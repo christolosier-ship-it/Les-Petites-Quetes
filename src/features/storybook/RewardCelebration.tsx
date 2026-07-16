@@ -38,10 +38,11 @@ export function RewardCelebration({ app, childId, onViewWorld }: RewardCelebrati
 
   if (!grant || !reward || !world) return null;
   const activeGrantId = grant.id;
+  const activeWorldId = world.id;
 
   async function close(showWorld: boolean) {
     await app.acknowledgeReward(activeGrantId);
-    if (showWorld) onViewWorld(world.id);
+    if (showWorld) onViewWorld(activeWorldId);
   }
 
   return (
