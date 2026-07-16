@@ -1,6 +1,8 @@
 import {
   archiveChildProfile,
   createChildProfile,
+  updateChildProfile,
+  type ChildProfileChanges,
   type ChildProfileInput,
 } from '../../domain/child/ChildProfile';
 import {
@@ -32,6 +34,20 @@ export function addChildProfile(
   };
 }
 
+export function editChildProfile(
+  state: FamilyState,
+  childId: string,
+  changes: ChildProfileChanges,
+  now: string,
+): FamilyState {
+  return {
+    ...state,
+    children: state.children.map((child) =>
+      child.id === childId ? updateChildProfile(child, changes, now) : child,
+    ),
+  };
+}
+
 export function archiveChild(
   state: FamilyState,
   childId: string,
@@ -44,13 +60,15 @@ export function archiveChild(
     state.settings.activeChildId === childId
       ? children.find((child) => !child.isArchived && child.deletedAt === undefined)?.id
       : state.settings.activeChildId;
+  const { activeChildId: previousActiveChildId, ...settingsWithoutActive } = state.settings;
+  void previousActiveChildId;
   return {
     ...state,
     children,
-    settings: {
-      ...state.settings,
-      ...(activeChildId !== undefined ? { activeChildId } : {}),
-    },
+    settings:
+      activeChildId !== undefined
+        ? { ...state.settings, activeChildId }
+        : settingsWithoutActive,
   };
 }
 
