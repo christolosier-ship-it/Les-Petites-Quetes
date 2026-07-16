@@ -49,6 +49,12 @@ export type DomainErrorCode =
   | 'occurrence.generation-range-too-large'
   | 'occurrence.child-not-found'
   | 'occurrence.id-collision'
+  | 'occurrence.invalid-disposition'
+  | 'progression.occurrence-not-completed'
+  | 'progression.completion-deleted'
+  | 'progression.identifier-required'
+  | 'progression.timestamp-required'
+  | 'progression.world-version-required'
   | 'validation.invalid-transition'
   | 'validation.adult-mode-required';
 
