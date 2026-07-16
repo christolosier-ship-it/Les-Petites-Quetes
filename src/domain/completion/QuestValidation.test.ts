@@ -83,7 +83,7 @@ describe('validation des quêtes', () => {
     const requested = requestQuestValidation(occurrence(), 'parent', 'requested');
     const retry = requestAnotherStep(requested, 'decision');
     expect(retry.status).toBe('available');
-    expect(retry.validationFeedback).toBe('small-step-remains');
+    expect(retry.validationNote).toBe('small-step-remains');
     expect(retry.completedAt).toBeUndefined();
     expect(retry.completionId).toBeUndefined();
   });
@@ -92,7 +92,7 @@ describe('validation des quêtes', () => {
     const requested = requestQuestValidation(occurrence(), 'parent', 'requested');
     const jointReview = requestJointReview(requested, 'decision');
     expect(jointReview.status).toBe('validation-requested');
-    expect(jointReview.validationFeedback).toBe('review-together');
+    expect(jointReview.validationNote).toBe('review-together');
   });
 
   it('refuse les transitions et modes incompatibles', () => {
