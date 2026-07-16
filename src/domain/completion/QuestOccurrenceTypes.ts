@@ -28,7 +28,7 @@ export interface QuestOccurrence extends EntityMetadata {
   readonly validationRequestedAt?: string;
   readonly completedAt?: string;
   readonly postponedTo?: string;
-  readonly validationFeedback?: ValidationFeedback;
+  readonly validationNote?: ValidationFeedback;
   readonly evidenceAssetId?: string;
   readonly completionId?: string;
 }
