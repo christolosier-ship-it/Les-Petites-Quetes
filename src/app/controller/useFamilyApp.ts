@@ -1,5 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import type { ChildProfileInput } from '../../domain/child/ChildProfile';
+import type {
+  ChildProfileChanges,
+  ChildProfileInput,
+} from '../../domain/child/ChildProfile';
 import type { QuestTemplateInput } from '../../domain/quest/QuestTemplate';
 import type { QuestScheduleInput } from '../../domain/schedule/QuestSchedule';
 import { addLocalDays } from '../../domain/shared/localDate';
@@ -10,6 +13,7 @@ import {
   addCustomQuestTemplate,
   addQuestSchedule,
   archiveChild,
+  editChildProfile,
 } from '../../application/services/familySetupCommands';
 import {
   approveOccurrence,
@@ -37,6 +41,7 @@ export interface FamilyAppController {
   readonly parentUnlocked: boolean;
   readonly builtinTemplates: typeof builtinQuestTemplates;
   readonly createChild: (input: ChildProfileInput) => Promise<void>;
+  readonly updateChild: (childId: string, changes: ChildProfileChanges) => Promise<void>;
   readonly archiveChild: (childId: string) => Promise<void>;
   readonly selectChild: (childId: string) => Promise<void>;
   readonly setParentPin: (pin: string) => Promise<void>;
@@ -157,6 +162,8 @@ export function useFamilyApp(): FamilyAppController {
     parentUnlocked,
     builtinTemplates: builtinQuestTemplates,
     createChild,
+    updateChild: async (childId, changes) =>
+      apply((current) => editChildProfile(current, childId, changes, clock.nowIso())),
     archiveChild: async (childId) => apply((current) => archiveChild(current, childId, clock.nowIso())),
     selectChild: async (childId) =>
       apply((current) => ({
