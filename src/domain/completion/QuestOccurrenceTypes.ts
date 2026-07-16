@@ -1,5 +1,6 @@
 import type { EntityMetadata } from '../shared/entity';
 import type { DayMoment, ValidationFeedback } from '../shared/types';
+import type { WorldId } from '../world/WorldDefinition';
 
 export type QuestOccurrenceStatus =
   | 'upcoming'
@@ -13,6 +14,8 @@ export type QuestOccurrenceStatus =
 export interface QuestOccurrence extends EntityMetadata {
   readonly scheduleId: string;
   readonly questTemplateId: string;
+  readonly questFamilyId: string;
+  readonly worldId: WorldId;
   readonly childId: string;
   readonly localDate: string;
   readonly dayMoment: DayMoment;

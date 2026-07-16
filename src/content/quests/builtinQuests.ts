@@ -1,26 +1,39 @@
-import { createBuiltinQuestTemplate, type QuestTemplate, type QuestTemplateInput } from '../../domain/quest/QuestTemplate';
-import rawQuests from './builtin-quests.json';
+import type { QuestTemplate } from '../../domain/quest/QuestTemplate';
+import type { AgeBand } from '../../domain/shared/types';
+import { buildQuestTemplates, type QuestFamilySeed } from './QuestFamily';
+import { creativityQuestFamilies } from './families/creativityFamilies';
+import { dragonQuestFamilies } from './families/dragonFamilies';
+import { fireflyQuestFamilies } from './families/fireflyFamilies';
+import { gnomeQuestFamilies } from './families/gnomeFamilies';
+import { natureQuestFamilies } from './families/natureFamilies';
+import { spaceQuestFamilies } from './families/spaceFamilies';
 
-interface RawBuiltinQuest extends QuestTemplateInput {
-  readonly id: string;
+export const builtinQuestFamilies: readonly QuestFamilySeed[] = [
+  ...fireflyQuestFamilies,
+  ...dragonQuestFamilies,
+  ...spaceQuestFamilies,
+  ...gnomeQuestFamilies,
+  ...natureQuestFamilies,
+  ...creativityQuestFamilies,
+];
+
+export const builtinQuestTemplates: readonly QuestTemplate[] = buildQuestTemplates(builtinQuestFamilies);
+
+export function findQuestTemplate(id: string, customTemplates: readonly QuestTemplate[]): QuestTemplate | undefined {
+  return customTemplates.find((template) => template.id === id) ?? builtinQuestTemplates.find((template) => template.id === id);
 }
 
-const CONTENT_CREATED_AT = '2026-01-01T00:00:00.000Z';
-const CONTENT_VERSION = '1.0.0';
-
-export const builtinQuestTemplates: readonly QuestTemplate[] = (
-  rawQuests as readonly RawBuiltinQuest[]
-).map(({ id, ...input }) =>
-  createBuiltinQuestTemplate(
-    { ...input, steps: input.steps ?? [] },
-    { id, contentVersion: CONTENT_VERSION, createdAt: CONTENT_CREATED_AT },
-  ),
-);
-
-export function findQuestTemplate(
-  id: string,
+export function findQuestVariantForAge(
+  familyId: string,
+  ageBand: AgeBand,
   customTemplates: readonly QuestTemplate[],
+  fallbackTemplateId?: string,
 ): QuestTemplate | undefined {
-  return customTemplates.find((template) => template.id === id) ??
-    builtinQuestTemplates.find((template) => template.id === id);
+  return customTemplates.find((template) => template.familyId === familyId && template.ageBands.includes(ageBand))
+    ?? builtinQuestTemplates.find((template) => template.familyId === familyId && template.ageBands.length === 1 && template.ageBands[0] === ageBand)
+    ?? (fallbackTemplateId === undefined ? undefined : findQuestTemplate(fallbackTemplateId, customTemplates));
+}
+
+export function questFamiliesForWorld(worldId: string): readonly QuestFamilySeed[] {
+  return builtinQuestFamilies.filter((family) => family.worldId === worldId);
 }

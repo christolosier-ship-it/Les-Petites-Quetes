@@ -16,8 +16,6 @@ export interface ChildProfile extends EntityMetadata {
   readonly ageBand: AgeBand;
   readonly readingLevel: ReadingLevel;
   readonly avatarId: string;
-  readonly accentId: string;
-  readonly activeWorldId: string;
   readonly isArchived: boolean;
 }
 
@@ -26,8 +24,6 @@ export interface ChildProfileInput {
   readonly ageBand: AgeBand;
   readonly readingLevel: ReadingLevel;
   readonly avatarId: string;
-  readonly accentId: string;
-  readonly activeWorldId: string;
 }
 
 export type ChildProfileChanges = Partial<ChildProfileInput>;
@@ -68,18 +64,6 @@ function normalizeInput(input: ChildProfileInput): ChildProfileInput {
       'Un avatar est requis.',
       'avatarId',
     ),
-    accentId: requireIdentifier(
-      input.accentId,
-      'child.identifier-required',
-      'Une couleur est requise.',
-      'accentId',
-    ),
-    activeWorldId: requireIdentifier(
-      input.activeWorldId,
-      'child.identifier-required',
-      'Un univers actif est requis.',
-      'activeWorldId',
-    ),
   };
 }
 
@@ -118,8 +102,6 @@ export function updateChildProfile(
     ageBand: changes.ageBand ?? profile.ageBand,
     readingLevel: changes.readingLevel ?? profile.readingLevel,
     avatarId: changes.avatarId ?? profile.avatarId,
-    accentId: changes.accentId ?? profile.accentId,
-    activeWorldId: changes.activeWorldId ?? profile.activeWorldId,
   });
 
   return {
