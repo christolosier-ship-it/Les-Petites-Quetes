@@ -51,8 +51,14 @@ jobs:
       - name: Lint domaine
         run: npx eslint src/domain
 
-      - name: Lint application
-        run: npx eslint src/application
+      - name: Lint modèles et ports applicatifs
+        run: npx eslint src/application/model src/application/ports
+
+      - name: Lint services applicatifs hors file
+        run: npx eslint src/application/services --ignore-pattern StateCommitQueue.ts --ignore-pattern StateCommitQueue.test.ts
+
+      - name: Lint file de mutations
+        run: npx eslint src/application/services/StateCommitQueue.ts src/application/services/StateCommitQueue.test.ts
 
       - name: Lint contrôleur et état
         run: npx eslint src/app
