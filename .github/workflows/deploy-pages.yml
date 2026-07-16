@@ -19,6 +19,7 @@ jobs:
   build:
     name: Construire le site
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - name: Récupérer le dépôt
         uses: actions/checkout@v7
@@ -27,13 +28,15 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: 22
-          cache: npm
 
       - name: Installer les dépendances
-        run: npm ci
+        run: npm install --no-audit --no-fund
 
       - name: Construire l’application
         run: npm run build
+
+      - name: Vérifier l’artefact Pages
+        run: npm run check:pages
 
       - name: Configurer GitHub Pages
         uses: actions/configure-pages@v6
@@ -47,6 +50,7 @@ jobs:
     name: Publier le site
     needs: build
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -54,3 +58,46 @@ jobs:
       - name: Déployer sur GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v5
+
+      - name: Vérifier le site publié
+        env:
+          PAGE_URL: ${{ steps.deployment.outputs.page_url }}
+        run: |
+          python - <<'PY'
+          import os
+          import re
+          import time
+          from urllib.parse import urljoin
+          from urllib.request import urlopen
+
+          page_url = os.environ['PAGE_URL']
+          last_error = None
+
+          for attempt in range(1, 13):
+              try:
+                  with urlopen(page_url, timeout=20) as response:
+                      html = response.read().decode('utf-8')
+
+                  if '/src/main.tsx' in html:
+                      raise RuntimeError('GitHub Pages sert encore les sources TypeScript.')
+
+                  match = re.search(r'<script[^>]+src="([^"]+\.js)"', html)
+                  if not match:
+                      raise RuntimeError('Aucun bundle JavaScript compilé dans la page publiée.')
+
+                  bundle_url = urljoin(page_url, match.group(1))
+                  with urlopen(bundle_url, timeout=20) as response:
+                      if response.status != 200:
+                          raise RuntimeError(f'Bundle inaccessible : HTTP {response.status}')
+
+                  print(f'Site Pages opérationnel : {page_url}')
+                  print(f'Bundle chargé : {bundle_url}')
+                  break
+              except Exception as error:
+                  last_error = error
+                  print(f'Tentative {attempt}/12 non concluante : {error}')
+                  if attempt < 12:
+                      time.sleep(5)
+          else:
+              raise SystemExit(f'Le site publié reste invalide : {last_error}')
+          PY
