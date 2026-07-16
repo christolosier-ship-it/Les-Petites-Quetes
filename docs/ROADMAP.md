@@ -1,316 +1,329 @@
-# Feuille de route
+# Feuille de route multi-univers
 
-## Principe
+## 1. Situation actuelle
 
-Le projet avance par portes de validation. Une phase n’est pas considérée terminée parce que des fichiers existent, mais parce que ses décisions sont cohérentes, testables et approuvées.
+La V1 technique et fonctionnelle existante a validé :
 
-## État au 16 juillet 2026
+- boucle parent-enfant ;
+- profils ;
+- planification ;
+- validation ;
+- récompenses ;
+- progression ;
+- IndexedDB ;
+- migrations ;
+- sauvegardes ;
+- PWA ;
+- contrôles statiques et dynamiques.
 
-La V1 fonctionnelle est finalisée sur les volets produit, domaine, persistance, interfaces, sauvegarde et PWA.
+Cette base est actuellement centrée sur La Forêt des Lucioles. Le prochain cycle doit la transformer en moteur multi-univers avant la production graphique définitive.
 
-- phases 0 à 6 : réalisées et contrôlées ;
-- phase 7 : contenu fonctionnel présent, production graphique définitive encore à réaliser ;
-- phase 8 : contrôles statiques, tests automatisés, responsive et hors ligne réalisés ; tests utilisateurs accompagnés et performance sur appareils modestes encore à conduire ;
-- phase 9 : pilote privé non démarré ;
-- phase 10 : déploiement technique disponible, documentation publique et revue finale encore à compléter.
+## 2. Nouveau programme
 
-Les illustrations, icônes, poses de mascotte et animations parallaxes constituent désormais un chantier graphique séparé. Elles devront respecter la bible des assets sans modifier le domaine métier stabilisé.
+Le programme cible :
 
-## Phase 0, cadrage
+- 6 univers ;
+- 6 mascottes ;
+- 6 avatars enfants initiaux ;
+- progression indépendante par enfant et univers ;
+- familles de quêtes avec variantes d’âge ;
+- accueil familial en deux fenêtres ;
+- carrefour enfant avec pastilles de disponibilité ;
+- scènes parallaxes déclaratives ;
+- migration V2 vers V3.
+
+## 3. Porte 0, cadrage multi-univers
 
 ### Livrables
 
-- vision produit ;
-- cahier des charges ;
-- architecture ;
-- modèle de données ;
-- parcours ;
-- sécurité enfant ;
-- règles éditoriales ;
+- vision mise à jour ;
+- cahier des charges cible ;
+- architecture cible ;
+- modèle V3 ;
+- nouveaux parcours ;
 - bible des assets ;
-- feuille de route.
+- règles éditoriales ;
+- sécurité enfant ;
+- plan directeur ;
+- ADR-0005.
 
 ### Porte de sortie
 
-- périmètre V1 validé ;
-- tranches d’âge confirmées ;
-- univers initial retenu ;
-- aucun désaccord majeur entre produit, données et architecture ;
-- fonctions hors périmètre clairement listées.
+- univers obligatoire pour chaque quête ;
+- distinction claire avatar/mascotte ;
+- navigation validée ;
+- stratégie d’âge validée ;
+- migration définie ;
+- aucun code modifié avant validation documentaire.
 
-**Statut : réalisée.**
+**Statut : en cours dans la PR documentaire multi-univers.**
 
-## Phase 1, conception détaillée
+## 4. Porte 1, domaine multi-univers
 
 ### Livrables
 
-- wireframes espace enfant ;
-- wireframes espace parent ;
-- carte de navigation ;
-- design system ;
-- prototype du monde ;
-- prototype de mascotte animable ;
-- schémas détaillés IndexedDB ;
-- contrats des repositories ;
-- décisions d’architecture documentées ;
-- stratégie PWA et mises à jour ;
-- stratégie de lecture vocale ;
-- plan de tests.
+- `WorldDefinition` ;
+- `QuestFamily` ;
+- `QuestVariant` ;
+- progression par enfant-univers ;
+- univers et variante figés dans les occurrences ;
+- avatars contraints par âge ;
+- nouveaux invariants.
 
-### Porte de sortie
+### Tests
 
-- parcours principal testable sur maquette ;
-- création d’une quête en moins de 30 secondes sur prototype ;
-- quête enfant compréhensible sans lecture ;
-- animation réalisable avec les assets choisis ;
-- aucun besoin technique majeur non résolu.
-
-**Statut : réalisée pour la conception fonctionnelle. Prototype graphique animé encore à produire.**
-
-## Phase 2, fondation technique
-
-### Livrables
-
-- projet React et TypeScript ;
-- configuration stricte ;
-- structure des couches ;
-- contrôles d’architecture ;
-- CI ;
-- tests ;
-- shell PWA ;
-- navigation ;
-- design tokens ;
-- registre d’assets ;
-- validation de contenus ;
-- budgets de bundle.
-
-### Porte de sortie
-
-- tous les contrôles sont verts ;
-- aucune fonctionnalité métier couplée directement au stockage ;
-- build et smoke test automatiques ;
-- fonctionnement hors ligne.
-
-**Statut : réalisée.**
-
-## Phase 3, domaine métier
-
-### Lots
-
-1. Profils enfants
-2. Modèles de quêtes
-3. Planifications
-4. Occurrences
-5. Validation
-6. Récompenses
-7. Progression
-8. Histoire
+- quête sans univers refusée ;
+- variante incompatible refusée ;
+- récompense croisée refusée ;
+- progression isolée ;
+- historique stable.
 
 ### Porte de sortie
 
 - règles testées sans navigateur ;
-- transitions invalides refusées ;
-- génération idempotente ;
-- aucune punition implicite ;
-- progression reconstructible.
+- aucune condition spécifique à un nom d’univers dans le moteur ;
+- typecheck, lint et couverture verts.
 
-**Statut : réalisée.**
-
-## Phase 4, persistance
+## 5. Porte 2, schéma V3 et migration
 
 ### Livrables
 
-- IndexedDB ;
-- repositories ;
-- migration V1 vers V2 ;
+- schéma V3 ;
+- migration V2 vers V3 ;
+- conversion des profils ;
+- table de correspondance des contenus intégrés ;
+- revue des quêtes personnalisées ;
+- import V2 et V3 ;
+- restauration.
+
+### Porte de sortie
+
+- historique conservé ;
+- aucune progression déplacée silencieusement ;
 - sauvegarde avant migration ;
-- journal de migration ;
-- export ;
-- import validé profondément ;
-- restauration ;
-- sauvegardes automatiques consultables.
-
-### Porte de sortie
-
-- tests de migration depuis chaque schéma supporté ;
 - import invalide sans effet ;
-- restauration fiable ;
-- écritures ordonnées ;
-- absence d’accès au stockage hors adaptateurs.
+- tests de migration réels.
 
-**Statut : réalisée. Le stockage média photo reste réservé à une évolution ultérieure.**
-
-## Phase 5, expérience parent
+## 6. Porte 3, catalogue des univers et des quêtes
 
 ### Livrables
 
-- onboarding ;
-- verrou parent ;
-- tableau de bord ;
-- profils complets ;
-- bibliothèque ;
-- modèles personnalisables ;
-- éditeur de quête ;
-- planification multi-enfants ;
-- gestion des routines ;
-- demandes de validation ;
-- réglages et sauvegardes.
+- six `WorldDefinition` ;
+- six mascottes provisoires dans le registre ;
+- audit des 40 modèles actuels ;
+- familles de quêtes ;
+- variantes d’âge ;
+- matrice de couverture.
+
+### Objectif initial
+
+- 5 familles minimum par univers ;
+- 3 variantes d’âge par famille ;
+- 30 familles ;
+- 90 variantes.
 
 ### Porte de sortie
 
-- parcours complet utilisable sans documentation ;
-- saisie rapide ;
-- navigation clavier possible ;
-- options avancées regroupées dans les écrans dédiés.
+- chaque univers possède un panel pour chaque âge ;
+- récompenses cohérentes ;
+- aucun contenu sans illustration ou fallback ;
+- validation éditoriale automatique verte.
 
-**Statut : réalisée fonctionnellement. Validation avec de vrais parents encore à conduire.**
-
-## Phase 6, expérience enfant
+## 7. Porte 4, accueil familial et carrefour enfant
 
 ### Livrables
 
-- sélection de profil ;
-- monde ;
-- quêtes du jour ;
-- détail ;
-- audio ;
-- demande de validation ;
-- récompense immédiate ou différée ;
-- trésor ;
-- histoire ;
-- distinction douce des quêtes facultatives ;
-- étapes unitaires pour les 3 à 5 ans.
+- écran principal à deux fenêtres ;
+- accès enfant à gauche ;
+- accès parent à droite ;
+- sélection du profil ;
+- six pavés d’univers ;
+- compteur de quêtes disponibles ;
+- badge absent à zéro ;
+- navigation responsive.
 
 ### Porte de sortie
 
-- parcours réalisable avec son désactivé ;
-- parcours réalisable avec animations réduites ;
-- trois interactions principales maximum par quête ;
-- aucune mécanique culpabilisante.
+- un enfant atteint un univers en deux interactions maximum ;
+- les compteurs sont exacts ;
+- aucune comparaison entre profils ;
+- mobile, tablette et bureau validés.
 
-**Statut : réalisée fonctionnellement. La compréhension sans lecture dépend encore des futurs assets illustrés.**
+## 8. Porte 5, espace parent multi-univers
 
-## Phase 7, contenu et assets
+### Livrables
 
-### Livrables fonctionnels réalisés
-
-- univers La Forêt des Lucioles ;
-- quatre états du monde ;
-- 40 quêtes ;
-- 12 récompenses ;
-- habitants ;
-- huit chapitres ;
-- textes alternatifs et fallbacks ;
-- registre typé.
-
-### Livrables graphiques restant à produire
-
-- mascotte définitive ;
-- expressions et poses ;
-- quatre décors réellement différenciés ;
-- 40 illustrations de quêtes ;
-- récompenses et habitants illustrés ;
-- sons finaux ;
-- icônes PWA PNG ;
-- scènes et animations parallaxes.
+- suppression compagnon et couleur ;
+- choix d’avatar filtré par âge ;
+- bibliothèque filtrée par univers ;
+- filtre par tranche d’âge ;
+- éditeur avec univers obligatoire ;
+- gestion des variantes ;
+- attribution multi-enfants compatible ;
+- progression par univers ;
+- revue des quêtes migrées.
 
 ### Porte de sortie
 
-- registre complet avec les assets définitifs ;
-- aucun asset manquant ;
+- aucun enfant ne reçoit une variante incompatible ;
+- création simple en moins de 30 secondes ;
+- options avancées repliées ;
+- navigation clavier validée.
+
+## 9. Porte 6, moteur parallaxe
+
+### Livrables
+
+- manifeste typé de scène ;
+- calques par profondeur ;
+- slots débloquables ;
+- ancres de mascotte ;
+- responsive ;
+- mouvements réduits ;
+- fallback statique ;
+- chargement différé ;
+- cache par univers.
+
+### Prototype obligatoire
+
+La Forêt des Lucioles sert de premier prototype complet avec Luma.
+
+### Porte de sortie
+
+- aucun composant spécifique à la forêt ;
+- scène fluide sur tablette cible ;
+- fallback fonctionnel hors ligne ;
 - budgets respectés ;
-- cohérence graphique validée ;
-- contenus relus pour chaque tranche d’âge ;
-- compréhension des quêtes testée à taille réelle.
+- ajout d’un second univers sans modifier le moteur.
 
-**Statut : en cours. Fonctionnel terminé, graphisme définitif à réaliser.**
+## 10. Porte 7, avatars et identité commune
 
-## Phase 8, tests et stabilisation
+### Livrables
 
-### Réalisé
-
-- tests du domaine ;
-- tests des services applicatifs ;
-- tests des migrations et imports ;
-- contrôle des écritures concurrentes ;
-- contrôles d’architecture et cycles ;
-- couverture des couches pures ;
-- responsive Chrome mobile, tablette et bureau ;
-- PWA et fonctionnement hors ligne ;
-- mise à jour contrôlée du service worker ;
-- navigation complète ;
-- build et déploiement automatisés.
-
-### Restant
-
-- audit manuel d’accessibilité avec lecteur d’écran ;
-- tests Safari et iOS installés ;
-- tests utilisateurs parent ;
-- tests accompagnés enfant ;
-- performance sur appareils modestes ;
-- contrôle final avec les assets définitifs.
+- six avatars ;
+- bustes et corps entiers ;
+- design system personnages ;
+- tests en 96 px ;
+- intégration au registre ;
+- migration des anciens avatars.
 
 ### Porte de sortie
 
-- aucun défaut bloquant ;
+- chaque âge possède garçon et fille ;
+- aucun avatar incompatible ;
+- style cohérent avec les mascottes ;
+- lisibilité sur les trois formats.
+
+## 11. Porte 8, production univers par univers
+
+L’ordre proposé :
+
+1. La Forêt des Lucioles ;
+2. La Montagne du Dragon ;
+3. La Station Spatiale ;
+4. Le Village des Lutins ;
+5. univers nature ;
+6. univers créativité.
+
+Chaque univers livre :
+
+- couverture ;
+- mascotte ;
+- scène parallaxe ;
+- fallback ;
+- récompenses ;
+- habitants ;
+- histoire ;
+- illustrations de quêtes ;
+- sons facultatifs ;
+- textes alternatifs.
+
+Un univers doit être validé avant de lancer le volume complet du suivant.
+
+## 12. Porte 9, stabilisation
+
+### Contrôles
+
+- TypeScript strict ;
+- architecture ;
+- cycles ;
+- contenu ;
+- assets ;
+- budgets ;
+- migration ;
+- navigation ;
+- responsive ;
+- hors ligne ;
+- Safari/iOS ;
+- accessibilité ;
+- performance sur appareils modestes.
+
+### Porte de sortie
+
 - aucune perte de données ;
-- aucune régression de sécurité enfant ;
-- parcours principaux validés ;
+- aucun défaut bloquant ;
+- aucune progression croisée ;
+- aucune quête hors âge ;
+- chaque scène possède un fallback ;
 - documentation à jour.
 
-**Statut : stabilisation technique réalisée, validation humaine et multi-navigateurs restante.**
-
-## Phase 9, pilote privé
+## 13. Porte 10, pilote familial
 
 ### Déroulement
 
-- installation par quelques familles volontaires ;
-- période d’usage réelle ;
-- retours structurés ;
-- analyse de la compréhension enfant ;
-- analyse du temps de préparation parent ;
+- installation chez quelques familles ;
+- observation de l’accueil à deux fenêtres ;
+- compréhension des six univers ;
+- compréhension des pastilles ;
+- temps de création parent ;
+- usage des variantes d’âge ;
+- perception des mascottes ;
+- performance des scènes ;
 - corrections ciblées.
 
 ### Porte de sortie
 
-- usage régulier observé ;
-- absence de mécanisme vécu comme culpabilisant ;
-- parents capables de gérer les quêtes sans assistance ;
-- enfant revenant pour découvrir son monde plutôt que pour accumuler des points.
+- parents autonomes ;
+- enfants capables de choisir le bon univers ;
+- pastilles non vécues comme une pression ;
+- univers reconnus visuellement ;
+- temps d’écran bref ;
+- aucune confusion avatar/mascotte.
 
-**Statut : non démarrée.**
+## 14. Porte 11, diffusion
 
-## Phase 10, déploiement V1
-
-### Déjà disponible
+### Livrables
 
 - build de production ;
-- hébergement GitHub Pages ;
-- sauvegardes ;
-- contrôles post-déploiement ;
-- mécanisme de mise à jour PWA.
-
-### Restant avant diffusion finale
-
-- domaine éventuel ;
-- politique de confidentialité publiée ;
+- icônes PWA finales ;
+- politique de confidentialité ;
 - guide parent ;
-- procédure de retour arrière documentée ;
 - notes de version ;
+- procédure de retour arrière ;
 - support minimal ;
-- validation après intégration des assets définitifs ;
-- bilan du pilote privé.
+- bilan pilote.
 
-**Statut : déploiement technique disponible, diffusion finale non validée.**
+## 15. Séquence des PR
 
-## Après la V1
+1. documentation multi-univers ;
+2. domaine et types V3 ;
+3. migration et validation runtime ;
+4. catalogues de mondes et variantes ;
+5. accueil familial et carrefour ;
+6. espace parent ;
+7. moteur parallaxe ;
+8. avatars ;
+9. intégration de La Forêt des Lucioles ;
+10. un PR graphique par univers restant ;
+11. stabilisation et pilote.
 
-Ordre potentiel, à revalider selon l’usage :
+## 16. Décisions encore ouvertes
 
-1. modèles et aventures supplémentaires ;
-2. second univers ;
-3. synchronisation familiale privée ;
-4. partage d’un pack de quêtes sans données enfant ;
-5. outils de création narrative.
+- nom public de l’univers nature ;
+- nom public de l’univers créativité ;
+- noms des cinq mascottes restantes ;
+- nombre final de paliers par univers ;
+- technique d’animation après prototype ;
+- répartition définitive des 40 quêtes existantes.
 
-Aucune fonction connectée n’est automatiquement prioritaire. La V1 doit d’abord prouver que la boucle familiale est utile.
+Ces décisions n’empêchent pas de stabiliser les identifiants techniques et le modèle métier.
