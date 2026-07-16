@@ -77,7 +77,7 @@ describe('génération des occurrences', () => {
       schedule: weeklySchedule(),
       children: [child('child-1'), child('child-2')],
       existingOccurrences: [],
-      window: {
+      generationRange: {
         fromDate: '2026-07-16',
         toDate: '2026-07-23',
         today: '2026-07-18',
@@ -104,7 +104,7 @@ describe('génération des occurrences', () => {
       schedule: weeklySchedule(),
       children: [child('child-1'), child('child-2')],
       existingOccurrences: [],
-      window: {
+      generationRange: {
         fromDate: '2026-07-16',
         toDate: '2026-07-16',
         today: '2026-07-16',
@@ -120,7 +120,7 @@ describe('génération des occurrences', () => {
         schedule: weeklySchedule(),
         children: [child('child-1'), child('child-2')],
         existingOccurrences: [terminal, tombstone],
-        window: {
+        generationRange: {
           fromDate: '2026-07-16',
           toDate: '2026-07-16',
           today: '2026-07-16',
@@ -137,7 +137,7 @@ describe('génération des occurrences', () => {
     const input = {
       children: [archived, deleted],
       existingOccurrences: [],
-      window: {
+      generationRange: {
         fromDate: '2026-07-16',
         toDate: '2026-07-23',
         today: '2026-07-16',
@@ -162,7 +162,7 @@ describe('génération des occurrences', () => {
           schedule: weeklySchedule(),
           children: [child('child-1')],
           existingOccurrences: [],
-          window: {
+          generationRange: {
             fromDate: '2026-07-16',
             toDate: '2026-07-16',
             today: '2026-07-16',
@@ -174,6 +174,25 @@ describe('génération des occurrences', () => {
     );
   });
 
+  it('refuse une plage inversée pour tous les types de planification', () => {
+    expectDomainError(
+      () =>
+        generateQuestOccurrences({
+          schedule: weeklySchedule(),
+          children: [child('child-1'), child('child-2')],
+          existingOccurrences: [],
+          generationRange: {
+            fromDate: '2026-07-20',
+            toDate: '2026-07-16',
+            today: '2026-07-16',
+            generatedAt: 'generated',
+          },
+          createOccurrenceId: createId,
+        }),
+      'occurrence.invalid-generation-range',
+    );
+  });
+
   it('refuse une collision d’identifiant même entre deux dates différentes', () => {
     expectDomainError(
       () =>
@@ -181,7 +200,7 @@ describe('génération des occurrences', () => {
           schedule: weeklySchedule(),
           children: [child('child-1'), child('child-2')],
           existingOccurrences: [],
-          window: {
+          generationRange: {
             fromDate: '2026-07-16',
             toDate: '2026-07-20',
             today: '2026-07-16',
@@ -208,8 +227,6 @@ describe('génération des occurrences', () => {
     expect(released[1]).toMatchObject({ status: 'available', revision: 2 });
     expect(released[2]).toBe(completed);
     expect(released[3]).toBe(deleted);
-    expect(
-      releaseDueQuestOccurrences(released, '2026-07-16', 'later')[1],
-    ).toBe(released[1]);
+    expect(releaseDueQuestOccurrences(released, '2026-07-16', 'later')[1]).toBe(released[1]);
   });
 });
