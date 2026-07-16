@@ -75,8 +75,14 @@ jobs:
       - name: Lint shell état et tests app
         run: npx eslint src/app/App.tsx src/app/App.test.tsx src/app/state
 
-      - name: Lint persistance et plateforme
-        run: npx eslint src/persistence src/platform
+      - name: Lint schémas et migrations
+        run: npx eslint src/persistence/schemas src/persistence/migrations
+
+      - name: Lint repositories et sauvegardes
+        run: npx eslint src/persistence/repositories src/persistence/backup
+
+      - name: Lint plateforme navigateur
+        run: npx eslint src/platform
 
       - name: Lint interface et contenus
         run: npx eslint src/features src/pages src/components src/content src/assets src/main.tsx
