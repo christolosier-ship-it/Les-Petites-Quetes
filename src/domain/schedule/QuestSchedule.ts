@@ -197,9 +197,9 @@ export function updateQuestSchedule(
 ): QuestSchedule {
   assertMutable(schedule);
   return {
-    ...schedule,
-    ...normalizeInput(buildInput(schedule, changes)),
     ...incrementRevision(schedule, updatedAt),
+    ...normalizeInput(buildInput(schedule, changes)),
+    isSuspended: schedule.isSuspended,
   };
 }
 
