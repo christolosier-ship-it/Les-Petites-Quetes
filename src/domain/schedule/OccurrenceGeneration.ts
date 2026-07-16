@@ -79,6 +79,12 @@ export function generateQuestOccurrences(input: GenerateOccurrencesInput): reado
   const fromDate = normalizeLocalDate(input.window.fromDate, 'fromDate');
   const toDate = normalizeLocalDate(input.window.toDate, 'toDate');
   const today = normalizeLocalDate(input.window.today, 'today');
+  assertDomain(
+    compareLocalDates(fromDate, toDate) <= 0,
+    'occurrence.invalid-generation-window',
+    'La fin de la fenêtre doit être postérieure ou égale au début.',
+  );
+
   const dates = datesForSchedule(input.schedule, fromDate, toDate);
   const existingKeys = new Set(
     input.existingOccurrences.map((occurrence) =>
