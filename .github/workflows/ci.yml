@@ -66,8 +66,14 @@ jobs:
       - name: Lint test de concurrence
         run: npx eslint src/application/services/StateCommitQueue.test.ts
 
-      - name: Lint contrôleur et état
-        run: npx eslint src/app
+      - name: Lint contrat et factory du contrôleur
+        run: npx eslint src/app/controller/FamilyAppController.ts src/app/controller/createFamilyController.ts
+
+      - name: Lint hook du contrôleur
+        run: npx eslint src/app/controller/useFamilyApp.ts
+
+      - name: Lint shell état et tests app
+        run: npx eslint src/app/App.tsx src/app/App.test.tsx src/app/state
 
       - name: Lint persistance et plateforme
         run: npx eslint src/persistence src/platform
