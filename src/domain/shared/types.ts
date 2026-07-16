@@ -7,6 +7,20 @@ export type ReadingLevel = (typeof READING_LEVELS)[number];
 export const VALIDATION_MODES = ['child', 'parent', 'together'] as const;
 export type ValidationMode = (typeof VALIDATION_MODES)[number];
 
+export const DAY_MOMENTS = [
+  'morning',
+  'after-school',
+  'before-meal',
+  'after-meal',
+  'evening',
+  'bedtime',
+  'anytime',
+] as const;
+export type DayMoment = (typeof DAY_MOMENTS)[number];
+
+export const WEEKDAYS = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'] as const;
+export type Weekday = (typeof WEEKDAYS)[number];
+
 export const QUEST_CATEGORIES = [
   'autonomy',
   'hygiene-routine',

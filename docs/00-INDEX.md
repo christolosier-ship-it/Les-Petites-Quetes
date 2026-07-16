@@ -17,6 +17,7 @@ Ce dossier constitue la source de vérité du projet avant et pendant le dévelo
 ## Décisions structurantes
 
 - [ADR-0001 — Règles du premier domaine métier](./decisions/ADR-0001-domain-rules.md)
+- [ADR-0002 — Planification et génération des occurrences](./decisions/ADR-0002-schedules-occurrences.md)
 
 ## Règle de gouvernance
 
