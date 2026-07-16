@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { createEmptyFamilyState, type FamilyState } from '../../application/model/FamilyState';
 import type { FamilyBackupSummary } from '../../application/ports/FamilyRepository';
 import {
@@ -34,16 +34,11 @@ export function useFamilyApp(): FamilyAppController {
   const [error, setError] = useState<string>();
   const [parentUnlocked, setParentUnlocked] = useState(false);
   const [backups, setBackups] = useState<readonly FamilyBackupSummary[]>([]);
-  const queueRef = useRef<StateCommitQueue<FamilyState> | undefined>(undefined);
-
-  if (queueRef.current === undefined) {
-    queueRef.current = new StateCommitQueue(
-      state,
-      async (_current, next) => repository.save(next),
-      setState,
-    );
-  }
-  const queue = queueRef.current;
+  const [queue] = useState(() => new StateCommitQueue(
+    createEmptyFamilyState(),
+    async (_current, next) => repository.save(next),
+    setState,
+  ));
 
   const refreshBackups = useCallback(async () => {
     setBackups(await repository.listBackups());
