@@ -1,9 +1,9 @@
-import { useEffect, useState, type FormEvent } from 'react';
+import { useState, type FormEvent } from 'react';
 import type { FamilyAppController } from '../../app/controller/FamilyAppController';
-import { avatarsForAgeBand, defaultAvatarForAge } from '../../content/avatars/avatarCatalog';
 import { Button } from '../../components/primitives/Button';
 import { Card } from '../../components/primitives/Card';
 import { Field } from '../../components/primitives/Field';
+import { avatarsForAgeBand, defaultAvatarForAge } from '../../content/avatars/avatarCatalog';
 import type { AgeBand, ReadingLevel, ValidationMode } from '../../domain/shared/types';
 
 interface OnboardingFlowProps {
@@ -20,14 +20,15 @@ export function OnboardingFlow({ app, onComplete }: OnboardingFlowProps) {
   const [avatarId, setAvatarId] = useState(defaultAvatarForAge('3-5'));
   const [pin, setPin] = useState('');
   const [validationMode, setValidationMode] = useState<ValidationMode>('parent');
-  const suggestedTemplates = app.builtinTemplates.filter((template) => template.ageBands[0] === ageBand).slice(0, 6);
-  const [questIds, setQuestIds] = useState<readonly string[]>([]);
+  const [questIds, setQuestIds] = useState<readonly string[]>(() => app.builtinTemplates.filter((template) => template.ageBands[0] === '3-5').slice(0, 3).map((template) => template.id));
   const [message, setMessage] = useState('');
+  const suggestedTemplates = app.builtinTemplates.filter((template) => template.ageBands[0] === ageBand).slice(0, 6);
 
-  useEffect(() => {
-    setAvatarId(defaultAvatarForAge(ageBand));
-    setQuestIds(app.builtinTemplates.filter((template) => template.ageBands[0] === ageBand).slice(0, 3).map((template) => template.id));
-  }, [ageBand, app.builtinTemplates]);
+  function changeAgeBand(nextAgeBand: AgeBand) {
+    setAgeBand(nextAgeBand);
+    setAvatarId(defaultAvatarForAge(nextAgeBand));
+    setQuestIds(app.builtinTemplates.filter((template) => template.ageBands[0] === nextAgeBand).slice(0, 3).map((template) => template.id));
+  }
 
   function toggleQuest(id: string) {
     setQuestIds((current) => current.includes(id)
@@ -68,7 +69,7 @@ export function OnboardingFlow({ app, onComplete }: OnboardingFlowProps) {
           <div className="stack">
             <h2>Qui part à l’aventure ?</h2>
             <Field label="Prénom ou pseudonyme"><input value={displayName} maxLength={30} required onChange={(event) => setDisplayName(event.target.value)} /></Field>
-            <Field label="Tranche d’âge"><select value={ageBand} onChange={(event) => setAgeBand(event.target.value as AgeBand)}><option value="3-5">3 à 5 ans</option><option value="6-8">6 à 8 ans</option><option value="9-10">9 à 10 ans</option></select></Field>
+            <Field label="Tranche d’âge"><select value={ageBand} onChange={(event) => changeAgeBand(event.target.value as AgeBand)}><option value="3-5">3 à 5 ans</option><option value="6-8">6 à 8 ans</option><option value="9-10">9 à 10 ans</option></select></Field>
             <Field label="Niveau de lecture"><select value={readingLevel} onChange={(event) => setReadingLevel(event.target.value as ReadingLevel)}><option value="visual">Principalement visuel</option><option value="short-text">Phrases courtes</option><option value="independent">Lecture autonome</option></select></Field>
             <fieldset className="choice-grid"><legend>Avatar</legend>{avatarsForAgeBand(ageBand).map((avatar) => <label key={avatar.id}><input type="radio" name="avatar" checked={avatarId === avatar.id} onChange={() => setAvatarId(avatar.id)} /><span aria-hidden="true">{avatar.presentation === 'girl' ? '👧' : '👦'}</span> {avatar.label}</label>)}</fieldset>
             <div className="button-row"><Button variant="quiet" onClick={() => setStep(0)}>Retour</Button><Button disabled={displayName.trim().length === 0} onClick={() => setStep(2)}>Continuer</Button></div>

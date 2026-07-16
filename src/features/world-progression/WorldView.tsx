@@ -1,8 +1,8 @@
 import type { FamilyAppController } from '../../app/controller/FamilyAppController';
 import { Card } from '../../components/primitives/Card';
+import { ParallaxScene } from '../../components/world/ParallaxScene';
 import { chaptersForWorld, findWorldDefinition, rewardsForWorld } from '../../content/world/worldCatalog';
 import type { WorldId } from '../../domain/world/WorldDefinition';
-import { ParallaxScene } from './ParallaxScene';
 
 interface WorldViewProps {
   readonly app: FamilyAppController;

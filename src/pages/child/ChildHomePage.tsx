@@ -5,8 +5,8 @@ import { Card } from '../../components/primitives/Card';
 import { findAvatarDefinition } from '../../content/avatars/avatarCatalog';
 import type { WorldId } from '../../domain/world/WorldDefinition';
 import { RewardCelebration } from '../../features/storybook/RewardCelebration';
-import { ChildWorldSpace } from '../../features/world-hub/ChildWorldSpace';
 import { WorldHub } from '../../features/world-hub/WorldHub';
+import { ChildWorldSpace } from './ChildWorldSpace';
 
 interface ChildHomePageProps {
   readonly app: FamilyAppController;

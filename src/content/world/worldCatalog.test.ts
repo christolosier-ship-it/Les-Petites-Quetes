@@ -21,7 +21,7 @@ describe('catalogue des univers', () => {
   });
 
   it('rattache chaque récompense et chaque chapitre à un univers existant', () => {
-    const worldIds = new Set(worldCatalog.map((world) => world.id));
+    const worldIds = new Set<string>(worldCatalog.map((world) => world.id));
     expect(allRewards.length).toBeGreaterThanOrEqual(37);
     expect(allStoryChapters).toHaveLength(48);
     for (const reward of allRewards) {

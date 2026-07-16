@@ -4,9 +4,9 @@ import { TabBar } from '../../components/layout/TabBar';
 import { Button } from '../../components/primitives/Button';
 import { findWorldDefinition } from '../../content/world/worldCatalog';
 import type { WorldId } from '../../domain/world/WorldDefinition';
-import { ChildQuestList } from '../daily-quests/ChildQuestList';
-import { TreasurePanel } from '../storybook/TreasurePanel';
-import { WorldView } from '../world-progression/WorldView';
+import { ChildQuestList } from '../../features/daily-quests/ChildQuestList';
+import { TreasurePanel } from '../../features/storybook/TreasurePanel';
+import { WorldView } from '../../features/world-progression/WorldView';
 
 interface ChildWorldSpaceProps {
   readonly app: FamilyAppController;

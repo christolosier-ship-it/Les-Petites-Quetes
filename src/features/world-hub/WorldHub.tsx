@@ -1,8 +1,8 @@
 import type { FamilyAppController } from '../../app/controller/FamilyAppController';
+import { ParallaxScene } from '../../components/world/ParallaxScene';
 import { findAvatarDefinition } from '../../content/avatars/avatarCatalog';
 import { worldCatalog } from '../../content/world/worldCatalog';
 import type { WorldId } from '../../domain/world/WorldDefinition';
-import { ParallaxScene } from '../world-progression/ParallaxScene';
 
 interface WorldHubProps {
   readonly app: FamilyAppController;

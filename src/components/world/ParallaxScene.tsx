@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { getAssetUrl } from '../../assets/registry/catalog';
-import type { WorldDefinition } from '../../domain/world/WorldDefinition';
 import { createSceneDefinition } from '../../content/world/parallaxScenes';
+import type { WorldDefinition } from '../../domain/world/WorldDefinition';
 
 interface ParallaxSceneProps {
   readonly world: WorldDefinition;
