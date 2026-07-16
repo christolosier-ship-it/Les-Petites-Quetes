@@ -1,5 +1,13 @@
-const CACHE_NAME = 'les-petites-quetes-shell-v1';
-const CORE_ASSETS = ['./', './index.html', './manifest.webmanifest', './icons/icon.svg'];
+const CACHE_NAME = 'les-petites-quetes-v1-usable-2';
+const CORE_ASSETS = [
+  './',
+  './index.html',
+  './manifest.webmanifest',
+  './icons/icon.svg',
+  './illustrations/forest-placeholder.svg',
+  './illustrations/quest-placeholder.svg',
+  './illustrations/reward-placeholder.svg',
+];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
@@ -31,6 +39,8 @@ self.addEventListener('fetch', (event) => {
         caches.open(CACHE_NAME).then((cache) => cache.put(request, copy));
         return response;
       })
-      .catch(() => caches.match(request).then((cached) => cached ?? caches.match('./index.html'))),
+      .catch(() =>
+        caches.match(request).then((cached) => cached ?? caches.match('./index.html')),
+      ),
   );
 });

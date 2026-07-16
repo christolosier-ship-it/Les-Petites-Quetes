@@ -1,24 +1,17 @@
 [
-  {
-    "id": "brand.app-icon",
-    "type": "icon",
-    "path": "icons/icon.svg",
-    "width": 512,
-    "height": 512,
-    "alt": "Une luciole lumineuse au-dessus d’un sentier dans une forêt verte.",
-    "maxBytes": 12000,
-    "ageBands": ["3-5", "6-8", "9-10"],
-    "states": []
-  },
-  {
-    "id": "world.forest-placeholder",
-    "type": "illustration",
-    "path": "illustrations/forest-placeholder.svg",
-    "width": 1200,
-    "height": 760,
-    "alt": "Une clairière douce éclairée par des lucioles.",
-    "maxBytes": 18000,
-    "ageBands": ["3-5", "6-8", "9-10"],
-    "states": ["calm"]
-  }
+  {"id":"brand.app-icon","type":"icon","path":"icons/icon.svg","width":512,"height":512,"alt":"Une luciole lumineuse au-dessus d’un sentier dans une forêt verte.","maxBytes":12000,"ageBands":["3-5","6-8","9-10"],"states":[]},
+  {"id":"world.forest-placeholder","type":"illustration","path":"illustrations/forest-placeholder.svg","width":1200,"height":760,"alt":"Une clairière douce éclairée par des lucioles.","maxBytes":18000,"ageBands":["3-5","6-8","9-10"],"states":["calm"]},
+  {"id":"world.forest-stage-0","type":"illustration","path":"illustrations/forest-placeholder.svg","width":1200,"height":760,"alt":"La clairière endormie de la Forêt des Lucioles.","maxBytes":18000,"ageBands":["3-5","6-8","9-10"],"states":["stage-0"]},
+  {"id":"world.forest-stage-1","type":"illustration","path":"illustrations/forest-placeholder.svg","width":1200,"height":760,"alt":"Les premières lumières de la Forêt des Lucioles.","maxBytes":18000,"ageBands":["3-5","6-8","9-10"],"states":["stage-1"]},
+  {"id":"world.forest-stage-2","type":"illustration","path":"illustrations/forest-placeholder.svg","width":1200,"height":760,"alt":"Le village réveillé de la Forêt des Lucioles.","maxBytes":18000,"ageBands":["3-5","6-8","9-10"],"states":["stage-2"]},
+  {"id":"world.forest-stage-3","type":"illustration","path":"illustrations/forest-placeholder.svg","width":1200,"height":760,"alt":"La Forêt des Lucioles entièrement illuminée.","maxBytes":18000,"ageBands":["3-5","6-8","9-10"],"states":["stage-3"]},
+  {"id":"quest.autonomy","type":"illustration","path":"illustrations/quest-placeholder.svg","width":768,"height":768,"alt":"Une petite aventure d’autonomie illustrée par un sentier et une luciole.","maxBytes":12000,"ageBands":["3-5","6-8","9-10"],"states":[]},
+  {"id":"quest.hygiene","type":"illustration","path":"illustrations/quest-placeholder.svg","width":768,"height":768,"alt":"Une petite aventure d’hygiène illustrée par un sentier et une luciole.","maxBytes":12000,"ageBands":["3-5","6-8","9-10"],"states":[]},
+  {"id":"quest.family","type":"illustration","path":"illustrations/quest-placeholder.svg","width":768,"height":768,"alt":"Une petite aventure familiale illustrée par un sentier et une luciole.","maxBytes":12000,"ageBands":["3-5","6-8","9-10"],"states":[]},
+  {"id":"quest.creativity","type":"illustration","path":"illustrations/quest-placeholder.svg","width":768,"height":768,"alt":"Une petite aventure créative illustrée par un sentier et une luciole.","maxBytes":12000,"ageBands":["3-5","6-8","9-10"],"states":[]},
+  {"id":"quest.discovery","type":"illustration","path":"illustrations/quest-placeholder.svg","width":768,"height":768,"alt":"Une petite aventure de découverte illustrée par un sentier et une luciole.","maxBytes":12000,"ageBands":["3-5","6-8","9-10"],"states":[]},
+  {"id":"quest.wellbeing","type":"illustration","path":"illustrations/quest-placeholder.svg","width":768,"height":768,"alt":"Une petite aventure de bien-être illustrée par un sentier et une luciole.","maxBytes":12000,"ageBands":["3-5","6-8","9-10"],"states":[]},
+  {"id":"quest.kindness","type":"illustration","path":"illustrations/quest-placeholder.svg","width":768,"height":768,"alt":"Une petite aventure de gentillesse illustrée par un sentier et une luciole.","maxBytes":12000,"ageBands":["3-5","6-8","9-10"],"states":[]},
+  {"id":"quest.adventure","type":"illustration","path":"illustrations/quest-placeholder.svg","width":768,"height":768,"alt":"Une aventure spéciale illustrée par un sentier et une luciole.","maxBytes":12000,"ageBands":["3-5","6-8","9-10"],"states":[]},
+  {"id":"reward.placeholder","type":"illustration","path":"illustrations/reward-placeholder.svg","width":512,"height":512,"alt":"Une récompense lumineuse en forme de lanterne feuille.","maxBytes":10000,"ageBands":["3-5","6-8","9-10"],"states":["unlocked"]}
 ]
