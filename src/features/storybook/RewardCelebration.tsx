@@ -2,13 +2,14 @@ import { useEffect } from 'react';
 import type { FamilyAppController } from '../../app/controller/FamilyAppController';
 import { Button } from '../../components/primitives/Button';
 import { Card } from '../../components/primitives/Card';
-import { findRewardDefinition } from '../../content/world/fireflyWorld';
+import { findRewardDefinition, findWorldDefinition } from '../../content/world/worldCatalog';
+import type { WorldId } from '../../domain/world/WorldDefinition';
 import { playCelebrationSound } from '../../platform/audio/playCelebrationSound';
 
 interface RewardCelebrationProps {
   readonly app: FamilyAppController;
   readonly childId: string;
-  readonly onViewWorld: () => void;
+  readonly onViewWorld: (worldId: WorldId) => void;
 }
 
 export function RewardCelebration({ app, childId, onViewWorld }: RewardCelebrationProps) {
@@ -16,6 +17,7 @@ export function RewardCelebration({ app, childId, onViewWorld }: RewardCelebrati
     (candidate) => candidate.childId === childId && !app.state.acknowledgedRewardGrantIds.includes(candidate.id),
   );
   const reward = grant ? findRewardDefinition(grant.rewardDefinitionId) : undefined;
+  const world = reward ? findWorldDefinition(reward.worldId) : undefined;
   const grantId = grant?.id;
   const soundEnabled = app.state.settings.soundEnabled;
   const durationSeconds = app.state.settings.celebrationDurationSeconds;
@@ -34,23 +36,23 @@ export function RewardCelebration({ app, childId, onViewWorld }: RewardCelebrati
     return () => globalThis.clearTimeout(timeout);
   }, [acknowledgeReward, durationSeconds, grantId]);
 
-  if (!grant || !reward) return null;
+  if (!grant || !reward || !world) return null;
   const activeGrantId = grant.id;
 
   async function close(showWorld: boolean) {
     await app.acknowledgeReward(activeGrantId);
-    if (showWorld) onViewWorld();
+    if (showWorld) onViewWorld(world.id);
   }
 
   return (
     <Card as="section" className="reward-celebration" aria-live="polite" data-reward-celebration>
       <div className="celebration-sparkles" aria-hidden="true">✨ ✦ ✨</div>
-      <p className="eyebrow">Nouvelle découverte</p>
+      <p className="eyebrow">Nouvelle découverte dans {world.shortName}</p>
       <h3>{reward.label}</h3>
       <p>{reward.description}</p>
-      <p>Cette petite action a fait grandir la Forêt des Lucioles.</p>
+      <p>Cette petite action a fait grandir {world.name}.</p>
       <div className="button-row">
-        <Button onClick={() => void close(true)}>Voir dans mon monde</Button>
+        <Button onClick={() => void close(true)}>Voir dans mon univers</Button>
         <Button variant="quiet" onClick={() => void close(false)}>Continuer</Button>
       </div>
     </Card>
