@@ -1,24 +1,28 @@
-# Modèle de données fonctionnel
+# Modèle de données cible V3
 
-## 1. Principes
+## 1. Statut
 
-- Les modèles métier ne dépendent pas du format IndexedDB.
-- Les dates métier utilisent `YYYY-MM-DD` lorsque l’heure n’a pas de sens.
-- Les instants techniques utilisent ISO UTC.
-- Les identifiants sont générés indépendamment du stockage.
-- Les entités importantes possèdent une révision et peuvent porter un tombstone `deletedAt`.
-- Les contenus intégrés sont versionnés séparément des données familiales.
-- La progression enregistrée reste une projection entièrement reconstructible depuis les récompenses attribuées.
-- Toute donnée chargée ou importée est validée à l’exécution, TypeScript seul n’étant pas une protection pour le JSON.
+Le code actuel utilise le schéma familial V2. Ce document définit le schéma V3 à implémenter pour le passage au multi-univers.
 
-## 2. Agrégat familial V2
+La migration V2 vers V3 devra être sauvegardée, testée et réversible par restauration.
 
-La V1 persiste un snapshot familial cohérent derrière `FamilyRepository`.
+## 2. Principes
+
+- chaque quête appartient à un univers ;
+- chaque occurrence mémorise l’univers et la variante d’âge réellement utilisés ;
+- chaque enfant possède une progression indépendante par univers ;
+- avatar enfant et mascotte d’univers sont deux concepts séparés ;
+- les noms publics peuvent changer sans modifier les identifiants ;
+- la progression reste reconstructible depuis les récompenses attribuées ;
+- les contenus intégrés restent séparés des données familiales ;
+- toute donnée chargée ou importée est validée à l’exécution.
+
+## 3. Agrégat familial V3
 
 ```ts
 interface FamilyState {
   children: ChildProfile[]
-  customQuestTemplates: QuestTemplate[]
+  customQuestFamilies: CustomQuestFamily[]
   schedules: QuestSchedule[]
   occurrences: QuestOccurrence[]
   completions: Completion[]
@@ -29,71 +33,146 @@ interface FamilyState {
 }
 ```
 
-`acknowledgedRewardGrantIds` distingue les récompenses déjà présentées à l’enfant. Une validation effectuée par un adulte peut ainsi déclencher une célébration lors du prochain passage dans l’espace enfant, sans la rejouer ensuite.
+Les définitions d’univers, quêtes intégrées, variantes, récompenses, histoires et scènes sont du contenu versionné, pas des données familiales dupliquées.
 
-## 3. Métadonnées partagées
-
-Les entités familiales utilisent :
-
-```ts
-interface EntityMetadata {
-  id: string
-  createdAt: string
-  updatedAt: string
-  revision: number
-  deletedAt?: string
-}
-```
-
-Ces champs préparent une future synchronisation sans l’activer en V1.
-
-## 4. Entités principales
-
-### ChildProfile
+## 4. Profil enfant
 
 ```ts
 interface ChildProfile extends EntityMetadata {
   displayName: string
   ageBand: '3-5' | '6-8' | '9-10'
   readingLevel: 'visual' | 'short-text' | 'independent'
-  avatarId: string
-  accentId: string
-  activeWorldId: string
+  avatarId: ChildAvatarId
   isArchived: boolean
 }
 ```
 
-Aucune date de naissance complète n’est nécessaire.
+Champs supprimés par rapport à V2 :
 
-### QuestTemplate
+- `accentId` ;
+- `activeWorldId`.
+
+Le profil ne contient ni compagnon ni couleur personnalisée.
+
+### Avatars initiaux
 
 ```ts
-interface QuestTemplate extends EntityMetadata {
+type ChildAvatarId =
+  | 'avatar.child.3-5.boy'
+  | 'avatar.child.3-5.girl'
+  | 'avatar.child.6-8.boy'
+  | 'avatar.child.6-8.girl'
+  | 'avatar.child.9-10.boy'
+  | 'avatar.child.9-10.girl'
+```
+
+Le registre d’avatars précise la tranche d’âge compatible. Le modèle permet d’ajouter de nouveaux avatars ultérieurement sans migration de profil.
+
+## 5. Définition d’univers
+
+```ts
+interface WorldDefinition {
+  id: WorldId
+  slug: string
+  publicName: string
+  editorialPurpose: string
+  order: number
+  mascotId: string
+  coverAssetId: string
+  sceneDefinitionId: string
+  staticFallbackAssetId: string
+  rewardCatalogId: string
+  storyId: string
+  progressionStages: WorldProgressStage[]
+  contentVersion: string
+  status: 'active' | 'planned'
+}
+```
+
+Identifiants initiaux :
+
+```ts
+type WorldId =
+  | 'world.firefly-forest'
+  | 'world.dragon-mountain'
+  | 'world.space-station'
+  | 'world.elven-village'
+  | 'world.nature-discovery'
+  | 'world.creative-studio'
+```
+
+Les noms publics des deux derniers univers restent modifiables.
+
+## 6. Mascotte
+
+```ts
+interface MascotDefinition {
+  id: string
+  worldId: WorldId
+  publicName: string
+  neutralAssetId: string
+  expressionAssetIds: Record<MascotExpression, string>
+  animationDefinitionIds: string[]
+  alt: string
+}
+```
+
+Une mascotte appartient exactement à un univers. Luma est la mascotte de `world.firefly-forest`.
+
+## 7. Famille de quête
+
+```ts
+interface QuestFamily extends EntityMetadata {
   source: 'builtin' | 'custom'
   contentVersion?: string
-  title: string
-  instruction: string
-  categoryId: QuestCategoryId
-  illustrationId: string
-  ageBands: AgeBand[]
-  readingLevel: ReadingLevel
-  estimatedMinutes?: number
-  steps: QuestStep[]
+  worldId: WorldId
+  realLifeIntent: string
+  categoryIds: QuestCategoryId[]
   requiresAdultHelp: boolean
   defaultValidation: ValidationMode
   rewardDefinitionId: string
+  variants: QuestVariant[]
   parentNote?: string
   isArchived: boolean
+  migrationReviewRequired?: boolean
 }
 ```
 
-Les modèles intégrés ne sont jamais modifiés. Une personnalisation crée une copie `custom` avec un nouvel identifiant.
+`worldId` est obligatoire.
 
-### QuestSchedule
+`migrationReviewRequired` est réservé aux quêtes personnalisées migrées dont l’univers n’a pas pu être déterminé avec certitude.
+
+## 8. Variante de quête
+
+```ts
+interface QuestVariant {
+  id: string
+  ageBand: AgeBand
+  readingLevel: ReadingLevel
+  title: string
+  actionLabel: string
+  instruction: string
+  estimatedMinutes?: number
+  steps: QuestStep[]
+  illustrationId: string
+  alt: string
+  gentleAlternative?: string
+}
+```
+
+Règles :
+
+- une famille ne possède pas deux variantes pour la même tranche d’âge ;
+- une variante appartient à une seule famille ;
+- l’illustration est adaptée à la tranche d’âge ;
+- les contenus intégrés cibles proposent les trois variantes ;
+- une quête personnalisée peut commencer avec une seule variante.
+
+## 9. Planification
 
 ```ts
 interface QuestSchedule extends EntityMetadata {
-  questTemplateId: string
+  questFamilyId: string
   childIds: string[]
   kind: 'immediate' | 'one-off' | 'weekly'
   startDate: string
@@ -107,15 +186,20 @@ interface QuestSchedule extends EntityMetadata {
 }
 ```
 
-Une planification peut viser plusieurs enfants. Sa modification fonctionnelle crée un remplacement et neutralise les occurrences encore ouvertes de l’ancienne configuration, sans toucher à l’historique terminé.
+La planification référence la famille, pas une variante précise.
 
-### QuestOccurrence
+Lors de la génération, chaque enfant reçoit la variante compatible avec sa tranche d’âge.
+
+## 10. Occurrence
 
 ```ts
 interface QuestOccurrence extends EntityMetadata {
   scheduleId: string
-  questTemplateId: string
+  questFamilyId: string
+  questVariantId: string
+  worldId: WorldId
   childId: string
+  childAgeBandSnapshot: AgeBand
   localDate: string
   dayMoment: DayMoment
   status:
@@ -131,25 +215,25 @@ interface QuestOccurrence extends EntityMetadata {
   completedAt?: string
   postponedTo?: string
   validationNote?: 'small-step-remains' | 'review-together'
-  evidenceAssetId?: string
   completionId?: string
 }
 ```
 
-La clé métier d’idempotence est :
+La variante, l’univers et la tranche d’âge sont figés dans l’occurrence afin de préserver l’historique.
+
+Clé métier :
 
 ```text
 scheduleId + childId + localDate
 ```
 
-Une occurrence existante, même terminée ou supprimée logiquement, empêche une génération en double.
-
-### Completion
+## 11. Réalisation
 
 ```ts
 interface Completion extends EntityMetadata {
   occurrenceId: string
   childId: string
+  worldId: WorldId
   validationMode: ValidationMode
   validatedBy: 'child' | 'parent' | 'together'
   completedAt: string
@@ -157,70 +241,114 @@ interface Completion extends EntityMetadata {
 }
 ```
 
-### RewardDefinition
+Le snapshot `worldId` simplifie les audits de cohérence et les futures migrations.
+
+## 12. Récompense
 
 ```ts
 interface RewardDefinition {
   id: string
-  worldId: string
+  worldId: WorldId
   kind: 'resource' | 'decoration' | 'resident' | 'story-fragment' | 'badge'
   assetId: string
   label: string
   description: string
+  unlockSlotId?: string
 }
 ```
-
-### RewardGrant
 
 ```ts
 interface RewardGrant extends EntityMetadata {
   childId: string
   completionId: string
+  worldId: WorldId
   rewardDefinitionId: string
   grantedAt: string
 }
 ```
 
-Une réalisation ne peut produire qu’un seul `RewardGrant` principal.
+Une récompense doit appartenir au même univers que l’occurrence et la réalisation.
 
-### WorldProgress
+## 13. Progression par univers
 
 ```ts
 interface WorldProgress extends EntityMetadata {
   childId: string
-  worldId: string
+  worldId: WorldId
   worldVersion: string
-  stage: 0 | 1 | 2 | 3
+  stage: number
   completionCount: number
   unlockedRewardIds: string[]
   unlockedStoryChapterIds: string[]
+  unlockedSceneSlotIds: string[]
   lastCelebrationAt?: string
 }
 ```
 
-La validation runtime recalcule les valeurs attendues depuis les `RewardGrant` et refuse toute projection incohérente.
+Contrainte unique :
 
-### StoryChapter
+```text
+childId + worldId
+```
+
+La projection est recalculable depuis les `RewardGrant` du même enfant et du même univers.
+
+## 14. Histoire
 
 ```ts
 interface StoryChapter {
   id: string
-  worldId: string
+  worldId: WorldId
   order: number
   title: string
   body: string
   illustrationId: string
-  requiredCompletions: number
+  requiredCompletions?: number
+  requiredRewardIds?: string[]
 }
 ```
 
-## 5. Réglages V2
+Aucun chapitre ne peut dépendre d’une récompense d’un autre univers.
+
+## 15. Scène parallaxe
+
+```ts
+interface WorldSceneDefinition {
+  id: string
+  worldId: WorldId
+  aspectRatio: string
+  safeAreas: ResponsiveSafeArea[]
+  stageDefinitions: SceneStageDefinition[]
+  layers: ParallaxLayerDefinition[]
+  mascotAnchors: MascotAnchor[]
+  staticFallbackAssetId: string
+}
+```
+
+```ts
+interface ParallaxLayerDefinition {
+  id: string
+  assetId: string
+  depth: number
+  stageFrom: number
+  stageTo?: number
+  slotId?: string
+  motionProfile: 'none' | 'drift' | 'float' | 'sparkle' | 'custom'
+  reducedMotionAssetId?: string
+  preload: boolean
+}
+```
+
+Les manifestes ne contiennent pas de code exécutable.
+
+## 16. Réglages V3
 
 ```ts
 interface AppSettings {
-  schemaVersion: 2
+  schemaVersion: 3
   contentVersion: string
   activeChildId?: string
+  lastVisitedWorldByChild: Record<string, WorldId | undefined>
   parentPin: string
   onboardingCompleted: boolean
   soundEnabled: boolean
@@ -232,24 +360,127 @@ interface AppSettings {
 }
 ```
 
-Le code parent sépare les usages sur l’appareil mais ne chiffre pas les données locales.
+`lastVisitedWorldByChild` est une préférence de navigation, pas une propriété identitaire du profil.
 
-Les preuves photo restent hors de la V1 fonctionnelle actuelle. Leur ajout futur nécessitera une décision spécifique sur le stockage média, l’export et la suppression.
+## 17. Compteur de quêtes par univers
 
-## 6. Contenus intégrés
+Le nombre affiché dans la pastille n’est pas persisté.
 
-Les contenus livrés avec l’application restent séparés du snapshot familial :
+```ts
+interface WorldAvailability {
+  worldId: WorldId
+  availableCount: number
+}
+```
 
-- modèles de quêtes intégrés ;
-- définitions du monde ;
-- catalogue de récompenses ;
-- chapitres ;
-- registre des assets ;
-- catalogue de textes.
+Il est dérivé des occurrences :
 
-Les contenus intégrés possèdent une version dédiée. Une sauvegarde familiale ne duplique pas les 40 modèles intégrés, elle conserve seulement leurs références stables et les copies personnalisées.
+- enfant correspondant ;
+- date courante ;
+- statut `available` ou `started` selon le choix UX final ;
+- univers correspondant ;
+- absence de suppression logique.
 
-## 7. Stores IndexedDB réels
+Les occurrences futures, ignorées, terminées ou en validation ne sont pas comptées.
+
+## 18. Invariants V3
+
+- chaque famille possède un univers ;
+- chaque famille possède au moins une variante ;
+- une tranche d’âge n’apparaît qu’une fois par famille ;
+- chaque avatar est compatible avec la tranche d’âge du profil ;
+- une planification ne cible que des enfants disposant d’une variante compatible ;
+- une occurrence référence une variante de sa famille ;
+- l’univers de l’occurrence correspond à celui de la famille ;
+- l’univers de la réalisation correspond à celui de l’occurrence ;
+- l’univers de la récompense correspond à celui de la réalisation ;
+- une récompense ne fait progresser qu’un seul univers ;
+- une progression possède une clé enfant-univers unique ;
+- les chapitres et slots débloqués appartiennent au même univers ;
+- un monde actif possède une mascotte, une couverture et un fallback ;
+- une scène active possède un mode mouvements réduits ;
+- un badge de disponibilité n’est jamais persisté.
+
+## 19. Contenus intégrés
+
+```text
+WorldCatalog
+MascotCatalog
+QuestFamilyCatalog
+QuestVariantCatalog
+RewardCatalog
+StoryCatalog
+WorldSceneCatalog
+AssetManifest
+CopyCatalog
+```
+
+Le pack cible minimum contient :
+
+- 6 univers ;
+- 30 familles de quêtes ;
+- 90 variantes d’âge ;
+- 6 mascottes ;
+- 6 scènes avec fallback.
+
+## 20. Migration V2 vers V3
+
+### Profils
+
+- convertir l’ancien avatar vers un avatar compatible ;
+- supprimer `accentId` ;
+- supprimer `activeWorldId` ;
+- conserver le prénom, l’âge, le niveau de lecture et l’archivage.
+
+### Modèles intégrés
+
+Une table de correspondance versionnée attribue à chaque identifiant V2 :
+
+- une famille V3 ;
+- un univers ;
+- une ou plusieurs variantes.
+
+### Quêtes personnalisées
+
+- créer une famille personnalisée ;
+- utiliser la tranche d’âge des enfants ou l’ancien `ageBands` pour créer les variantes ;
+- attribuer un univers lorsque le contexte est certain ;
+- sinon conserver une attribution sûre et activer `migrationReviewRequired`.
+
+### Historique
+
+- ne jamais déplacer silencieusement une réalisation historique ;
+- préserver les identifiants lorsque possible ;
+- conserver les récompenses existantes dans La Forêt des Lucioles si leur provenance ne peut pas être prouvée ;
+- reconstruire les progressions par univers après validation.
+
+## 21. Import, export et validation
+
+L’import V3 suit :
+
+```text
+Lire
+→ détecter V2 ou V3
+→ sauvegarder
+→ migrer en mémoire si nécessaire
+→ hydrater
+→ valider les références
+→ valider les univers et variantes
+→ afficher un résumé
+→ remplacer en transaction
+```
+
+Le résumé indique notamment :
+
+- nombre d’enfants ;
+- nombre de familles personnalisées ;
+- nombre de quêtes à reclasser ;
+- progression par univers ;
+- version des contenus.
+
+## 22. Stores IndexedDB
+
+Le snapshot peut rester dans les trois stores actuels pendant le passage V3 :
 
 ```text
 familyState
@@ -257,114 +488,4 @@ familyBackups
 migrationJournal
 ```
 
-### `familyState`
-
-Contient le snapshot familial courant sous la clé `current`.
-
-### `familyBackups`
-
-Conserve les sauvegardes créées avant :
-
-- migration ;
-- import ;
-- restauration d’une sauvegarde précédente.
-
-Ces sauvegardes sont listables et restaurables depuis l’espace parent.
-
-### `migrationJournal`
-
-Conserve un journal minimal :
-
-- version d’origine ;
-- version cible ;
-- instant ;
-- statut terminé.
-
-Le snapshot pourra être éclaté en stores spécialisés lors d’une future évolution sans modifier le domaine ou les écrans, car l’accès reste derrière `FamilyRepository`.
-
-## 8. Invariants contrôlés à l’exécution
-
-- chaque collection possède des identifiants uniques ;
-- deux entités familiales ne partagent pas le même identifiant ;
-- les références vers enfant, modèle, planification, occurrence, réalisation et récompense existent ;
-- un profil archivé ne reçoit plus de nouvelles occurrences ;
-- deux occurrences ne partagent pas la même clé métier ;
-- une occurrence terminée possède une réalisation ;
-- une occurrence ne possède qu’une réalisation ;
-- une réalisation ne possède qu’une récompense principale ;
-- une validation refusée ne crée aucune récompense ;
-- une occurrence terminée ne redevient pas disponible ;
-- une récompense déjà obtenue n’est jamais retirée ;
-- une occurrence ignorée n’est pas un échec ;
-- la progression ne dépend pas d’une série quotidienne ;
-- la projection du monde correspond exactement aux récompenses attribuées ;
-- une célébration reconnue référence une récompense existante ;
-- le profil actif existe et n’est pas archivé ;
-- un onboarding terminé possède au moins un profil et un code parent ;
-- les données familiales ne contiennent que des modèles `custom` ;
-- un import ne remplace les données qu’après validation complète.
-
-## 9. Migration
-
-La première migration réelle transforme le schéma V1 en V2 :
-
-- ajout de `onboardingCompleted` ;
-- ajout de `celebrationDurationSeconds` ;
-- ajout de `acknowledgedRewardGrantIds` ;
-- conservation de toutes les entités et de leurs identifiants ;
-- marquage des anciennes récompenses comme déjà présentées.
-
-Le chargement suit :
-
-```text
-Lire → détecter la version → sauvegarder l’ancien état → migrer en mémoire
-→ valider → remplacer dans une transaction → journaliser
-```
-
-Une version inconnue est refusée sans modifier le snapshot courant.
-
-## 10. Import, export et restauration
-
-L’export contient :
-
-- format de sauvegarde ;
-- date d’export ;
-- avertissement de confidentialité ;
-- version du schéma et des contenus ;
-- snapshot familial complet.
-
-L’import suit :
-
-```text
-Lire → vérifier l’enveloppe → migrer en mémoire → hydrater chaque entité
-→ valider les références et invariants → afficher un résumé
-→ sauvegarder l’existant et remplacer dans une transaction
-```
-
-Aucune donnée partielle n’est injectée en cas d’échec.
-
-La restauration d’une sauvegarde automatique crée d’abord une nouvelle sauvegarde de l’état courant. Un retour en arrière reste donc possible après chaque opération sensible.
-
-## 11. Ordonnancement des écritures
-
-Les mutations passent par une file applicative :
-
-```text
-Calculer depuis le dernier état persisté → écrire → publier dans React
-```
-
-Deux actions rapides ne peuvent pas enregistrer les snapshots dans le désordre. Une écriture refusée ne publie pas un état uniquement visuel qui disparaîtrait au prochain rechargement.
-
-## 12. Préparation de la synchronisation future
-
-La V1 ne communique avec aucun serveur. Les coutures déjà présentes sont :
-
-- repositories définis par interfaces ;
-- identifiants indépendants d’IndexedDB ;
-- révisions ;
-- tombstones ;
-- dates techniques ISO ;
-- dates métier locales ;
-- validation centralisée des snapshots.
-
-Un futur adaptateur de synchronisation pourra être ajouté derrière les ports sans réécrire les règles de quêtes, validation ou progression.
+Le nouveau domaine ne nécessite pas d’éclatement immédiat du stockage. L’accès reste derrière `FamilyRepository`.
