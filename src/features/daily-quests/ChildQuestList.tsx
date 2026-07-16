@@ -27,11 +27,12 @@ export function ChildQuestList({ app, childId }: ChildQuestListProps) {
   }
 
   async function finish(occurrence: QuestOccurrence) {
-    const before = app.state.completions.length;
+    const schedule = app.state.schedules.find((candidate) => candidate.id === occurrence.scheduleId);
+    const completedImmediately = schedule?.validationMode === 'child';
     await app.finishQuest(occurrence.id);
     setSelectedId(undefined);
     setCelebration(
-      app.state.completions.length > before
+      completedImmediately
         ? 'Une nouvelle lumière rejoint la forêt !'
         : 'Ta demande est partie vers ton adulte.',
     );
@@ -49,8 +50,8 @@ export function ChildQuestList({ app, childId }: ChildQuestListProps) {
         {template.steps.length > 0 && <ol>{template.steps.map((step) => <li key={step.id}>{step.instruction}</li>)}</ol>}
         <div className="child-action-grid">
           <Button variant="secondary" aria-label="Écouter la consigne" onClick={() => speakText(template.instruction, app.state.settings.narrationEnabled)}>🔊 Écouter</Button>
-          {selected.status === 'available' && <Button onClick={() => void app.startQuest(selected.id)}>▶️ Je commence</Button>}
-          {selected.status !== 'validation-requested' && <Button onClick={() => void finish(selected)}>✨ J’ai terminé</Button>}
+          {selected.status === 'available' && <Button data-action="start-quest" onClick={() => void app.startQuest(selected.id)}>▶️ Je commence</Button>}
+          {selected.status !== 'validation-requested' && <Button data-action="finish-quest" onClick={() => void finish(selected)}>✨ J’ai terminé</Button>}
           {selected.status === 'validation-requested' && <p className="waiting-message">🧭 Un adulte va regarder avec toi.</p>}
           <Button variant="quiet" onClick={() => setSelectedId(undefined)}>Retour aux quêtes</Button>
         </div>
@@ -68,7 +69,7 @@ export function ChildQuestList({ app, childId }: ChildQuestListProps) {
           const template = templateFor(occurrence);
           if (!template) return null;
           return (
-            <button key={occurrence.id} className="child-quest-card" type="button" onClick={() => setSelectedId(occurrence.id)}>
+            <button key={occurrence.id} className="child-quest-card" data-occurrence-id={occurrence.id} type="button" onClick={() => setSelectedId(occurrence.id)}>
               <img src={getAssetUrl(template.illustrationId)} alt="" />
               <span><strong>{template.title}</strong><small>{occurrence.status === 'validation-requested' ? 'En attente de ton adulte' : template.instruction}</small></span>
             </button>
