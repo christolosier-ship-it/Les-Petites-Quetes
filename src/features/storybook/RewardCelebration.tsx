@@ -16,15 +16,28 @@ export function RewardCelebration({ app, childId, onViewWorld }: RewardCelebrati
     (candidate) => candidate.childId === childId && !app.state.acknowledgedRewardGrantIds.includes(candidate.id),
   );
   const reward = grant ? findRewardDefinition(grant.rewardDefinitionId) : undefined;
+  const grantId = grant?.id;
+  const soundEnabled = app.state.settings.soundEnabled;
+  const durationSeconds = app.state.settings.celebrationDurationSeconds;
+  const acknowledgeReward = app.acknowledgeReward;
 
   useEffect(() => {
-    if (grant) playCelebrationSound(app.state.settings.soundEnabled);
-  }, [app.state.settings.soundEnabled, grant]);
+    if (grantId) playCelebrationSound(soundEnabled);
+  }, [grantId, soundEnabled]);
+
+  useEffect(() => {
+    if (!grantId) return undefined;
+    const timeout = globalThis.setTimeout(
+      () => void acknowledgeReward(grantId),
+      durationSeconds * 1_000,
+    );
+    return () => globalThis.clearTimeout(timeout);
+  }, [acknowledgeReward, durationSeconds, grantId]);
 
   if (!grant || !reward) return null;
 
   async function close(showWorld: boolean) {
-    await app.acknowledgeReward(grant!.id);
+    await app.acknowledgeReward(grant.id);
     if (showWorld) onViewWorld();
   }
 
