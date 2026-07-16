@@ -24,8 +24,21 @@ jobs:
           node-version: 22
       - name: Installer les dépendances
         run: npm install --silent --no-audit --no-fund
-      - name: Vérifier le typage strict
-        run: npm run typecheck
+      - name: Capturer le typage strict
+        id: typecheck
+        continue-on-error: true
+        run: npm run typecheck > typecheck.log 2>&1
+      - name: Publier le diagnostic TypeScript
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: typecheck-diagnostic
+          path: typecheck.log
+      - name: Valider le typage strict
+        if: steps.typecheck.outcome == 'failure'
+        run: |
+          cat typecheck.log
+          exit 1
 
   quality:
     needs: typing
