@@ -6,48 +6,79 @@ Une application familiale qui transforme les petites actions du quotidien en ave
 
 ## Statut
 
-Une première V1 utilisable est disponible dans la PR d’intégration. Elle couvre la boucle familiale complète sur un appareil :
+La V1 fonctionnelle couvre la boucle familiale complète sur un appareil :
 
 ```text
 Préparer une quête → la réaliser hors écran → la valider → faire grandir le monde
 ```
 
-Les visuels actuels forment un kit vectoriel provisoire cohérent. La production des illustrations définitives restera pilotée par la bible graphique du projet.
+Les fonctions, les données, la PWA et les parcours sont finalisés. Les visuels actuels restent volontairement provisoires : les illustrations définitives, les icônes, la mascotte et les scènes parallaxes seront produits séparément à partir de la bible graphique.
 
 ## Fonctions V1
 
+### Premier lancement
+
+- présentation courte et confirmation d’un usage familial privé ;
+- création du premier profil ;
+- choix d’un compagnon et d’une couleur ;
+- code parent local ;
+- mode de validation par défaut ;
+- sélection d’une à trois premières quêtes ;
+- arrivée directe dans le monde enfant.
+
 ### Espace parent
 
-- code parent local à quatre chiffres ;
-- création, modification et archivage des profils ;
+- création, modification, archivage et restauration de plusieurs profils ;
 - bibliothèque de 40 quêtes réparties entre 8 catégories ;
-- création de quêtes personnalisées ;
+- planification directe d’un modèle ou création d’une copie personnalisée ;
+- modèles familiaux modifiables, archivables et réutilisables ;
+- quêtes personnalisées avec étapes, durée, aide adulte, note et récompense ;
+- attribution à un ou plusieurs enfants ;
 - planification immédiate, ponctuelle ou hebdomadaire ;
+- moments de journée, heure facultative et date de fin ;
+- routines modifiables, suspendables, reprenables et duplicables ;
 - validation parent ou ensemble ;
 - report au lendemain et choix neutre de laisser une quête de côté ;
-- préférences de lecture vocale et d’animations ;
-- export et restauration JSON.
+- réglages de lecture vocale, effets sonores, animations et célébrations ;
+- export JSON, import confirmé et sauvegardes automatiques restaurables ;
+- suppression complète des données locales.
 
 ### Espace enfant
 
 - choix du profil ;
 - trois destinations : Monde, Quêtes et Trésor ;
-- consignes illustrées et lecture vocale locale ;
+- maximum de trois quêtes visibles pour les 3 à 5 ans ;
+- distinction douce des quêtes facultatives ;
+- lecture vocale locale ;
+- étapes montrées une par une aux plus jeunes ;
 - démarrage et signalement de fin en quelques interactions ;
-- récompenses narratives ;
+- attente neutre d’une validation adulte ;
+- célébration immédiate ou différée ;
 - quatre états de La Forêt des Lucioles ;
 - douze objets ou habitants et huit chapitres.
 
-## Vie privée
+## Vie privée et intégrité
 
 - fonctionnement local-first sans compte ;
-- données stockées dans IndexedDB sur l’appareil ;
+- données stockées dans IndexedDB ;
 - aucune publicité, télémétrie ou communication sociale ;
 - aucune date de naissance complète ;
-- sauvegarde explicite avant restauration ;
-- import entièrement validé avant remplacement.
+- validation runtime de chaque entité importée ;
+- contrôle des références et de la progression ;
+- sauvegarde transactionnelle avant import, migration ou restauration ;
+- journal de migration ;
+- écritures sérialisées afin d’éviter la perte d’une action rapide.
 
 Le code parent sépare les usages sur l’appareil. Il ne constitue pas un chiffrement des données locales.
+
+## PWA
+
+- installation sur smartphone, tablette ou ordinateur ;
+- fonctionnement hors ligne après le premier chargement ;
+- service worker généré depuis les bundles de production ;
+- bundles JavaScript et CSS précachés ;
+- nouvelle version proposée sans interrompre l’usage ;
+- aucun fallback HTML utilisé à la place d’un asset JavaScript ou CSS.
 
 ## Principes fondateurs
 
@@ -82,7 +113,17 @@ npm run dev
 npm run check
 ```
 
-Cette commande vérifie l’architecture, les cycles, les budgets de fichiers, les assets, les 40 contenus, le lint, le typage, la couverture, le build, le bundle et un parcours complet dans Chrome mobile, y compris la persistance et le hors ligne.
+La chaîne vérifie notamment :
+
+- TypeScript strict et code mort ;
+- architecture, imports entre features et cycles ;
+- budgets de fichiers, assets et bundle ;
+- 40 contenus et formulations interdites ;
+- 84 scénarios unitaires et leur couverture ;
+- migrations, imports et sauvegardes ;
+- build GitHub Pages et service worker ;
+- parcours Chrome mobile, tablette et bureau ;
+- onboarding, famille, routines, validation, récompense, import corrompu, persistance et hors ligne.
 
 ## Documents
 
