@@ -42,8 +42,10 @@ export function incrementRevision(metadata: EntityMetadata, updatedAt: string): 
   );
 
   return {
-    ...metadata,
+    id: metadata.id,
+    createdAt: metadata.createdAt,
     updatedAt: normalizedTimestamp,
     revision: metadata.revision + 1,
+    ...(metadata.deletedAt !== undefined ? { deletedAt: metadata.deletedAt } : {}),
   };
 }
