@@ -23,6 +23,16 @@ const weeklyInput: QuestScheduleInput = {
   validationMode: 'parent',
 };
 
+const oneOffInput: QuestScheduleInput = {
+  questTemplateId: 'quest.brush-teeth',
+  childIds: ['child-1'],
+  kind: 'one-off',
+  startDate: '2026-07-20',
+  dayMoment: 'morning',
+  priority: 'required',
+  validationMode: 'parent',
+};
+
 function createSchedule() {
   return createQuestSchedule(weeklyInput, {
     id: 'schedule-1',
@@ -60,18 +70,10 @@ describe('QuestSchedule', () => {
   });
 
   it('accepte une planification ponctuelle sans jours ni date de fin', () => {
-    const schedule = createQuestSchedule(
-      {
-        ...weeklyInput,
-        kind: 'one-off',
-        childIds: ['child-1'],
-        startDate: '2026-07-20',
-        endDate: undefined,
-        weekdays: undefined,
-        exactTime: undefined,
-      },
-      { id: 'schedule-one-off', createdAt: 'now' },
-    );
+    const schedule = createQuestSchedule(oneOffInput, {
+      id: 'schedule-one-off',
+      createdAt: 'now',
+    });
     expect(schedule.kind).toBe('one-off');
     expect(schedule.weekdays).toBeUndefined();
     expect(schedule.endDate).toBeUndefined();
@@ -108,7 +110,7 @@ describe('QuestSchedule', () => {
     expectDomainError(
       () =>
         createQuestSchedule(
-          { ...weeklyInput, kind: 'one-off', endDate: undefined },
+          { ...oneOffInput, weekdays: ['mon'] },
           { id: 'weekday-once', createdAt: 'now' },
         ),
       'schedule.weekdays-not-allowed',
@@ -116,7 +118,7 @@ describe('QuestSchedule', () => {
     expectDomainError(
       () =>
         createQuestSchedule(
-          { ...weeklyInput, kind: 'immediate', weekdays: undefined },
+          { ...oneOffInput, kind: 'immediate', endDate: '2026-07-21' },
           { id: 'end-immediate', createdAt: 'now' },
         ),
       'schedule.end-date-not-allowed',
