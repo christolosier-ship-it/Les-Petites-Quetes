@@ -160,7 +160,20 @@ export function useFamilyApp(): FamilyAppController {
     [apply],
   );
 
-  const controller = createFamilyController({
+  const importBackup = useCallback(
+    async (content: string) => {
+      const imported = parseFamilyBackup(content).state;
+      const now = clock.nowIso();
+      await queue.enqueue(
+        () => ({ ...imported, settings: { ...imported.settings, lastBackupAt: now } }),
+        (current, next) => repository.replaceWithBackup(current, next, 'before-import', now),
+      );
+      await refreshBackups();
+    },
+    [queue, refreshBackups],
+  );
+
+  return createFamilyController({
     state,
     ready,
     ...(error !== undefined ? { error } : {}),
@@ -174,21 +187,9 @@ export function useFamilyApp(): FamilyAppController {
     flow,
     completeOnboarding,
     createCustomQuest,
+    importBackup,
     refreshBackups,
     setParentUnlocked,
     setBackups,
   });
-
-  return {
-    ...controller,
-    importBackup: async (content) => {
-      const imported = parseFamilyBackup(content).state;
-      const now = clock.nowIso();
-      await queue.enqueue(
-        () => ({ ...imported, settings: { ...imported.settings, lastBackupAt: now } }),
-        (current, next) => repository.replaceWithBackup(current, next, 'before-import', now),
-      );
-      await refreshBackups();
-    },
-  };
 }
