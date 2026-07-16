@@ -51,6 +51,15 @@ jobs:
       - name: Vérifier le typage
         run: npm run typecheck
 
+      - name: Tester les dates locales
+        run: npx vitest run src/domain/shared/localDate.test.ts
+
+      - name: Tester les planifications
+        run: npx vitest run src/domain/schedule/QuestSchedule.test.ts
+
+      - name: Tester la génération des occurrences
+        run: npx vitest run src/domain/schedule/OccurrenceGeneration.test.ts
+
       - name: Exécuter les tests unitaires
         run: npm run test
 
