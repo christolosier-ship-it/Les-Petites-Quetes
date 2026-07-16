@@ -35,8 +35,11 @@ jobs:
       - name: Installer les dépendances
         run: npm install --no-audit --no-fund
 
-      - name: Vérifier l’architecture et les cycles
-        run: npm run check:architecture && npm run check:cycles
+      - name: Vérifier l’architecture
+        run: npm run check:architecture
+
+      - name: Vérifier les cycles
+        run: npm run check:cycles
 
       - name: Vérifier les budgets, assets et contenus
         run: npm run check:files && npm run check:assets && npm run check:content
