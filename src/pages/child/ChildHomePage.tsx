@@ -5,8 +5,8 @@ import { Card } from '../../components/primitives/Card';
 import { findAvatarDefinition } from '../../content/avatars/avatarCatalog';
 import type { WorldId } from '../../domain/world/WorldDefinition';
 import { RewardCelebration } from '../../features/storybook/RewardCelebration';
-import { WorldHub } from '../../features/world-hub/WorldHub';
 import { ChildWorldSpace } from '../../features/world-hub/ChildWorldSpace';
+import { WorldHub } from '../../features/world-hub/WorldHub';
 
 interface ChildHomePageProps {
   readonly app: FamilyAppController;
@@ -27,7 +27,7 @@ export function ChildHomePage({ app, onBack }: ChildHomePageProps) {
     <section className="workspace workspace--child" data-page="child" data-age-band={activeChild.ageBand}>
       <header className="workspace-header child-header"><div><p className="eyebrow">Espace enfant</p><h1>Les Petites Quêtes</h1></div><Button variant="quiet" onClick={onBack}>Accueil</Button></header>
       {children.length > 1 && <div className="profile-picker" aria-label="Choisir un profil">{children.map((child) => { const avatar = findAvatarDefinition(child.avatarId); return <button key={child.id} type="button" className={child.id === activeChildId ? 'profile-chip profile-chip--active' : 'profile-chip'} onClick={() => { setWorldId(undefined); void app.selectChild(child.id); }}><span aria-hidden="true">{avatar?.presentation === 'girl' ? '👧' : '👦'}</span> {child.displayName}</button>; })}</div>}
-      <RewardCelebration app={app} childId={activeChildId} onViewWorld={() => setWorldId((current) => current ?? 'world.firefly-forest')} />
+      <RewardCelebration app={app} childId={activeChildId} onViewWorld={setWorldId} />
       {worldId === undefined
         ? <WorldHub app={app} childId={activeChildId} onOpenWorld={setWorldId} />
         : <ChildWorldSpace app={app} childId={activeChildId} worldId={worldId} onBack={() => setWorldId(undefined)} />}
