@@ -56,7 +56,20 @@ jobs:
       - name: Construire et contrôler l’artefact Pages
         run: npm run build
 
-      - name: Exécuter le smoke test Chrome
+      - name: Capturer le smoke test Chrome
+        id: smoke
+        continue-on-error: true
         env:
           CHROME_BIN: ${{ steps.setup-chrome.outputs.chrome-path }}
-        run: npm run check:browser
+        run: npm run check:browser > smoke.log 2>&1
+
+      - name: Publier le diagnostic navigateur
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: smoke-final-diagnostic
+          path: smoke.log
+
+      - name: Valider le smoke test Chrome
+        if: steps.smoke.outcome == 'failure'
+        run: exit 1
