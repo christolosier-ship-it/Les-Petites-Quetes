@@ -35,21 +35,8 @@ jobs:
       - name: Installer les dépendances
         run: npm install --no-audit --no-fund
 
-      - name: Capturer le contrôle d’architecture
-        id: architecture
-        continue-on-error: true
-        run: npm run check:architecture > architecture.log 2>&1
-
-      - name: Publier le diagnostic d’architecture
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: architecture-diagnostic
-          path: architecture.log
-
-      - name: Valider l’architecture
-        if: steps.architecture.outcome == 'failure'
-        run: exit 1
+      - name: Vérifier l’architecture
+        run: npm run check:architecture
 
       - name: Vérifier les cycles
         run: npm run check:cycles
