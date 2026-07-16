@@ -47,7 +47,7 @@ describe('dates locales', () => {
     expectDomainError(() => normalizeExactTime('7:05'), 'schedule.invalid-exact-time');
   });
 
-  it('énumère une fenêtre inclusive sans dépasser le budget annuel', () => {
+  it('énumère une plage inclusive sans dépasser le budget annuel', () => {
     expect(enumerateLocalDates('2026-07-30', '2026-08-02')).toEqual([
       '2026-07-30',
       '2026-07-31',
@@ -56,11 +56,11 @@ describe('dates locales', () => {
     ]);
     expectDomainError(
       () => enumerateLocalDates('2026-08-02', '2026-07-30'),
-      'occurrence.invalid-generation-window',
+      'occurrence.invalid-generation-range',
     );
     expectDomainError(
       () => enumerateLocalDates('2026-01-01', '2027-01-06'),
-      'occurrence.generation-window-too-large',
+      'occurrence.generation-range-too-large',
     );
   });
 });
