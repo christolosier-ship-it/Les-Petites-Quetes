@@ -1,10 +1,10 @@
-# Règles éditoriales et narratives
+# Règles éditoriales et narratives multi-univers
 
 ## 1. Objectif
 
-Garantir que toutes les quêtes, histoires, messages et récompenses conservent la même voix et respectent l’âge de l’enfant.
+Garantir que les quêtes, variantes d’âge, histoires, mascottes et récompenses conservent une voix commune tout en donnant une identité claire à chaque univers.
 
-## 2. Ton général
+## 2. Ton commun
 
 Le ton est :
 
@@ -16,32 +16,94 @@ Le ton est :
 - jamais culpabilisant ;
 - jamais sarcastique envers l’enfant.
 
-## 3. Structure d’une consigne
+## 3. Identité des univers
 
-Une consigne enfant doit :
+Chaque univers possède un vocabulaire narratif léger.
+
+### La Forêt des Lucioles
+
+- lumière ;
+- calme ;
+- nid ;
+- clairière ;
+- sommeil ;
+- douceur du soir.
+
+### La Montagne du Dragon
+
+- réveil ;
+- souffle ;
+- sommet ;
+- énergie ;
+- départ du matin.
+
+### La Station Spatiale
+
+- mission ;
+- équipement ;
+- départ ;
+- exploration ;
+- journée dehors.
+
+### Le Village des Lutins
+
+- atelier ;
+- cartable ;
+- savoir ;
+- lecture ;
+- organisation scolaire.
+
+### Univers nature
+
+- observation ;
+- saisons ;
+- traces ;
+- vivant ;
+- curiosité.
+
+### Univers créativité
+
+- couleurs ;
+- formes ;
+- sons ;
+- construction ;
+- imagination.
+
+Le vocabulaire d’univers embellit l’action mais ne doit jamais masquer la consigne réelle.
+
+## 4. Famille et variante de quête
+
+Une famille de quête définit l’intention réelle et l’univers.
+
+Chaque variante d’âge définit :
+
+- titre narratif ;
+- action réelle ;
+- consigne ;
+- étapes ;
+- durée ;
+- illustration ;
+- texte alternatif.
+
+Une variante n’est pas une simple version raccourcie. Elle adapte la difficulté, l’autonomie, le vocabulaire et le nombre d’étapes.
+
+## 5. Consignes
+
+Une consigne doit :
 
 - commencer par un verbe d’action ;
 - décrire une action visible ;
-- éviter les abstractions ;
-- tenir idéalement en une phrase ;
 - contenir une seule intention principale ;
-- préciser l’aide d’un adulte lorsque nécessaire.
+- préciser l’aide d’un adulte lorsque nécessaire ;
+- rester compréhensible sans connaître l’histoire de l’univers.
 
 Exemples :
 
-- « Mets ton pyjama et pose tes vêtements dans le panier. »
-- « Choisis trois jouets et range-les dans leur maison. »
-- « Avec un adulte, arrose la plante jusqu’au petit repère. »
+- 3-5 ans : « Pose ton pyjama près du lit. »
+- 6-8 ans : « Prépare ton pyjama et range tes vêtements dans le panier. »
+- 9-10 ans : « Prépare tes affaires du soir et vérifie que ta chambre est prête pour demain. »
 
-À éviter :
-
-- « Sois sage. »
-- « Range correctement ta chambre. »
-- « Fais tous tes devoirs sans discuter. »
-
-## 4. Titres de quêtes
-
-Le titre narratif peut embellir l’action, mais il ne doit jamais la masquer.
+## 6. Titres
 
 Format recommandé :
 
@@ -52,46 +114,75 @@ Action réelle en sous-titre
 
 Exemple :
 
-- « Les crocs du dragon »
-- sous-titre : « Se brosser les dents »
+```text
+Le souffle du matin
+S’habiller
+```
 
-## 5. Longueur par âge
+Le titre peut changer selon l’univers et l’âge. L’action réelle reste explicite côté parent et accessible côté enfant.
+
+## 7. Longueur par âge
 
 ### 3 à 5 ans
 
 - titre : 2 à 5 mots ;
 - consigne : 4 à 12 mots ;
-- une seule étape visible à la fois ;
-- vocabulaire concret.
+- une étape visible à la fois ;
+- vocabulaire concret ;
+- aucune métaphore nécessaire pour comprendre l’action.
 
 ### 6 à 8 ans
 
 - titre : 2 à 7 mots ;
 - consigne : 6 à 20 mots ;
-- jusqu’à trois étapes courtes.
+- jusqu’à trois étapes ;
+- vocabulaire narratif léger.
 
 ### 9 à 10 ans
 
 - titre : 2 à 8 mots ;
 - consigne : jusqu’à 30 mots ;
-- étapes possibles pour un petit projet.
+- petit projet possible ;
+- autonomie et préparation explicites.
 
-## 6. Messages de progression
+## 8. Messages de progression
 
-Les messages valorisent l’action :
+Les messages nomment l’univers concerné :
 
-- « Tu as aidé le village à grandir. »
-- « Une nouvelle luciole s’est réveillée. »
-- « Cette petite action a débloqué un passage. »
+- « Une nouvelle lumière s’est réveillée dans la forêt. »
+- « Un passage s’ouvre sur la montagne. »
+- « Un nouveau module rejoint la station. »
+- « Un atelier s’anime dans le village. »
 
-Ils n’évaluent pas la valeur de l’enfant :
+Ils ne jugent jamais la valeur de l’enfant.
 
-- pas de « Tu es le meilleur » ;
-- pas de « Tu es plus fort que les autres » ;
-- pas de « Enfin ! » ;
-- pas de « Tu aurais pu faire mieux ».
+Formulations interdites :
 
-## 7. Quête non terminée
+- « Tu es le meilleur » ;
+- « Enfin » ;
+- « Tu as pris du retard » ;
+- « Les autres ont fait mieux » ;
+- « La mascotte est déçue ».
+
+## 9. Pastilles de disponibilité
+
+La pastille rouge signifie uniquement : « des quêtes sont disponibles maintenant ».
+
+Elle ne doit jamais être décrite comme :
+
+- retard ;
+- dette ;
+- urgence ;
+- série à préserver ;
+- tâche en souffrance.
+
+Libellé accessible recommandé :
+
+```text
+2 quêtes disponibles dans La Station Spatiale
+```
+
+## 10. Quête non terminée
 
 Messages autorisés :
 
@@ -99,86 +190,108 @@ Messages autorisés :
 - « Tu peux la reprendre plus tard. »
 - « Demande de l’aide si tu en as besoin. »
 
-Aucune formule de perte, d’échec ou de déception.
+Aucun univers ne se dégrade et aucune mascotte ne devient triste.
 
-## 8. Aide et coopération
+## 11. Mascottes
 
-Les contenus peuvent valoriser :
+Chaque mascotte est :
 
-- demander de l’aide ;
-- faire ensemble ;
-- essayer une petite étape ;
-- adapter la quête ;
-- faire une pause.
+- compagne ;
+- guide ;
+- narratrice ;
+- témoin de la progression.
 
-L’autonomie ne signifie pas accomplir seul à tout prix.
+Elle n’est jamais :
 
-## 9. Narration
+- surveillante ;
+- juge ;
+- donneuse d’ordres ;
+- victime de l’inaction de l’enfant.
 
-L’histoire initiale doit :
+Luma est la mascotte de La Forêt des Lucioles. Les autres noms seront validés avec leurs planches graphiques.
 
-- fonctionner par chapitres courts ;
-- ne pas dépendre d’une cadence quotidienne ;
-- rester compréhensible après une longue pause ;
-- ne pas mettre le monde en danger à cause de l’enfant ;
-- présenter la mascotte comme compagne, pas comme surveillante ;
-- éviter tout antagoniste effrayant pour les plus jeunes.
+## 12. Histoires
 
-## 10. Récompenses et badges
+Chaque histoire :
 
-Les badges décrivent des expériences variées :
+- fonctionne indépendamment des autres univers ;
+- utilise des chapitres courts ;
+- reste compréhensible après une pause ;
+- ne dépend pas d’une cadence quotidienne ;
+- ne met pas le monde en danger à cause de l’enfant ;
+- évite les antagonistes effrayants pour les plus jeunes.
 
-- première découverte ;
-- aide apportée ;
-- quête créative ;
-- aventure en famille ;
-- curiosité ;
-- autonomie essayée.
+## 13. Récompenses
 
-Ils ne doivent pas devenir une hiérarchie de valeur.
+Une récompense :
 
-## 11. Diversité et représentation
+- appartient à un seul univers ;
+- explique clairement ce qui a changé ;
+- n’est pas une monnaie ;
+- ne peut pas être perdue ;
+- ne sert pas à comparer les enfants.
 
-Les illustrations et textes doivent montrer :
+## 14. Diversité et représentation
 
-- différentes familles ;
-- différentes apparences ;
-- des enfants avec ou sans lunettes ;
-- des situations de handicap lorsque pertinent ;
-- des activités non genrées ;
-- des vêtements et environnements variés.
+Les six avatars initiaux respectent les tranches d’âge demandées. Les futures collections devront élargir progressivement :
 
-Les quêtes ne supposent pas qu’une tâche appartient à un genre.
+- apparences ;
+- coiffures ;
+- vêtements ;
+- lunettes ;
+- handicaps visibles lorsque pertinent.
 
-## 12. Contenus intégrés
+Les activités, couleurs, postures et univers ne sont jamais réservés à un genre.
 
-Chaque modèle doit contenir :
+## 15. Contenu intégré obligatoire
+
+Chaque famille contient :
 
 - `id` stable ;
-- titre narratif ;
+- `worldId` ;
+- intention réelle ;
+- catégories ;
+- aide adulte ;
+- récompense du même univers ;
+- variantes d’âge.
+
+Chaque variante contient :
+
+- tranche d’âge ;
+- titre ;
 - action réelle ;
 - consigne ;
-- catégorie ;
-- tranches d’âge ;
+- étapes ;
 - illustration ;
-- durée indicative ;
-- aide adulte ;
-- variantes ;
-- récompense ;
+- durée ;
 - texte alternatif.
 
-## 13. Validation éditoriale automatique
+## 16. Matrice de couverture
 
-Le build doit pouvoir détecter :
+Le build produit une matrice :
 
-- champ obligatoire manquant ;
+```text
+univers × tranche d’âge × nombre de variantes
+```
+
+Le pack initial cible au moins cinq variantes disponibles par univers et par tranche d’âge.
+
+Une répartition très déséquilibrée doit être signalée avant fusion.
+
+## 17. Validation automatique
+
+Le build détecte :
+
+- univers absent ou inconnu ;
+- récompense d’un autre univers ;
+- variante d’âge manquante ou dupliquée ;
 - titre trop long ;
 - consigne vide ;
-- catégorie inconnue ;
 - illustration absente ;
-- âge incompatible ;
 - texte alternatif absent ;
 - identifiant dupliqué ;
-- contenu marqué adulte sans avertissement.
+- contenu adulte sans avertissement ;
+- vocabulaire culpabilisant ;
+- couverture insuffisante par âge et univers.
 
-Une revue humaine reste obligatoire pour le ton, la sécurité et la compréhension.
+Une revue humaine reste obligatoire pour la sécurité, la compréhension et le ton.

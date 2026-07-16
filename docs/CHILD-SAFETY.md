@@ -2,13 +2,13 @@
 
 ## 1. Finalité
 
-Les Petites Quêtes accompagne de jeunes enfants dans un cadre familial. La conception doit donc éviter les mécanismes de pression, la collecte excessive de données et les interactions non maîtrisées.
+Les Petites Quêtes accompagne de jeunes enfants dans un cadre familial. La conception doit éviter les mécanismes de pression, la collecte excessive de données et les interactions non maîtrisées.
 
-Ce document s’applique au produit, au code, aux contenus et aux assets.
+Ce document s’applique au produit, au code, aux contenus, aux six univers et aux scènes animées.
 
 ## 2. Données minimales
 
-Données autorisées en V1 :
+Données autorisées :
 
 - prénom ou pseudonyme ;
 - tranche d’âge large ;
@@ -16,7 +16,7 @@ Données autorisées en V1 :
 - avatar ;
 - préférences d’interface ;
 - historique local des quêtes ;
-- photos facultatives et locales si le parent active cette option.
+- progression locale par univers.
 
 Données interdites ou inutiles :
 
@@ -31,9 +31,11 @@ Données interdites ou inutiles :
 - enregistrement audio automatique ;
 - analyse du visage ou des émotions.
 
+Le choix garçon ou fille pour les six avatars initiaux est une sélection visuelle locale. Il ne doit jamais être interprété comme une donnée d’identité publique ou servir à limiter les activités proposées.
+
 ## 3. Interaction privée
 
-La V1 ne comporte :
+L’application ne comporte :
 
 - aucun compte enfant ;
 - aucun profil public ;
@@ -45,24 +47,24 @@ La V1 ne comporte :
 - aucune publicité ;
 - aucune collecte distante.
 
-Toute future fonction connectée devra faire l’objet d’une décision spécifique et d’une nouvelle analyse de risques.
-
 ## 4. Protection de l’espace parent
 
-L’espace parent est protégé par un code local ou une interaction difficile à déclencher accidentellement.
+L’espace parent reste protégé par un code local.
 
 Le verrou protège notamment :
 
 - création et suppression de profils ;
+- choix de la tranche d’âge ;
 - planification ;
+- création et classement des quêtes par univers ;
 - historique ;
+- progression détaillée ;
 - export ;
 - import ;
 - suppression totale ;
-- activation des photos ;
 - réglages de sécurité.
 
-Le code parent n’est pas présenté comme une sécurité cryptographique forte. Il sert à séparer les usages sur un appareil familial.
+Le code parent sépare les usages sur l’appareil mais n’est pas présenté comme un chiffrement fort.
 
 ## 5. Conception sans manipulation
 
@@ -71,26 +73,50 @@ Sont interdits :
 - séries quotidiennes cassables ;
 - compte à rebours anxiogène ;
 - mascotte triste à cause d’une quête non réalisée ;
+- dégradation d’un univers pour cause d’inactivité ;
 - retrait de récompenses ;
 - comparaison entre enfants ;
+- comparaison entre univers ;
 - messages de honte ;
 - notifications insistantes ;
 - récompenses aléatoires de type machine à sous ;
 - faux sentiment d’urgence ;
-- bouton de refus trompeur ;
 - achat permettant d’accélérer la progression.
 
-## 6. Langage
+## 6. Pastilles rouges
 
-L’application ne qualifie jamais l’enfant de :
+La pastille rouge d’un univers signifie uniquement qu’une ou plusieurs quêtes sont disponibles maintenant.
 
-- paresseux ;
-- mauvais ;
-- désobéissant ;
-- en retard ;
-- moins bon qu’un autre.
+Elle ne doit jamais :
 
-Elle décrit une action ou une situation sans juger la personne.
+- compter les quêtes en retard ;
+- montrer un nombre négatif ;
+- clignoter ;
+- pulser en permanence ;
+- déclencher un son automatique ;
+- rester visible à zéro ;
+- provoquer une perte si elle n’est pas ouverte.
+
+Le rouge ne peut pas être l’unique information. Un chiffre et un libellé accessible doivent être présents.
+
+## 7. Mascottes
+
+Chaque mascotte est une compagne narrative.
+
+Elle ne doit jamais :
+
+- surveiller l’enfant ;
+- exprimer de la déception ;
+- réclamer une action ;
+- sembler souffrir parce qu’une quête n’est pas terminée ;
+- comparer l’enfant à un autre ;
+- créer une dépendance affective artificielle.
+
+Les réactions autorisées portent sur la découverte, la curiosité, l’encouragement et le repos.
+
+## 8. Langage
+
+L’application décrit une action sans juger la personne.
 
 Exemples acceptables :
 
@@ -104,45 +130,49 @@ Exemples interdits :
 - « Tu as échoué. »
 - « Tu as perdu ta série. »
 - « La mascotte est triste à cause de toi. »
+- « Cet univers est moins avancé que celui de ta sœur. »
 - « Dépêche-toi avant de perdre ta récompense. »
 
-## 7. Temps d’écran
+## 9. Temps d’écran
 
-L’application doit encourager une utilisation brève :
+Le parcours reste bref :
 
-- ouverture ;
-- compréhension de la quête ;
-- retour au monde réel ;
-- validation ;
-- célébration courte.
+- choisir le profil ;
+- choisir un univers ;
+- comprendre la quête ;
+- agir dans le monde réel ;
+- valider ;
+- découvrir une célébration courte.
 
-Aucun contenu infini, lecture automatique continue ou boucle destinée à retenir l’enfant.
+Les scènes parallaxes ne doivent pas devenir des boucles infinies destinées à retenir l’enfant.
 
-## 8. Photos
+## 10. Animations et parallaxe
 
-Les preuves photo sont :
+Chaque scène possède :
 
-- désactivées par défaut ;
-- facultatives ;
-- locales ;
-- supprimables ;
-- jamais analysées ;
-- jamais utilisées pour une reconnaissance automatique.
+- un mode mouvements réduits ;
+- un fallback statique ;
+- des mouvements lents et prévisibles ;
+- aucune secousse forte ;
+- aucun flash rapide ;
+- aucun effet indispensable à la compréhension.
 
-L’interface recommande de photographier le résultat ou l’objet plutôt que le visage de l’enfant.
+La navigation, les quêtes et les récompenses restent utilisables sans animation.
 
-## 9. Accessibilité cognitive
+## 11. Accessibilité cognitive
 
 - une action principale par écran enfant ;
 - vocabulaire concret ;
 - phrases courtes ;
-- illustrations non ambiguës ;
+- illustration non ambiguë ;
 - bouton d’aide visible ;
 - possibilité de réécouter ;
 - absence de sanction en cas d’erreur tactile ;
-- confirmation parentale pour les actions irréversibles.
+- confirmation parentale pour les actions irréversibles ;
+- maximum de trois quêtes mises en avant pour les 3 à 5 ans ;
+- univers reconnaissables autrement que par la couleur.
 
-## 10. Quêtes sensibles
+## 12. Quêtes sensibles
 
 Les modèles intégrés ne doivent pas demander à l’enfant :
 
@@ -151,35 +181,49 @@ Les modèles intégrés ne doivent pas demander à l’enfant :
 - de sortir seul ;
 - de prendre un médicament ;
 - de gérer un animal inconnu ;
-- de cuisiner avec chaleur ou lame sans mention explicite d’un adulte ;
+- de cuisiner avec chaleur ou lame sans adulte ;
 - de partager une information personnelle ;
 - de photographier une personne sans accord.
 
-Les contenus nécessitant un adulte portent un marqueur visible côté parent et une formulation adaptée côté enfant.
+Les univers sortie, nature et créativité ne doivent pas transformer une activité dangereuse en aventure anodine.
 
-## 11. Suppression et export
+## 13. Activités scolaires
+
+Le Village des Lutins ne doit pas :
+
+- évaluer les notes ;
+- comparer les résultats ;
+- surveiller les devoirs ;
+- enregistrer l’établissement ;
+- devenir un outil de contrôle scolaire.
+
+Il peut accompagner la préparation du cartable, la lecture, l’organisation ou une petite activité adaptée.
+
+## 14. Suppression et export
 
 Le parent doit pouvoir :
 
-- supprimer une photo ;
-- supprimer un historique ;
 - archiver un profil ;
+- supprimer un historique ;
 - supprimer définitivement toutes les données ;
-- exporter une sauvegarde.
+- exporter une sauvegarde ;
+- restaurer un état antérieur.
 
-L’export rappelle clairement qu’il contient des informations familiales privées.
+L’export rappelle clairement qu’il contient des informations familiales privées et les progressions des différents univers.
 
-## 12. Revue obligatoire
+## 15. Revue obligatoire
 
-Toute nouvelle fonctionnalité doit répondre à ces questions :
+Toute nouvelle fonctionnalité ou tout nouvel univers doit répondre à ces questions :
 
-1. Quelles données enfant utilise-t-elle ?
+1. Quelles données enfant utilise-t-il ?
 2. Pourquoi sont-elles nécessaires ?
 3. Peuvent-elles rester locales ?
 4. L’enfant peut-il être poussé à rester plus longtemps à l’écran ?
 5. Le mécanisme crée-t-il une pression ou une comparaison ?
-6. Une action d’adulte est-elle nécessaire ?
-7. Que se passe-t-il si l’enfant ne réalise rien ?
-8. Comment la donnée est-elle supprimée ?
+6. Une pastille ou animation peut-elle être vécue comme une urgence ?
+7. Une action d’adulte est-elle nécessaire ?
+8. Que se passe-t-il si l’enfant ne réalise rien ?
+9. Comment les données sont-elles supprimées ?
+10. Le monde reste-t-il utilisable sans son ni animation ?
 
 Une fonctionnalité sans réponses satisfaisantes ne doit pas être fusionnée.

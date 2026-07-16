@@ -1,10 +1,10 @@
-# Cahier des charges V1
+# Cahier des charges cible multi-univers
 
 ## 1. Objet
 
-La V1 doit permettre à un adulte de préparer des quêtes simples et à un enfant de les découvrir, les accomplir puis obtenir une progression narrative et visuelle.
+Les Petites Quêtes doit permettre à un adulte de préparer des quêtes simples et à un enfant de les découvrir, les accomplir puis faire évoluer l’univers narratif auquel elles appartiennent.
 
-La V1 est locale, privée, installable et utilisable hors ligne. L’architecture devra permettre une future synchronisation familiale sans réécrire le domaine métier.
+L’application reste locale, privée, installable et utilisable hors ligne. Le changement multi-univers constitue le prochain cycle fonctionnel après la V1 technique existante.
 
 ## 2. Périmètre utilisateur
 
@@ -12,66 +12,190 @@ La V1 est locale, privée, installable et utilisable hors ligne. L’architectur
 
 Le parent peut :
 
-- créer, modifier et archiver plusieurs profils enfants ;
-- choisir un prénom ou pseudonyme, une tranche d’âge, un niveau de lecture, un avatar et une couleur ;
-- créer une quête depuis un modèle ou depuis zéro ;
+- créer, modifier, archiver et restaurer plusieurs profils enfants ;
+- choisir un prénom ou pseudonyme, une tranche d’âge, un niveau de lecture et un avatar compatible ;
+- créer une quête depuis une famille de quête ou depuis zéro ;
+- choisir obligatoirement l’univers d’une quête personnalisée ;
 - planifier une quête ponctuelle ou récurrente ;
 - attribuer une quête à un ou plusieurs enfants ;
+- vérifier la compatibilité de chaque variante d’âge ;
 - définir si la validation adulte est nécessaire ;
 - consulter les quêtes prévues, terminées, ignorées ou reportées ;
-- valider ou refuser une demande de validation ;
-- choisir l’univers narratif actif ;
-- régler le son, la voix, les animations et la durée d’affichage ;
+- valider ou demander une petite étape supplémentaire ;
+- consulter la progression de chaque enfant par univers ;
+- régler le son, la voix, les animations et la durée des célébrations ;
 - exporter et importer une sauvegarde complète ;
 - protéger l’espace parent par un code local.
+
+Les options compagnon et couleur sont supprimées.
 
 ### Espace enfant
 
 L’enfant peut :
 
 - sélectionner son profil si plusieurs profils existent ;
-- voir un accueil illustré et ses quêtes du moment ;
+- voir les six univers ;
+- connaître le nombre de quêtes disponibles dans chaque univers ;
+- ouvrir un univers et sa scène évolutive ;
+- consulter uniquement les quêtes compatibles avec son âge ;
 - écouter la consigne ;
-- choisir une quête facultative lorsque plusieurs choix sont proposés ;
 - ouvrir une quête et voir ses étapes ;
 - signaler qu’il a terminé ;
 - attendre ou demander la validation d’un adulte ;
-- découvrir la récompense obtenue ;
-- consulter son monde, son histoire et ses objets débloqués.
+- découvrir une récompense appartenant au même univers ;
+- consulter le trésor et l’histoire de chaque univers.
 
-## 3. Tranches d’expérience
+## 3. Accueil familial
 
-### Mode Petit explorateur, 3 à 5 ans
+L’écran principal comporte deux fenêtres.
 
-- navigation par images ;
-- texte secondaire ;
-- lecture vocale accessible en un geste ;
-- maximum de trois quêtes simultanées ;
-- validation adulte activée par défaut ;
+### Fenêtre enfant
+
+- position gauche sur tablette et ordinateur ;
+- ouvre directement le profil unique ;
+- ouvre le sélecteur de profils s’il existe plusieurs enfants ;
+- utilise les avatars, sans comparaison de progression.
+
+### Fenêtre parent
+
+- position droite sur tablette et ordinateur ;
+- ouvre le verrou parent ;
+- ne montre aucune donnée familiale détaillée avant déverrouillage.
+
+Sur smartphone étroit, les deux fenêtres peuvent être empilées sans créer un troisième niveau de navigation.
+
+## 4. Profils et avatars
+
+Le profil contient :
+
+- prénom ou pseudonyme ;
+- tranche d’âge `3-5`, `6-8` ou `9-10` ;
+- niveau de lecture ;
+- avatar ;
+- statut d’archivage.
+
+Collection initiale :
+
+- garçon 3-5 ans ;
+- fille 3-5 ans ;
+- garçon 6-8 ans ;
+- fille 6-8 ans ;
+- garçon 9-10 ans ;
+- fille 9-10 ans.
+
+Un avatar incompatible avec la tranche d’âge ne peut pas être enregistré.
+
+L’avatar enfant est distinct de la mascotte d’un univers.
+
+## 5. Univers
+
+Le produit cible six univers.
+
+| Univers | Quêtes principales |
+|---|---|
+| La Forêt des Lucioles | soirée, calme et coucher |
+| La Montagne du Dragon | réveil, toilette, habillage et matin |
+| La Station Spatiale | sorties, trajet et activités de journée |
+| Le Village des Lutins | école, cartable, lecture et devoirs |
+| Univers nature, nom à définir | jardin, observation, animaux et découverte |
+| Univers créativité, nom à définir | dessin, musique, construction et imagination |
+
+Chaque univers possède :
+
+- une définition stable ;
+- une mascotte ;
+- une couverture ;
+- une scène parallaxe ;
+- plusieurs états de progression ;
+- des récompenses ;
+- des habitants ou objets ;
+- une histoire ou une suite de découvertes ;
+- un fallback statique.
+
+## 6. Carrefour des univers
+
+Après le choix du profil, un pavé est affiché pour chaque univers.
+
+Chaque pavé présente :
+
+- couverture ;
+- nom ;
+- mascotte ;
+- aperçu du stade actuel ;
+- nombre de quêtes disponibles.
+
+La pastille de disponibilité :
+
+- est rouge ;
+- contient un chiffre ;
+- est absente lorsque le nombre vaut zéro ;
+- ne compte que les occurrences réellement disponibles ;
+- ne représente jamais un retard ou un échec ;
+- possède un libellé accessible.
+
+## 7. Tranches d’expérience
+
+### 3 à 5 ans
+
+- navigation principalement visuelle ;
+- une à trois quêtes visibles par univers ;
+- consignes de 4 à 12 mots ;
+- une étape à la fois ;
+- validation adulte par défaut ;
 - aucune notion numérique abstraite nécessaire.
 
-### Mode Aventurier, 6 à 8 ans
+### 6 à 8 ans
 
 - textes courts ;
 - plusieurs quêtes visibles ;
+- jusqu’à trois étapes ;
 - choix facultatifs ;
-- étapes simples ;
-- progression narrative plus explicite.
+- progression narrative explicite.
 
-### Mode Grand aventurier, 9 à 10 ans
+### 9 à 10 ans
 
-- quêtes découpées ;
-- durées indicatives ;
+- consignes plus détaillées ;
 - petits projets ;
+- étapes et durée indicative ;
 - autonomie renforcée ;
 - validation adulte paramétrable.
 
-## 4. Catégories de quêtes
+## 8. Modèle éditorial d’une quête
 
-La V1 propose les catégories suivantes :
+Une quête intégrée est composée d’une famille et de variantes d’âge.
+
+### Famille de quête
+
+- identifiant stable ;
+- univers obligatoire ;
+- intention réelle ;
+- catégories transversales ;
+- besoin éventuel d’un adulte ;
+- récompense du même univers ;
+- statut d’archivage.
+
+### Variante d’âge
+
+- identifiant stable ;
+- tranche d’âge ;
+- niveau de lecture ;
+- titre narratif ;
+- action réelle ;
+- consigne ;
+- étapes ;
+- durée ;
+- illustration ;
+- texte alternatif ;
+- éventuelle variante douce.
+
+Une famille de quête intégrée doit posséder au moins une variante. Le catalogue complet vise une variante pour chaque tranche d’âge.
+
+## 9. Catégories
+
+Les catégories restent utiles pour rechercher ou filtrer :
 
 - autonomie ;
-- hygiène et routines ;
+- hygiène ;
 - participation familiale ;
 - créativité ;
 - découverte ;
@@ -79,37 +203,9 @@ La V1 propose les catégories suivantes :
 - gentillesse ;
 - aventure spéciale.
 
-Chaque catégorie possède une icône, une couleur fonctionnelle et des modèles éditables.
+Une catégorie peut apparaître dans plusieurs univers. Elle ne détermine jamais la progression.
 
-## 5. Modèle d’une quête
-
-Une quête contient au minimum :
-
-- identifiant ;
-- titre ;
-- consigne courte ;
-- illustration ;
-- catégorie ;
-- enfants concernés ;
-- caractère obligatoire ou facultatif ;
-- type de validation ;
-- récompense narrative ;
-- statut d’archivage.
-
-Champs optionnels :
-
-- consigne vocale préenregistrée ou synthétisable localement ;
-- étapes ;
-- durée indicative ;
-- moment de la journée ;
-- jours de récurrence ;
-- date ponctuelle ;
-- matériel nécessaire ;
-- aide autorisée ;
-- note réservée au parent ;
-- illustration personnalisée.
-
-## 6. Planification
+## 10. Planification
 
 Une quête peut être :
 
@@ -117,22 +213,30 @@ Une quête peut être :
 - planifiée à une date ;
 - récurrente certains jours ;
 - liée à un moment de la journée ;
-- suspendue temporairement ;
+- suspendue ;
 - dupliquée.
 
-Moments proposés :
+Une planification multi-enfants résout la variante d’âge individuellement lors de la génération de chaque occurrence.
 
-- matin ;
-- retour à la maison ;
-- avant le repas ;
-- après le repas ;
-- soirée ;
-- coucher ;
-- à tout moment.
+L’enregistrement est refusé lorsqu’un enfant ciblé ne possède aucune variante compatible.
 
-La V1 ne gère pas de calendrier complexe à la minute. Une heure précise reste facultative.
+## 11. Occurrence
 
-## 7. Cycle de vie d’une occurrence
+Une occurrence mémorise notamment :
+
+- planification ;
+- enfant ;
+- famille de quête ;
+- variante d’âge ;
+- univers ;
+- date locale ;
+- statut ;
+- validation ;
+- réalisation éventuelle.
+
+Le snapshot de l’univers et de la variante préserve l’historique lorsque les contenus évoluent.
+
+## 12. Cycle de vie
 
 ```text
 À venir → Disponible → Commencée → Validation demandée → Terminée
@@ -142,234 +246,194 @@ La V1 ne gère pas de calendrier complexe à la minute. Une heure précise reste
 
 Règles :
 
-- une occurrence passée non réalisée n’est jamais automatiquement qualifiée d’échec ;
-- un parent peut reporter ou ignorer une occurrence ;
+- une occurrence passée non réalisée n’est jamais qualifiée d’échec ;
 - aucune série n’est cassée ;
 - aucune récompense déjà obtenue n’est retirée ;
-- un refus de validation renvoie la quête vers l’état disponible avec un message neutre ;
-- l’historique distingue le modèle de quête de ses occurrences.
+- un refus de validation renvoie vers un état neutre ;
+- une réalisation ne peut être comptée qu’une fois.
 
-## 8. Validation
+## 13. Validation et récompense
 
-Types proposés :
+Types :
 
 - validation immédiate par l’enfant ;
-- validation adulte requise ;
-- validation ensemble ;
-- preuve photo facultative, désactivée par défaut.
+- validation adulte ;
+- validation ensemble.
 
-La validation adulte doit être accessible rapidement depuis l’accueil parent.
+Une récompense :
 
-Le refus ne doit jamais afficher un message culpabilisant. Exemple : « Il reste peut-être une petite étape. Regarde avec ton adulte. »
+- appartient au même univers que la quête ;
+- est attribuée une seule fois ;
+- fait progresser uniquement cet univers ;
+- peut être présentée immédiatement ou au prochain passage enfant.
 
-## 9. Progression narrative
+## 14. Progression par univers
 
-La V1 contient un seul univers complet.
+Chaque enfant possède une progression indépendante dans chaque univers.
 
-Chaque quête terminée attribue une ressource narrative déterminée par le contenu, par exemple :
+La progression peut débloquer :
 
-- luciole ;
-- graine ;
-- plume ;
-- fragment de carte ;
-- objet décoratif.
+- états de scène ;
+- calques parallaxes ;
+- objets ;
+- habitants ;
+- réactions de mascotte ;
+- chapitres ;
+- badges non compétitifs.
 
-La progression débloque :
+Aucune progression globale chiffrée ne compare les univers ou les enfants.
 
-- des états de décor ;
-- des objets ;
-- des réactions de mascotte ;
-- des fragments d’histoire ;
-- des badges non compétitifs.
+## 15. Scènes parallaxes
 
-La récompense n’est pas une monnaie achetable. Aucun catalogue commercial n’existe.
+Les scènes sont décrites par des manifestes de contenu.
 
-## 10. Univers initial
+Chaque manifeste définit :
 
-Nom de travail : **La Forêt des Lucioles**.
+- calques et profondeurs ;
+- format et zones sûres ;
+- paliers de progression ;
+- emplacements débloquables ;
+- ancres de mascotte ;
+- mouvements légers ;
+- mode réduit ;
+- fallback statique.
 
-Éléments minimum :
+Une quête reste réalisable si les calques animés ne sont pas disponibles.
 
-- une mascotte principale ;
-- quatre états progressifs du décor ;
-- douze objets ou habitants débloquables ;
-- une histoire de huit chapitres courts ;
-- des réactions pour découverte, encouragement, validation et retour après une pause ;
-- une fin ouverte permettant de continuer à enrichir le monde.
+## 16. Bibliothèque initiale cible
 
-## 11. Bibliothèque initiale
+Le premier pack multi-univers complet vise :
 
-La V1 doit inclure au moins 40 modèles répartis entre les catégories.
+- 6 univers ;
+- 5 familles minimum par univers ;
+- 3 variantes d’âge par famille ;
+- 30 familles minimum ;
+- 90 variantes minimum.
 
-Chaque modèle doit préciser :
+Les 40 modèles actuels doivent être audités et redistribués. La quantité finale pourra augmenter sans modifier le modèle.
 
-- tranche d’âge recommandée ;
-- niveau de lecture ;
-- nécessité éventuelle d’un adulte ;
-- durée indicative ;
-- contexte ;
-- consigne courte ;
-- variante douce ;
-- illustration associée.
+## 17. Écrans enfant
 
-## 12. Écrans V1
+1. Accueil familial en deux fenêtres
+2. Sélection du profil
+3. Carrefour des univers
+4. Intérieur d’un univers
+5. Quêtes de l’univers
+6. Détail d’une quête
+7. Validation demandée
+8. Récompense
+9. Trésor de l’univers
+10. Histoire de l’univers
 
-### Enfant
-
-1. Sélection du profil
-2. Mon monde
-3. Mes quêtes
-4. Détail d’une quête
-5. Validation demandée
-6. Récompense débloquée
-7. Mon histoire et mon trésor
-
-### Parent
+## 18. Écrans parent
 
 1. Verrou parent
 2. Tableau de bord
-3. Profils enfants
-4. Liste et calendrier léger des quêtes
-5. Création ou modification d’une quête
-6. Demandes de validation
-7. Bibliothèque de modèles
-8. Univers et progression
-9. Sauvegarde et réglages
+3. Profils enfants simplifiés
+4. Bibliothèque filtrée par univers et âge
+5. Familles et variantes de quêtes
+6. Planification
+7. Routines
+8. Demandes de validation
+9. Progressions par univers
+10. Sauvegardes et réglages
+11. Revue des quêtes personnalisées migrées
 
-## 13. Navigation
-
-L’espace enfant ne doit pas dépasser trois destinations principales :
-
-- Monde ;
-- Quêtes ;
-- Trésor.
-
-L’espace parent peut utiliser cinq destinations :
-
-- Aujourd’hui ;
-- Quêtes ;
-- Enfants ;
-- Monde ;
-- Réglages.
-
-Le passage vers l’espace parent doit nécessiter une action volontaire et une vérification locale.
-
-## 14. Audio et lecture
+## 19. Audio et accessibilité
 
 - chaque consigne peut être lue à voix haute ;
-- le son reste désactivable ;
 - aucune fonction essentielle ne dépend du son ;
-- les effets sont courts ;
-- aucun son ne démarre de manière agressive ;
-- l’application respecte les préférences de réduction des animations.
-
-La solution technique de synthèse ou d’enregistrement sera définie pendant la conception détaillée.
-
-## 15. Stockage et sauvegarde
-
-La V1 conserve localement :
-
-- profils ;
-- modèles personnalisés ;
-- planifications ;
-- occurrences ;
-- progression ;
-- réglages ;
-- photos facultatives ;
-- version du schéma.
-
-Exigences :
-
-- IndexedDB pour les données applicatives ;
-- migrations versionnées ;
-- sauvegarde avant migration ;
-- export JSON complet ;
-- import validé avant remplacement ;
-- restauration possible ;
-- aucune dépendance réseau pour l’usage quotidien.
-
-## 16. PWA et fonctionnement hors ligne
-
-- installation sur smartphone et tablette ;
-- fonctionnement hors ligne après le premier chargement ;
-- service worker versionné ;
-- message clair lors d’une mise à jour ;
-- aucun écran blanc si un asset facultatif manque ;
-- chargement différé des assets narratifs lourds ;
-- conservation du dernier état cohérent.
-
-## 17. Accessibilité
-
 - grandes zones tactiles ;
 - contraste suffisant ;
-- aucun texte intégré uniquement dans une image ;
+- textes alternatifs ;
+- pastilles compréhensibles sans la couleur seule ;
 - navigation clavier dans l’espace parent ;
-- libellés accessibles ;
-- réduction des animations ;
-- alternatives textuelles ;
-- consignes compréhensibles sans couleur ;
-- tailles de texte adaptables ;
-- aucune limite de temps bloquante.
+- mouvements réduits ;
+- aucun délai bloquant.
 
-## 18. Confidentialité
+## 20. Stockage et schéma V3
 
-- aucun compte dans la V1 ;
-- aucun suivi publicitaire ;
-- aucune télémétrie distante ;
-- aucun identifiant public d’enfant ;
-- aucune collecte de date de naissance complète ;
+Le schéma cible V3 ajoute :
+
+- définitions d’univers versionnées ;
+- univers obligatoire sur les familles de quête ;
+- variantes d’âge ;
+- univers et variante dans les occurrences ;
+- progression par enfant et univers ;
+- avatars contraints par âge ;
+- suppression des champs compagnon, couleur et univers actif.
+
+## 21. Migration V2 vers V3
+
+La migration doit :
+
+- créer une sauvegarde ;
+- convertir les profils ;
+- préserver toutes les réalisations ;
+- répartir les contenus intégrés par table explicite ;
+- conserver l’historique incertain dans son univers actuel ;
+- signaler les quêtes personnalisées à revoir ;
+- valider la cohérence avant remplacement.
+
+## 22. PWA et chargement
+
+- shell, avatars, couvertures et contenus textuels précachés ;
+- scènes lourdes chargées par univers ;
+- mise en cache après première ouverture ;
+- fallback statique hors ligne ;
+- aucun écran blanc si un asset manque ;
+- budgets par univers contrôlés au build.
+
+## 23. Confidentialité et sécurité
+
+- aucun compte enfant ;
+- aucune publicité ou télémétrie ;
+- aucune localisation ;
+- aucune comparaison ;
 - prénom ou pseudonyme suffisant ;
-- photos facultatives et locales ;
 - suppression totale accessible au parent ;
-- avertissement avant export ou partage d’une sauvegarde.
+- aucune mascotte triste à cause d’une quête non réalisée.
 
-## 19. Exigences de qualité
+## 24. Exigences de qualité
 
-Le dépôt doit disposer avant la première version fonctionnelle de :
+Le dépôt doit ajouter des contrôles pour :
 
-- TypeScript strict ;
-- tests du domaine sans navigateur ;
-- tests des migrations ;
-- tests des règles de planification ;
-- tests des progressions ;
-- contrôles d’architecture ;
-- contrôle des dépendances circulaires ;
-- détection du code mort ;
-- contrôle de taille du bundle ;
-- tests de fumée navigateur ;
-- validation automatique du registre d’assets ;
-- vérification des contenus obligatoires.
+- quête sans univers ;
+- variante d’âge absente ou dupliquée ;
+- attribution incompatible avec l’âge ;
+- récompense d’un autre univers ;
+- progression croisée ;
+- manifeste parallaxe incomplet ;
+- fallback absent ;
+- pastille incorrecte ;
+- migration V2 vers V3 ;
+- chargement différé et hors ligne.
 
-## 20. Hors périmètre V1
+## 25. Hors périmètre du prochain cycle
 
 - synchronisation familiale ;
 - comptes en ligne ;
 - classement ;
-- amis ;
-- chat ;
-- localisation ;
-- publicité ;
-- achat intégré ;
-- récompenses financières ;
-- monnaie achetable ;
+- amis ou chat ;
+- géolocalisation ;
+- publicité et achats intégrés ;
 - intelligence artificielle ;
-- analyse émotionnelle automatique ;
-- intégration scolaire ;
-- contrôle du téléphone de l’enfant ;
-- partage public ;
-- plus d’un univers complet.
+- analyse automatique d’images ou d’émotions ;
+- création procédurale d’univers ;
+- boutique de récompenses.
 
-## 21. Critères d’acceptation globaux
+## 26. Critères d’acceptation
 
-La V1 est acceptable lorsque :
+Le recalage multi-univers est acceptable lorsque :
 
-- un parent peut créer un profil et une quête sans documentation ;
-- un enfant non lecteur peut comprendre la quête grâce à l’image et à l’audio ;
-- la réalisation et la validation fonctionnent hors ligne ;
-- la progression est déterministe et ne perd aucun objet ;
-- un jour sans quête accomplie ne produit aucun message négatif ;
-- les données survivent à une mise à jour de schéma ;
-- l’export puis l’import restaurent un état équivalent ;
-- l’espace parent est protégé ;
-- les parcours principaux passent les tests sur mobile, tablette et ordinateur ;
-- l’application reste utilisable avec les animations et le son désactivés.
+- l’accueil comporte les deux fenêtres enfant et parent ;
+- les six univers sont visibles pour chaque enfant ;
+- les pastilles reflètent exactement les quêtes disponibles ;
+- chaque quête possède un univers ;
+- chaque enfant reçoit une variante compatible avec son âge ;
+- une réalisation ne fait progresser que le bon univers ;
+- les profils n’affichent plus compagnon ni couleur ;
+- les six avatars initiaux sont disponibles ;
+- la migration V2 vers V3 préserve l’historique ;
+- chaque scène fonctionne avec mouvements réduits et fallback ;
+- les parcours principaux passent sur mobile, tablette et ordinateur.
