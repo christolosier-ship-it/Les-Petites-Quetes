@@ -48,8 +48,14 @@ jobs:
       - name: Lint scripts et configuration
         run: npx eslint scripts eslint.config.js vite.config.ts
 
-      - name: Lint domaine et application
-        run: npx eslint src/domain src/application src/app
+      - name: Lint domaine
+        run: npx eslint src/domain
+
+      - name: Lint application
+        run: npx eslint src/application
+
+      - name: Lint contrôleur et état
+        run: npx eslint src/app
 
       - name: Lint persistance et plateforme
         run: npx eslint src/persistence src/platform
