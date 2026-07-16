@@ -40,8 +40,41 @@ jobs:
           cat typecheck.log
           exit 1
 
-  quality:
+  coverage:
     needs: typing
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Récupérer le dépôt
+        uses: actions/checkout@v4
+        with:
+          show-progress: false
+      - name: Installer Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Installer les dépendances
+        run: npm install --silent --no-audit --no-fund
+      - name: Capturer la couverture
+        id: coverage
+        continue-on-error: true
+        run: npm run test:coverage > coverage.log 2>&1
+      - name: Publier le diagnostic de couverture
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-diagnostic
+          path: |
+            coverage.log
+            coverage/coverage-summary.json
+      - name: Valider la couverture
+        if: steps.coverage.outcome == 'failure'
+        run: |
+          cat coverage.log
+          exit 1
+
+  quality:
+    needs: [typing, coverage]
     runs-on: ubuntu-latest
     timeout-minutes: 15
 
@@ -129,9 +162,6 @@ jobs:
 
       - name: Exécuter les tests unitaires
         run: npm run test
-
-      - name: Vérifier la couverture
-        run: npm run test:coverage
 
       - name: Construire l’application
         run: npm run build
