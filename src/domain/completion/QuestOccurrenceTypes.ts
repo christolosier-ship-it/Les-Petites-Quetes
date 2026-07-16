@@ -1,5 +1,5 @@
 import type { EntityMetadata } from '../shared/entity';
-import type { ValidationFeedback } from '../shared/types';
+import type { DayMoment, ValidationFeedback } from '../shared/types';
 
 export type QuestOccurrenceStatus =
   | 'upcoming'
@@ -15,14 +15,7 @@ export interface QuestOccurrence extends EntityMetadata {
   readonly questTemplateId: string;
   readonly childId: string;
   readonly localDate: string;
-  readonly dayMoment:
-    | 'morning'
-    | 'after-school'
-    | 'before-meal'
-    | 'after-meal'
-    | 'evening'
-    | 'bedtime'
-    | 'anytime';
+  readonly dayMoment: DayMoment;
   readonly status: QuestOccurrenceStatus;
   readonly startedAt?: string;
   readonly validationRequestedAt?: string;
