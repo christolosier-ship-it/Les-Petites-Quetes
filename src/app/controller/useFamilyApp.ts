@@ -1,68 +1,31 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
-import type {
-  ChildProfileChanges,
-  ChildProfileInput,
-} from '../../domain/child/ChildProfile';
-import type { QuestTemplateInput } from '../../domain/quest/QuestTemplate';
-import type { QuestScheduleInput } from '../../domain/schedule/QuestSchedule';
-import { addLocalDays } from '../../domain/shared/localDate';
-import { builtinQuestTemplates } from '../../content/quests/builtinQuests';
+import { useCallback, useEffect, useState } from 'react';
 import { createEmptyFamilyState, type FamilyState } from '../../application/model/FamilyState';
+import type { FamilyBackupSummary } from '../../application/ports/FamilyRepository';
 import {
   addChildProfile,
   addCustomQuestTemplate,
   addQuestSchedule,
-  archiveChild,
-  editChildProfile,
 } from '../../application/services/familySetupCommands';
-import {
-  approveOccurrence,
-  askAnotherStep,
-  askJointReview,
-  finishOccurrence,
-  ignoreOccurrence,
-  postponeOccurrence,
-  startOccurrence,
-} from '../../application/services/questFlowCommands';
 import { refreshScheduledOccurrences } from '../../application/services/stateRefresh';
-import { parseFamilyBackup, serializeFamilyBackup } from '../../persistence/backup/familyBackup';
+import { StateCommitQueue } from '../../application/services/StateCommitQueue';
+import { builtinQuestTemplates } from '../../content/quests/builtinQuests';
+import type { QuestTemplateInput } from '../../domain/quest/QuestTemplate';
+import type { QuestScheduleInput } from '../../domain/schedule/QuestSchedule';
+import { parseFamilyBackup } from '../../persistence/backup/familyBackup';
 import { IndexedDbFamilyRepository } from '../../persistence/repositories/IndexedDbFamilyRepository';
 import { SystemClock } from '../../platform/clock/SystemClock';
 import { CryptoIdGenerator } from '../../platform/ids/CryptoIdGenerator';
+import type { FamilyAppController, OnboardingInput } from './FamilyAppController';
+import { createFamilyController } from './createFamilyController';
+
+export type { FamilyAppController, OnboardingInput } from './FamilyAppController';
 
 const repository = new IndexedDbFamilyRepository();
 const clock = new SystemClock();
 const ids = new CryptoIdGenerator();
 
-export interface FamilyAppController {
-  readonly state: FamilyState;
-  readonly ready: boolean;
-  readonly error?: string;
-  readonly parentUnlocked: boolean;
-  readonly builtinTemplates: typeof builtinQuestTemplates;
-  readonly createChild: (input: ChildProfileInput) => Promise<void>;
-  readonly updateChild: (childId: string, changes: ChildProfileChanges) => Promise<void>;
-  readonly archiveChild: (childId: string) => Promise<void>;
-  readonly selectChild: (childId: string) => Promise<void>;
-  readonly setParentPin: (pin: string) => Promise<void>;
-  readonly unlockParent: (pin: string) => boolean;
-  readonly lockParent: () => void;
-  readonly createSchedule: (input: QuestScheduleInput) => Promise<void>;
-  readonly createCustomQuest: (
-    template: QuestTemplateInput,
-    schedule: Omit<QuestScheduleInput, 'questTemplateId'>,
-  ) => Promise<void>;
-  readonly startQuest: (occurrenceId: string) => Promise<void>;
-  readonly finishQuest: (occurrenceId: string) => Promise<void>;
-  readonly approveQuest: (occurrenceId: string) => Promise<void>;
-  readonly requestAnotherStep: (occurrenceId: string) => Promise<void>;
-  readonly requestJointReview: (occurrenceId: string) => Promise<void>;
-  readonly postponeQuest: (occurrenceId: string) => Promise<void>;
-  readonly ignoreQuest: (occurrenceId: string) => Promise<void>;
-  readonly updatePreferences: (changes: Partial<FamilyState['settings']>) => Promise<void>;
-  readonly exportBackup: () => string;
-  readonly importBackup: (content: string) => Promise<void>;
-  readonly resetAll: () => Promise<void>;
+function assertPin(pin: string): void {
+  if (!/^\d{4}$/.test(pin)) throw new Error('Le code parent doit contenir quatre chiffres.');
 }
 
 export function useFamilyApp(): FamilyAppController {
@@ -70,12 +33,15 @@ export function useFamilyApp(): FamilyAppController {
   const [ready, setReady] = useState(false);
   const [error, setError] = useState<string>();
   const [parentUnlocked, setParentUnlocked] = useState(false);
-  const stateRef = useRef(state);
+  const [backups, setBackups] = useState<readonly FamilyBackupSummary[]>([]);
+  const [queue] = useState(() => new StateCommitQueue(
+    createEmptyFamilyState(),
+    async (_current, next) => repository.save(next),
+    setState,
+  ));
 
-  const commit = useCallback(async (next: FamilyState) => {
-    stateRef.current = next;
-    setState(next);
-    await repository.save(next);
+  const refreshBackups = useCallback(async () => {
+    setBackups(await repository.listBackups());
   }, []);
 
   useEffect(() => {
@@ -89,8 +55,10 @@ export function useFamilyApp(): FamilyAppController {
           clock.nowIso(),
           ids,
         );
+        await repository.save(refreshed);
         if (!active) return;
-        await commit(refreshed);
+        queue.hydrate(refreshed);
+        await refreshBackups();
         setReady(true);
       })
       .catch((reason: unknown) => {
@@ -101,33 +69,72 @@ export function useFamilyApp(): FamilyAppController {
     return () => {
       active = false;
     };
-  }, [commit]);
+  }, [queue, refreshBackups]);
 
   const apply = useCallback(
     async (transform: (current: FamilyState) => FamilyState) => {
       setError(undefined);
       try {
-        await commit(transform(stateRef.current));
+        await queue.enqueue(transform);
       } catch (reason) {
         setError(reason instanceof Error ? reason.message : 'Action impossible.');
         throw reason;
       }
     },
-    [commit],
+    [queue],
   );
 
-  const createChild = useCallback(
-    async (input: ChildProfileInput) => {
-      await apply((current) => addChildProfile(current, input, clock.nowIso(), ids));
+  const completeOnboarding = useCallback(
+    async (input: OnboardingInput) => {
+      assertPin(input.pin);
+      if (input.suggestedTemplateIds.length < 1 || input.suggestedTemplateIds.length > 3) {
+        throw new Error('Choisis entre une et trois premières quêtes.');
+      }
+      await apply((current) => {
+        if (current.settings.onboardingCompleted) {
+          throw new Error('Le premier lancement est déjà terminé.');
+        }
+        let next = addChildProfile(current, input.child, clock.nowIso(), ids);
+        const childId = next.settings.activeChildId;
+        if (!childId) throw new Error('Le premier profil n’a pas pu être sélectionné.');
+        next = {
+          ...next,
+          settings: {
+            ...next.settings,
+            parentPin: input.pin,
+            defaultValidationMode: input.defaultValidationMode,
+            onboardingCompleted: true,
+          },
+        };
+        for (const templateId of input.suggestedTemplateIds) {
+          const template = builtinQuestTemplates.find((candidate) => candidate.id === templateId);
+          if (!template) throw new Error('Une quête suggérée est introuvable.');
+          next = addQuestSchedule(
+            next,
+            {
+              questTemplateId: template.id,
+              childIds: [childId],
+              kind: 'immediate',
+              startDate: clock.todayLocal(),
+              dayMoment: 'anytime',
+              priority: 'required',
+              validationMode: input.defaultValidationMode,
+            },
+            clock.nowIso(),
+            clock.todayLocal(),
+            ids,
+          );
+        }
+        return next;
+      });
+      setParentUnlocked(true);
     },
     [apply],
   );
 
-  const createSchedule = useCallback(
-    async (input: QuestScheduleInput) => {
-      await apply((current) =>
-        addQuestSchedule(current, input, clock.nowIso(), clock.todayLocal(), ids),
-      );
+  const flow = useCallback(
+    async (command: (current: FamilyState, now: string) => FamilyState) => {
+      await apply((current) => command(current, clock.nowIso()));
     },
     [apply],
   );
@@ -148,75 +155,36 @@ export function useFamilyApp(): FamilyAppController {
     [apply],
   );
 
-  const flow = useCallback(
-    async (command: (current: FamilyState, now: string) => FamilyState) => {
-      await apply((current) => command(current, clock.nowIso()));
+  const importBackup = useCallback(
+    async (content: string) => {
+      const imported = parseFamilyBackup(content).state;
+      const now = clock.nowIso();
+      await queue.enqueue(
+        () => ({ ...imported, settings: { ...imported.settings, lastBackupAt: now } }),
+        (current, next) => repository.replaceWithBackup(current, next, 'before-import', now),
+      );
+      await refreshBackups();
     },
-    [apply],
+    [queue, refreshBackups],
   );
 
-  return {
+  return createFamilyController({
     state,
     ready,
     ...(error !== undefined ? { error } : {}),
     parentUnlocked,
-    builtinTemplates: builtinQuestTemplates,
-    createChild,
-    updateChild: async (childId, changes) =>
-      apply((current) => editChildProfile(current, childId, changes, clock.nowIso())),
-    archiveChild: async (childId) => apply((current) => archiveChild(current, childId, clock.nowIso())),
-    selectChild: async (childId) =>
-      apply((current) => ({
-        ...current,
-        settings: { ...current.settings, activeChildId: childId },
-      })),
-    setParentPin: async (pin) => {
-      if (!/^\d{4}$/.test(pin)) throw new Error('Le code parent doit contenir quatre chiffres.');
-      await apply((current) => ({
-        ...current,
-        settings: { ...current.settings, parentPin: pin },
-      }));
-      setParentUnlocked(true);
-    },
-    unlockParent: (pin) => {
-      const valid = stateRef.current.settings.parentPin === pin;
-      setParentUnlocked(valid);
-      return valid;
-    },
-    lockParent: () => setParentUnlocked(false),
-    createSchedule,
+    backups,
+    queue,
+    repository,
+    clock,
+    ids,
+    apply,
+    flow,
+    completeOnboarding,
     createCustomQuest,
-    startQuest: async (id) => flow((current, now) => startOccurrence(current, id, now)),
-    finishQuest: async (id) => flow((current, now) => finishOccurrence(current, id, now, ids)),
-    approveQuest: async (id) => flow((current, now) => approveOccurrence(current, id, now, ids)),
-    requestAnotherStep: async (id) => flow((current, now) => askAnotherStep(current, id, now)),
-    requestJointReview: async (id) => flow((current, now) => askJointReview(current, id, now)),
-    postponeQuest: async (id) =>
-      flow((current, now) =>
-        postponeOccurrence(
-          current,
-          id,
-          addLocalDays(clock.todayLocal(), 1),
-          clock.todayLocal(),
-          now,
-        ),
-      ),
-    ignoreQuest: async (id) => flow((current, now) => ignoreOccurrence(current, id, now)),
-    updatePreferences: async (changes) =>
-      apply((current) => ({
-        ...current,
-        settings: { ...current.settings, ...changes },
-      })),
-    exportBackup: () => serializeFamilyBackup(stateRef.current, clock.nowIso()),
-    importBackup: async (content) => {
-      const imported = parseFamilyBackup(content).state;
-      await repository.createBackup(stateRef.current, 'before-import', clock.nowIso());
-      await commit(imported);
-    },
-    resetAll: async () => {
-      await repository.clear();
-      await commit(createEmptyFamilyState());
-      setParentUnlocked(false);
-    },
-  };
+    importBackup,
+    refreshBackups,
+    setParentUnlocked,
+    setBackups,
+  });
 }

@@ -1,16 +1,23 @@
 import type { ReactNode } from 'react';
+import { UpdateBanner } from '../../features/settings/UpdateBanner';
 
 interface AppShellProps {
   readonly children: ReactNode;
+  readonly reducedMotion: 'system' | 'reduce' | 'allow';
 }
 
-export function AppShell({ children }: AppShellProps) {
+export function AppShell({ children, reducedMotion }: AppShellProps) {
   return (
-    <div className="app-shell" data-theme="forest-fireflies">
+    <div
+      className="app-shell"
+      data-theme="forest-fireflies"
+      data-motion={reducedMotion}
+    >
       <header className="app-header">
         <div><p className="eyebrow">La Forêt des Lucioles</p><h1>Les Petites Quêtes</h1></div>
         <span className="foundation-badge">V1 familiale</span>
       </header>
+      <UpdateBanner />
       <main className="app-main">{children}</main>
       <footer className="app-footer">Une aventure privée, locale et sans publicité.</footer>
     </div>

@@ -1,6 +1,6 @@
 {
   "name": "les-petites-quetes",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "type": "module",
   "engines": {
@@ -8,7 +8,7 @@
   },
   "scripts": {
     "dev": "vite --host 0.0.0.0",
-    "build": "tsc -b && vite build && npm run check:bundle && npm run check:pages",
+    "build": "tsc -b && vite build && node scripts/generate-service-worker.mjs && npm run check:bundle && npm run check:pages",
     "preview": "vite preview --host 0.0.0.0",
     "lint": "eslint .",
     "typecheck": "tsc -b --pretty false",
@@ -30,8 +30,8 @@
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",
-    "@testing-library/jest-dom": "^6.6.3",
-    "@testing-library/react": "^16.1.0",
+    "@testing-library/jest-dom": "6.6.3",
+    "@testing-library/react": "16.1.0",
     "@types/node": "25.6.2",
     "@types/react": "18.3.31",
     "@types/react-dom": "18.3.7",
@@ -41,7 +41,7 @@
     "eslint-plugin-react-hooks": "7.1.1",
     "eslint-plugin-react-refresh": "0.5.3",
     "globals": "17.7.0",
-    "jsdom": "^26.1.0",
+    "jsdom": "26.1.0",
     "puppeteer-core": "25.3.0",
     "typescript": "6.0.3",
     "typescript-eslint": "8.63.0",

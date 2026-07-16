@@ -6,16 +6,53 @@
 - Les dates métier utilisent `YYYY-MM-DD` lorsque l’heure n’a pas de sens.
 - Les instants techniques utilisent ISO UTC.
 - Les identifiants sont générés indépendamment du stockage.
-- Les suppressions importantes peuvent être logiques afin de préparer une future synchronisation.
-- Les contenus livrés avec l’application sont versionnés séparément des données familiales.
+- Les entités importantes possèdent une révision et peuvent porter un tombstone `deletedAt`.
+- Les contenus intégrés sont versionnés séparément des données familiales.
+- La progression enregistrée reste une projection entièrement reconstructible depuis les récompenses attribuées.
+- Toute donnée chargée ou importée est validée à l’exécution, TypeScript seul n’étant pas une protection pour le JSON.
 
-## 2. Entités principales
+## 2. Agrégat familial V2
+
+La V1 persiste un snapshot familial cohérent derrière `FamilyRepository`.
+
+```ts
+interface FamilyState {
+  children: ChildProfile[]
+  customQuestTemplates: QuestTemplate[]
+  schedules: QuestSchedule[]
+  occurrences: QuestOccurrence[]
+  completions: Completion[]
+  rewardGrants: RewardGrant[]
+  worldProgress: WorldProgress[]
+  acknowledgedRewardGrantIds: string[]
+  settings: AppSettings
+}
+```
+
+`acknowledgedRewardGrantIds` distingue les récompenses déjà présentées à l’enfant. Une validation effectuée par un adulte peut ainsi déclencher une célébration lors du prochain passage dans l’espace enfant, sans la rejouer ensuite.
+
+## 3. Métadonnées partagées
+
+Les entités familiales utilisent :
+
+```ts
+interface EntityMetadata {
+  id: string
+  createdAt: string
+  updatedAt: string
+  revision: number
+  deletedAt?: string
+}
+```
+
+Ces champs préparent une future synchronisation sans l’activer en V1.
+
+## 4. Entités principales
 
 ### ChildProfile
 
 ```ts
-interface ChildProfile {
-  id: string
+interface ChildProfile extends EntityMetadata {
   displayName: string
   ageBand: '3-5' | '6-8' | '9-10'
   readingLevel: 'visual' | 'short-text' | 'independent'
@@ -23,10 +60,6 @@ interface ChildProfile {
   accentId: string
   activeWorldId: string
   isArchived: boolean
-  createdAt: string
-  updatedAt: string
-  revision: number
-  deletedAt?: string
 }
 ```
 
@@ -35,8 +68,7 @@ Aucune date de naissance complète n’est nécessaire.
 ### QuestTemplate
 
 ```ts
-interface QuestTemplate {
-  id: string
+interface QuestTemplate extends EntityMetadata {
   source: 'builtin' | 'custom'
   contentVersion?: string
   title: string
@@ -52,18 +84,15 @@ interface QuestTemplate {
   rewardDefinitionId: string
   parentNote?: string
   isArchived: boolean
-  createdAt: string
-  updatedAt: string
-  revision: number
-  deletedAt?: string
 }
 ```
+
+Les modèles intégrés ne sont jamais modifiés. Une personnalisation crée une copie `custom` avec un nouvel identifiant.
 
 ### QuestSchedule
 
 ```ts
-interface QuestSchedule {
-  id: string
+interface QuestSchedule extends EntityMetadata {
   questTemplateId: string
   childIds: string[]
   kind: 'immediate' | 'one-off' | 'weekly'
@@ -75,18 +104,15 @@ interface QuestSchedule {
   priority: 'required' | 'optional'
   validationMode: ValidationMode
   isSuspended: boolean
-  createdAt: string
-  updatedAt: string
-  revision: number
-  deletedAt?: string
 }
 ```
+
+Une planification peut viser plusieurs enfants. Sa modification fonctionnelle crée un remplacement et neutralise les occurrences encore ouvertes de l’ancienne configuration, sans toucher à l’historique terminé.
 
 ### QuestOccurrence
 
 ```ts
-interface QuestOccurrence {
-  id: string
+interface QuestOccurrence extends EntityMetadata {
   scheduleId: string
   questTemplateId: string
   childId: string
@@ -104,33 +130,30 @@ interface QuestOccurrence {
   validationRequestedAt?: string
   completedAt?: string
   postponedTo?: string
-  validationNote?: string
+  validationNote?: 'small-step-remains' | 'review-together'
   evidenceAssetId?: string
   completionId?: string
-  createdAt: string
-  updatedAt: string
-  revision: number
-  deletedAt?: string
 }
 ```
 
-Une contrainte métier empêche deux occurrences actives identiques pour le même planning, le même enfant et la même date.
+La clé métier d’idempotence est :
+
+```text
+scheduleId + childId + localDate
+```
+
+Une occurrence existante, même terminée ou supprimée logiquement, empêche une génération en double.
 
 ### Completion
 
 ```ts
-interface Completion {
-  id: string
+interface Completion extends EntityMetadata {
   occurrenceId: string
   childId: string
   validationMode: ValidationMode
   validatedBy: 'child' | 'parent' | 'together'
   completedAt: string
   rewardGrantId: string
-  createdAt: string
-  updatedAt: string
-  revision: number
-  deletedAt?: string
 }
 ```
 
@@ -144,49 +167,38 @@ interface RewardDefinition {
   assetId: string
   label: string
   description: string
-  quantity?: number
-  unlockRule?: UnlockRule
 }
 ```
 
 ### RewardGrant
 
 ```ts
-interface RewardGrant {
-  id: string
+interface RewardGrant extends EntityMetadata {
   childId: string
   completionId: string
   rewardDefinitionId: string
   grantedAt: string
-  createdAt: string
-  updatedAt: string
-  revision: number
-  deletedAt?: string
 }
 ```
 
-Une occurrence terminée ne peut produire qu’un seul `RewardGrant` principal. L’opération d’attribution doit être idempotente.
+Une réalisation ne peut produire qu’un seul `RewardGrant` principal.
 
 ### WorldProgress
 
 ```ts
-interface WorldProgress {
-  id: string
+interface WorldProgress extends EntityMetadata {
   childId: string
   worldId: string
   worldVersion: string
-  stage: number
+  stage: 0 | 1 | 2 | 3
+  completionCount: number
   unlockedRewardIds: string[]
   unlockedStoryChapterIds: string[]
   lastCelebrationAt?: string
-  createdAt: string
-  updatedAt: string
-  revision: number
-  deletedAt?: string
 }
 ```
 
-Les champs dérivables pourront être recalculés à partir des `RewardGrant`. Le stockage d’une projection sert uniquement la performance et doit pouvoir être reconstruit.
+La validation runtime recalcule les valeurs attendues depuis les `RewardGrant` et refuse toute projection incohérente.
 
 ### StoryChapter
 
@@ -197,106 +209,162 @@ interface StoryChapter {
   order: number
   title: string
   body: string
-  narrationAssetId?: string
   illustrationId: string
-  unlockRule: UnlockRule
+  requiredCompletions: number
 }
 ```
 
-### AppSettings
+## 5. Réglages V2
 
 ```ts
 interface AppSettings {
-  schemaVersion: number
+  schemaVersion: 2
   contentVersion: string
   activeChildId?: string
-  parentLock: ParentLockSettings
+  parentPin: string
+  onboardingCompleted: boolean
   soundEnabled: boolean
   narrationEnabled: boolean
-  reducedMotionOverride?: 'system' | 'reduce' | 'allow'
+  reducedMotion: 'system' | 'reduce' | 'allow'
   defaultValidationMode: ValidationMode
-  evidencePhotosEnabled: boolean
+  celebrationDurationSeconds: 3 | 5 | 8
   lastBackupAt?: string
 }
 ```
 
-## 3. Types partagés
+Le code parent sépare les usages sur l’appareil mais ne chiffre pas les données locales.
 
-```ts
-type AgeBand = '3-5' | '6-8' | '9-10'
-type ReadingLevel = 'visual' | 'short-text' | 'independent'
-type DayMoment = 'morning' | 'after-school' | 'before-meal' | 'after-meal' | 'evening' | 'bedtime' | 'anytime'
-type ValidationMode = 'child' | 'parent' | 'together'
-type Weekday = 'mon' | 'tue' | 'wed' | 'thu' | 'fri' | 'sat' | 'sun'
-```
+Les preuves photo restent hors de la V1 fonctionnelle actuelle. Leur ajout futur nécessitera une décision spécifique sur le stockage média, l’export et la suppression.
 
-## 4. Contenus intégrés
+## 6. Contenus intégrés
 
-Les contenus livrés avec l’application sont séparés des données de l’utilisateur :
+Les contenus livrés avec l’application restent séparés du snapshot familial :
 
-- `QuestContentPack` ;
-- `WorldDefinition` ;
-- `StoryDefinition` ;
-- `RewardCatalog` ;
-- `AssetManifest` ;
-- `CopyCatalog`.
+- modèles de quêtes intégrés ;
+- définitions du monde ;
+- catalogue de récompenses ;
+- chapitres ;
+- registre des assets ;
+- catalogue de textes.
 
-Chaque pack possède :
+Les contenus intégrés possèdent une version dédiée. Une sauvegarde familiale ne duplique pas les 40 modèles intégrés, elle conserve seulement leurs références stables et les copies personnalisées.
 
-- un identifiant ;
-- une version ;
-- une langue ;
-- une version minimale de l’application ;
-- un checksum ou contrôle d’intégrité ;
-- une liste de dépendances éventuelles.
-
-## 5. Stores IndexedDB envisagés
+## 7. Stores IndexedDB réels
 
 ```text
-children
-questTemplates
-questSchedules
-questOccurrences
-completions
-rewardGrants
-worldProgress
-settings
-userMedia
+familyState
+familyBackups
 migrationJournal
-changeLog
 ```
 
-`changeLog` est local en V1. Il pourra plus tard alimenter une synchronisation, sans être nécessaire au fonctionnement courant.
+### `familyState`
 
-## 6. Invariants métier
+Contient le snapshot familial courant sous la clé `current`.
 
+### `familyBackups`
+
+Conserve les sauvegardes créées avant :
+
+- migration ;
+- import ;
+- restauration d’une sauvegarde précédente.
+
+Ces sauvegardes sont listables et restaurables depuis l’espace parent.
+
+### `migrationJournal`
+
+Conserve un journal minimal :
+
+- version d’origine ;
+- version cible ;
+- instant ;
+- statut terminé.
+
+Le snapshot pourra être éclaté en stores spécialisés lors d’une future évolution sans modifier le domaine ou les écrans, car l’accès reste derrière `FamilyRepository`.
+
+## 8. Invariants contrôlés à l’exécution
+
+- chaque collection possède des identifiants uniques ;
+- deux entités familiales ne partagent pas le même identifiant ;
+- les références vers enfant, modèle, planification, occurrence, réalisation et récompense existent ;
 - un profil archivé ne reçoit plus de nouvelles occurrences ;
-- une occurrence terminée ne redevient pas disponible ;
+- deux occurrences ne partagent pas la même clé métier ;
+- une occurrence terminée possède une réalisation ;
+- une occurrence ne possède qu’une réalisation ;
+- une réalisation ne possède qu’une récompense principale ;
 - une validation refusée ne crée aucune récompense ;
-- une récompense ne peut pas être retirée par l’absence d’une quête future ;
-- la progression ne dépend pas d’une série quotidienne ;
+- une occurrence terminée ne redevient pas disponible ;
+- une récompense déjà obtenue n’est jamais retirée ;
 - une occurrence ignorée n’est pas un échec ;
-- les occurrences futures ne sont jamais comptées comme manquées ;
-- la génération d’occurrences est idempotente ;
-- un import ne remplace les données qu’après validation complète ;
-- les contenus intégrés ne sont jamais modifiés directement par l’utilisateur : une personnalisation crée une copie `custom`.
+- la progression ne dépend pas d’une série quotidienne ;
+- la projection du monde correspond exactement aux récompenses attribuées ;
+- une célébration reconnue référence une récompense existante ;
+- le profil actif existe et n’est pas archivé ;
+- un onboarding terminé possède au moins un profil et un code parent ;
+- les données familiales ne contiennent que des modèles `custom` ;
+- un import ne remplace les données qu’après validation complète.
 
-## 7. Import et export
+## 9. Migration
+
+La première migration réelle transforme le schéma V1 en V2 :
+
+- ajout de `onboardingCompleted` ;
+- ajout de `celebrationDurationSeconds` ;
+- ajout de `acknowledgedRewardGrantIds` ;
+- conservation de toutes les entités et de leurs identifiants ;
+- marquage des anciennes récompenses comme déjà présentées.
+
+Le chargement suit :
+
+```text
+Lire → détecter la version → sauvegarder l’ancien état → migrer en mémoire
+→ valider → remplacer dans une transaction → journaliser
+```
+
+Une version inconnue est refusée sans modifier le snapshot courant.
+
+## 10. Import, export et restauration
 
 L’export contient :
 
-- métadonnées de l’application ;
-- version du schéma ;
-- version des contenus ;
-- toutes les entités familiales ;
-- médias facultatifs selon l’option choisie ;
+- format de sauvegarde ;
 - date d’export ;
-- contrôles de cohérence.
+- avertissement de confidentialité ;
+- version du schéma et des contenus ;
+- snapshot familial complet.
 
 L’import suit :
 
 ```text
-Lire → Vérifier format → Migrer en mémoire → Valider invariants → Sauvegarder l’existant → Remplacer en transaction
+Lire → vérifier l’enveloppe → migrer en mémoire → hydrater chaque entité
+→ valider les références et invariants → afficher un résumé
+→ sauvegarder l’existant et remplacer dans une transaction
 ```
 
-Aucune donnée partielle ne doit être injectée en cas d’échec.
+Aucune donnée partielle n’est injectée en cas d’échec.
+
+La restauration d’une sauvegarde automatique crée d’abord une nouvelle sauvegarde de l’état courant. Un retour en arrière reste donc possible après chaque opération sensible.
+
+## 11. Ordonnancement des écritures
+
+Les mutations passent par une file applicative :
+
+```text
+Calculer depuis le dernier état persisté → écrire → publier dans React
+```
+
+Deux actions rapides ne peuvent pas enregistrer les snapshots dans le désordre. Une écriture refusée ne publie pas un état uniquement visuel qui disparaîtrait au prochain rechargement.
+
+## 12. Préparation de la synchronisation future
+
+La V1 ne communique avec aucun serveur. Les coutures déjà présentes sont :
+
+- repositories définis par interfaces ;
+- identifiants indépendants d’IndexedDB ;
+- révisions ;
+- tombstones ;
+- dates techniques ISO ;
+- dates métier locales ;
+- validation centralisée des snapshots.
+
+Un futur adaptateur de synchronisation pourra être ajouté derrière les ports sans réécrire les règles de quêtes, validation ou progression.

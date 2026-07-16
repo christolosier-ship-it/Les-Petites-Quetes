@@ -19,6 +19,7 @@ Ce dossier constitue la source de vérité du projet avant et pendant le dévelo
 - [ADR-0001 — Règles du premier domaine métier](./decisions/ADR-0001-domain-rules.md)
 - [ADR-0002 — Planification et génération des occurrences](./decisions/ADR-0002-schedules-occurrences.md)
 - [ADR-0003 — Intégration de la V1 utilisable](./decisions/ADR-0003-v1-usable-integration.md)
+- [ADR-0004 — Finalisation fonctionnelle de la V1](./decisions/ADR-0004-finalisation-v1.md)
 
 ## Règle de gouvernance
 
@@ -37,4 +38,4 @@ Toute décision structurante devra être documentée avant fusion :
 
 ## Statut
 
-Le cadrage initial est validé. Les ADR complètent désormais cette source de vérité à mesure que les lots métier sont développés.
+Le cadrage initial et la V1 fonctionnelle sont validés par les ADR. Les assets définitifs, les icônes et les scènes animées restent pilotés séparément par la bible graphique.

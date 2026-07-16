@@ -4,6 +4,18 @@
 
 Le projet avance par portes de validation. Une phase n’est pas considérée terminée parce que des fichiers existent, mais parce que ses décisions sont cohérentes, testables et approuvées.
 
+## État au 16 juillet 2026
+
+La V1 fonctionnelle est finalisée sur les volets produit, domaine, persistance, interfaces, sauvegarde et PWA.
+
+- phases 0 à 6 : réalisées et contrôlées ;
+- phase 7 : contenu fonctionnel présent, production graphique définitive encore à réaliser ;
+- phase 8 : contrôles statiques, tests automatisés, responsive et hors ligne réalisés ; tests utilisateurs accompagnés et performance sur appareils modestes encore à conduire ;
+- phase 9 : pilote privé non démarré ;
+- phase 10 : déploiement technique disponible, documentation publique et revue finale encore à compléter.
+
+Les illustrations, icônes, poses de mascotte et animations parallaxes constituent désormais un chantier graphique séparé. Elles devront respecter la bible des assets sans modifier le domaine métier stabilisé.
+
 ## Phase 0, cadrage
 
 ### Livrables
@@ -25,6 +37,8 @@ Le projet avance par portes de validation. Une phase n’est pas considérée te
 - univers initial retenu ;
 - aucun désaccord majeur entre produit, données et architecture ;
 - fonctions hors périmètre clairement listées.
+
+**Statut : réalisée.**
 
 ## Phase 1, conception détaillée
 
@@ -51,6 +65,8 @@ Le projet avance par portes de validation. Une phase n’est pas considérée te
 - animation réalisable avec les assets choisis ;
 - aucun besoin technique majeur non résolu.
 
+**Statut : réalisée pour la conception fonctionnelle. Prototype graphique animé encore à produire.**
+
 ## Phase 2, fondation technique
 
 ### Livrables
@@ -62,7 +78,7 @@ Le projet avance par portes de validation. Une phase n’est pas considérée te
 - CI ;
 - tests ;
 - shell PWA ;
-- navigation vide ;
+- navigation ;
 - design tokens ;
 - registre d’assets ;
 - validation de contenus ;
@@ -71,9 +87,11 @@ Le projet avance par portes de validation. Une phase n’est pas considérée te
 ### Porte de sortie
 
 - tous les contrôles sont verts ;
-- aucune fonctionnalité métier encore couplée à l’interface ;
+- aucune fonctionnalité métier couplée directement au stockage ;
 - build et smoke test automatiques ;
-- fonctionnement offline du shell.
+- fonctionnement hors ligne.
+
+**Statut : réalisée.**
 
 ## Phase 3, domaine métier
 
@@ -96,47 +114,58 @@ Le projet avance par portes de validation. Une phase n’est pas considérée te
 - aucune punition implicite ;
 - progression reconstructible.
 
+**Statut : réalisée.**
+
 ## Phase 4, persistance
 
 ### Livrables
 
 - IndexedDB ;
 - repositories ;
-- migrations ;
+- migration V1 vers V2 ;
 - sauvegarde avant migration ;
+- journal de migration ;
 - export ;
-- import ;
+- import validé profondément ;
 - restauration ;
-- stockage média facultatif.
+- sauvegardes automatiques consultables.
 
 ### Porte de sortie
 
-- tests de migration depuis chaque schéma ;
+- tests de migration depuis chaque schéma supporté ;
 - import invalide sans effet ;
 - restauration fiable ;
+- écritures ordonnées ;
 - absence d’accès au stockage hors adaptateurs.
 
-## Phase 5, expérience parent minimale
+**Statut : réalisée. Le stockage média photo reste réservé à une évolution ultérieure.**
+
+## Phase 5, expérience parent
 
 ### Livrables
 
+- onboarding ;
 - verrou parent ;
 - tableau de bord ;
-- profils ;
+- profils complets ;
 - bibliothèque ;
+- modèles personnalisables ;
 - éditeur de quête ;
-- planification ;
+- planification multi-enfants ;
+- gestion des routines ;
 - demandes de validation ;
-- réglages et sauvegarde.
+- réglages et sauvegardes.
 
 ### Porte de sortie
 
 - parcours complet utilisable sans documentation ;
 - saisie rapide ;
-- navigation clavier ;
-- aucune option avancée imposée.
+- navigation clavier possible ;
+- options avancées regroupées dans les écrans dédiés.
 
-## Phase 6, expérience enfant minimale
+**Statut : réalisée fonctionnellement. Validation avec de vrais parents encore à conduire.**
+
+## Phase 6, expérience enfant
 
 ### Livrables
 
@@ -146,56 +175,80 @@ Le projet avance par portes de validation. Une phase n’est pas considérée te
 - détail ;
 - audio ;
 - demande de validation ;
-- récompense ;
+- récompense immédiate ou différée ;
 - trésor ;
-- histoire.
+- histoire ;
+- distinction douce des quêtes facultatives ;
+- étapes unitaires pour les 3 à 5 ans.
 
 ### Porte de sortie
 
 - parcours réalisable avec son désactivé ;
 - parcours réalisable avec animations réduites ;
-- mode 3 à 5 ans compréhensible sans lecture ;
-- trois interactions principales maximum par quête.
+- trois interactions principales maximum par quête ;
+- aucune mécanique culpabilisante.
+
+**Statut : réalisée fonctionnellement. La compréhension sans lecture dépend encore des futurs assets illustrés.**
 
 ## Phase 7, contenu et assets
 
-### Livrables
+### Livrables fonctionnels réalisés
 
 - univers La Forêt des Lucioles ;
-- mascotte ;
 - quatre états du monde ;
 - 40 quêtes ;
-- récompenses ;
+- 12 récompenses ;
 - habitants ;
 - huit chapitres ;
-- sons ;
-- textes alternatifs ;
-- icônes PWA.
+- textes alternatifs et fallbacks ;
+- registre typé.
+
+### Livrables graphiques restant à produire
+
+- mascotte définitive ;
+- expressions et poses ;
+- quatre décors réellement différenciés ;
+- 40 illustrations de quêtes ;
+- récompenses et habitants illustrés ;
+- sons finaux ;
+- icônes PWA PNG ;
+- scènes et animations parallaxes.
 
 ### Porte de sortie
 
-- registre complet ;
+- registre complet avec les assets définitifs ;
 - aucun asset manquant ;
 - budgets respectés ;
 - cohérence graphique validée ;
-- contenus relus pour chaque tranche d’âge.
+- contenus relus pour chaque tranche d’âge ;
+- compréhension des quêtes testée à taille réelle.
+
+**Statut : en cours. Fonctionnel terminé, graphisme définitif à réaliser.**
 
 ## Phase 8, tests et stabilisation
 
-### Tests
+### Réalisé
 
-- domaine ;
-- intégration ;
-- migrations ;
-- accessibilité ;
-- responsive ;
-- PWA ;
-- hors ligne ;
-- mise à jour ;
-- import/export ;
+- tests du domaine ;
+- tests des services applicatifs ;
+- tests des migrations et imports ;
+- contrôle des écritures concurrentes ;
+- contrôles d’architecture et cycles ;
+- couverture des couches pures ;
+- responsive Chrome mobile, tablette et bureau ;
+- PWA et fonctionnement hors ligne ;
+- mise à jour contrôlée du service worker ;
+- navigation complète ;
+- build et déploiement automatisés.
+
+### Restant
+
+- audit manuel d’accessibilité avec lecteur d’écran ;
+- tests Safari et iOS installés ;
 - tests utilisateurs parent ;
 - tests accompagnés enfant ;
-- performance sur appareils modestes.
+- performance sur appareils modestes ;
+- contrôle final avec les assets définitifs.
 
 ### Porte de sortie
 
@@ -204,6 +257,8 @@ Le projet avance par portes de validation. Une phase n’est pas considérée te
 - aucune régression de sécurité enfant ;
 - parcours principaux validés ;
 - documentation à jour.
+
+**Statut : stabilisation technique réalisée, validation humaine et multi-navigateurs restante.**
 
 ## Phase 9, pilote privé
 
@@ -223,19 +278,30 @@ Le projet avance par portes de validation. Une phase n’est pas considérée te
 - parents capables de gérer les quêtes sans assistance ;
 - enfant revenant pour découvrir son monde plutôt que pour accumuler des points.
 
+**Statut : non démarrée.**
+
 ## Phase 10, déploiement V1
 
-### Livrables
+### Déjà disponible
 
 - build de production ;
-- hébergement ;
-- domaine éventuel ;
-- politique de confidentialité ;
-- guide parent ;
+- hébergement GitHub Pages ;
 - sauvegardes ;
-- procédure de retour arrière ;
+- contrôles post-déploiement ;
+- mécanisme de mise à jour PWA.
+
+### Restant avant diffusion finale
+
+- domaine éventuel ;
+- politique de confidentialité publiée ;
+- guide parent ;
+- procédure de retour arrière documentée ;
 - notes de version ;
-- support minimal.
+- support minimal ;
+- validation après intégration des assets définitifs ;
+- bilan du pilote privé.
+
+**Statut : déploiement technique disponible, diffusion finale non validée.**
 
 ## Après la V1
 
@@ -243,9 +309,8 @@ Ordre potentiel, à revalider selon l’usage :
 
 1. modèles et aventures supplémentaires ;
 2. second univers ;
-3. duplication de routines ;
-4. synchronisation familiale privée ;
-5. partage d’un pack de quêtes sans données enfant ;
-6. outils de création narrative.
+3. synchronisation familiale privée ;
+4. partage d’un pack de quêtes sans données enfant ;
+5. outils de création narrative.
 
 Aucune fonction connectée n’est automatiquement prioritaire. La V1 doit d’abord prouver que la boucle familiale est utile.

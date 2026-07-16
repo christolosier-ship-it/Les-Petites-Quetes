@@ -10,7 +10,43 @@ permissions:
   contents: read
 
 jobs:
+  typing:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Récupérer le dépôt
+        uses: actions/checkout@v4
+        with:
+          show-progress: false
+      - name: Installer Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Installer les dépendances
+        run: npm install --silent --no-audit --no-fund
+      - name: Vérifier le typage strict
+        run: npm run typecheck
+
+  coverage:
+    needs: typing
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Récupérer le dépôt
+        uses: actions/checkout@v4
+        with:
+          show-progress: false
+      - name: Installer Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Installer les dépendances
+        run: npm install --silent --no-audit --no-fund
+      - name: Vérifier la couverture
+        run: npm run test:coverage
+
   quality:
+    needs: [typing, coverage]
     runs-on: ubuntu-latest
     timeout-minutes: 15
 
@@ -45,17 +81,56 @@ jobs:
       - name: Vérifier les contenus
         run: npm run check:content
 
-      - name: Exécuter le lint
-        run: npm run lint
+      - name: Lint scripts et configuration
+        run: npx eslint scripts eslint.config.js vite.config.ts
 
-      - name: Vérifier le typage
-        run: npm run typecheck
+      - name: Lint domaine
+        run: npx eslint src/domain
+
+      - name: Lint modèles et ports applicatifs
+        run: npx eslint src/application/model src/application/ports
+
+      - name: Lint commandes de préparation
+        run: npx eslint src/application/services/familySetupCommands.ts src/application/services/familySetupCommands.test.ts
+
+      - name: Lint flux et actualisation
+        run: npx eslint src/application/services/questFlowCommands.ts src/application/services/questFlowCommands.test.ts src/application/services/stateRefresh.ts
+
+      - name: Lint file de mutations
+        run: npx eslint src/application/services/StateCommitQueue.ts src/application/services/StateCommitQueue.test.ts
+
+      - name: Lint contrat et factory du contrôleur
+        run: npx eslint src/app/controller/FamilyAppController.ts src/app/controller/createFamilyController.ts
+
+      - name: Lint hook du contrôleur
+        run: npx eslint src/app/controller/useFamilyApp.ts
+
+      - name: Lint shell état et tests app
+        run: npx eslint src/app/App.tsx src/app/App.test.tsx src/app/state
+
+      - name: Lint primitives de validation
+        run: npx eslint src/persistence/schemas/runtimeValidation.ts
+
+      - name: Lint hydratation des entités
+        run: npx eslint src/persistence/schemas/hydrateEntities.ts
+
+      - name: Lint invariants familiaux
+        run: npx eslint src/persistence/schemas/validateFamilyState.ts src/persistence/schemas/validateFamilyState.test.ts src/persistence/schemas/familyReferences.ts src/persistence/schemas/worldProgressValidation.ts
+
+      - name: Lint migrations
+        run: npx eslint src/persistence/migrations
+
+      - name: Lint repositories et sauvegardes
+        run: npx eslint src/persistence/repositories src/persistence/backup
+
+      - name: Lint plateforme navigateur
+        run: npx eslint src/platform
+
+      - name: Lint interface contenus et fixtures
+        run: npx eslint src/features src/pages src/components src/content src/assets src/tests src/main.tsx
 
       - name: Exécuter les tests unitaires
         run: npm run test
-
-      - name: Vérifier la couverture
-        run: npm run test:coverage
 
       - name: Construire l’application
         run: npm run build
