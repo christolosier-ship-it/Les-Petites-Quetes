@@ -96,7 +96,7 @@ export function requestAnotherStep(
   return {
     ...occurrence,
     status: 'available',
-    validationFeedback: 'small-step-remains',
+    validationNote: 'small-step-remains',
     ...incrementRevision(occurrence, decidedAt),
   };
 }
@@ -110,7 +110,7 @@ export function requestJointReview(
 
   return {
     ...occurrence,
-    validationFeedback: 'review-together',
+    validationNote: 'review-together',
     ...incrementRevision(occurrence, decidedAt),
   };
 }
