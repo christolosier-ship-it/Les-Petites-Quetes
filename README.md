@@ -6,9 +6,9 @@ Une application familiale qui transforme les petites actions du quotidien en ave
 
 ## Statut
 
-Projet en phase de cadrage. Aucun développement applicatif n’a encore commencé.
+La V1 est entrée en création par incréments. La branche stable reste protégée par des pull requests et une chaîne complète de contrôles.
 
-La première proposition de fondations est disponible dans le [dossier de cadrage](./docs/00-INDEX.md).
+Le premier lot fournit uniquement la fondation exécutable : shell React, navigation parent/enfant, PWA hors ligne, design tokens, registres typés, tests et garde-fous d’architecture. Le moteur de quêtes n’est pas encore développé.
 
 ## Principes fondateurs
 
@@ -17,6 +17,33 @@ La première proposition de fondations est disponible dans le [dossier de cadrag
 - Aucun classement, aucune publicité et aucun achat intégré.
 - L’application complète les encouragements du parent sans chercher à les remplacer.
 - La sécurité, l’accessibilité et la vie privée des enfants sont intégrées dès la conception.
+
+## Architecture
+
+Le projet est un monolithe modulaire React + TypeScript, local-first et organisé autour du domaine métier.
+
+```text
+Interface → commandes applicatives → domaine pur → ports → adaptateurs locaux
+```
+
+Les composants ne lisent pas le stockage, le domaine ne dépend pas du navigateur et les assets passent par un registre typé.
+
+## Démarrage local
+
+Prérequis : Node.js 22.
+
+```bash
+npm install
+npm run dev
+```
+
+## Contrôles
+
+```bash
+npm run check
+```
+
+Cette commande vérifie l’architecture, les cycles, les budgets de fichiers, les assets, les contenus, le lint, le typage, la couverture, le build, le bundle et un smoke test dans Chrome.
 
 ## Documents
 
@@ -37,5 +64,3 @@ La première proposition de fondations est disponible dans le [dossier de cadrag
 3. Création par lots contrôlés
 4. Tests métier, accessibilité, sécurité et performance
 5. Déploiement progressif
-
-Aucun code fonctionnel ne sera lancé avant validation du cadrage et de l’architecture.
