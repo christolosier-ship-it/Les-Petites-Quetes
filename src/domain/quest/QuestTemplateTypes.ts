@@ -5,6 +5,7 @@ import type {
   ReadingLevel,
   ValidationMode,
 } from '../shared/types';
+import type { WorldId } from '../world/WorldDefinition';
 
 export interface QuestStep {
   readonly id: string;
@@ -16,6 +17,8 @@ export type QuestTemplateSource = 'builtin' | 'custom';
 export interface QuestTemplate extends EntityMetadata {
   readonly source: QuestTemplateSource;
   readonly contentVersion?: string;
+  readonly familyId: string;
+  readonly worldId: WorldId;
   readonly title: string;
   readonly instruction: string;
   readonly categoryId: QuestCategoryId;
@@ -32,6 +35,8 @@ export interface QuestTemplate extends EntityMetadata {
 }
 
 export interface QuestTemplateInput {
+  readonly familyId: string;
+  readonly worldId: WorldId;
   readonly title: string;
   readonly instruction: string;
   readonly categoryId: QuestCategoryId;
@@ -47,6 +52,8 @@ export interface QuestTemplateInput {
 }
 
 export interface QuestTemplateChanges {
+  readonly familyId?: string;
+  readonly worldId?: WorldId;
   readonly title?: string;
   readonly instruction?: string;
   readonly categoryId?: QuestCategoryId;

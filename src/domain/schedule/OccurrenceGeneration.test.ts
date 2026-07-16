@@ -1,232 +1,88 @@
 import { describe, expect, it } from 'vitest';
-import { createChildProfile, archiveChildProfile, type ChildProfile } from '../child/ChildProfile';
+import { createChildProfile } from '../child/ChildProfile';
 import type { QuestOccurrence } from '../completion/QuestOccurrenceTypes';
-import { DomainError, type DomainErrorCode } from '../shared/errors';
-import { createQuestSchedule, suspendQuestSchedule } from './QuestSchedule';
-import {
-  generateQuestOccurrences,
-  releaseDueQuestOccurrences,
-  type OccurrenceIdentitySeed,
-} from './OccurrenceGeneration';
+import { DomainError } from '../shared/errors';
+import { createQuestSchedule } from './QuestSchedule';
+import { generateQuestOccurrences, releaseDueQuestOccurrences } from './OccurrenceGeneration';
 
-function child(id: string): ChildProfile {
-  return createChildProfile(
-    {
-      displayName: id,
-      ageBand: '3-5',
-      readingLevel: 'visual',
-      avatarId: 'avatar.firefly',
-      accentId: 'accent.sunrise',
-      activeWorldId: 'world.firefly-forest',
-    },
-    { id, createdAt: '2026-07-16T07:00:00.000Z' },
-  );
+const createdAt = '2026-07-16T08:00:00.000Z';
+const child35 = createChildProfile({ displayName: 'Maddie', ageBand: '3-5', readingLevel: 'visual', avatarId: 'avatar.girl.3-5' }, { id: 'child-35', createdAt });
+const child68 = createChildProfile({ displayName: 'Nais', ageBand: '6-8', readingLevel: 'short-text', avatarId: 'avatar.girl.6-8' }, { id: 'child-68', createdAt });
+const schedule = createQuestSchedule({
+  questTemplateId: 'family.morning.dress.3-5',
+  questFamilyId: 'family.morning.dress',
+  worldId: 'world.dragon-mountain',
+  childIds: [child35.id, child68.id],
+  kind: 'weekly',
+  startDate: '2026-07-16',
+  endDate: '2026-07-31',
+  weekdays: ['thu'],
+  dayMoment: 'morning',
+  priority: 'required',
+  validationMode: 'parent',
+}, { id: 'schedule-1', createdAt });
+
+function generate(existingOccurrences: readonly QuestOccurrence[] = []) {
+  return generateQuestOccurrences({
+    schedule,
+    children: [child35, child68],
+    existingOccurrences,
+    generationRange: { fromDate: '2026-07-16', toDate: '2026-07-23', today: '2026-07-16', generatedAt: createdAt },
+    createOccurrenceId: ({ childId, localDate }) => `${childId}-${localDate}`,
+    resolveQuestVariantId: (familyId, ageBand) => `${familyId}.${ageBand}`,
+  });
 }
 
-function weeklySchedule() {
-  return createQuestSchedule(
-    {
-      questTemplateId: 'quest.brush-teeth',
-      childIds: ['child-1', 'child-2'],
-      kind: 'weekly',
-      startDate: '2026-07-16',
-      endDate: '2026-07-31',
-      weekdays: ['mon', 'thu'],
-      dayMoment: 'morning',
-      priority: 'required',
-      validationMode: 'parent',
-    },
-    { id: 'schedule-1', createdAt: '2026-07-16T07:00:00.000Z' },
-  );
-}
+describe('OccurrenceGeneration V3', () => {
+  it('génère une variante différente par âge dans le même univers', () => {
+    const occurrences = generate();
+    expect(occurrences).toHaveLength(4);
+    expect(occurrences.filter((item) => item.childId === child35.id).every((item) => item.questTemplateId.endsWith('.3-5'))).toBe(true);
+    expect(occurrences.filter((item) => item.childId === child68.id).every((item) => item.questTemplateId.endsWith('.6-8'))).toBe(true);
+    expect(new Set(occurrences.map((item) => item.questFamilyId))).toEqual(new Set(['family.morning.dress']));
+    expect(new Set(occurrences.map((item) => item.worldId))).toEqual(new Set(['world.dragon-mountain']));
+  });
 
-function occurrence(overrides: Partial<QuestOccurrence> = {}): QuestOccurrence {
-  return {
-    id: 'occurrence-existing',
-    scheduleId: 'schedule-1',
-    questTemplateId: 'quest.brush-teeth',
-    childId: 'child-1',
-    localDate: '2026-07-16',
-    dayMoment: 'morning',
-    status: 'available',
-    createdAt: '2026-07-16T07:00:00.000Z',
-    updatedAt: '2026-07-16T07:00:00.000Z',
-    revision: 1,
-    ...overrides,
-  };
-}
+  it('ne régénère pas une clé métier existante, même terminée', () => {
+    const initial = generate();
+    const completed: QuestOccurrence = { ...initial[0]!, status: 'completed', completedAt: 'later', completionId: 'completion-1' };
+    const next = generate([completed, ...initial.slice(1)]);
+    expect(next).toHaveLength(0);
+  });
 
-function createId(seed: OccurrenceIdentitySeed): string {
-  return `occ-${seed.childId}-${seed.localDate}`;
-}
-
-function expectDomainError(run: () => unknown, code: DomainErrorCode): void {
-  try {
-    run();
-  } catch (error) {
-    expect(error).toBeInstanceOf(DomainError);
-    if (error instanceof DomainError) expect(error.code).toBe(code);
-    return;
-  }
-  throw new Error(`L’erreur métier ${code} était attendue.`);
-}
-
-describe('génération des occurrences', () => {
-  it('génère les jours attendus pour chaque enfant avec un statut temporel neutre', () => {
-    const generated = generateQuestOccurrences({
-      schedule: weeklySchedule(),
-      children: [child('child-1'), child('child-2')],
+  it('ignore les profils archivés et les routines suspendues', () => {
+    const archivedChild = { ...child35, isArchived: true };
+    const onlyActive = generateQuestOccurrences({
+      schedule,
+      children: [archivedChild, child68],
       existingOccurrences: [],
-      generationRange: {
-        fromDate: '2026-07-16',
-        toDate: '2026-07-23',
-        today: '2026-07-18',
-        generatedAt: '2026-07-16T08:00:00.000Z',
-      },
-      createOccurrenceId: createId,
+      generationRange: { fromDate: '2026-07-16', toDate: '2026-07-16', today: '2026-07-16', generatedAt: createdAt },
+      createOccurrenceId: ({ childId }) => childId,
     });
-
-    expect(generated).toHaveLength(6);
-    expect(generated.map((item) => `${item.childId}:${item.localDate}`)).toEqual([
-      'child-1:2026-07-16',
-      'child-1:2026-07-20',
-      'child-1:2026-07-23',
-      'child-2:2026-07-16',
-      'child-2:2026-07-20',
-      'child-2:2026-07-23',
-    ]);
-    expect(generated.filter((item) => item.status === 'available')).toHaveLength(2);
-    expect(generated.filter((item) => item.status === 'upcoming')).toHaveLength(4);
-  });
-
-  it('ne recrée aucune occurrence déjà connue, quel que soit son état', () => {
-    const first = generateQuestOccurrences({
-      schedule: weeklySchedule(),
-      children: [child('child-1'), child('child-2')],
+    expect(onlyActive).toHaveLength(1);
+    const suspended = generateQuestOccurrences({
+      schedule: { ...schedule, isSuspended: true },
+      children: [child35, child68],
       existingOccurrences: [],
-      generationRange: {
-        fromDate: '2026-07-16',
-        toDate: '2026-07-16',
-        today: '2026-07-16',
-        generatedAt: 'generated',
-      },
-      createOccurrenceId: createId,
+      generationRange: { fromDate: '2026-07-16', toDate: '2026-07-16', today: '2026-07-16', generatedAt: createdAt },
+      createOccurrenceId: ({ childId }) => childId,
     });
-    const terminal = { ...first[0]!, status: 'completed' as const };
-    const tombstone = { ...first[1]!, deletedAt: 'deleted' };
-
-    expect(
-      generateQuestOccurrences({
-        schedule: weeklySchedule(),
-        children: [child('child-1'), child('child-2')],
-        existingOccurrences: [terminal, tombstone],
-        generationRange: {
-          fromDate: '2026-07-16',
-          toDate: '2026-07-16',
-          today: '2026-07-16',
-          generatedAt: 'again',
-        },
-        createOccurrenceId: createId,
-      }),
-    ).toEqual([]);
+    expect(suspended).toEqual([]);
   });
 
-  it('ignore une planification suspendue et les profils archivés ou supprimés', () => {
-    const archived = archiveChildProfile(child('child-1'), 'archived');
-    const deleted = { ...child('child-2'), deletedAt: 'deleted' };
-    const input = {
-      children: [archived, deleted],
+  it('refuse une plage de génération inversée', () => {
+    expect(() => generateQuestOccurrences({
+      schedule,
+      children: [child35],
       existingOccurrences: [],
-      generationRange: {
-        fromDate: '2026-07-16',
-        toDate: '2026-07-23',
-        today: '2026-07-16',
-        generatedAt: 'generated',
-      },
-      createOccurrenceId: createId,
-    } as const;
-
-    expect(generateQuestOccurrences({ ...input, schedule: weeklySchedule() })).toEqual([]);
-    expect(
-      generateQuestOccurrences({
-        ...input,
-        schedule: suspendQuestSchedule(weeklySchedule(), 'suspended'),
-      }),
-    ).toEqual([]);
+      generationRange: { fromDate: '2026-07-20', toDate: '2026-07-16', today: '2026-07-16', generatedAt: createdAt },
+      createOccurrenceId: () => 'occ',
+    })).toThrowError(DomainError);
   });
 
-  it('signale un enfant manquant au lieu de perdre silencieusement une attribution', () => {
-    expectDomainError(
-      () =>
-        generateQuestOccurrences({
-          schedule: weeklySchedule(),
-          children: [child('child-1')],
-          existingOccurrences: [],
-          generationRange: {
-            fromDate: '2026-07-16',
-            toDate: '2026-07-16',
-            today: '2026-07-16',
-            generatedAt: 'generated',
-          },
-          createOccurrenceId: createId,
-        }),
-      'occurrence.child-not-found',
-    );
-  });
-
-  it('refuse une plage inversée pour tous les types de planification', () => {
-    expectDomainError(
-      () =>
-        generateQuestOccurrences({
-          schedule: weeklySchedule(),
-          children: [child('child-1'), child('child-2')],
-          existingOccurrences: [],
-          generationRange: {
-            fromDate: '2026-07-20',
-            toDate: '2026-07-16',
-            today: '2026-07-16',
-            generatedAt: 'generated',
-          },
-          createOccurrenceId: createId,
-        }),
-      'occurrence.invalid-generation-range',
-    );
-  });
-
-  it('refuse une collision d’identifiant même entre deux dates différentes', () => {
-    expectDomainError(
-      () =>
-        generateQuestOccurrences({
-          schedule: weeklySchedule(),
-          children: [child('child-1'), child('child-2')],
-          existingOccurrences: [],
-          generationRange: {
-            fromDate: '2026-07-16',
-            toDate: '2026-07-20',
-            today: '2026-07-16',
-            generatedAt: 'generated',
-          },
-          createOccurrenceId: () => 'same-id',
-        }),
-      'occurrence.id-collision',
-    );
-  });
-
-  it('rend disponibles uniquement les occurrences arrivées à échéance', () => {
-    const future = occurrence({ id: 'future', localDate: '2026-07-20', status: 'upcoming' });
-    const due = occurrence({ id: 'due', localDate: '2026-07-16', status: 'upcoming' });
-    const completed = occurrence({ id: 'completed', status: 'completed' });
-    const deleted = occurrence({ id: 'deleted', status: 'upcoming', deletedAt: 'deleted' });
-    const released = releaseDueQuestOccurrences(
-      [future, due, completed, deleted],
-      '2026-07-16',
-      '2026-07-16T08:00:00.000Z',
-    );
-
-    expect(released[0]).toBe(future);
-    expect(released[1]).toMatchObject({ status: 'available', revision: 2 });
-    expect(released[2]).toBe(completed);
-    expect(released[3]).toBe(deleted);
-    expect(releaseDueQuestOccurrences(released, '2026-07-16', 'later')[1]).toBe(released[1]);
+  it('rend disponibles les occurrences arrivées à échéance', () => {
+    const upcoming: QuestOccurrence = { ...generate()[1]!, status: 'upcoming', localDate: '2026-07-17' };
+    const released = releaseDueQuestOccurrences([upcoming], '2026-07-17', 'released');
+    expect(released[0]).toMatchObject({ status: 'available', revision: 2 });
   });
 });

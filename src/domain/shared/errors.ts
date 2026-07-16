@@ -13,6 +13,7 @@ export type DomainErrorCode =
   | 'quest.instruction-required'
   | 'quest.instruction-too-long'
   | 'quest.invalid-category'
+  | 'quest.invalid-world'
   | 'quest.identifier-required'
   | 'quest.age-band-required'
   | 'quest.age-band-duplicated'
@@ -33,6 +34,7 @@ export type DomainErrorCode =
   | 'schedule.child-required'
   | 'schedule.child-duplicated'
   | 'schedule.invalid-kind'
+  | 'schedule.invalid-world'
   | 'schedule.invalid-local-date'
   | 'schedule.invalid-date-range'
   | 'schedule.invalid-day-moment'
@@ -70,11 +72,6 @@ export class DomainError extends Error {
   }
 }
 
-export function assertDomain(
-  condition: unknown,
-  code: DomainErrorCode,
-  message: string,
-  field?: string,
-): asserts condition {
+export function assertDomain(condition: unknown, code: DomainErrorCode, message: string, field?: string): asserts condition {
   if (!condition) throw new DomainError(code, message, field);
 }

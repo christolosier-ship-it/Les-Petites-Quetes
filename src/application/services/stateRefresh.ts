@@ -1,3 +1,4 @@
+import { findQuestVariantForAge } from '../../content/quests/builtinQuests';
 import { releaseDueQuestOccurrences, generateQuestOccurrences } from '../../domain/schedule/OccurrenceGeneration';
 import { addLocalDays } from '../../domain/shared/localDate';
 import type { FamilyState } from '../model/FamilyState';
@@ -19,6 +20,9 @@ export function refreshScheduledOccurrences(
       existingOccurrences: occurrences,
       generationRange: { fromDate: today, toDate, today, generatedAt: now },
       createOccurrenceId: () => ids.next(),
+      resolveQuestVariantId: (familyId, ageBand, fallbackTemplateId) =>
+        findQuestVariantForAge(familyId, ageBand, state.customQuestTemplates, fallbackTemplateId)?.id
+        ?? fallbackTemplateId,
     });
     occurrences = [...occurrences, ...generated];
   }

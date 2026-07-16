@@ -1,5 +1,4 @@
-import type { FamilyAppController } from '../app/controller/useFamilyApp';
-import { getAsset, getAssetUrl } from '../assets/registry/catalog';
+import type { FamilyAppController } from '../app/controller/FamilyAppController';
 import { Button } from '../components/primitives/Button';
 import { Card } from '../components/primitives/Card';
 
@@ -10,30 +9,27 @@ interface WelcomePageProps {
 }
 
 export function WelcomePage({ app, onOpenChild, onOpenParent }: WelcomePageProps) {
-  const worldAsset = getAsset('world.forest-stage-0');
   const activeChildren = app.state.children.filter((child) => !child.isArchived && child.deletedAt === undefined);
-  const pending = app.state.occurrences.filter((item) => item.status === 'validation-requested').length;
+  const available = app.state.occurrences.filter((item) => item.deletedAt === undefined && item.status === 'available').length;
+  const pending = app.state.occurrences.filter((item) => item.deletedAt === undefined && item.status === 'validation-requested').length;
 
   return (
-    <section className="welcome-page" data-page="welcome">
-      <div className="welcome-copy">
-        <p className="eyebrow">Petit effort, monde qui grandit</p>
-        <h2>Les petites actions deviennent des aventures</h2>
-        <p>Un adulte prépare les quêtes. L’enfant les réalise dans le monde réel, puis réveille peu à peu La Forêt des Lucioles.</p>
-        <div className="welcome-actions" aria-label="Choisir un espace">
-          <Button onClick={onOpenChild} disabled={activeChildren.length === 0}>Espace enfant</Button>
-          <Button onClick={onOpenParent} variant="secondary">Espace parent</Button>
-        </div>
-        {activeChildren.length === 0 ? (
-          <p className="welcome-hint">Commence par l’espace parent pour créer le premier profil.</p>
-        ) : (
-          <div className="welcome-stats"><span>🧒 {activeChildren.length} profil(s)</span><span>🧭 {pending} validation(s)</span><span>✨ {app.state.rewardGrants.length} lumière(s)</span></div>
-        )}
-      </div>
-      <figure className="world-preview">
-        <img src={getAssetUrl(worldAsset.id)} alt={worldAsset.alt} />
-        <figcaption>La Forêt des Lucioles grandit sans points, classement ni série à préserver.</figcaption>
-      </figure>
+    <section className="family-gateway" data-page="welcome" aria-label="Choisir un espace">
+      <button type="button" className="gateway-pane gateway-pane--child" onClick={onOpenChild} disabled={activeChildren.length === 0}>
+        <span className="gateway-pane__illustration" aria-hidden="true">🌍</span>
+        <span className="eyebrow">À gauche</span>
+        <strong>Espace enfant</strong>
+        <span>Choisir son avatar, découvrir les six univers et voir les quêtes disponibles.</span>
+        {available > 0 && <span className="gateway-notice">{available} quête{available > 1 ? 's' : ''} disponible{available > 1 ? 's' : ''}</span>}
+      </button>
+      <button type="button" className="gateway-pane gateway-pane--parent" onClick={onOpenParent}>
+        <span className="gateway-pane__illustration" aria-hidden="true">🧭</span>
+        <span className="eyebrow">À droite</span>
+        <strong>Espace parent</strong>
+        <span>Créer les profils, préparer les quêtes et suivre chaque univers.</span>
+        {pending > 0 && <span className="gateway-notice gateway-notice--parent">{pending} validation{pending > 1 ? 's' : ''}</span>}
+      </button>
+      {activeChildren.length === 0 && <Card className="gateway-help"><p>Commence par l’espace parent pour créer le premier profil.</p><Button onClick={onOpenParent}>Créer un profil</Button></Card>}
       {app.error && <Card className="form-message"><p role="alert">{app.error}</p></Card>}
     </section>
   );

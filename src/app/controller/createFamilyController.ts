@@ -53,19 +53,13 @@ interface ControllerRuntime {
   readonly setBackups: (value: readonly FamilyBackupSummary[]) => void;
 }
 
-function preferenceChanges(
-  changes: Partial<FamilyState['settings']>,
-): Partial<FamilyState['settings']> {
+function preferenceChanges(changes: Partial<FamilyState['settings']>): Partial<FamilyState['settings']> {
   return {
     ...(changes.soundEnabled !== undefined ? { soundEnabled: changes.soundEnabled } : {}),
     ...(changes.narrationEnabled !== undefined ? { narrationEnabled: changes.narrationEnabled } : {}),
     ...(changes.reducedMotion !== undefined ? { reducedMotion: changes.reducedMotion } : {}),
-    ...(changes.defaultValidationMode !== undefined
-      ? { defaultValidationMode: changes.defaultValidationMode }
-      : {}),
-    ...(changes.celebrationDurationSeconds !== undefined
-      ? { celebrationDurationSeconds: changes.celebrationDurationSeconds }
-      : {}),
+    ...(changes.defaultValidationMode !== undefined ? { defaultValidationMode: changes.defaultValidationMode } : {}),
+    ...(changes.celebrationDurationSeconds !== undefined ? { celebrationDurationSeconds: changes.celebrationDurationSeconds } : {}),
   };
 }
 
@@ -78,16 +72,11 @@ function customizedQuest(
 ): FamilyState {
   const source = builtinQuestTemplates.find((template) => template.id === templateId);
   if (!source) throw new Error('Modèle intégré introuvable.');
-  const customized = customizeBuiltinTemplate(
-    current,
-    source,
-    changes,
-    runtime.clock.nowIso(),
-    runtime.ids,
-  );
+  const customized = customizeBuiltinTemplate(current, source, changes, runtime.clock.nowIso(), runtime.ids);
+  const template = customized.state.customQuestTemplates.find((candidate) => candidate.id === customized.questTemplateId)!;
   return addQuestSchedule(
     customized.state,
-    { ...schedule, questTemplateId: customized.questTemplateId },
+    { ...schedule, questTemplateId: template.id, questFamilyId: template.familyId, worldId: template.worldId },
     runtime.clock.nowIso(),
     runtime.clock.todayLocal(),
     runtime.ids,
@@ -104,16 +93,11 @@ export function createFamilyController(runtime: ControllerRuntime): FamilyAppCon
     backups: runtime.backups,
     builtinTemplates: builtinQuestTemplates,
     completeOnboarding: runtime.completeOnboarding,
-    createChild: async (input) =>
-      apply((current) => addChildProfile(current, input, clock.nowIso(), ids)),
-    updateChild: async (childId, changes) =>
-      apply((current) => editChildProfile(current, childId, changes, clock.nowIso())),
-    archiveChild: async (childId) =>
-      apply((current) => archiveChild(current, childId, clock.nowIso())),
-    restoreChild: async (childId) =>
-      apply((current) => restoreChild(current, childId, clock.nowIso())),
-    selectChild: async (childId) =>
-      apply((current) => ({ ...current, settings: { ...current.settings, activeChildId: childId } })),
+    createChild: async (input) => apply((current) => addChildProfile(current, input, clock.nowIso(), ids)),
+    updateChild: async (childId, changes) => apply((current) => editChildProfile(current, childId, changes, clock.nowIso())),
+    archiveChild: async (childId) => apply((current) => archiveChild(current, childId, clock.nowIso())),
+    restoreChild: async (childId) => apply((current) => restoreChild(current, childId, clock.nowIso())),
+    selectChild: async (childId) => apply((current) => ({ ...current, settings: { ...current.settings, activeChildId: childId } })),
     setParentPin: async (pin) => {
       if (!/^\d{4}$/.test(pin)) throw new Error('Le code parent doit contenir quatre chiffres.');
       await apply((current) => ({ ...current, settings: { ...current.settings, parentPin: pin } }));
@@ -125,67 +109,41 @@ export function createFamilyController(runtime: ControllerRuntime): FamilyAppCon
       return valid;
     },
     lockParent: () => runtime.setParentUnlocked(false),
-    createSchedule: async (input) =>
-      apply((current) => addQuestSchedule(current, input, clock.nowIso(), clock.todayLocal(), ids)),
-    replaceSchedule: async (scheduleId, input) =>
-      apply((current) => replaceQuestSchedule(
-        current, scheduleId, input, clock.nowIso(), clock.todayLocal(), ids,
-      )),
-    setScheduleSuspended: async (scheduleId, suspended) =>
-      apply((current) => setScheduleSuspended(current, scheduleId, suspended, clock.nowIso())),
-    duplicateSchedule: async (scheduleId, startDate) =>
-      apply((current) => duplicateQuestSchedule(
-        current, scheduleId, startDate, clock.nowIso(), clock.todayLocal(), ids,
-      )),
+    createSchedule: async (input) => apply((current) => addQuestSchedule(current, input, clock.nowIso(), clock.todayLocal(), ids)),
+    replaceSchedule: async (scheduleId, input) => apply((current) => replaceQuestSchedule(current, scheduleId, input, clock.nowIso(), clock.todayLocal(), ids)),
+    setScheduleSuspended: async (scheduleId, suspended) => apply((current) => setScheduleSuspended(current, scheduleId, suspended, clock.nowIso())),
+    duplicateSchedule: async (scheduleId, startDate) => apply((current) => duplicateQuestSchedule(current, scheduleId, startDate, clock.nowIso(), clock.todayLocal(), ids)),
     createCustomQuest: runtime.createCustomQuest,
-    customizeBuiltinQuest: async (templateId, changes, schedule) =>
-      apply((current) => customizedQuest(current, templateId, changes, schedule, runtime)),
-    updateCustomQuest: async (templateId, changes) =>
-      apply((current) => editCustomQuestTemplate(current, templateId, changes, clock.nowIso())),
-    archiveCustomQuest: async (templateId) =>
-      apply((current) => archiveCustomQuestTemplate(current, templateId, clock.nowIso())),
-    restoreCustomQuest: async (templateId) =>
-      apply((current) => restoreCustomQuestTemplate(current, templateId, clock.nowIso())),
+    customizeBuiltinQuest: async (templateId, changes, schedule) => apply((current) => customizedQuest(current, templateId, changes, schedule, runtime)),
+    updateCustomQuest: async (templateId, changes) => apply((current) => editCustomQuestTemplate(current, templateId, changes, clock.nowIso())),
+    archiveCustomQuest: async (templateId) => apply((current) => archiveCustomQuestTemplate(current, templateId, clock.nowIso())),
+    restoreCustomQuest: async (templateId) => apply((current) => restoreCustomQuestTemplate(current, templateId, clock.nowIso())),
     startQuest: async (id) => flow((current, now) => startOccurrence(current, id, now)),
     finishQuest: async (id) => flow((current, now) => finishOccurrence(current, id, now, ids)),
     approveQuest: async (id) => flow((current, now) => approveOccurrence(current, id, now, ids)),
     requestAnotherStep: async (id) => flow((current, now) => askAnotherStep(current, id, now)),
     requestJointReview: async (id) => flow((current, now) => askJointReview(current, id, now)),
-    postponeQuest: async (id) => flow((current, now) => postponeOccurrence(
-      current, id, addLocalDays(clock.todayLocal(), 1), clock.todayLocal(), now,
-    )),
+    postponeQuest: async (id) => flow((current, now) => postponeOccurrence(current, id, addLocalDays(clock.todayLocal(), 1), clock.todayLocal(), now)),
     ignoreQuest: async (id) => flow((current, now) => ignoreOccurrence(current, id, now)),
     acknowledgeReward: async (rewardGrantId) => apply((current) => {
-      if (!current.rewardGrants.some((grant) => grant.id === rewardGrantId)) {
-        throw new Error('Récompense introuvable.');
-      }
-      return current.acknowledgedRewardGrantIds.includes(rewardGrantId)
-        ? current
-        : { ...current, acknowledgedRewardGrantIds: [...current.acknowledgedRewardGrantIds, rewardGrantId] };
+      if (!current.rewardGrants.some((grant) => grant.id === rewardGrantId)) throw new Error('Récompense introuvable.');
+      return current.acknowledgedRewardGrantIds.includes(rewardGrantId) ? current : { ...current, acknowledgedRewardGrantIds: [...current.acknowledgedRewardGrantIds, rewardGrantId] };
     }),
-    updatePreferences: async (changes) => apply((current) => ({
-      ...current,
-      settings: { ...current.settings, ...preferenceChanges(changes) },
-    })),
+    updatePreferences: async (changes) => apply((current) => ({ ...current, settings: { ...current.settings, ...preferenceChanges(changes) } })),
     exportBackup: () => serializeFamilyBackup(queue.current(), clock.nowIso()),
     importBackup: runtime.importBackup,
     refreshBackups: runtime.refreshBackups,
     restoreBackup: async (key) => {
       await queue.resolve(async () => {
         const restored = await repository.restoreBackup(key, clock.nowIso());
-        const refreshed = refreshScheduledOccurrences(
-          restored, clock.todayLocal(), clock.nowIso(), ids,
-        );
+        const refreshed = refreshScheduledOccurrences(restored, clock.todayLocal(), clock.nowIso(), ids);
         await repository.save(refreshed);
         return refreshed;
       });
       await runtime.refreshBackups();
     },
     resetAll: async () => {
-      await queue.resolve(async () => {
-        await repository.clear();
-        return createEmptyFamilyState();
-      });
+      await queue.resolve(async () => { await repository.clear(); return createEmptyFamilyState(); });
       runtime.setParentUnlocked(false);
       runtime.setBackups([]);
     },

@@ -1,5 +1,6 @@
 import type { EntityMetadata } from '../shared/entity';
 import type { DayMoment, ValidationMode, Weekday } from '../shared/types';
+import type { WorldId } from '../world/WorldDefinition';
 
 export const SCHEDULE_KINDS = ['immediate', 'one-off', 'weekly'] as const;
 export type ScheduleKind = (typeof SCHEDULE_KINDS)[number];
@@ -9,6 +10,8 @@ export type QuestPriority = (typeof QUEST_PRIORITIES)[number];
 
 export interface QuestSchedule extends EntityMetadata {
   readonly questTemplateId: string;
+  readonly questFamilyId: string;
+  readonly worldId: WorldId;
   readonly childIds: readonly string[];
   readonly kind: ScheduleKind;
   readonly startDate: string;
@@ -23,6 +26,8 @@ export interface QuestSchedule extends EntityMetadata {
 
 export interface QuestScheduleInput {
   readonly questTemplateId: string;
+  readonly questFamilyId: string;
+  readonly worldId: WorldId;
   readonly childIds: readonly string[];
   readonly kind: ScheduleKind;
   readonly startDate: string;
@@ -36,6 +41,8 @@ export interface QuestScheduleInput {
 
 export interface QuestScheduleChanges {
   readonly questTemplateId?: string;
+  readonly questFamilyId?: string;
+  readonly worldId?: WorldId;
   readonly childIds?: readonly string[];
   readonly kind?: ScheduleKind;
   readonly startDate?: string;

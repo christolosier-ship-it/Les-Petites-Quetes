@@ -1,16 +1,12 @@
 import type { ChildProfile } from '../../domain/child/ChildProfile';
 import type { QuestOccurrence } from '../../domain/completion/QuestOccurrenceTypes';
-import type {
-  Completion,
-  RewardGrant,
-  WorldProgress,
-} from '../../domain/progression/ProgressionTypes';
+import type { Completion, RewardGrant, WorldProgress } from '../../domain/progression/ProgressionTypes';
 import type { QuestTemplate } from '../../domain/quest/QuestTemplate';
 import type { QuestSchedule } from '../../domain/schedule/QuestSchedule';
 import type { ValidationMode } from '../../domain/shared/types';
 
-export const SCHEMA_VERSION = 2;
-export const CONTENT_VERSION = '1.0.0';
+export const SCHEMA_VERSION = 3;
+export const CONTENT_VERSION = '3.0.0';
 
 export type CelebrationDurationSeconds = 3 | 5 | 8;
 
@@ -37,6 +33,7 @@ export interface FamilyState {
   readonly rewardGrants: readonly RewardGrant[];
   readonly worldProgress: readonly WorldProgress[];
   readonly acknowledgedRewardGrantIds: readonly string[];
+  readonly questTemplateIdsNeedingWorldReview: readonly string[];
   readonly settings: AppSettings;
 }
 
@@ -50,6 +47,7 @@ export function createEmptyFamilyState(): FamilyState {
     rewardGrants: [],
     worldProgress: [],
     acknowledgedRewardGrantIds: [],
+    questTemplateIdsNeedingWorldReview: [],
     settings: {
       schemaVersion: SCHEMA_VERSION,
       contentVersion: CONTENT_VERSION,

@@ -22,35 +22,17 @@ interface QuestTemplateIdentity {
 }
 
 function assertMutable(template: QuestTemplate): void {
-  assertDomain(
-    template.deletedAt === undefined,
-    'quest.deleted-readonly',
-    'Un modèle supprimé ne peut plus être modifié.',
-  );
-  assertDomain(
-    !template.isArchived,
-    'quest.archived-readonly',
-    'Restaurez le modèle avant de le modifier.',
-  );
-  assertDomain(
-    template.source === 'custom',
-    'quest.builtin-readonly',
-    'Un modèle intégré doit être personnalisé avant modification.',
-  );
+  assertDomain(template.deletedAt === undefined, 'quest.deleted-readonly', 'Un modèle supprimé ne peut plus être modifié.');
+  assertDomain(!template.isArchived, 'quest.archived-readonly', 'Restaurez le modèle avant de le modifier.');
+  assertDomain(template.source === 'custom', 'quest.builtin-readonly', 'Un modèle intégré doit être personnalisé avant modification.');
 }
 
-function buildInput(
-  template: QuestTemplate,
-  changes: QuestTemplateChanges,
-): QuestTemplateInput {
-  const estimatedMinutes =
-    changes.estimatedMinutes === null
-      ? undefined
-      : (changes.estimatedMinutes ?? template.estimatedMinutes);
-  const parentNote =
-    changes.parentNote === null ? undefined : (changes.parentNote ?? template.parentNote);
-
+function buildInput(template: QuestTemplate, changes: QuestTemplateChanges): QuestTemplateInput {
+  const estimatedMinutes = changes.estimatedMinutes === null ? undefined : (changes.estimatedMinutes ?? template.estimatedMinutes);
+  const parentNote = changes.parentNote === null ? undefined : (changes.parentNote ?? template.parentNote);
   return {
+    familyId: changes.familyId ?? template.familyId,
+    worldId: changes.worldId ?? template.worldId,
     title: changes.title ?? template.title,
     instruction: changes.instruction ?? template.instruction,
     categoryId: changes.categoryId ?? template.categoryId,
@@ -66,45 +48,23 @@ function buildInput(
   };
 }
 
-function withoutOptionalFields(
-  template: QuestTemplate,
-): Omit<QuestTemplate, 'estimatedMinutes' | 'parentNote'> {
+function withoutOptionalFields(template: QuestTemplate): Omit<QuestTemplate, 'estimatedMinutes' | 'parentNote'> {
   const { estimatedMinutes, parentNote, ...base } = template;
   void estimatedMinutes;
   void parentNote;
   return base;
 }
 
-export function createCustomQuestTemplate(
-  input: QuestTemplateInput,
-  identity: QuestTemplateIdentity,
-): QuestTemplate {
-  return {
-    ...createEntityMetadata(identity.id, identity.createdAt),
-    ...normalizeQuestTemplateInput(input),
-    source: 'custom',
-    isArchived: false,
-  };
+export function createCustomQuestTemplate(input: QuestTemplateInput, identity: QuestTemplateIdentity): QuestTemplate {
+  return { ...createEntityMetadata(identity.id, identity.createdAt), ...normalizeQuestTemplateInput(input), source: 'custom', isArchived: false };
 }
 
 export function createBuiltinQuestTemplate(
   input: QuestTemplateInput,
   identity: QuestTemplateIdentity & { readonly contentVersion: string },
 ): QuestTemplate {
-  const contentVersion = requireText(
-    identity.contentVersion,
-    'quest.content-version-required',
-    'Une version de contenu est requise pour un modèle intégré.',
-    'contentVersion',
-  );
-
-  return {
-    ...createEntityMetadata(identity.id, identity.createdAt),
-    ...normalizeQuestTemplateInput(input),
-    source: 'builtin',
-    contentVersion,
-    isArchived: false,
-  };
+  const contentVersion = requireText(identity.contentVersion, 'quest.content-version-required', 'Une version de contenu est requise pour un modèle intégré.', 'contentVersion');
+  return { ...createEntityMetadata(identity.id, identity.createdAt), ...normalizeQuestTemplateInput(input), source: 'builtin', contentVersion, isArchived: false };
 }
 
 export function customizeQuestTemplate(
@@ -112,62 +72,24 @@ export function customizeQuestTemplate(
   changes: QuestTemplateChanges,
   identity: QuestTemplateIdentity,
 ): QuestTemplate {
-  assertDomain(
-    template.deletedAt === undefined,
-    'quest.deleted-readonly',
-    'Un modèle supprimé ne peut pas être personnalisé.',
-  );
+  assertDomain(template.deletedAt === undefined, 'quest.deleted-readonly', 'Un modèle supprimé ne peut pas être personnalisé.');
   return createCustomQuestTemplate(buildInput(template, changes), identity);
 }
 
-export function updateCustomQuestTemplate(
-  template: QuestTemplate,
-  changes: QuestTemplateChanges,
-  updatedAt: string,
-): QuestTemplate {
+export function updateCustomQuestTemplate(template: QuestTemplate, changes: QuestTemplateChanges, updatedAt: string): QuestTemplate {
   assertMutable(template);
-  const normalized = normalizeQuestTemplateInput(buildInput(template, changes));
-
-  return {
-    ...withoutOptionalFields(template),
-    ...normalized,
-    ...incrementRevision(template, updatedAt),
-  };
+  return { ...withoutOptionalFields(template), ...normalizeQuestTemplateInput(buildInput(template, changes)), ...incrementRevision(template, updatedAt) };
 }
 
-export function archiveQuestTemplate(
-  template: QuestTemplate,
-  updatedAt: string,
-): QuestTemplate {
+export function archiveQuestTemplate(template: QuestTemplate, updatedAt: string): QuestTemplate {
   if (template.isArchived) return template;
   assertMutable(template);
-
-  return {
-    ...template,
-    isArchived: true,
-    ...incrementRevision(template, updatedAt),
-  };
+  return { ...template, isArchived: true, ...incrementRevision(template, updatedAt) };
 }
 
-export function restoreQuestTemplate(
-  template: QuestTemplate,
-  updatedAt: string,
-): QuestTemplate {
+export function restoreQuestTemplate(template: QuestTemplate, updatedAt: string): QuestTemplate {
   if (!template.isArchived) return template;
-  assertDomain(
-    template.deletedAt === undefined,
-    'quest.deleted-readonly',
-    'Un modèle supprimé ne peut pas être restauré.',
-  );
-  assertDomain(
-    template.source === 'custom',
-    'quest.builtin-readonly',
-    'Un modèle intégré ne possède pas d’état utilisateur modifiable.',
-  );
-
-  return {
-    ...template,
-    isArchived: false,
-    ...incrementRevision(template, updatedAt),
-  };
+  assertDomain(template.deletedAt === undefined, 'quest.deleted-readonly', 'Un modèle supprimé ne peut pas être restauré.');
+  assertDomain(template.source === 'custom', 'quest.builtin-readonly', 'Un modèle intégré ne possède pas d’état utilisateur modifiable.');
+  return { ...template, isArchived: false, ...incrementRevision(template, updatedAt) };
 }
