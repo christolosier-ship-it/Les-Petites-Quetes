@@ -1,4 +1,5 @@
 import { createEmptyFamilyState, type FamilyState } from '../../application/model/FamilyState';
+import type { Clock } from '../../application/ports/Clock';
 import type { FamilyBackupSummary, FamilyRepository } from '../../application/ports/FamilyRepository';
 import type { IdGenerator } from '../../application/ports/IdGenerator';
 import {
@@ -30,7 +31,6 @@ import { builtinQuestTemplates } from '../../content/quests/builtinQuests';
 import type { QuestTemplateChanges } from '../../domain/quest/QuestTemplate';
 import { addLocalDays } from '../../domain/shared/localDate';
 import { serializeFamilyBackup } from '../../persistence/backup/familyBackup';
-import type { Clock } from '../../application/ports/Clock';
 import type { FamilyAppController, OnboardingInput } from './FamilyAppController';
 
 interface ControllerRuntime {
@@ -47,6 +47,7 @@ interface ControllerRuntime {
   readonly flow: (command: (current: FamilyState, now: string) => FamilyState) => Promise<void>;
   readonly completeOnboarding: (input: OnboardingInput) => Promise<void>;
   readonly createCustomQuest: FamilyAppController['createCustomQuest'];
+  readonly importBackup: FamilyAppController['importBackup'];
   readonly refreshBackups: () => Promise<void>;
   readonly setParentUnlocked: (value: boolean) => void;
   readonly setBackups: (value: readonly FamilyBackupSummary[]) => void;
@@ -167,9 +168,7 @@ export function createFamilyController(runtime: ControllerRuntime): FamilyAppCon
       settings: { ...current.settings, ...preferenceChanges(changes) },
     })),
     exportBackup: () => serializeFamilyBackup(queue.current(), clock.nowIso()),
-    importBackup: async () => {
-      throw new Error('Import non initialisé.');
-    },
+    importBackup: runtime.importBackup,
     refreshBackups: runtime.refreshBackups,
     restoreBackup: async (key) => {
       await queue.resolve(async () => {
