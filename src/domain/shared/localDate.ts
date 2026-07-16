@@ -131,8 +131,8 @@ export function enumerateLocalDates(fromDate: string, toDate: string): readonly 
   const to = normalizeLocalDate(toDate, 'toDate');
   assertDomain(
     compareLocalDates(from, to) <= 0,
-    'occurrence.invalid-generation-window',
-    'La fin de la fenêtre doit être postérieure ou égale au début.',
+    'occurrence.invalid-generation-range',
+    'La fin de la plage doit être postérieure ou égale au début.',
   );
 
   const dates: string[] = [];
@@ -141,7 +141,7 @@ export function enumerateLocalDates(fromDate: string, toDate: string): readonly 
     dates.push(current);
     assertDomain(
       dates.length <= 370,
-      'occurrence.generation-window-too-large',
+      'occurrence.generation-range-too-large',
       'Une génération ne peut pas dépasser 370 jours.',
     );
     current = addLocalDays(current, 1);
