@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">Icône provisoire Les Petites Quêtes</title>
+  <desc id="desc">Une luciole lumineuse au-dessus d’un sentier dans une forêt verte.</desc>
+  <rect width="512" height="512" rx="112" fill="#214f3b"/>
+  <path d="M96 390c64-88 132-132 206-132 50 0 92 15 126 45" fill="none" stroke="#f8df84" stroke-width="34" stroke-linecap="round"/>
+  <path d="M118 326c24-98 85-166 184-204M395 310c-8-92-54-159-138-202" fill="none" stroke="#6aa66f" stroke-width="42" stroke-linecap="round"/>
+  <circle cx="284" cy="184" r="48" fill="#f8df84"/>
+  <circle cx="284" cy="184" r="76" fill="#f8df84" opacity=".18"/>
+  <path d="M250 180c-34-28-61-26-76 5 25 24 50 29 76 15M318 180c34-28 61-26 76 5-25 24-50 29-76 15" fill="#d9f0c7"/>
+  <circle cx="270" cy="172" r="5" fill="#214f3b"/>
+  <circle cx="298" cy="172" r="5" fill="#214f3b"/>
+  <path d="M271 196c9 8 18 8 27 0" fill="none" stroke="#214f3b" stroke-width="6" stroke-linecap="round"/>
+</svg>
