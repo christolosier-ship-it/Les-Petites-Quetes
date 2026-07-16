@@ -47,7 +47,8 @@ function buildInput(
     changes.estimatedMinutes === null
       ? undefined
       : (changes.estimatedMinutes ?? template.estimatedMinutes);
-  const parentNote = changes.parentNote === null ? undefined : (changes.parentNote ?? template.parentNote);
+  const parentNote =
+    changes.parentNote === null ? undefined : (changes.parentNote ?? template.parentNote);
 
   return {
     title: changes.title ?? template.title,
@@ -63,6 +64,15 @@ function buildInput(
     rewardDefinitionId: changes.rewardDefinitionId ?? template.rewardDefinitionId,
     ...(parentNote !== undefined ? { parentNote } : {}),
   };
+}
+
+function withoutOptionalFields(
+  template: QuestTemplate,
+): Omit<QuestTemplate, 'estimatedMinutes' | 'parentNote'> {
+  const { estimatedMinutes, parentNote, ...base } = template;
+  void estimatedMinutes;
+  void parentNote;
+  return base;
 }
 
 export function createCustomQuestTemplate(
@@ -119,7 +129,7 @@ export function updateCustomQuestTemplate(
   const normalized = normalizeQuestTemplateInput(buildInput(template, changes));
 
   return {
-    ...template,
+    ...withoutOptionalFields(template),
     ...normalized,
     ...incrementRevision(template, updatedAt),
   };
