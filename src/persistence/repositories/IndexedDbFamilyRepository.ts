@@ -7,6 +7,8 @@ const DATABASE_VERSION = 1;
 const STATE_STORE = 'familyState';
 const BACKUP_STORE = 'migrationBackups';
 const CURRENT_KEY = 'current';
+let memoryState: FamilyState | undefined;
+const memoryBackups: FamilyState[] = [];
 
 interface StoredState {
   readonly key: typeof CURRENT_KEY;
@@ -18,6 +20,10 @@ interface StoredBackup {
   readonly reason: string;
   readonly createdAt: string;
   readonly value: FamilyState;
+}
+
+function supportsIndexedDb(): boolean {
+  return typeof indexedDB !== 'undefined';
 }
 
 function requestResult<T>(request: IDBRequest<T>): Promise<T> {
@@ -54,6 +60,7 @@ function openDatabase(): Promise<IDBDatabase> {
 
 export class IndexedDbFamilyRepository implements FamilyRepository {
   async load(): Promise<FamilyState> {
+    if (!supportsIndexedDb()) return migrateFamilyState(memoryState);
     const database = await openDatabase();
     try {
       const transaction = database.transaction(STATE_STORE, 'readonly');
@@ -68,6 +75,10 @@ export class IndexedDbFamilyRepository implements FamilyRepository {
   }
 
   async save(state: FamilyState): Promise<void> {
+    if (!supportsIndexedDb()) {
+      memoryState = state;
+      return;
+    }
     const database = await openDatabase();
     try {
       const transaction = database.transaction(STATE_STORE, 'readwrite');
@@ -79,6 +90,10 @@ export class IndexedDbFamilyRepository implements FamilyRepository {
   }
 
   async createBackup(state: FamilyState, reason: string, createdAt: string): Promise<void> {
+    if (!supportsIndexedDb()) {
+      memoryBackups.push(state);
+      return;
+    }
     const database = await openDatabase();
     try {
       const transaction = database.transaction(BACKUP_STORE, 'readwrite');
@@ -91,6 +106,11 @@ export class IndexedDbFamilyRepository implements FamilyRepository {
   }
 
   async clear(): Promise<void> {
+    if (!supportsIndexedDb()) {
+      memoryState = undefined;
+      memoryBackups.length = 0;
+      return;
+    }
     const database = await openDatabase();
     try {
       const transaction = database.transaction([STATE_STORE, BACKUP_STORE], 'readwrite');
