@@ -107,7 +107,7 @@ describe('commandes de préparation familiale V3', () => {
 
   it('refuse une planification dont la quête et l’univers divergent', () => {
     const ids = new SequenceIds();
-    let state = addChildProfile(createEmptyFamilyState(), { displayName: 'Maddie', ageBand: '3-5', readingLevel: 'visual', avatarId: 'avatar.girl.3-5' }, TEST_NOW, ids);
+    const state = addChildProfile(createEmptyFamilyState(), { displayName: 'Maddie', ageBand: '3-5', readingLevel: 'visual', avatarId: 'avatar.girl.3-5' }, TEST_NOW, ids);
     const template = builtinQuestTemplates.find((candidate) => candidate.id === 'family.evening.pyjamas.3-5')!;
     expect(() => addQuestSchedule(state, {
       questTemplateId: template.id,
