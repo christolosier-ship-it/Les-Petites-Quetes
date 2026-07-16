@@ -1,0 +1,33 @@
+:root {
+  color-scheme: light;
+  font-family: "Avenir Next", Avenir, "Segoe UI", system-ui, sans-serif;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+
+  --color-forest-900: #173e2e;
+  --color-forest-800: #214f3b;
+  --color-forest-600: #4f8060;
+  --color-leaf-400: #9fc47e;
+  --color-firefly-400: #f8df84;
+  --color-cream-100: #f8f3e8;
+  --color-paper: #fffdf7;
+  --color-ink: #20362c;
+  --color-muted: #60736a;
+  --color-border: #d7dfd2;
+  --color-focus: #1d6f8f;
+
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+
+  --radius-sm: 0.75rem;
+  --radius-md: 1.25rem;
+  --radius-lg: 2rem;
+  --shadow-soft: 0 1.2rem 3rem rgb(33 79 59 / 0.12);
+  --content-max: 72rem;
+  --touch-min: 3rem;
+}
