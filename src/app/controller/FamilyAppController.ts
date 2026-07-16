@@ -1,14 +1,7 @@
 import type { FamilyState } from '../../application/model/FamilyState';
 import type { FamilyBackupSummary } from '../../application/ports/FamilyRepository';
-import type {
-  ChildProfileChanges,
-  ChildProfileInput,
-} from '../../domain/child/ChildProfile';
-import type {
-  QuestTemplate,
-  QuestTemplateChanges,
-  QuestTemplateInput,
-} from '../../domain/quest/QuestTemplate';
+import type { ChildProfileChanges, ChildProfileInput } from '../../domain/child/ChildProfile';
+import type { QuestTemplate, QuestTemplateChanges, QuestTemplateInput } from '../../domain/quest/QuestTemplate';
 import type { QuestScheduleInput } from '../../domain/schedule/QuestSchedule';
 import type { ValidationMode } from '../../domain/shared/types';
 
@@ -18,6 +11,8 @@ export interface OnboardingInput {
   readonly defaultValidationMode: ValidationMode;
   readonly suggestedTemplateIds: readonly string[];
 }
+
+type ScheduleWithoutQuest = Omit<QuestScheduleInput, 'questTemplateId' | 'questFamilyId' | 'worldId'>;
 
 export interface FamilyAppController {
   readonly state: FamilyState;
@@ -39,15 +34,8 @@ export interface FamilyAppController {
   readonly replaceSchedule: (scheduleId: string, input: QuestScheduleInput) => Promise<void>;
   readonly setScheduleSuspended: (scheduleId: string, suspended: boolean) => Promise<void>;
   readonly duplicateSchedule: (scheduleId: string, startDate: string) => Promise<void>;
-  readonly createCustomQuest: (
-    template: QuestTemplateInput,
-    schedule: Omit<QuestScheduleInput, 'questTemplateId'>,
-  ) => Promise<void>;
-  readonly customizeBuiltinQuest: (
-    templateId: string,
-    changes: QuestTemplateChanges,
-    schedule: Omit<QuestScheduleInput, 'questTemplateId'>,
-  ) => Promise<void>;
+  readonly createCustomQuest: (template: Omit<QuestTemplateInput, 'familyId'>, schedule: ScheduleWithoutQuest) => Promise<void>;
+  readonly customizeBuiltinQuest: (templateId: string, changes: QuestTemplateChanges, schedule: ScheduleWithoutQuest) => Promise<void>;
   readonly updateCustomQuest: (templateId: string, changes: QuestTemplateChanges) => Promise<void>;
   readonly archiveCustomQuest: (templateId: string) => Promise<void>;
   readonly restoreCustomQuest: (templateId: string) => Promise<void>;
