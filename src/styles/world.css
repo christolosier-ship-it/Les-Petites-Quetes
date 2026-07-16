@@ -1,0 +1,182 @@
+.world-layout {
+  display: grid;
+  gap: var(--space-5);
+}
+
+.world-scene {
+  position: relative;
+  overflow: hidden;
+  min-height: 22rem;
+  padding: 0;
+  background: var(--color-forest-900);
+}
+
+.world-scene img {
+  width: 100%;
+  min-height: 22rem;
+  object-fit: cover;
+  transition: filter 500ms ease, transform 500ms ease;
+}
+
+.world-scene--stage-0 img { filter: brightness(0.72) saturate(0.75); }
+.world-scene--stage-1 img { filter: brightness(0.88) saturate(0.95); }
+.world-scene--stage-2 img { filter: brightness(1.02) saturate(1.12); }
+.world-scene--stage-3 img { filter: brightness(1.12) saturate(1.35) drop-shadow(0 0 1.2rem #f8df84); transform: scale(1.015); }
+
+.world-scene__overlay {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  padding: clamp(1rem, 5vw, 2rem);
+  background: linear-gradient(transparent, rgb(23 62 46 / 0.94));
+  color: white;
+}
+
+.world-scene__overlay h3,
+.world-scene__overlay p {
+  color: white;
+}
+
+.mascot-bubble {
+  display: inline-block;
+  margin-bottom: var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  border-radius: 999px;
+  background: rgb(255 253 247 / 0.92);
+  color: var(--color-forest-900);
+  font-weight: 900;
+}
+
+.world-details {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.reward-token,
+.treasure-item,
+.storybook-page {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  border-radius: var(--radius-sm);
+  background: var(--color-cream-100);
+}
+
+.reward-token {
+  flex-direction: column;
+}
+
+.reward-token span,
+.treasure-item > span,
+.storybook-page > span {
+  color: #b28216;
+  font-size: 1.5rem;
+  font-weight: 900;
+}
+
+.reward-token small,
+.treasure-item p,
+.storybook-page p {
+  margin: 0;
+  color: var(--color-muted);
+}
+
+.story-chapter {
+  padding-block: var(--space-2);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.story-chapter summary {
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.treasure-list {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.child-quest-card {
+  display: grid;
+  overflow: hidden;
+  padding: 0;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-paper);
+  color: var(--color-ink);
+  text-align: left;
+  box-shadow: var(--shadow-soft);
+  cursor: pointer;
+}
+
+.child-quest-card img {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+}
+
+.child-quest-card span {
+  display: grid;
+  gap: var(--space-2);
+  padding: var(--space-4);
+}
+
+.child-quest-card strong {
+  color: var(--color-forest-900);
+  font-size: 1.15rem;
+}
+
+.child-quest-card small {
+  color: var(--color-muted);
+  font-size: 0.95rem;
+  line-height: 1.45;
+}
+
+.quest-detail {
+  width: min(100%, 42rem);
+  margin-inline: auto;
+  text-align: center;
+}
+
+.quest-detail > img {
+  width: min(100%, 19rem);
+  margin-inline: auto;
+  border-radius: var(--radius-md);
+}
+
+.quest-instruction {
+  color: var(--color-forest-900);
+  font-size: clamp(1.25rem, 4vw, 1.8rem);
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+.child-action-grid {
+  display: grid;
+  gap: var(--space-3);
+  margin-top: var(--space-5);
+}
+
+.waiting-message,
+.celebration-card {
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  background: #fff1a8;
+  color: var(--color-forest-900);
+  font-weight: 900;
+}
+
+.empty-card {
+  text-align: center;
+}
+
+.empty-card > div {
+  font-size: 4rem;
+}
+
+@media (min-width: 52rem) {
+  .world-layout:not(.world-layout--compact) { grid-template-columns: minmax(0, 1.3fr) minmax(20rem, 0.7fr); }
+  .world-layout--compact .world-details { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
