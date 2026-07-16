@@ -7,15 +7,21 @@ import tseslint from 'typescript-eslint';
 export default tseslint.config(
   { ignores: ['dist', 'coverage'] },
   js.configs.recommended,
-  ...tseslint.configs.recommendedTypeChecked,
   {
-    files: ['**/*.{ts,tsx}'],
+    files: ['**/*.{js,mjs,ts,tsx}'],
     languageOptions: {
       ecmaVersion: 2022,
       globals: {
         ...globals.browser,
         ...globals.node,
+        ...globals.serviceworker,
       },
+    },
+  },
+  ...tseslint.configs.recommendedTypeChecked,
+  {
+    files: ['**/*.{ts,tsx}'],
+    languageOptions: {
       parserOptions: {
         projectService: true,
         tsconfigRootDir: import.meta.dirname,
@@ -35,7 +41,7 @@ export default tseslint.config(
     },
   },
   {
-    files: ['scripts/**/*.mjs', 'eslint.config.js'],
+    files: ['scripts/**/*.mjs', 'public/**/*.js', 'eslint.config.js'],
     extends: [tseslint.configs.disableTypeChecked],
   },
 );
