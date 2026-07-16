@@ -64,9 +64,11 @@ describe('progression', () => {
   });
 
   it('refuse de récompenser une occurrence non terminée', () => {
+    const { completedAt, ...withoutCompletionDate } = occurrence;
+    void completedAt;
     expect(() =>
       createCompletion(
-        { ...occurrence, status: 'available', completedAt: undefined },
+        { ...withoutCompletionDate, status: 'available' },
         'parent',
         'parent',
         'grant-1',
