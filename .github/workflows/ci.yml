@@ -51,7 +51,10 @@ jobs:
       - name: Vérifier le typage
         run: npm run typecheck
 
-      - name: Exécuter les tests et la couverture
+      - name: Exécuter les tests unitaires
+        run: npm run test
+
+      - name: Vérifier la couverture
         run: npm run test:coverage
 
       - name: Construire l’application
