@@ -24,14 +24,19 @@ jobs:
           node-version: 22
       - name: Installer les dépendances
         run: npm install --silent --no-audit --no-fund
-      - name: Vérifier le typage strict
-        shell: bash
-        run: |
-          set +e
-          npm run typecheck > typecheck.log 2>&1
-          status=$?
-          tail -n 240 typecheck.log
-          exit $status
+      - name: Capturer le typage strict
+        id: typecheck
+        continue-on-error: true
+        run: npm run typecheck > typecheck.log 2>&1
+      - name: Publier le diagnostic TypeScript
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: typecheck-multi-universe
+          path: typecheck.log
+      - name: Valider le typage strict
+        if: steps.typecheck.outcome == 'failure'
+        run: exit 1
 
   coverage:
     needs: typing
