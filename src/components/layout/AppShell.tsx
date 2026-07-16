@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { UpdateBanner } from '../../features/settings/UpdateBanner';
 
 interface AppShellProps {
   readonly children: ReactNode;
@@ -16,6 +17,7 @@ export function AppShell({ children, reducedMotion }: AppShellProps) {
         <div><p className="eyebrow">La Forêt des Lucioles</p><h1>Les Petites Quêtes</h1></div>
         <span className="foundation-badge">V1 familiale</span>
       </header>
+      <UpdateBanner />
       <main className="app-main">{children}</main>
       <footer className="app-footer">Une aventure privée, locale et sans publicité.</footer>
     </div>
