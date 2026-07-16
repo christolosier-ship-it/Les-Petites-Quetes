@@ -10,7 +10,25 @@ permissions:
   contents: read
 
 jobs:
+  typing:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Récupérer le dépôt
+        uses: actions/checkout@v4
+        with:
+          show-progress: false
+      - name: Installer Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Installer les dépendances
+        run: npm install --silent --no-audit --no-fund
+      - name: Vérifier le typage strict
+        run: npm run typecheck
+
   quality:
+    needs: typing
     runs-on: ubuntu-latest
     timeout-minutes: 15
 
@@ -95,9 +113,6 @@ jobs:
 
       - name: Lint interface et contenus
         run: npx eslint src/features src/pages src/components src/content src/assets src/main.tsx
-
-      - name: Vérifier le typage
-        run: npm run typecheck
 
       - name: Exécuter les tests unitaires
         run: npm run test
