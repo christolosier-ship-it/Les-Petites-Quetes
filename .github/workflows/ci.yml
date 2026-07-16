@@ -47,21 +47,8 @@ jobs:
       - name: Vérifier le lint
         run: npm run lint
 
-      - name: Capturer le typage
-        id: typing
-        continue-on-error: true
-        run: npm run typecheck > typecheck.log 2>&1
-
-      - name: Publier le diagnostic TypeScript
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: typecheck-final-diagnostic
-          path: typecheck.log
-
-      - name: Valider le typage
-        if: steps.typing.outcome == 'failure'
-        run: exit 1
+      - name: Vérifier le typage
+        run: npm run typecheck
 
       - name: Exécuter les tests avec couverture
         run: npm run test:coverage
