@@ -1,5 +1,6 @@
 import { spawn } from 'node:child_process';
 import { existsSync } from 'node:fs';
+import { join } from 'node:path';
 import puppeteer from 'puppeteer-core';
 
 const executablePath =
@@ -11,9 +12,10 @@ if (!executablePath) {
   process.exit(1);
 }
 
-const preview = spawn('npm', ['run', 'preview', '--', '--host', '127.0.0.1'], {
+const viteEntry = join(process.cwd(), 'node_modules', 'vite', 'bin', 'vite.js');
+const preview = spawn(process.execPath, [viteEntry, 'preview', '--host', '127.0.0.1'], {
   env: process.env,
-  stdio: ['ignore', 'pipe', 'pipe'],
+  stdio: 'ignore',
 });
 const url = 'http://127.0.0.1:4173/Les-Petites-Quetes/';
 
@@ -28,6 +30,16 @@ async function waitForPreview() {
     await new Promise((resolve) => setTimeout(resolve, 250));
   }
   throw new Error('Le serveur de prévisualisation ne répond pas.');
+}
+
+async function stopPreview() {
+  if (preview.exitCode !== null) return;
+  preview.kill('SIGTERM');
+  await Promise.race([
+    new Promise((resolve) => preview.once('exit', resolve)),
+    new Promise((resolve) => setTimeout(resolve, 1_000)),
+  ]);
+  if (preview.exitCode === null) preview.kill('SIGKILL');
 }
 
 let browser;
@@ -64,5 +76,5 @@ try {
   console.log('Smoke navigateur conforme : shell, mobile et navigation enfant/parent validés.');
 } finally {
   if (browser) await browser.close();
-  preview.kill('SIGTERM');
+  await stopPreview();
 }
