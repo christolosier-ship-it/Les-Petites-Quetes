@@ -1,26 +1,24 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { App } from './App';
 
 describe('App', () => {
-  it('crée le code parent, un profil puis ouvre l’espace enfant', async () => {
+  it('termine l’onboarding et ouvre la forêt avec les premières quêtes', async () => {
     render(<App />);
 
-    await screen.findByRole('heading', { name: 'Les petites actions deviennent des aventures' });
-    fireEvent.click(screen.getByRole('button', { name: 'Espace parent' }));
+    expect(await screen.findByRole('heading', { name: 'Bienvenue dans Les Petites Quêtes' })).toBeInTheDocument();
+    fireEvent.click(screen.getByLabelText('Je confirme un usage familial privé.'));
+    fireEvent.click(screen.getByRole('button', { name: 'Créer le premier profil' }));
 
-    fireEvent.change(screen.getByLabelText('Code à quatre chiffres'), { target: { value: '1234' } });
-    fireEvent.click(screen.getByRole('button', { name: 'Créer le code' }));
-    await screen.findByRole('heading', { name: 'Préparer les petites aventures' });
-
-    fireEvent.click(screen.getByRole('button', { name: /Enfants/ }));
     fireEvent.change(screen.getByLabelText('Prénom ou pseudonyme'), { target: { value: 'Maddie' } });
-    fireEvent.click(screen.getByRole('button', { name: 'Créer le profil' }));
-    await waitFor(() => expect(screen.getByText('Maddie')).toBeInTheDocument());
+    fireEvent.click(screen.getByRole('button', { name: 'Continuer' }));
 
-    fireEvent.click(screen.getByRole('button', { name: 'Accueil' }));
-    fireEvent.click(await screen.findByRole('button', { name: 'Espace enfant' }));
+    fireEvent.change(screen.getByLabelText('Code parent à quatre chiffres'), { target: { value: '1234' } });
+    fireEvent.click(screen.getByRole('button', { name: 'Ouvrir la forêt' }));
+
     expect(await screen.findByRole('heading', { name: 'La Forêt des Lucioles' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /Mes quêtes/ })).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: /Mes quêtes/ }));
+    expect(await screen.findAllByRole('button', { name: /L’armure du matin|Les crocs du dragon|La tenue des rêves/ })).toHaveLength(3);
   });
 });
