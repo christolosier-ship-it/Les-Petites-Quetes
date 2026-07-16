@@ -1,5 +1,5 @@
 import { readdirSync, readFileSync, statSync } from 'node:fs';
-import { join, relative, sep } from 'node:path';
+import { dirname, join, relative, resolve, sep } from 'node:path';
 
 const root = process.cwd();
 const sourceRoot = join(root, 'src');
@@ -14,6 +14,10 @@ function walk(directory) {
 
 function report(file, rule) {
   errors.push(`${relative(root, file)} : ${rule}`);
+}
+
+function featureName(path) {
+  return path.split('/features/')[1]?.split('/')[0];
 }
 
 for (const file of walk(sourceRoot).filter((path) => /\.(ts|tsx)$/.test(path))) {
@@ -33,13 +37,30 @@ for (const file of walk(sourceRoot).filter((path) => /\.(ts|tsx)$/.test(path))) 
     }
   }
 
-  if ((normalized.includes('/pages/') || normalized.includes('/components/')) && !isTest) {
+  if ((normalized.includes('/pages/') || normalized.includes('/components/') || normalized.includes('/features/')) && !isTest) {
     if (/\b(indexedDB|localStorage|sessionStorage)\b/.test(content)) {
-      report(file, 'les pages et composants ne peuvent accéder au stockage');
+      report(file, 'l’interface ne peut accéder directement au stockage');
     }
     if (/from\s+['"][^'"]*persistence/.test(content)) {
-      report(file, 'les pages et composants ne peuvent importer persistence');
+      report(file, 'l’interface ne peut importer persistence');
     }
+  }
+
+  const currentFeature = featureName(normalized);
+  if (currentFeature && !isTest) {
+    for (const match of content.matchAll(/from\s+['"]([^'"]+)['"]/g)) {
+      const specifier = match[1];
+      if (!specifier?.startsWith('.')) continue;
+      const target = resolve(dirname(file), specifier).split(sep).join('/');
+      const targetFeature = featureName(target);
+      if (targetFeature && targetFeature !== currentFeature) {
+        report(file, `une feature ne peut importer les internes de ${targetFeature}`);
+      }
+    }
+  }
+
+  if (!isTest && /(:\s*any\b|as\s+any\b|<any>)/.test(content)) {
+    report(file, 'any est interdit sans décision documentée');
   }
 
   if (!normalized.includes('/assets/registry/') && /['"]\/?(icons|illustrations|mascots|rewards)\//.test(content)) {
@@ -52,4 +73,4 @@ if (errors.length > 0) {
   process.exit(1);
 }
 
-console.log('Architecture conforme : frontières domaine, interface, stockage et assets respectées.');
+console.log('Architecture conforme : domaine, interface, features, stockage, types et assets contrôlés.');
