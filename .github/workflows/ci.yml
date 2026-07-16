@@ -61,7 +61,10 @@ jobs:
         run: npx eslint src/application/services/questFlowCommands.ts src/application/services/stateRefresh.ts
 
       - name: Lint file de mutations
-        run: npx eslint src/application/services/StateCommitQueue.ts src/application/services/StateCommitQueue.test.ts
+        run: npx eslint src/application/services/StateCommitQueue.ts
+
+      - name: Lint test de concurrence
+        run: npx eslint src/application/services/StateCommitQueue.test.ts
 
       - name: Lint contrôleur et état
         run: npx eslint src/app
