@@ -7,6 +7,7 @@ import './styles/global.css';
 import './styles/app.css';
 import './styles/forms.css';
 import './styles/world.css';
+import './styles/finalization.css';
 
 const root = document.getElementById('root');
 if (!root) throw new Error('Élément racine #root introuvable.');
