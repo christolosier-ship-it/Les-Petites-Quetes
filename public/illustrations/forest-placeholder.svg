@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 760" role="img" aria-labelledby="title desc">
+  <title id="title">Clairière provisoire de la Forêt des Lucioles</title>
+  <desc id="desc">Une clairière douce avec un sentier, des arbres arrondis et plusieurs lucioles lumineuses.</desc>
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#dcefd5"/>
+      <stop offset="1" stop-color="#f8f3e8"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="760" rx="52" fill="url(#sky)"/>
+  <circle cx="920" cy="140" r="74" fill="#f8df84" opacity=".8"/>
+  <path d="M0 535c210-82 388-72 535 31 196-116 418-127 665-35v229H0z" fill="#9fc47e"/>
+  <path d="M405 760c60-203 165-321 315-354 102-23 190-12 264 31-109 36-193 88-252 155-55 62-91 118-108 168z" fill="#efd7a2"/>
+  <g fill="#315f48">
+    <path d="M0 473c51-134 116-223 195-268 86 65 140 160 162 285z"/>
+    <path d="M840 498c39-151 109-256 211-315 83 69 133 174 149 315z"/>
+  </g>
+  <g fill="#6aa66f">
+    <circle cx="191" cy="220" r="92"/>
+    <circle cx="1050" cy="201" r="108"/>
+    <circle cx="83" cy="347" r="105"/>
+    <circle cx="1135" cy="359" r="115"/>
+  </g>
+  <g fill="#f8df84">
+    <circle cx="294" cy="202" r="10"/>
+    <circle cx="375" cy="292" r="8"/>
+    <circle cx="773" cy="236" r="9"/>
+    <circle cx="875" cy="338" r="11"/>
+    <circle cx="631" cy="165" r="7"/>
+  </g>
+  <g fill="#f8df84" opacity=".18">
+    <circle cx="294" cy="202" r="27"/>
+    <circle cx="375" cy="292" r="23"/>
+    <circle cx="773" cy="236" r="25"/>
+    <circle cx="875" cy="338" r="29"/>
+    <circle cx="631" cy="165" r="20"/>
+  </g>
+</svg>
