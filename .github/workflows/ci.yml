@@ -35,7 +35,22 @@ jobs:
       - name: Installer les dépendances
         run: npm install --no-audit --no-fund
 
-      - name: Vérifier architecture, code, tests, build et navigation
+      - name: Vérifier l’architecture et les cycles
+        run: npm run check:architecture && npm run check:cycles
+
+      - name: Vérifier les budgets, assets et contenus
+        run: npm run check:files && npm run check:assets && npm run check:content
+
+      - name: Vérifier le lint et le typage
+        run: npm run lint && npm run typecheck
+
+      - name: Exécuter les tests avec couverture
+        run: npm run test:coverage
+
+      - name: Construire et contrôler l’artefact Pages
+        run: npm run build
+
+      - name: Exécuter le smoke test Chrome
         env:
           CHROME_BIN: ${{ steps.setup-chrome.outputs.chrome-path }}
-        run: npm run check
+        run: npm run check:browser
