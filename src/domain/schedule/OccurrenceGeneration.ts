@@ -10,7 +10,7 @@ import {
 } from '../shared/localDate';
 import type { QuestSchedule } from './QuestScheduleTypes';
 
-export interface OccurrenceGenerationWindow {
+export interface OccurrenceGenerationRange {
   readonly fromDate: string;
   readonly toDate: string;
   readonly today: string;
@@ -29,7 +29,7 @@ interface GenerateOccurrencesInput {
   readonly schedule: QuestSchedule;
   readonly children: readonly ChildProfile[];
   readonly existingOccurrences: readonly QuestOccurrence[];
-  readonly window: OccurrenceGenerationWindow;
+  readonly generationRange: OccurrenceGenerationRange;
   readonly createOccurrenceId: OccurrenceIdFactory;
 }
 
@@ -76,13 +76,13 @@ function activeChildById(children: readonly ChildProfile[], childId: string): Ch
 export function generateQuestOccurrences(input: GenerateOccurrencesInput): readonly QuestOccurrence[] {
   if (input.schedule.deletedAt !== undefined || input.schedule.isSuspended) return [];
 
-  const fromDate = normalizeLocalDate(input.window.fromDate, 'fromDate');
-  const toDate = normalizeLocalDate(input.window.toDate, 'toDate');
-  const today = normalizeLocalDate(input.window.today, 'today');
+  const fromDate = normalizeLocalDate(input.generationRange.fromDate, 'fromDate');
+  const toDate = normalizeLocalDate(input.generationRange.toDate, 'toDate');
+  const today = normalizeLocalDate(input.generationRange.today, 'today');
   assertDomain(
     compareLocalDates(fromDate, toDate) <= 0,
-    'occurrence.invalid-generation-window',
-    'La fin de la fenêtre doit être postérieure ou égale au début.',
+    'occurrence.invalid-generation-range',
+    'La fin de la plage doit être postérieure ou égale au début.',
   );
 
   const dates = datesForSchedule(input.schedule, fromDate, toDate);
@@ -115,7 +115,7 @@ export function generateQuestOccurrences(input: GenerateOccurrencesInput): reado
       );
 
       generated.push({
-        ...createEntityMetadata(id, input.window.generatedAt),
+        ...createEntityMetadata(id, input.generationRange.generatedAt),
         scheduleId: input.schedule.id,
         questTemplateId: input.schedule.questTemplateId,
         childId: child.id,
