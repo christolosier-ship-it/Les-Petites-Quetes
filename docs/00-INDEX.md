@@ -18,6 +18,7 @@ Ce dossier constitue la source de vérité du projet avant et pendant le dévelo
 
 - [ADR-0001 — Règles du premier domaine métier](./decisions/ADR-0001-domain-rules.md)
 - [ADR-0002 — Planification et génération des occurrences](./decisions/ADR-0002-schedules-occurrences.md)
+- [ADR-0003 — Intégration de la V1 utilisable](./decisions/ADR-0003-v1-usable-integration.md)
 
 ## Règle de gouvernance
 
