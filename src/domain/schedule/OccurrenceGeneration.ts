@@ -131,6 +131,17 @@ export function generateQuestOccurrences(input: GenerateOccurrencesInput): reado
   return generated;
 }
 
+function isDue(occurrence: QuestOccurrence, today: string): boolean {
+  if (occurrence.status === 'upcoming') {
+    return compareLocalDates(occurrence.localDate, today) <= 0;
+  }
+  return (
+    occurrence.status === 'postponed' &&
+    occurrence.postponedTo !== undefined &&
+    compareLocalDates(occurrence.postponedTo, today) <= 0
+  );
+}
+
 export function releaseDueQuestOccurrences(
   occurrences: readonly QuestOccurrence[],
   todayValue: string,
@@ -138,17 +149,12 @@ export function releaseDueQuestOccurrences(
 ): readonly QuestOccurrence[] {
   const today = normalizeLocalDate(todayValue, 'today');
   return occurrences.map((occurrence) => {
-    if (
-      occurrence.deletedAt !== undefined ||
-      occurrence.status !== 'upcoming' ||
-      compareLocalDates(occurrence.localDate, today) > 0
-    ) {
-      return occurrence;
-    }
+    if (occurrence.deletedAt !== undefined || !isDue(occurrence, today)) return occurrence;
 
     return {
       ...occurrence,
       status: 'available',
+      localDate: occurrence.postponedTo ?? occurrence.localDate,
       ...incrementRevision(occurrence, updatedAt),
     };
   });
