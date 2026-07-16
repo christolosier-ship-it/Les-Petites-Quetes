@@ -102,6 +102,8 @@ export function hydrateQuestTemplate(value: unknown): QuestTemplate {
   if (ageBands.some((age) => !AGE_BANDS.includes(age as AgeBand))) {
     throw new Error('ageBands contient une tranche d’âge inconnue.');
   }
+  const estimatedMinutes = optionalInteger(source, 'estimatedMinutes', 1);
+  const parentNote = optionalText(source, 'parentNote');
   const input: QuestTemplateInput = {
     title: text(source, 'title'),
     instruction: text(source, 'instruction'),
@@ -109,16 +111,12 @@ export function hydrateQuestTemplate(value: unknown): QuestTemplate {
     illustrationId: text(source, 'illustrationId'),
     ageBands: ageBands as readonly AgeBand[],
     readingLevel: oneOf(source, 'readingLevel', READING_LEVELS),
-    ...(optionalInteger(source, 'estimatedMinutes', 1) !== undefined
-      ? { estimatedMinutes: optionalInteger(source, 'estimatedMinutes', 1) }
-      : {}),
+    ...(estimatedMinutes !== undefined ? { estimatedMinutes } : {}),
     steps: hydrateSteps(source.steps),
     requiresAdultHelp: boolean(source, 'requiresAdultHelp'),
     defaultValidation: oneOf(source, 'defaultValidation', VALIDATION_MODES),
     rewardDefinitionId: text(source, 'rewardDefinitionId'),
-    ...(optionalText(source, 'parentNote') !== undefined
-      ? { parentNote: optionalText(source, 'parentNote') }
-      : {}),
+    ...(parentNote !== undefined ? { parentNote } : {}),
   };
   const templateSource = oneOf(source, 'source', ['builtin', 'custom'] as const);
   const created = templateSource === 'builtin'
@@ -137,19 +135,23 @@ export function hydrateQuestTemplate(value: unknown): QuestTemplate {
 export function hydrateSchedule(value: unknown): QuestSchedule {
   const source = record(value, 'planification');
   const entityMetadata = metadata(source);
-  const weekdayValues = source.weekdays === undefined ? undefined : stringList(source, 'weekdays');
+  const weekdayValues = source.weekdays === undefined
+    ? undefined
+    : stringList(source, 'weekdays');
   if (weekdayValues?.some((weekday) => !WEEKDAYS.includes(weekday as Weekday))) {
     throw new Error('weekdays contient un jour inconnu.');
   }
+  const endDate = optionalText(source, 'endDate');
+  const exactTime = optionalText(source, 'exactTime');
   const input: QuestScheduleInput = {
     questTemplateId: text(source, 'questTemplateId'),
     childIds: stringList(source, 'childIds'),
     kind: oneOf(source, 'kind', ['immediate', 'one-off', 'weekly'] as const),
     startDate: text(source, 'startDate'),
-    ...(optionalText(source, 'endDate') !== undefined ? { endDate: optionalText(source, 'endDate') } : {}),
+    ...(endDate !== undefined ? { endDate } : {}),
     ...(weekdayValues !== undefined ? { weekdays: weekdayValues as readonly Weekday[] } : {}),
     dayMoment: oneOf(source, 'dayMoment', DAY_MOMENTS),
-    ...(optionalText(source, 'exactTime') !== undefined ? { exactTime: optionalText(source, 'exactTime') } : {}),
+    ...(exactTime !== undefined ? { exactTime } : {}),
     priority: oneOf(source, 'priority', ['required', 'optional'] as const),
     validationMode: oneOf(source, 'validationMode', VALIDATION_MODES),
   };
@@ -164,6 +166,12 @@ export function hydrateOccurrence(value: unknown): QuestOccurrence {
   const source = record(value, 'occurrence');
   const entityMetadata = metadata(source);
   const validationNote = optionalEnum(source, 'validationNote', VALIDATION_FEEDBACK);
+  const startedAt = optionalText(source, 'startedAt');
+  const validationRequestedAt = optionalText(source, 'validationRequestedAt');
+  const completedAt = optionalText(source, 'completedAt');
+  const postponedToValue = optionalText(source, 'postponedTo');
+  const evidenceAssetId = optionalText(source, 'evidenceAssetId');
+  const completionId = optionalText(source, 'completionId');
   return {
     ...entityMetadata,
     scheduleId: text(source, 'scheduleId'),
@@ -172,19 +180,15 @@ export function hydrateOccurrence(value: unknown): QuestOccurrence {
     localDate: normalizeLocalDate(text(source, 'localDate'), 'localDate'),
     dayMoment: oneOf(source, 'dayMoment', DAY_MOMENTS),
     status: oneOf(source, 'status', OCCURRENCE_STATUSES),
-    ...(optionalText(source, 'startedAt') !== undefined ? { startedAt: optionalText(source, 'startedAt') } : {}),
-    ...(optionalText(source, 'validationRequestedAt') !== undefined
-      ? { validationRequestedAt: optionalText(source, 'validationRequestedAt') }
-      : {}),
-    ...(optionalText(source, 'completedAt') !== undefined ? { completedAt: optionalText(source, 'completedAt') } : {}),
-    ...(optionalText(source, 'postponedTo') !== undefined
-      ? { postponedTo: normalizeLocalDate(optionalText(source, 'postponedTo')!, 'postponedTo') }
+    ...(startedAt !== undefined ? { startedAt } : {}),
+    ...(validationRequestedAt !== undefined ? { validationRequestedAt } : {}),
+    ...(completedAt !== undefined ? { completedAt } : {}),
+    ...(postponedToValue !== undefined
+      ? { postponedTo: normalizeLocalDate(postponedToValue, 'postponedTo') }
       : {}),
     ...(validationNote !== undefined ? { validationNote } : {}),
-    ...(optionalText(source, 'evidenceAssetId') !== undefined
-      ? { evidenceAssetId: optionalText(source, 'evidenceAssetId') }
-      : {}),
-    ...(optionalText(source, 'completionId') !== undefined ? { completionId: optionalText(source, 'completionId') } : {}),
+    ...(evidenceAssetId !== undefined ? { evidenceAssetId } : {}),
+    ...(completionId !== undefined ? { completionId } : {}),
   };
 }
 
@@ -216,6 +220,7 @@ export function hydrateWorldProgress(value: unknown): WorldProgress {
   const source = record(value, 'progression du monde');
   const stage = integer(source, 'stage');
   if (stage > 3) throw new Error('stage doit être compris entre 0 et 3.');
+  const lastCelebrationAt = optionalText(source, 'lastCelebrationAt');
   return {
     ...metadata(source),
     childId: text(source, 'childId'),
@@ -225,8 +230,6 @@ export function hydrateWorldProgress(value: unknown): WorldProgress {
     completionCount: integer(source, 'completionCount'),
     unlockedRewardIds: stringList(source, 'unlockedRewardIds'),
     unlockedStoryChapterIds: stringList(source, 'unlockedStoryChapterIds'),
-    ...(optionalText(source, 'lastCelebrationAt') !== undefined
-      ? { lastCelebrationAt: optionalText(source, 'lastCelebrationAt') }
-      : {}),
+    ...(lastCelebrationAt !== undefined ? { lastCelebrationAt } : {}),
   };
 }
