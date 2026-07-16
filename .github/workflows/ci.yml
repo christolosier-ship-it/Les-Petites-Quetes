@@ -75,8 +75,17 @@ jobs:
       - name: Lint shell état et tests app
         run: npx eslint src/app/App.tsx src/app/App.test.tsx src/app/state
 
-      - name: Lint schémas et migrations
-        run: npx eslint src/persistence/schemas src/persistence/migrations
+      - name: Lint primitives de validation
+        run: npx eslint src/persistence/schemas/runtimeValidation.ts
+
+      - name: Lint hydratation des entités
+        run: npx eslint src/persistence/schemas/hydrateEntities.ts
+
+      - name: Lint invariants familiaux
+        run: npx eslint src/persistence/schemas/validateFamilyState.ts
+
+      - name: Lint migrations
+        run: npx eslint src/persistence/migrations
 
       - name: Lint repositories et sauvegardes
         run: npx eslint src/persistence/repositories src/persistence/backup
