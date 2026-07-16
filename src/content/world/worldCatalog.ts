@@ -71,41 +71,27 @@ const generatedRewards: readonly RewardDefinition[] = [
 ];
 
 export const allRewards: readonly RewardDefinition[] = [...fireflyRewards, ...generatedRewards];
-
 const chapterTitles = ['Le premier signe', 'Le passage s’ouvre', 'Un nouvel ami', 'Le refuge grandit', 'La carte change', 'Le grand rassemblement', 'Le monde rayonne', 'La suite de l’aventure'];
-
-export const allStoryChapters: readonly StoryChapter[] = worldCatalog.flatMap((world) =>
-  chapterTitles.map((title, index) => ({
-    id: `story.${world.slug}.${index + 1}`,
-    worldId: world.id,
-    order: index + 1,
-    title,
-    body: `${world.mascotName} découvre une nouvelle étape liée à ${world.focus}.`,
-    illustrationId: world.stageAssetIds[Math.min(3, Math.floor(index / 2))],
-    requiredCompletions: [1, 2, 4, 6, 8, 10, 12, 16][index]!,
-  })),
-);
+export const allStoryChapters: readonly StoryChapter[] = worldCatalog.flatMap((world) => chapterTitles.map((title, index) => ({
+  id: `story.${world.slug}.${index + 1}`,
+  worldId: world.id,
+  order: index + 1,
+  title,
+  body: `${world.mascotName} découvre une nouvelle étape liée à ${world.focus}.`,
+  illustrationId: world.stageAssetIds[Math.min(3, Math.floor(index / 2)) as 0 | 1 | 2 | 3],
+  requiredCompletions: [1, 2, 4, 6, 8, 10, 12, 16][index]!,
+})));
 
 export function findWorldDefinition(id: string): WorldDefinition {
   const world = worldCatalog.find((candidate) => candidate.id === id);
   if (!world) throw new Error(`Univers inconnu : ${id}`);
   return world;
 }
-
 export function findRewardDefinition(id: string): RewardDefinition {
   const definition = allRewards.find((candidate) => candidate.id === id);
   if (!definition) throw new Error(`Récompense inconnue : ${id}`);
   return definition;
 }
-
-export function rewardsForWorld(worldId: WorldId): readonly RewardDefinition[] {
-  return allRewards.filter((rewardDefinition) => rewardDefinition.worldId === worldId);
-}
-
-export function chaptersForWorld(worldId: WorldId): readonly StoryChapter[] {
-  return allStoryChapters.filter((chapter) => chapter.worldId === worldId);
-}
-
-export function defaultRewardForWorld(worldId: WorldId): string {
-  return rewardsForWorld(worldId)[0]!.id;
-}
+export function rewardsForWorld(worldId: WorldId): readonly RewardDefinition[] { return allRewards.filter((rewardDefinition) => rewardDefinition.worldId === worldId); }
+export function chaptersForWorld(worldId: WorldId): readonly StoryChapter[] { return allStoryChapters.filter((chapter) => chapter.worldId === worldId); }
+export function defaultRewardForWorld(worldId: WorldId): string { return rewardsForWorld(worldId)[0]!.id; }

@@ -13,7 +13,7 @@ export interface ParallaxSceneDefinition {
   readonly layers: readonly ParallaxLayerDefinition[];
 }
 
-export function createSceneDefinition(worldId: WorldId, stageAssetIds: readonly string[]): ParallaxSceneDefinition {
+export function createSceneDefinition(worldId: WorldId, stageAssetIds: readonly [string, string, string, string]): ParallaxSceneDefinition {
   return {
     worldId,
     layers: [
