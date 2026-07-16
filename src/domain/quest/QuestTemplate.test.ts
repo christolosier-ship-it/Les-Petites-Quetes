@@ -2,9 +2,11 @@ import { describe, expect, it } from 'vitest';
 import { DomainError, type DomainErrorCode } from '../shared/errors';
 import type { QuestStep, QuestTemplateInput } from './QuestTemplateTypes';
 import {
+  archiveQuestTemplate,
   createBuiltinQuestTemplate,
   createCustomQuestTemplate,
   customizeQuestTemplate,
+  restoreQuestTemplate,
   updateCustomQuestTemplate,
 } from './QuestTemplate';
 
@@ -109,6 +111,34 @@ describe('QuestTemplate', () => {
     );
   });
 
+  it('refuse les durées, notes et versions de contenu incohérentes', () => {
+    expectDomainError(
+      () =>
+        createCustomQuestTemplate(
+          { ...input, estimatedMinutes: 0 },
+          { id: 'quest-duration', createdAt: 'now' },
+        ),
+      'quest.invalid-duration',
+    );
+    expectDomainError(
+      () =>
+        createCustomQuestTemplate(
+          { ...input, parentNote: 'x'.repeat(501) },
+          { id: 'quest-note', createdAt: 'now' },
+        ),
+      'quest.parent-note-too-long',
+    );
+    expectDomainError(
+      () =>
+        createBuiltinQuestTemplate(input, {
+          id: 'builtin-invalid-version',
+          createdAt: 'now',
+          contentVersion: '   ',
+        }),
+      'quest.content-version-required',
+    );
+  });
+
   it('interdit la modification directe d’un modèle intégré', () => {
     const builtin = createBuiltinQuestTemplate(input, {
       id: 'builtin-brush-teeth',
@@ -138,5 +168,27 @@ describe('QuestTemplate', () => {
     expect(customized.contentVersion).toBeUndefined();
     expect(customized.estimatedMinutes).toBeUndefined();
     expect(builtin.title).toBe('Les crocs du dragon');
+  });
+
+  it('met à jour, archive et restaure une quête personnalisée sans mutation', () => {
+    const original = createCustomQuestTemplate(
+      { ...input, parentNote: 'Note initiale' },
+      { id: 'quest-custom', createdAt: 'created' },
+    );
+    const updated = updateCustomQuestTemplate(
+      original,
+      { title: 'Le sourire du dragon', parentNote: null },
+      'updated',
+    );
+    const archived = archiveQuestTemplate(updated, 'archived');
+    const restored = restoreQuestTemplate(archived, 'restored');
+
+    expect(original.title).toBe('Les crocs du dragon');
+    expect(updated.title).toBe('Le sourire du dragon');
+    expect(updated.parentNote).toBeUndefined();
+    expect(archived.isArchived).toBe(true);
+    expect(archiveQuestTemplate(archived, 'again')).toBe(archived);
+    expect(restored.isArchived).toBe(false);
+    expect(restored.revision).toBe(4);
   });
 });
