@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { createChildProfile } from '../child/ChildProfile';
+import type { QuestOccurrence } from '../completion/QuestOccurrenceTypes';
 import { DomainError } from '../shared/errors';
 import { createQuestSchedule } from './QuestSchedule';
 import { generateQuestOccurrences, releaseDueQuestOccurrences } from './OccurrenceGeneration';
@@ -21,7 +22,7 @@ const schedule = createQuestSchedule({
   validationMode: 'parent',
 }, { id: 'schedule-1', createdAt });
 
-function generate(existingOccurrences = [] as const) {
+function generate(existingOccurrences: readonly QuestOccurrence[] = []) {
   return generateQuestOccurrences({
     schedule,
     children: [child35, child68],
@@ -44,7 +45,7 @@ describe('OccurrenceGeneration V3', () => {
 
   it('ne régénère pas une clé métier existante, même terminée', () => {
     const initial = generate();
-    const completed = { ...initial[0]!, status: 'completed' as const, completedAt: 'later', completionId: 'completion-1' };
+    const completed: QuestOccurrence = { ...initial[0]!, status: 'completed', completedAt: 'later', completionId: 'completion-1' };
     const next = generate([completed, ...initial.slice(1)]);
     expect(next).toHaveLength(0);
   });
@@ -80,7 +81,7 @@ describe('OccurrenceGeneration V3', () => {
   });
 
   it('rend disponibles les occurrences arrivées à échéance', () => {
-    const upcoming = { ...generate()[1]!, status: 'upcoming' as const, localDate: '2026-07-17' };
+    const upcoming: QuestOccurrence = { ...generate()[1]!, status: 'upcoming', localDate: '2026-07-17' };
     const released = releaseDueQuestOccurrences([upcoming], '2026-07-17', 'released');
     expect(released[0]).toMatchObject({ status: 'available', revision: 2 });
   });
