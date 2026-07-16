@@ -44,8 +44,11 @@ jobs:
       - name: Vérifier les budgets, assets et contenus
         run: npm run check:files && npm run check:assets && npm run check:content
 
-      - name: Vérifier le lint et le typage
-        run: npm run lint && npm run typecheck
+      - name: Vérifier le lint
+        run: npm run lint
+
+      - name: Vérifier le typage
+        run: npm run typecheck
 
       - name: Exécuter les tests avec couverture
         run: npm run test:coverage
