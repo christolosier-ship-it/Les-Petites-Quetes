@@ -1,0 +1,20 @@
+{
+  "name": "Les Petites Quêtes",
+  "short_name": "Quêtes",
+  "description": "Une aventure familiale qui transforme les petites actions du quotidien en quêtes pour enfants.",
+  "lang": "fr",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#f8f3e8",
+  "theme_color": "#214f3b",
+  "icons": [
+    {
+      "src": "./icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
