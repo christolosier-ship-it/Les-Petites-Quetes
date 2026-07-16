@@ -45,8 +45,17 @@ jobs:
       - name: Vérifier les contenus
         run: npm run check:content
 
-      - name: Exécuter le lint
-        run: npm run lint
+      - name: Lint scripts et configuration
+        run: npx eslint scripts eslint.config.js vite.config.ts
+
+      - name: Lint domaine et application
+        run: npx eslint src/domain src/application src/app
+
+      - name: Lint persistance et plateforme
+        run: npx eslint src/persistence src/platform
+
+      - name: Lint interface et contenus
+        run: npx eslint src/features src/pages src/components src/content src/assets src/main.tsx
 
       - name: Vérifier le typage
         run: npm run typecheck
