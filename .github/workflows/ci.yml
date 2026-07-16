@@ -82,7 +82,7 @@ jobs:
         run: npx eslint src/persistence/schemas/hydrateEntities.ts
 
       - name: Lint invariants familiaux
-        run: npx eslint src/persistence/schemas/validateFamilyState.ts
+        run: npx eslint src/persistence/schemas/validateFamilyState.ts src/persistence/schemas/familyReferences.ts src/persistence/schemas/worldProgressValidation.ts
 
       - name: Lint migrations
         run: npx eslint src/persistence/migrations
