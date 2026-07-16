@@ -2,101 +2,142 @@
 
 Une application familiale qui transforme les petites actions du quotidien en aventures illustrées pour les enfants de 3 à 10 ans.
 
-> Petit effort, morceau d’aventure, monde qui grandit.
+> Petit effort, morceau d’aventure, univers qui grandit.
 
 ## Statut
 
-La V1 fonctionnelle couvre la boucle familiale complète sur un appareil :
+Le socle V1 local-first est fonctionnel et contrôlé. Il couvre profils, quêtes, routines, validation, récompenses, sauvegardes et PWA.
 
-```text
-Préparer une quête → la réaliser hors écran → la valider → faire grandir le monde
-```
+Le produit entre maintenant dans un recalage structurant : le code actuel, centré sur La Forêt des Lucioles, doit devenir un moteur de **six univers indépendants** avant l’intégration des assets définitifs.
 
-Les fonctions, les données, la PWA et les parcours sont finalisés. Les visuels actuels restent volontairement provisoires : les illustrations définitives, les icônes, la mascotte et les scènes parallaxes seront produits séparément à partir de la bible graphique.
+Aucun code multi-univers n’est encore présenté comme terminé dans cette documentation. Le plan cible est défini avant le prochain chantier d’implémentation.
 
-## Fonctions V1
+## Univers cibles
 
-### Premier lancement
+| Univers | Quêtes principales |
+|---|---|
+| La Forêt des Lucioles | routines et petits défis du soir ou du coucher |
+| La Montagne du Dragon | routines et petits défis du matin |
+| La Station Spatiale | préparation des sorties et défis de journée |
+| Le Village des Lutins | routines et petits défis scolaires |
+| Univers nature, nom à définir | nature, observation et découverte |
+| Univers créativité, nom à définir | imagination, construction et expression |
 
-- présentation courte et confirmation d’un usage familial privé ;
-- création du premier profil ;
-- choix d’un compagnon et d’une couleur ;
-- code parent local ;
-- mode de validation par défaut ;
-- sélection d’une à trois premières quêtes ;
-- arrivée directe dans le monde enfant.
+Chaque univers possédera :
 
-### Espace parent
+- une mascotte ;
+- une scène parallaxe évolutive ;
+- une progression propre à chaque enfant ;
+- des récompenses ;
+- une histoire ;
+- un panel de quêtes adapté aux trois tranches d’âge.
 
-- création, modification, archivage et restauration de plusieurs profils ;
-- bibliothèque de 40 quêtes réparties entre 8 catégories ;
-- planification directe d’un modèle ou création d’une copie personnalisée ;
-- modèles familiaux modifiables, archivables et réutilisables ;
-- quêtes personnalisées avec étapes, durée, aide adulte, note et récompense ;
-- attribution à un ou plusieurs enfants ;
-- planification immédiate, ponctuelle ou hebdomadaire ;
-- moments de journée, heure facultative et date de fin ;
-- routines modifiables, suspendables, reprenables et duplicables ;
-- validation parent ou ensemble ;
-- report au lendemain et choix neutre de laisser une quête de côté ;
-- réglages de lecture vocale, effets sonores, animations et célébrations ;
-- export JSON, import confirmé et sauvegardes automatiques restaurables ;
-- suppression complète des données locales.
+Luma la luciole reste la mascotte de La Forêt des Lucioles.
+
+## Expérience cible
+
+### Accueil familial
+
+L’écran principal se divise en deux fenêtres :
+
+- à gauche, l’espace enfant ;
+- à droite, l’espace parent protégé.
 
 ### Espace enfant
 
-- choix du profil ;
-- trois destinations : Monde, Quêtes et Trésor ;
-- maximum de trois quêtes visibles pour les 3 à 5 ans ;
-- distinction douce des quêtes facultatives ;
-- lecture vocale locale ;
-- étapes montrées une par une aux plus jeunes ;
-- démarrage et signalement de fin en quelques interactions ;
-- attente neutre d’une validation adulte ;
-- célébration immédiate ou différée ;
-- quatre états de La Forêt des Lucioles ;
-- douze objets ou habitants et huit chapitres.
+Après sélection du profil, six pavés donnent accès aux univers.
 
-## Vie privée et intégrité
+Une pastille rouge affiche le nombre de quêtes actuellement disponibles dans chaque univers. Elle disparaît lorsque ce nombre vaut zéro et ne représente jamais un retard ou un échec.
 
-- fonctionnement local-first sans compte ;
-- données stockées dans IndexedDB ;
-- aucune publicité, télémétrie ou communication sociale ;
-- aucune date de naissance complète ;
-- validation runtime de chaque entité importée ;
-- contrôle des références et de la progression ;
-- sauvegarde transactionnelle avant import, migration ou restauration ;
-- journal de migration ;
-- écritures sérialisées afin d’éviter la perte d’une action rapide.
+### Espace parent
 
-Le code parent sépare les usages sur l’appareil. Il ne constitue pas un chiffrement des données locales.
+Le parent pourra :
 
-## PWA
+- gérer les profils sans compagnon ni couleur ;
+- choisir un avatar compatible avec l’âge ;
+- filtrer les quêtes par univers et tranche d’âge ;
+- créer une quête avec un univers obligatoire ;
+- planifier pour plusieurs enfants ;
+- consulter les progressions par univers.
 
-- installation sur smartphone, tablette ou ordinateur ;
-- fonctionnement hors ligne après le premier chargement ;
-- service worker généré depuis les bundles de production ;
-- bundles JavaScript et CSS précachés ;
-- nouvelle version proposée sans interrompre l’usage ;
-- aucun fallback HTML utilisé à la place d’un asset JavaScript ou CSS.
+## Avatars initiaux
+
+La première collection prévoit :
+
+- garçon et fille 3 à 5 ans ;
+- garçon et fille 6 à 8 ans ;
+- garçon et fille 9 à 10 ans.
+
+L’avatar représente l’enfant. La mascotte appartient à un univers.
+
+## Contenus adaptés à l’âge
+
+Une quête cible devient une famille contenant plusieurs variantes :
+
+```text
+Famille de quête
+├── variante 3-5 ans
+├── variante 6-8 ans
+└── variante 9-10 ans
+```
+
+Le premier catalogue complet vise au minimum :
+
+- 6 univers ;
+- 30 familles de quêtes ;
+- 90 variantes d’âge.
+
+## Architecture cible
+
+```text
+Interface
+→ cas d’usage
+→ domaine multi-univers
+→ contenus et manifestes
+→ persistance locale
+```
+
+Le moteur commun gérera :
+
+- familles et variantes de quêtes ;
+- progression par enfant et univers ;
+- compteurs de disponibilité ;
+- scènes parallaxes déclaratives ;
+- fallbacks statiques ;
+- chargement différé par univers.
+
+Les composants ne devront jamais coder un comportement particulier avec une succession de conditions sur les noms des mondes.
+
+## Prochain schéma de données
+
+Le schéma V3 ajoutera notamment :
+
+- `worldId` obligatoire sur chaque famille de quête ;
+- variantes par tranche d’âge ;
+- univers et variante figés dans chaque occurrence ;
+- progression par couple enfant-univers ;
+- avatars contraints par âge ;
+- suppression de `accentId` et `activeWorldId`.
+
+La migration V2 vers V3 préservera l’historique et signalera les quêtes personnalisées dont l’univers doit être vérifié.
+
+## PWA et assets
+
+- couvertures, avatars, textes et fallbacks précachés ;
+- scènes parallaxes chargées univers par univers ;
+- cache après première ouverture ;
+- fonctionnement des quêtes garanti sans animation ;
+- mode mouvements réduits obligatoire.
 
 ## Principes fondateurs
 
 - Le parent prépare, l’enfant joue.
-- La progression récompense l’effort, jamais la perfection.
+- Chaque quête appartient à un univers.
+- Chaque enfant possède une progression indépendante dans chaque univers.
+- L’effort est valorisé, jamais la perfection.
 - Aucun classement, aucune série cassable et aucun retrait de récompense.
-- L’application renvoie rapidement vers l’action dans le monde réel.
-- La sécurité, l’accessibilité et la vie privée des enfants sont intégrées dès la conception.
-
-## Architecture
-
-Le projet est un monolithe modulaire React + TypeScript, local-first et organisé autour du domaine métier.
-
-```text
-Interface → commandes applicatives → domaine pur → ports → adaptateurs locaux
-```
-
-Les composants ne lisent pas le stockage, le domaine ne dépend pas du navigateur et les assets passent par un registre typé.
+- Le temps d’écran reste bref.
+- La sécurité, l’accessibilité et la vie privée des enfants restent intégrées dès la conception.
 
 ## Démarrage local
 
@@ -107,30 +148,23 @@ npm install
 npm run dev
 ```
 
-## Contrôles
+## Contrôles actuels
 
 ```bash
 npm run check
 ```
 
-La chaîne vérifie notamment :
+Le socle actuel vérifie TypeScript strict, architecture, cycles, contenus, assets, tests, couverture, build PWA et parcours Chrome.
 
-- TypeScript strict et code mort ;
-- architecture, imports entre features et cycles ;
-- budgets de fichiers, assets et bundle ;
-- 40 contenus et formulations interdites ;
-- 84 scénarios unitaires et leur couverture ;
-- migrations, imports et sauvegardes ;
-- build GitHub Pages et service worker ;
-- parcours Chrome mobile, tablette et bureau ;
-- onboarding, famille, routines, validation, récompense, import corrompu, persistance et hors ligne.
+Le prochain cycle ajoutera les contrôles multi-univers, variantes d’âge, migration V3, compteurs par monde et manifestes parallaxes.
 
 ## Documents
 
 - [Vision produit](./docs/PRODUCT-VISION.md)
-- [Cahier des charges V1](./docs/CAHIER-DES-CHARGES.md)
+- [Cahier des charges cible](./docs/CAHIER-DES-CHARGES.md)
+- [Plan directeur multi-univers](./docs/MULTI-UNIVERSE-PLAN.md)
 - [Architecture](./docs/ARCHITECTURE.md)
-- [Modèle de données](./docs/DATA-MODEL.md)
+- [Modèle de données V3](./docs/DATA-MODEL.md)
 - [Parcours utilisateurs](./docs/USER-FLOWS.md)
 - [Sécurité enfant](./docs/CHILD-SAFETY.md)
 - [Règles éditoriales](./docs/CONTENT-GUIDELINES.md)
