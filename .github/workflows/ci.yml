@@ -24,21 +24,8 @@ jobs:
           node-version: 22
       - name: Installer les dépendances
         run: npm install --silent --no-audit --no-fund
-      - name: Capturer le typage strict
-        id: typecheck
-        continue-on-error: true
-        run: npm run typecheck > typecheck.log 2>&1
-      - name: Publier le diagnostic TypeScript
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: typecheck-diagnostic
-          path: typecheck.log
-      - name: Valider le typage strict
-        if: steps.typecheck.outcome == 'failure'
-        run: |
-          cat typecheck.log
-          exit 1
+      - name: Vérifier le typage strict
+        run: npm run typecheck
 
   coverage:
     needs: typing
@@ -55,23 +42,8 @@ jobs:
           node-version: 22
       - name: Installer les dépendances
         run: npm install --silent --no-audit --no-fund
-      - name: Capturer la couverture
-        id: coverage
-        continue-on-error: true
-        run: npm run test:coverage > coverage.log 2>&1
-      - name: Publier le diagnostic de couverture
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: coverage-diagnostic
-          path: |
-            coverage.log
-            coverage/coverage-summary.json
-      - name: Valider la couverture
-        if: steps.coverage.outcome == 'failure'
-        run: |
-          cat coverage.log
-          exit 1
+      - name: Vérifier la couverture
+        run: npm run test:coverage
 
   quality:
     needs: [typing, coverage]
@@ -119,16 +91,13 @@ jobs:
         run: npx eslint src/application/model src/application/ports
 
       - name: Lint commandes de préparation
-        run: npx eslint src/application/services/familySetupCommands.ts
+        run: npx eslint src/application/services/familySetupCommands.ts src/application/services/familySetupCommands.test.ts
 
       - name: Lint flux et actualisation
-        run: npx eslint src/application/services/questFlowCommands.ts src/application/services/stateRefresh.ts
+        run: npx eslint src/application/services/questFlowCommands.ts src/application/services/questFlowCommands.test.ts src/application/services/stateRefresh.ts
 
       - name: Lint file de mutations
-        run: npx eslint src/application/services/StateCommitQueue.ts
-
-      - name: Lint test de concurrence
-        run: npx eslint src/application/services/StateCommitQueue.test.ts
+        run: npx eslint src/application/services/StateCommitQueue.ts src/application/services/StateCommitQueue.test.ts
 
       - name: Lint contrat et factory du contrôleur
         run: npx eslint src/app/controller/FamilyAppController.ts src/app/controller/createFamilyController.ts
@@ -146,7 +115,7 @@ jobs:
         run: npx eslint src/persistence/schemas/hydrateEntities.ts
 
       - name: Lint invariants familiaux
-        run: npx eslint src/persistence/schemas/validateFamilyState.ts src/persistence/schemas/familyReferences.ts src/persistence/schemas/worldProgressValidation.ts
+        run: npx eslint src/persistence/schemas/validateFamilyState.ts src/persistence/schemas/validateFamilyState.test.ts src/persistence/schemas/familyReferences.ts src/persistence/schemas/worldProgressValidation.ts
 
       - name: Lint migrations
         run: npx eslint src/persistence/migrations
@@ -157,8 +126,8 @@ jobs:
       - name: Lint plateforme navigateur
         run: npx eslint src/platform
 
-      - name: Lint interface et contenus
-        run: npx eslint src/features src/pages src/components src/content src/assets src/main.tsx
+      - name: Lint interface contenus et fixtures
+        run: npx eslint src/features src/pages src/components src/content src/assets src/tests src/main.tsx
 
       - name: Exécuter les tests unitaires
         run: npm run test
