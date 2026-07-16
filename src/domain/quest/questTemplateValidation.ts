@@ -20,6 +20,10 @@ const MAX_PARENT_NOTE_LENGTH = 500;
 const MAX_STEPS_DEFAULT = 8;
 const MAX_STEPS_FOR_6_TO_8 = 3;
 
+type NormalizedQuestTemplateInput = QuestTemplateInput & {
+  readonly steps: readonly QuestStep[];
+};
+
 const TITLE_WORD_LIMIT: Readonly<Record<AgeBand, number>> = {
   '3-5': 5,
   '6-8': 7,
@@ -32,7 +36,10 @@ const INSTRUCTION_WORD_LIMIT: Readonly<Record<AgeBand, number>> = {
   '9-10': 30,
 };
 
-function lowestLimit(ageBands: readonly AgeBand[], limits: Readonly<Record<AgeBand, number>>): number {
+function lowestLimit(
+  ageBands: readonly AgeBand[],
+  limits: Readonly<Record<AgeBand, number>>,
+): number {
   return Math.min(...ageBands.map((ageBand) => limits[ageBand]));
 }
 
@@ -106,7 +113,9 @@ function validateSteps(
   return normalized;
 }
 
-export function normalizeQuestTemplateInput(input: QuestTemplateInput): QuestTemplateInput {
+export function normalizeQuestTemplateInput(
+  input: QuestTemplateInput,
+): NormalizedQuestTemplateInput {
   const ageBands = validateAgeBands(input.ageBands);
   const title = requireText(
     input.title,
