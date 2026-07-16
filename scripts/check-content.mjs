@@ -42,7 +42,11 @@ if (new Set(familyIds).size !== familyIds.length) errors.push('Des identifiants 
 if (familyWorlds.length !== 30) errors.push('Chaque famille doit référencer un univers.');
 if (familyIds.length * 3 !== 90) errors.push('Le catalogue doit produire 90 variantes d’âge.');
 for (const id of illustrationIds) if (!assetIds.has(id)) errors.push(`Illustration inconnue : ${id}`);
-for (const id of rewardIds) if (!worldSource.includes(`'${id}'`) && !worldSource.includes(`"${id}"`)) errors.push(`Récompense inconnue : ${id}`);
+for (const id of rewardIds) {
+  const explicitDefinition = worldSource.includes(`id: '${id}'`) || worldSource.includes(`id: "${id}"`);
+  const generatedDefinition = assetIds.has(id);
+  if (!explicitDefinition && !generatedDefinition) errors.push(`Récompense inconnue : ${id}`);
+}
 for (const worldId of worldIds) {
   if (!worldSource.includes(`'${worldId}'`)) errors.push(`Univers absent du catalogue : ${worldId}`);
   for (let stage = 0; stage < 4; stage += 1) {
