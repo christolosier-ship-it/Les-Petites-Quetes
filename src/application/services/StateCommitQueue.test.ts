@@ -1,12 +1,15 @@
 import { describe, expect, it } from 'vitest';
 import { StateCommitQueue } from './StateCommitQueue';
 
-function deferred() {
-  let release!: () => void;
+function deferred(): { readonly promise: Promise<void>; readonly release: () => void } {
+  let resolvePromise: (() => void) | undefined;
   const promise = new Promise<void>((resolve) => {
-    release = resolve;
+    resolvePromise = () => resolve();
   });
-  return { promise, release };
+  return {
+    promise,
+    release: () => resolvePromise?.(),
+  };
 }
 
 describe('StateCommitQueue', () => {
@@ -16,9 +19,9 @@ describe('StateCommitQueue', () => {
     const published: number[] = [];
     const queue = new StateCommitQueue(
       0,
-      async (_current, next) => {
+      (_current, next) => {
         events.push(`save-${next}`);
-        if (next === 1) await firstWrite.promise;
+        return next === 1 ? firstWrite.promise : Promise.resolve();
       },
       (next) => {
         events.push(`publish-${next}`);
@@ -43,9 +46,7 @@ describe('StateCommitQueue', () => {
     let fail = true;
     const queue = new StateCommitQueue(
       0,
-      async () => {
-        if (fail) throw new Error('écriture refusée');
-      },
+      () => fail ? Promise.reject(new Error('écriture refusée')) : Promise.resolve(),
       (next) => published.push(next),
     );
 
