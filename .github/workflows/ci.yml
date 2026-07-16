@@ -44,8 +44,21 @@ jobs:
       - name: Vérifier les budgets, assets et contenus
         run: npm run check:files && npm run check:assets && npm run check:content
 
-      - name: Vérifier le lint
-        run: npm run lint
+      - name: Capturer le lint
+        id: lint
+        continue-on-error: true
+        run: npm run lint > lint.log 2>&1
+
+      - name: Publier le diagnostic lint
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lint-diagnostic
+          path: lint.log
+
+      - name: Valider le lint
+        if: steps.lint.outcome == 'failure'
+        run: exit 1
 
       - name: Vérifier le typage
         run: npm run typecheck
