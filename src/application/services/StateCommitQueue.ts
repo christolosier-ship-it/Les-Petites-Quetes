@@ -1,5 +1,6 @@
 export type StateTransform<T> = (current: T) => T;
 export type StatePersist<T> = (current: T, next: T) => Promise<void>;
+export type StateResolver<T> = (current: T) => Promise<T>;
 
 export class StateCommitQueue<T> {
   private currentState: T;
@@ -22,6 +23,14 @@ export class StateCommitQueue<T> {
     this.publish(state);
   }
 
+  private track(operation: Promise<T>): Promise<T> {
+    this.tail = operation.then(
+      () => undefined,
+      () => undefined,
+    );
+    return operation;
+  }
+
   enqueue(
     transform: StateTransform<T>,
     persistOverride: StatePersist<T> = this.persist,
@@ -34,10 +43,16 @@ export class StateCommitQueue<T> {
       this.publish(next);
       return next;
     });
-    this.tail = operation.then(
-      () => undefined,
-      () => undefined,
-    );
-    return operation;
+    return this.track(operation);
+  }
+
+  resolve(resolver: StateResolver<T>): Promise<T> {
+    const operation = this.tail.then(async () => {
+      const next = await resolver(this.currentState);
+      this.currentState = next;
+      this.publish(next);
+      return next;
+    });
+    return this.track(operation);
   }
 }
