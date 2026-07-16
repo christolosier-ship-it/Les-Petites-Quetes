@@ -1,6 +1,6 @@
 # Dossier de cadrage
 
-Ce dossier constitue la source de vérité du projet avant le développement applicatif.
+Ce dossier constitue la source de vérité du projet avant et pendant le développement applicatif.
 
 ## Ordre de lecture
 
@@ -13,6 +13,10 @@ Ce dossier constitue la source de vérité du projet avant le développement app
 7. [Règles éditoriales](./CONTENT-GUIDELINES.md)
 8. [Bible des assets](./ASSET-BIBLE.md)
 9. [Feuille de route](./ROADMAP.md)
+
+## Décisions structurantes
+
+- [ADR-0001 — Règles du premier domaine métier](./decisions/ADR-0001-domain-rules.md)
 
 ## Règle de gouvernance
 
@@ -31,4 +35,4 @@ Toute décision structurante devra être documentée avant fusion :
 
 ## Statut
 
-Ces documents forment une base initiale à relire et amender. Ils ne constituent pas encore l’autorisation de lancer le développement fonctionnel.
+Le cadrage initial est validé. Les ADR complètent désormais cette source de vérité à mesure que les lots métier sont développés.
