@@ -1,5 +1,6 @@
 import { useState, type FormEvent } from 'react';
 import type { FamilyAppController } from '../../app/controller/FamilyAppController';
+import { AvatarImage } from '../../components/profile/AvatarImage';
 import { Button } from '../../components/primitives/Button';
 import { Card } from '../../components/primitives/Card';
 import { Field } from '../../components/primitives/Field';
@@ -71,7 +72,15 @@ export function OnboardingFlow({ app, onComplete }: OnboardingFlowProps) {
             <Field label="Prénom ou pseudonyme"><input value={displayName} maxLength={30} required onChange={(event) => setDisplayName(event.target.value)} /></Field>
             <Field label="Tranche d’âge"><select value={ageBand} onChange={(event) => changeAgeBand(event.target.value as AgeBand)}><option value="3-5">3 à 5 ans</option><option value="6-8">6 à 8 ans</option><option value="9-10">9 à 10 ans</option></select></Field>
             <Field label="Niveau de lecture"><select value={readingLevel} onChange={(event) => setReadingLevel(event.target.value as ReadingLevel)}><option value="visual">Principalement visuel</option><option value="short-text">Phrases courtes</option><option value="independent">Lecture autonome</option></select></Field>
-            <fieldset className="choice-grid"><legend>Avatar</legend>{avatarsForAgeBand(ageBand).map((avatar) => <label key={avatar.id}><input type="radio" name="avatar" checked={avatarId === avatar.id} onChange={() => setAvatarId(avatar.id)} /><span aria-hidden="true">{avatar.presentation === 'girl' ? '👧' : '👦'}</span> {avatar.label}</label>)}</fieldset>
+            <fieldset className="choice-grid avatar-choice-grid">
+              <legend>Avatar</legend>
+              {avatarsForAgeBand(ageBand).map((avatar) => (
+                <label key={avatar.id} className={avatarId === avatar.id ? 'avatar-choice avatar-choice--selected' : 'avatar-choice'}>
+                  <input type="radio" name="avatar" aria-label={avatar.label} checked={avatarId === avatar.id} onChange={() => setAvatarId(avatar.id)} />
+                  <AvatarImage assetId={avatar.assetId} className="avatar-choice__image" />
+                </label>
+              ))}
+            </fieldset>
             <div className="button-row"><Button variant="quiet" onClick={() => setStep(0)}>Retour</Button><Button disabled={displayName.trim().length === 0} onClick={() => setStep(2)}>Continuer</Button></div>
           </div>
         )}
