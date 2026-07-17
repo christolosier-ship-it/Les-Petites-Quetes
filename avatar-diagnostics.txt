@@ -7,10 +7,4 @@ avatar-girl-6-8.webp 14997 bytes
 avatar-girl-9-10.webp 14997 bytes
 
 check-assets output:
-Validation des assets en échec :
-- Identifiant absent ou dupliqué : avatar.girl.3-5
-- Identifiant absent ou dupliqué : avatar.boy.3-5
-- Identifiant absent ou dupliqué : avatar.girl.6-8
-- Identifiant absent ou dupliqué : avatar.boy.6-8
-- Identifiant absent ou dupliqué : avatar.girl.9-10
-- Identifiant absent ou dupliqué : avatar.boy.9-10
+166 assets effectifs validés dans 2 registres.
