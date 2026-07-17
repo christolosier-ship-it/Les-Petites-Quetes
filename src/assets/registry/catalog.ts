@@ -2,7 +2,11 @@ import rawAssets from './assets.json';
 import rawAvatars from './avatars.json';
 import type { AssetDefinition } from './types';
 
-const assets = [...rawAssets, ...rawAvatars] as readonly AssetDefinition[];
+const avatarIds = new Set(rawAvatars.map((asset) => asset.id));
+const assets = [
+  ...rawAssets.filter((asset) => !avatarIds.has(asset.id)),
+  ...rawAvatars,
+] as readonly AssetDefinition[];
 const assetsById = new Map(assets.map((asset) => [asset.id, asset]));
 
 export function getAsset(id: string): AssetDefinition {
