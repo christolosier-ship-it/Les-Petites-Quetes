@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import type { FamilyAppController } from '../../app/controller/FamilyAppController';
+import { AvatarImage } from '../../components/profile/AvatarImage';
 import { Button } from '../../components/primitives/Button';
 import { Card } from '../../components/primitives/Card';
 import { findAvatarDefinition } from '../../content/avatars/avatarCatalog';
@@ -26,7 +27,19 @@ export function ChildHomePage({ app, onBack }: ChildHomePageProps) {
   return (
     <section className="workspace workspace--child" data-page="child" data-age-band={activeChild.ageBand}>
       {worldId === undefined && <header className="workspace-header child-header"><div><p className="eyebrow">Espace enfant</p><h1>Les Petites Quêtes</h1></div><Button variant="quiet" onClick={onBack}>Accueil</Button></header>}
-      {children.length > 1 && <div className="profile-picker" aria-label="Choisir un profil">{children.map((child) => { const avatar = findAvatarDefinition(child.avatarId); return <button key={child.id} type="button" className={child.id === activeChildId ? 'profile-chip profile-chip--active' : 'profile-chip'} onClick={() => { setWorldId(undefined); void app.selectChild(child.id); }}><span aria-hidden="true">{avatar?.presentation === 'girl' ? '👧' : '👦'}</span> {child.displayName}</button>; })}</div>}
+      {children.length > 1 && (
+        <div className="profile-picker" aria-label="Choisir un profil">
+          {children.map((child) => {
+            const avatar = findAvatarDefinition(child.avatarId);
+            return (
+              <button key={child.id} type="button" className={child.id === activeChildId ? 'profile-chip profile-chip--active' : 'profile-chip'} onClick={() => { setWorldId(undefined); void app.selectChild(child.id); }}>
+                {avatar && <AvatarImage assetId={avatar.assetId} className="profile-chip__avatar" />}
+                <span>{child.displayName}</span>
+              </button>
+            );
+          })}
+        </div>
+      )}
       <RewardCelebration app={app} childId={activeChildId} onViewWorld={setWorldId} />
       {worldId === undefined
         ? <WorldHub app={app} childId={activeChildId} onOpenWorld={setWorldId} />
