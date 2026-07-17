@@ -1,9 +1,10 @@
 import { useState, type FormEvent } from 'react';
 import type { FamilyAppController } from '../../app/controller/FamilyAppController';
-import { avatarsForAgeBand, defaultAvatarForAge, findAvatarDefinition } from '../../content/avatars/avatarCatalog';
+import { AvatarImage } from '../../components/profile/AvatarImage';
 import { Button } from '../../components/primitives/Button';
 import { Card } from '../../components/primitives/Card';
 import { Field } from '../../components/primitives/Field';
+import { avatarsForAgeBand, defaultAvatarForAge, findAvatarDefinition } from '../../content/avatars/avatarCatalog';
 import type { AgeBand, ReadingLevel } from '../../domain/shared/types';
 
 interface ChildProfilesPanelProps {
@@ -30,7 +31,15 @@ function ProfileFields({ draft, onChange }: { readonly draft: ProfileDraft; read
       <Field label="Prénom ou pseudonyme"><input value={draft.displayName} maxLength={30} required onChange={(event) => onChange({ ...draft, displayName: event.target.value })} /></Field>
       <Field label="Tranche d’âge"><select value={draft.ageBand} onChange={(event) => changeAge(event.target.value as AgeBand)}><option value="3-5">3 à 5 ans</option><option value="6-8">6 à 8 ans</option><option value="9-10">9 à 10 ans</option></select></Field>
       <Field label="Niveau de lecture"><select value={draft.readingLevel} onChange={(event) => onChange({ ...draft, readingLevel: event.target.value as ReadingLevel })}><option value="visual">Principalement visuel</option><option value="short-text">Phrases courtes</option><option value="independent">Lecture autonome</option></select></Field>
-      <fieldset className="choice-grid"><legend>Avatar</legend>{avatarsForAgeBand(draft.ageBand).map((avatar) => <label key={avatar.id}><input type="radio" name={`avatar-${draft.displayName || 'new'}`} checked={draft.avatarId === avatar.id} onChange={() => onChange({ ...draft, avatarId: avatar.id })} /><span aria-hidden="true">{avatar.presentation === 'girl' ? '👧' : '👦'}</span> {avatar.label}</label>)}</fieldset>
+      <fieldset className="choice-grid avatar-choice-grid">
+        <legend>Avatar</legend>
+        {avatarsForAgeBand(draft.ageBand).map((avatar) => (
+          <label key={avatar.id} className={draft.avatarId === avatar.id ? 'avatar-choice avatar-choice--selected' : 'avatar-choice'}>
+            <input type="radio" name={`avatar-${draft.displayName || 'new'}`} aria-label={avatar.label} checked={draft.avatarId === avatar.id} onChange={() => onChange({ ...draft, avatarId: avatar.id })} />
+            <AvatarImage assetId={avatar.assetId} className="avatar-choice__image" />
+          </label>
+        ))}
+      </fieldset>
     </>
   );
 }
@@ -77,7 +86,7 @@ export function ChildProfilesPanel({ app }: ChildProfilesPanelProps) {
               {editingId === child.id ? (
                 <form className="form-grid" onSubmit={(event) => void saveEdit(event)}><ProfileFields draft={editingDraft} onChange={setEditingDraft} /><div className="button-row"><Button type="submit">Enregistrer</Button><Button variant="quiet" onClick={() => setEditingId(undefined)}>Annuler</Button></div></form>
               ) : (
-                <div className="list-card"><div className="profile-summary"><span className="avatar-token" aria-hidden="true">{avatar?.presentation === 'girl' ? '👧' : '👦'}</span><div><strong>{child.displayName}</strong><p>{child.ageBand} ans · {child.readingLevel} · {avatar?.label}</p></div></div><div className="button-row"><Button variant="quiet" onClick={() => startEdit(child)}>Modifier</Button><Button variant="quiet" onClick={() => void app.archiveChild(child.id)}>Archiver</Button></div></div>
+                <div className="list-card"><div className="profile-summary"><span className="avatar-token" aria-hidden="true">{avatar && <AvatarImage assetId={avatar.assetId} className="avatar-image" />}</span><div><strong>{child.displayName}</strong><p>{child.ageBand} ans · {child.readingLevel} · {avatar?.label}</p></div></div><div className="button-row"><Button variant="quiet" onClick={() => startEdit(child)}>Modifier</Button><Button variant="quiet" onClick={() => void app.archiveChild(child.id)}>Archiver</Button></div></div>
               )}
             </Card>
           );
