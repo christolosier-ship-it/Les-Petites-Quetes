@@ -52,9 +52,11 @@
 .filter-panel { display: grid; gap: var(--space-3); padding: var(--space-4); border-radius: var(--radius-md); background: rgb(255 253 247 / 0.8); }
 .filter-panel label { display: grid; gap: var(--space-2); font-weight: 800; }
 .profile-summary { display: flex; align-items: center; gap: var(--space-3); }
-.avatar-token { display: inline-grid; width: 3rem; height: 3rem; place-items: center; border-radius: 50%; background: #fff1a8; font-size: 1.7rem; }
-.avatar-token--large { width: 4.5rem; height: 4.5rem; font-size: 2.6rem; }
-.profile-chip { min-height: 3rem; padding: 0.55rem 0.9rem; border: 1px solid var(--color-border); border-radius: 999px; background: var(--color-paper); cursor: pointer; }
+.avatar-token { display: inline-grid; width: 4rem; height: 4.75rem; flex: 0 0 auto; overflow: hidden; place-items: end center; padding: 0.15rem; border: 1px solid var(--color-border); border-radius: 1rem; background: linear-gradient(180deg, #fff9dc, #f1f7e6); }
+.avatar-token--large { width: 5.5rem; height: 6.5rem; }
+.avatar-image { width: 100%; height: 100%; object-fit: contain; object-position: center bottom; }
+.profile-chip { display: inline-flex; min-height: 3rem; align-items: center; gap: var(--space-2); padding: 0.4rem 0.85rem 0.4rem 0.45rem; border: 1px solid var(--color-border); border-radius: 999px; background: var(--color-paper); cursor: pointer; }
+.profile-chip__avatar { width: 2.2rem; height: 2.6rem; object-fit: contain; object-position: center bottom; }
 .profile-chip--active { background: var(--color-forest-800); color: white; }
 
 @keyframes pulse-firefly { 50% { transform: scale(1.18); filter: drop-shadow(0 0 1rem #f8df84); } }

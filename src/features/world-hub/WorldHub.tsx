@@ -1,4 +1,5 @@
 import type { FamilyAppController } from '../../app/controller/FamilyAppController';
+import { AvatarImage } from '../../components/profile/AvatarImage';
 import { ParallaxScene } from '../../components/world/ParallaxScene';
 import { findAvatarDefinition } from '../../content/avatars/avatarCatalog';
 import { worldCatalog } from '../../content/world/worldCatalog';
@@ -19,7 +20,7 @@ export function WorldHub({ app, childId, onOpenWorld }: WorldHubProps) {
   return (
     <section className="world-hub" aria-labelledby="world-hub-title">
       <header className="world-hub__header">
-        <span className="avatar-token avatar-token--large" aria-hidden="true">{avatar?.presentation === 'girl' ? '👧' : '👦'}</span>
+        <span className="avatar-token avatar-token--large" aria-hidden="true">{avatar && <AvatarImage assetId={avatar.assetId} className="avatar-image" />}</span>
         <div><p className="eyebrow">Bonjour {child.displayName}</p><h2 id="world-hub-title">Choisis ton univers</h2><p>Les pastilles montrent seulement les quêtes prêtes maintenant.</p></div>
       </header>
       <div className="world-tile-grid">

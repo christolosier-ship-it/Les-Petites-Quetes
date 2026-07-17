@@ -1,0 +1,46 @@
+name: Clean avatar materialization helpers
+
+on:
+  push:
+    branches:
+      - feat/avatar-assets
+    paths:
+      - .github/workflows/cleanup-avatar-materializer.yml
+
+permissions:
+  contents: write
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/avatar-assets
+          fetch-depth: 0
+      - name: Wait for generated avatar assets
+        run: |
+          for attempt in $(seq 1 30); do
+            git pull --ff-only origin feat/avatar-assets || true
+            if test -f public/avatars/avatar-girl-3-5.webp \
+              && test -f public/avatars/avatar-boy-3-5.webp \
+              && test -f public/avatars/avatar-girl-6-8.webp \
+              && test -f public/avatars/avatar-boy-6-8.webp \
+              && test -f public/avatars/avatar-girl-9-10.webp \
+              && test -f public/avatars/avatar-boy-9-10.webp; then
+              exit 0
+            fi
+            sleep 10
+          done
+          echo "Avatar assets were not materialized in time." >&2
+          exit 1
+      - name: Remove temporary helpers
+        run: |
+          rm -f scripts/avatar-blobs.json
+          rm -f .github/workflows/materialize-avatar-assets.yml
+          rm -f .github/workflows/cleanup-avatar-materializer.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Remove avatar materialization helpers"
+          git push

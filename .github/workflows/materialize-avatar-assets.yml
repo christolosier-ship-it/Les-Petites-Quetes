@@ -1,0 +1,46 @@
+name: Materialize avatar assets
+
+on:
+  push:
+    branches:
+      - feat/avatar-assets
+    paths:
+      - scripts/avatar-blobs.json
+      - .github/workflows/materialize-avatar-assets.yml
+
+permissions:
+  contents: write
+
+jobs:
+  materialize:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/avatar-assets
+      - name: Fetch avatar blobs
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          mkdir -p public/avatars
+          node <<'NODE'
+          const fs = require('fs');
+          const path = require('path');
+          const { execFileSync } = require('child_process');
+          const items = JSON.parse(fs.readFileSync('scripts/avatar-blobs.json', 'utf8'));
+          for (const item of items) {
+            const json = execFileSync('gh', ['api', `repos/${process.env.GH_REPO}/git/blobs/${item.sha}`], { encoding: 'utf8' });
+            const blob = JSON.parse(json);
+            fs.mkdirSync(path.dirname(item.path), { recursive: true });
+            fs.writeFileSync(item.path, Buffer.from(blob.content.replace(/\n/g, ''), 'base64'));
+          }
+          NODE
+      - name: Commit WebP assets
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/avatars
+          git commit -m "Add selected child avatar WebP assets"
+          git push
