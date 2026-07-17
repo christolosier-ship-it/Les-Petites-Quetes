@@ -13,6 +13,7 @@ interface ChildWorldSpaceProps {
   readonly childId: string;
   readonly worldId: WorldId;
   readonly onBack: () => void;
+  readonly onHome: () => void;
 }
 
 type ChildTab = 'world' | 'quests' | 'treasure';
@@ -22,12 +23,15 @@ const tabs = [
   { id: 'treasure', label: 'Mon trésor', icon: '🎒' },
 ] as const;
 
-export function ChildWorldSpace({ app, childId, worldId, onBack }: ChildWorldSpaceProps) {
+export function ChildWorldSpace({ app, childId, worldId, onBack, onHome }: ChildWorldSpaceProps) {
   const [tab, setTab] = useState<ChildTab>('world');
   const world = findWorldDefinition(worldId);
   return (
     <section className="child-world-space" data-world-space={worldId}>
-      <header className="workspace-header child-header"><div><p className="eyebrow">Avec {world.mascotName}</p><h2>{world.name}</h2></div><Button variant="quiet" onClick={onBack}>Tous les univers</Button></header>
+      <header className="workspace-header child-header child-world-header">
+        <div className="child-world-heading"><span className="eyebrow">Avec {world.mascotName}</span><h2>{world.name}</h2></div>
+        <div className="child-world-actions"><Button variant="quiet" onClick={onHome}>Accueil</Button><Button variant="quiet" onClick={onBack}>Tous les univers</Button></div>
+      </header>
       <TabBar tabs={tabs} active={tab} onChange={setTab} label={`Navigation ${world.name}`} />
       <div className="workspace-content">
         {tab === 'world' && <WorldView app={app} childId={childId} worldId={worldId} compact />}

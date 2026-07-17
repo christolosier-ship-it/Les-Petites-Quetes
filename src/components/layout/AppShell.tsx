@@ -13,13 +13,8 @@ export function AppShell({ children, reducedMotion }: AppShellProps) {
       data-theme="forest-fireflies"
       data-motion={reducedMotion}
     >
-      <header className="app-header">
-        <div><p className="eyebrow">La Forêt des Lucioles</p><h1>Les Petites Quêtes</h1></div>
-        <span className="foundation-badge">V1 familiale</span>
-      </header>
       <UpdateBanner />
       <main className="app-main">{children}</main>
-      <footer className="app-footer">Une aventure privée, locale et sans publicité.</footer>
     </div>
   );
 }
