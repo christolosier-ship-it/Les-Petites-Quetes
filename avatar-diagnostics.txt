@@ -1,0 +1,16 @@
+Avatar files:
+avatar-boy-3-5.webp 14999 bytes
+avatar-boy-6-8.webp 14999 bytes
+avatar-boy-9-10.webp 11150 bytes
+avatar-girl-3-5.webp 14998 bytes
+avatar-girl-6-8.webp 14997 bytes
+avatar-girl-9-10.webp 14997 bytes
+
+check-assets output:
+Validation des assets en échec :
+- Identifiant absent ou dupliqué : avatar.girl.3-5
+- Identifiant absent ou dupliqué : avatar.boy.3-5
+- Identifiant absent ou dupliqué : avatar.girl.6-8
+- Identifiant absent ou dupliqué : avatar.boy.6-8
+- Identifiant absent ou dupliqué : avatar.girl.9-10
+- Identifiant absent ou dupliqué : avatar.boy.9-10
