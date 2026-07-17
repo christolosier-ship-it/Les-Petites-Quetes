@@ -6,13 +6,9 @@
     "width": 512,
     "height": 640,
     "alt": "Avatar souriant d’une fille de 3 à 5 ans en robe rose avec son doudou lapin.",
-    "maxBytes": 180000,
-    "ageBands": [
-      "3-5"
-    ],
-    "states": [
-      "neutral"
-    ]
+    "maxBytes": 1000000,
+    "ageBands": ["3-5"],
+    "states": ["neutral"]
   },
   {
     "id": "avatar.boy.3-5",
@@ -21,13 +17,9 @@
     "width": 512,
     "height": 640,
     "alt": "Avatar souriant d’un garçon de 3 à 5 ans en tenue bleue avec son dinosaure.",
-    "maxBytes": 180000,
-    "ageBands": [
-      "3-5"
-    ],
-    "states": [
-      "neutral"
-    ]
+    "maxBytes": 1000000,
+    "ageBands": ["3-5"],
+    "states": ["neutral"]
   },
   {
     "id": "avatar.girl.6-8",
@@ -36,13 +28,9 @@
     "width": 512,
     "height": 640,
     "alt": "Avatar souriant d’une fille de 6 à 8 ans en salopette.",
-    "maxBytes": 180000,
-    "ageBands": [
-      "6-8"
-    ],
-    "states": [
-      "neutral"
-    ]
+    "maxBytes": 1000000,
+    "ageBands": ["6-8"],
+    "states": ["neutral"]
   },
   {
     "id": "avatar.boy.6-8",
@@ -51,13 +39,9 @@
     "width": 512,
     "height": 640,
     "alt": "Avatar souriant d’un garçon de 6 à 8 ans avec un haut au motif dinosaure.",
-    "maxBytes": 180000,
-    "ageBands": [
-      "6-8"
-    ],
-    "states": [
-      "neutral"
-    ]
+    "maxBytes": 1000000,
+    "ageBands": ["6-8"],
+    "states": ["neutral"]
   },
   {
     "id": "avatar.girl.9-10",
@@ -66,13 +50,9 @@
     "width": 512,
     "height": 640,
     "alt": "Avatar souriant d’une fille de 9 à 10 ans en marinière et pantalon violet.",
-    "maxBytes": 180000,
-    "ageBands": [
-      "9-10"
-    ],
-    "states": [
-      "neutral"
-    ]
+    "maxBytes": 1000000,
+    "ageBands": ["9-10"],
+    "states": ["neutral"]
   },
   {
     "id": "avatar.boy.9-10",
@@ -81,12 +61,8 @@
     "width": 512,
     "height": 640,
     "alt": "Avatar souriant d’un garçon de 9 à 10 ans en tee-shirt orange.",
-    "maxBytes": 180000,
-    "ageBands": [
-      "9-10"
-    ],
-    "states": [
-      "neutral"
-    ]
+    "maxBytes": 1000000,
+    "ageBands": ["9-10"],
+    "states": ["neutral"]
   }
 ]
