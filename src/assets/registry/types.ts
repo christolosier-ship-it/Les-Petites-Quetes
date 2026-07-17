@@ -1,5 +1,5 @@
 export type AgeBand = '3-5' | '6-8' | '9-10';
-export type AssetType = 'icon' | 'illustration' | 'mascot' | 'reward' | 'sound';
+export type AssetType = 'icon' | 'illustration' | 'avatar' | 'mascot' | 'reward' | 'sound';
 
 export interface AssetDefinition {
   readonly id: string;
