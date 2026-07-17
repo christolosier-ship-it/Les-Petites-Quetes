@@ -1,0 +1,10 @@
+Avatar files:
+avatar-boy-3-5.webp 14999 bytes
+avatar-boy-6-8.webp 14999 bytes
+avatar-boy-9-10.webp 11150 bytes
+avatar-girl-3-5.webp 14998 bytes
+avatar-girl-6-8.webp 14997 bytes
+avatar-girl-9-10.webp 14997 bytes
+
+check-assets output:
+166 assets effectifs validés dans 2 registres.
