@@ -2,12 +2,12 @@ import { existsSync, readFileSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 
 const root = process.cwd();
-const registryPath = join(root, 'src/assets/registry/assets.json');
-const assets = JSON.parse(readFileSync(registryPath, 'utf8'));
+const registryFiles = ['assets.json', 'avatars.json'];
+const assets = registryFiles.flatMap((file) => JSON.parse(readFileSync(join(root, 'src/assets/registry', file), 'utf8')));
 const errors = [];
 const ids = new Set();
 
-if (!Array.isArray(assets) || assets.length === 0) errors.push('Le registre doit contenir au moins un asset.');
+if (assets.length === 0) errors.push('Le registre doit contenir au moins un asset.');
 
 for (const asset of assets) {
   if (!asset.id || ids.has(asset.id)) errors.push(`Identifiant absent ou dupliqué : ${asset.id ?? '(vide)'}`);
@@ -33,4 +33,4 @@ if (errors.length > 0) {
   process.exit(1);
 }
 
-console.log(`${assets.length} assets validés : identifiants, métadonnées, fichiers et budgets conformes.`);
+console.log(`${assets.length} assets validés dans ${registryFiles.length} registres.`);
