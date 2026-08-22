@@ -2,16 +2,10 @@ import { useState, type FormEvent } from 'react';
 import type { FamilyAppController } from '../../app/controller/FamilyAppController';
 import { Button } from '../../components/primitives/Button';
 import type { QuestTemplate } from '../../domain/quest/QuestTemplate';
-import {
-  draftFromTemplate,
-  inputFromDraft,
-  QuestTemplateFields,
-} from './QuestTemplateFields';
-import {
-  createScheduleDraft,
-  scheduleInputFromDraft,
-  ScheduleDraftFields,
-} from './ScheduleDraftFields';
+import { QuestTemplateFields } from './QuestTemplateFields';
+import { draftFromTemplate, inputFromDraft } from './QuestTemplateDraft';
+import { ScheduleDraftFields } from './ScheduleDraftFields';
+import { createScheduleDraft, scheduleInputFromDraft } from './ScheduleDraft';
 
 interface CustomQuestFormProps {
   readonly app: FamilyAppController;
