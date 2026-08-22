@@ -1,25 +1,58 @@
-import { lazy, Suspense, useState } from 'react';
+import { lazy, Suspense, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react';
+import { FireflyForestIllustratedBackdrop } from './FireflyForestIllustratedBackdrop';
 import type { WorldSceneRendererProps } from './WorldSceneProps';
 
 const FireflyForestScene = lazy(() => import('./FireflyForestScene').then((module) => ({ default: module.FireflyForestScene })));
 
-function FireflySceneFallback({ stage }: { readonly stage: 0 | 1 | 2 | 3 }) {
+function FireflySceneFallback() {
   return (
-    <div className={`firefly-forest-three firefly-forest-three--stage-${stage}`} aria-hidden="true">
+    <div className="firefly-forest-three__actors" aria-hidden="true">
       <div className="firefly-forest-three__fallback" />
     </div>
   );
 }
 
+function setIllustratedParallax(container: HTMLDivElement, x: number, y: number) {
+  container.style.setProperty('--forest-x-far', `${x * -4}px`);
+  container.style.setProperty('--forest-y-far', `${y * -2}px`);
+  container.style.setProperty('--forest-x-mid', `${x * -9}px`);
+  container.style.setProperty('--forest-y-mid', `${y * -4}px`);
+  container.style.setProperty('--forest-x-near', `${x * -16}px`);
+  container.style.setProperty('--forest-y-near', `${y * -7}px`);
+}
+
 export function FireflyForestDiorama({ world, stage, reducedMotion, compact = false }: WorldSceneRendererProps) {
   const [expanded, setExpanded] = useState(false);
+  const dioramaRef = useRef<HTMLDivElement>(null);
   const className = compact ? 'parallax-scene parallax-scene--compact' : 'parallax-scene';
   const sceneClassName = `${className} parallax-scene--three${expanded ? ' parallax-scene--expanded' : ''}`;
+
+  function moveIllustration(event: ReactPointerEvent<HTMLDivElement>) {
+    if (reducedMotion || !dioramaRef.current) return;
+    const bounds = event.currentTarget.getBoundingClientRect();
+    const x = ((event.clientX - bounds.left) / Math.max(bounds.width, 1) - 0.5) * 2;
+    const y = ((event.clientY - bounds.top) / Math.max(bounds.height, 1) - 0.5) * 2;
+    setIllustratedParallax(dioramaRef.current, x, y);
+  }
+
+  function resetIllustration() {
+    if (dioramaRef.current) setIllustratedParallax(dioramaRef.current, 0, 0);
+  }
+
   const content = (
     <>
-      <Suspense fallback={<FireflySceneFallback stage={stage} />}>
-        <FireflyForestScene stage={stage} reducedMotion={reducedMotion} />
-      </Suspense>
+      <div
+        ref={dioramaRef}
+        className={`firefly-forest-three firefly-forest-three--stage-${stage}`}
+        onPointerMove={moveIllustration}
+        onPointerLeave={resetIllustration}
+        aria-hidden="true"
+      >
+        <FireflyForestIllustratedBackdrop stage={stage} reducedMotion={reducedMotion} />
+        <Suspense fallback={<FireflySceneFallback />}>
+          <FireflyForestScene stage={stage} reducedMotion={reducedMotion} />
+        </Suspense>
+      </div>
       <div className="parallax-scene__content">
         <span className="mascot-bubble">{world.mascotName}</span>
         <h3>{world.name}</h3>
