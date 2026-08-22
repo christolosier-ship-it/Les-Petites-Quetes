@@ -12,10 +12,9 @@ export interface FireflyForestActors {
  * Le paysage est rendu par le diorama illustré 2.5D. Three.js reste limité
  * aux acteurs et aux effets vivants afin de ne jamais dupliquer le paysage.
  */
-export function addFireflyForest(scene: THREE.Scene, stage: 0 | 1 | 2 | 3): FireflyForestActors {
+export function addFireflyForest(scene: THREE.Scene): FireflyForestActors {
   const actors = new THREE.Group();
   actors.name = 'firefly-living-actors';
-  actors.userData.stage = stage;
 
   const child = createChildInPyjamas();
   child.position.set(-1.05, 0, 0.65);
