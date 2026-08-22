@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import { animateLivingActors, createLivingAnimationState } from './fireflyForestAnimation';
 import { addFireflyForestBackdrop, animateFireflyForestBackdrop } from './fireflyForestBackdrop';
+import { FireflyForestIllustratedBackdrop } from './FireflyForestIllustratedBackdrop';
 import { createFireflies } from './fireflyForestObjects';
 import { addFireflyForest } from './fireflyForestWorld';
 
@@ -24,6 +25,15 @@ function disposeScene(scene: THREE.Scene) {
   });
 }
 
+function updateIllustratedParallax(container: HTMLDivElement, x: number, y: number) {
+  container.style.setProperty('--forest-x-far', `${x * -4}px`);
+  container.style.setProperty('--forest-y-far', `${y * -2}px`);
+  container.style.setProperty('--forest-x-mid', `${x * -9}px`);
+  container.style.setProperty('--forest-y-mid', `${y * -4}px`);
+  container.style.setProperty('--forest-x-near', `${x * -16}px`);
+  container.style.setProperty('--forest-y-near', `${y * -7}px`);
+}
+
 export function FireflyForestScene({ stage, reducedMotion }: FireflyForestSceneProps) {
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -33,7 +43,7 @@ export function FireflyForestScene({ stage, reducedMotion }: FireflyForestSceneP
 
     let renderer: THREE.WebGLRenderer;
     try {
-      renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false, powerPreference: 'high-performance' });
+      renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
     } catch {
       return;
     }
@@ -41,22 +51,23 @@ export function FireflyForestScene({ stage, reducedMotion }: FireflyForestSceneP
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.6));
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = stage >= 3 ? 1.18 : 1.08;
+    renderer.toneMappingExposure = stage >= 3 ? 1.16 : 1.06;
+    renderer.setClearColor(0x000000, 0);
     renderer.domElement.className = 'firefly-forest-three__canvas';
     renderer.domElement.setAttribute('aria-hidden', 'true');
     container.append(renderer.domElement);
 
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color(stage >= 3 ? 0x081827 : 0x071a1c);
-    scene.fog = new THREE.FogExp2(stage >= 3 ? 0x0b2030 : 0x071a1c, stage >= 3 ? 0.045 : 0.055);
+    scene.background = null;
+    scene.fog = new THREE.FogExp2(stage >= 3 ? 0x0b2030 : 0x071a1c, stage >= 3 ? 0.042 : 0.052);
     const camera = new THREE.PerspectiveCamera(38, 1, 0.1, 85);
     camera.position.set(0, 4.3, 12.8);
     camera.lookAt(0, 1.7, 0.8);
 
-    scene.add(new THREE.HemisphereLight(stage >= 3 ? 0xc7d9ff : 0x9cced2, 0x13271e, stage >= 3 ? 1.45 : 1.25));
-    const moonlight = new THREE.DirectionalLight(0xb7d7df, stage >= 3 ? 1.35 : 1.1);
+    scene.add(new THREE.HemisphereLight(stage >= 3 ? 0xc7d9ff : 0x9cced2, 0x13271e, stage >= 3 ? 1.38 : 1.2));
+    const moonlight = new THREE.DirectionalLight(0xb7d7df, stage >= 3 ? 1.28 : 1.02);
     moonlight.position.set(-4, 8, 6);
-    const warmth = new THREE.PointLight(0xffc574, stage >= 3 ? 2.7 : 1.45, 14, 2);
+    const warmth = new THREE.PointLight(0xffc574, stage >= 3 ? 2.55 : 1.35, 14, 2);
     warmth.position.set(1, 4.5, 2.5);
     scene.add(moonlight, warmth);
 
@@ -76,8 +87,12 @@ export function FireflyForestScene({ stage, reducedMotion }: FireflyForestSceneP
         ((event.clientX - bounds.left) / Math.max(bounds.width, 1) - 0.5) * 2,
         ((event.clientY - bounds.top) / Math.max(bounds.height, 1) - 0.5) * 2,
       );
+      updateIllustratedParallax(container, pointerTarget.x, pointerTarget.y);
     };
-    const onPointerLeave = () => pointerTarget.set(0, 0);
+    const onPointerLeave = () => {
+      pointerTarget.set(0, 0);
+      updateIllustratedParallax(container, 0, 0);
+    };
     container.addEventListener('pointermove', onPointerMove);
     container.addEventListener('pointerleave', onPointerLeave);
 
@@ -99,8 +114,8 @@ export function FireflyForestScene({ stage, reducedMotion }: FireflyForestSceneP
       const delta = Math.min(clock.getDelta(), 0.05);
       const elapsed = clock.elapsedTime;
       pointerCurrent.lerp(pointerTarget, 0.055);
-      camera.position.set(pointerCurrent.x * 0.52, 4.3 - pointerCurrent.y * 0.24, 12.8);
-      camera.lookAt(pointerCurrent.x * 0.18, 1.7 - pointerCurrent.y * 0.08, 0.8);
+      camera.position.set(pointerCurrent.x * 0.5, 4.3 - pointerCurrent.y * 0.22, 12.8);
+      camera.lookAt(pointerCurrent.x * 0.16, 1.7 - pointerCurrent.y * 0.07, 0.8);
       actors.forest.children.forEach((object) => {
         if (typeof object.userData.swayPhase === 'number') object.rotation.z = Math.sin(elapsed * 0.52 + object.userData.swayPhase) * 0.012;
       });
@@ -137,5 +152,10 @@ export function FireflyForestScene({ stage, reducedMotion }: FireflyForestSceneP
     };
   }, [reducedMotion, stage]);
 
-  return <div ref={containerRef} className={`firefly-forest-three firefly-forest-three--stage-${stage}`} data-firefly-forest-three="true" aria-hidden="true"><div className="firefly-forest-three__fallback" /></div>;
+  return (
+    <div ref={containerRef} className={`firefly-forest-three firefly-forest-three--stage-${stage}`} data-firefly-forest-three="true" aria-hidden="true">
+      <FireflyForestIllustratedBackdrop stage={stage} reducedMotion={reducedMotion} />
+      <div className="firefly-forest-three__fallback" />
+    </div>
+  );
 }
