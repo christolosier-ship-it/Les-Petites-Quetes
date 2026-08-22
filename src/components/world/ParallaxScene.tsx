@@ -18,15 +18,45 @@ function FireflySceneFallback({ stage }: { readonly stage: 0 | 1 | 2 | 3 }) {
 
 export function ParallaxScene({ world, stage, reducedMotion, compact = false }: ParallaxSceneProps) {
   const [pointer, setPointer] = useState({ x: 0, y: 0 });
+  const [expanded, setExpanded] = useState(false);
   const scene = useMemo(() => createSceneDefinition(world.id, world.stageAssetIds), [world]);
   const className = compact ? 'parallax-scene parallax-scene--compact' : 'parallax-scene';
 
   if (world.id === 'world.firefly-forest') {
+    const sceneClassName = `${className} parallax-scene--three${expanded ? ' parallax-scene--expanded' : ''}`;
     return (
-      <div className={`${className} parallax-scene--three`} data-world-id={world.id} data-world-stage={stage}>
+      <div
+        className={sceneClassName}
+        data-world-id={world.id}
+        data-world-stage={stage}
+        role="button"
+        tabIndex={0}
+        aria-label={expanded ? 'Réduire le tableau de la Forêt des Lucioles' : 'Agrandir le tableau de la Forêt des Lucioles'}
+        onClick={() => setExpanded((value) => !value)}
+        onKeyDown={(event) => {
+          if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            setExpanded((value) => !value);
+          }
+          if (event.key === 'Escape') setExpanded(false);
+        }}
+      >
         <Suspense fallback={<FireflySceneFallback stage={stage} />}>
           <FireflyForestScene stage={stage} reducedMotion={reducedMotion} />
         </Suspense>
+        <button
+          type="button"
+          className="parallax-scene__expand"
+          aria-label={expanded ? 'Quitter le plein écran du tableau' : 'Mettre le tableau en grand écran'}
+          onClick={(event) => {
+            event.stopPropagation();
+            setExpanded((value) => !value);
+          }}
+        >
+          <span aria-hidden="true">{expanded ? '✕' : '⛶'}</span>
+          <span>{expanded ? 'Réduire' : 'Grand écran'}</span>
+        </button>
+        {!expanded && <div className="parallax-scene__hint">Touchez le tableau pour entrer dans la forêt</div>}
         <div className="parallax-scene__content">
           <span className="mascot-bubble">{world.mascotName}</span>
           <h3>{world.name}</h3>
