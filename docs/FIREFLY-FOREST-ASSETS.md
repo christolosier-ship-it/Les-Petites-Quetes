@@ -4,11 +4,15 @@
 
 La Forêt des Lucioles n’utilise que des ressources gratuites dont la licence autorise explicitement leur usage dans le projet. Aucun asset payant ne doit être ajouté au dépôt.
 
-Le rendu est désormais hybride : Three.js reste responsable des acteurs, lumières, particules et éléments interactifs, tandis que plusieurs plans illustrés 2D enrichissent le diorama et lui donnent une direction plus proche d’un album jeunesse.
+Le rendu est hybride : Three.js reste responsable des acteurs, lumières et particules, tandis que plusieurs plans illustrés 2D enrichissent le diorama.
 
-## Assets CC0 effectivement utilisés dans le diorama illustré
+## Règle local-first
 
-Les ressources ci-dessous proviennent de l’univers graphique de **Glitch**, dont les assets ont été donnés au domaine public. Les versions utilisées ici sont servies par Openclipart et chargées uniquement lorsque la Forêt des Lucioles est ouverte. Le service worker les met ensuite en cache au runtime pour les visites suivantes.
+Les assets graphiques utilisés par la scène sont embarqués dans `public/worlds/firefly-forest/` et référencés par `src/assets/registry/firefly-assets.json`. L’application ne dépend d’aucun serveur d’images externe pour afficher la Forêt.
+
+Les pages Openclipart ci-dessous restent uniquement les références de provenance et de licence. Les PNG source ont été téléchargés une fois lors de l’intégration puis convertis en WebP local avec conservation de la transparence lorsque nécessaire.
+
+## Assets CC0 effectivement utilisés
 
 ### Pleasant meadow scene
 
@@ -17,18 +21,18 @@ Les ressources ci-dessous proviennent de l’univers graphique de **Glitch**, do
 - Origine : artworks Glitch / Tiny Speck.
 - Licence : domaine public / CC0.
 - Page source : https://openclipart.org/detail/251204/pleasant-meadow-scene
-- Ressource chargée : https://openclipart.org/image/800px/251204
-- Transformation : assombrissement nocturne, désaturation partielle, teinte bleue, contraste et parallaxe.
+- Fichier local : `public/worlds/firefly-forest/meadow.webp`.
+- Transformation : conversion WebP, assombrissement nocturne, désaturation partielle, teinte bleue, contraste et parallaxe à l’affichage.
 
 ### Cottage from Glitch
 
-- Usage : cottage principal au premier plan à partir du stade 1.
+- Usage : cottage principal à partir du stade 1.
 - Auteur du remix : anarres.
 - Origine : Glitch.
 - Licence : domaine public / CC0.
 - Page source : https://openclipart.org/detail/311437/cottage-from-glitch
-- Ressource chargée : https://openclipart.org/image/800px/311437
-- Transformation : colorimétrie nocturne, halo chaud, ombre portée et parallaxe.
+- Fichier local : `public/worlds/firefly-forest/cottage.webp`.
+- Transformation : conversion WebP, colorimétrie nocturne, halo chaud, ombre portée et parallaxe à l’affichage.
 
 ### Rustic house from Glitch
 
@@ -37,8 +41,8 @@ Les ressources ci-dessous proviennent de l’univers graphique de **Glitch**, do
 - Origine : Glitch.
 - Licence : domaine public / CC0.
 - Page source : https://openclipart.org/detail/299648/rustic-house-from-glitch
-- Ressource chargée : https://openclipart.org/image/800px/299648
-- Transformation : réduction, traitement atmosphérique et halo chaud.
+- Fichier local : `public/worlds/firefly-forest/rustic-house.webp`.
+- Transformation : conversion WebP, réduction visuelle, traitement atmosphérique et halo chaud à l’affichage.
 
 ### Tree House from Glitch
 
@@ -47,8 +51,8 @@ Les ressources ci-dessous proviennent de l’univers graphique de **Glitch**, do
 - Origine : Glitch.
 - Licence : domaine public / CC0.
 - Page source : https://openclipart.org/detail/298682/tree-house-from-glitch
-- Ressource chargée : https://openclipart.org/image/800px/298682
-- Transformation : traitement nocturne, réduction, parallaxe et lumière ambiante.
+- Fichier local : `public/worlds/firefly-forest/tree-house.webp`.
+- Transformation : conversion WebP, traitement nocturne, réduction, parallaxe et lumière ambiante à l’affichage.
 
 ### Alpine Landscape Mountain Flora 01h Al1
 
@@ -56,8 +60,10 @@ Les ressources ci-dessous proviennent de l’univers graphique de **Glitch**, do
 - Auteur : Glitch / Tiny Speck, conversion SVG par Bart.
 - Licence : domaine public / CC0.
 - Page source : https://openclipart.org/detail/208754
-- Ressource chargée : https://openclipart.org/image/800px/208754
-- Transformation : assombrissement, saturation contrôlée, miroir, rotation et parallaxe proche.
+- Fichier local : `public/worlds/firefly-forest/foliage.webp`.
+- Transformation : conversion WebP, assombrissement, saturation contrôlée, miroir, rotation et parallaxe proche à l’affichage.
+
+Les cinq fichiers WebP pèsent ensemble environ 226 Ko, contre environ 1,13 Mo pour les PNG téléchargés à l’origine.
 
 ## Bibliothèques validées pour les prochaines itérations
 
@@ -112,6 +118,6 @@ Pour toute ressource externe, conserver dans ce document :
 3. sa licence ;
 4. son rôle dans la scène ;
 5. les transformations appliquées ;
-6. si elle est embarquée localement ou chargée à la demande.
+6. son chemin local dans le dépôt.
 
-Une ressource dont la licence est absente, ambiguë ou non commerciale n’entre pas dans le projet.
+Une ressource dont la licence est absente, ambiguë ou non commerciale n’entre pas dans le projet. Une ressource graphique nécessaire à l’expérience utilisateur doit être embarquée localement plutôt que chargée à l’exécution depuis un tiers.
