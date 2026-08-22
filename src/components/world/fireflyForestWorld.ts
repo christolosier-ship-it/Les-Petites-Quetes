@@ -55,9 +55,11 @@ function addDreamLights(forest: THREE.Group) {
 export function addFireflyForest(scene: THREE.Scene, stage: 0 | 1 | 2 | 3): FireflyForestActors {
   const forest = new THREE.Group();
   const treeLayout = [
-    [-5.5, 1.8, 4.7, 1.2, 0x234d3d], [-4.1, -1.7, 5.8, 1.35, 0x1d4437], [-2.8, 3.3, 4.3, 1.05, 0x315d48],
-    [4.8, 1.9, 5.4, 1.3, 0x214a3a], [3.6, -2.3, 4.9, 1.18, 0x2c5b44], [5.8, -1.7, 4.1, 0.92, 0x37664d],
-    [-0.4, -4.1, 5.7, 1.24, 0x1a4034], [1.7, -4.4, 4.8, 1.05, 0x2a5541],
+    [-6.1, 2.2, 5.4, 1.38, 0x173d32],
+    [-5.35, -2.4, 6.0, 1.44, 0x1b4336],
+    [5.65, 2.5, 5.7, 1.42, 0x1b4537],
+    [6.2, -2.0, 5.1, 1.28, 0x22513e],
+    [4.7, -4.3, 4.2, 1.02, 0x294f3e],
   ] as const;
   treeLayout.forEach(([x, z, height, canopy, color], index) => {
     const tree = createTree(height, canopy, color);
@@ -69,7 +71,14 @@ export function addFireflyForest(scene: THREE.Scene, stage: 0 | 1 | 2 | 3): Fire
 
   const ground = new THREE.Mesh(
     new THREE.CircleGeometry(8.8, 48),
-    new THREE.MeshStandardMaterial({ color: stage >= 3 ? 0x22483a : 0x1b3b30, roughness: 1, flatShading: true }),
+    new THREE.MeshStandardMaterial({
+      color: stage >= 3 ? 0x21483a : 0x17372e,
+      roughness: 1,
+      flatShading: true,
+      transparent: true,
+      opacity: stage >= 3 ? 0.34 : 0.48,
+      depthWrite: false,
+    }),
   );
   ground.rotation.x = -Math.PI / 2;
   ground.scale.y = 0.72;
@@ -78,7 +87,13 @@ export function addFireflyForest(scene: THREE.Scene, stage: 0 | 1 | 2 | 3): Fire
 
   const path = new THREE.Mesh(
     new THREE.PlaneGeometry(2.2, 8.6, 1, 8),
-    new THREE.MeshStandardMaterial({ color: stage >= 3 ? 0x8b765f : 0x75644f, roughness: 1, transparent: true, opacity: 0.72 }),
+    new THREE.MeshStandardMaterial({
+      color: stage >= 3 ? 0x9a856b : 0x75644f,
+      roughness: 1,
+      transparent: true,
+      opacity: stage >= 3 ? 0.32 : 0.44,
+      depthWrite: false,
+    }),
   );
   path.rotation.x = -Math.PI / 2;
   path.rotation.z = -0.14;
