@@ -1,14 +1,19 @@
-import { useMemo, useState } from 'react';
+import { lazy, Suspense, useMemo, useState } from 'react';
 import { getAssetUrl } from '../../assets/registry/catalog';
 import { createSceneDefinition } from '../../content/world/parallaxScenes';
 import type { WorldDefinition } from '../../domain/world/WorldDefinition';
-import { FireflyForestScene } from './FireflyForestScene';
+
+const FireflyForestScene = lazy(() => import('./FireflyForestScene').then((module) => ({ default: module.FireflyForestScene })));
 
 interface ParallaxSceneProps {
   readonly world: WorldDefinition;
   readonly stage: 0 | 1 | 2 | 3;
   readonly reducedMotion: boolean;
   readonly compact?: boolean;
+}
+
+function FireflySceneFallback({ stage }: { readonly stage: 0 | 1 | 2 | 3 }) {
+  return <div className={`firefly-forest-three firefly-forest-three--stage-${stage}`} aria-hidden="true"><div className="firefly-forest-three__fallback" /></div>;
 }
 
 export function ParallaxScene({ world, stage, reducedMotion, compact = false }: ParallaxSceneProps) {
@@ -19,7 +24,9 @@ export function ParallaxScene({ world, stage, reducedMotion, compact = false }: 
   if (world.id === 'world.firefly-forest') {
     return (
       <div className={`${className} parallax-scene--three`} data-world-id={world.id} data-world-stage={stage}>
-        <FireflyForestScene stage={stage} reducedMotion={reducedMotion} />
+        <Suspense fallback={<FireflySceneFallback stage={stage} />}>
+          <FireflyForestScene stage={stage} reducedMotion={reducedMotion} />
+        </Suspense>
         <div className="parallax-scene__content">
           <span className="mascot-bubble">{world.mascotName}</span>
           <h3>{world.name}</h3>
