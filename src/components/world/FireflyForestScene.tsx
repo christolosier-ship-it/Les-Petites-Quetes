@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import { animateLivingActors, createLivingAnimationState } from './fireflyForestAnimation';
+import { addFireflyForestBackdrop, animateFireflyForestBackdrop } from './fireflyForestBackdrop';
 import { createFireflies } from './fireflyForestObjects';
 import { addFireflyForest } from './fireflyForestWorld';
 
@@ -48,17 +49,18 @@ export function FireflyForestScene({ stage, reducedMotion }: FireflyForestSceneP
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(stage >= 3 ? 0x081827 : 0x071a1c);
     scene.fog = new THREE.FogExp2(stage >= 3 ? 0x0b2030 : 0x071a1c, stage >= 3 ? 0.045 : 0.055);
-    const camera = new THREE.PerspectiveCamera(38, 1, 0.1, 60);
+    const camera = new THREE.PerspectiveCamera(38, 1, 0.1, 85);
     camera.position.set(0, 4.3, 12.8);
     camera.lookAt(0, 1.7, 0.8);
 
     scene.add(new THREE.HemisphereLight(stage >= 3 ? 0xc7d9ff : 0x9cced2, 0x13271e, stage >= 3 ? 1.45 : 1.25));
-    const moon = new THREE.DirectionalLight(0xb7d7df, stage >= 3 ? 1.35 : 1.1);
-    moon.position.set(-4, 8, 6);
+    const moonlight = new THREE.DirectionalLight(0xb7d7df, stage >= 3 ? 1.35 : 1.1);
+    moonlight.position.set(-4, 8, 6);
     const warmth = new THREE.PointLight(0xffc574, stage >= 3 ? 2.7 : 1.45, 14, 2);
     warmth.position.set(1, 4.5, 2.5);
-    scene.add(moon, warmth);
+    scene.add(moonlight, warmth);
 
+    const backdrop = addFireflyForestBackdrop(scene, stage);
     const actors = addFireflyForest(scene, stage);
     const livingState = createLivingAnimationState();
     const fireflyCount = stage === 0 ? 12 : stage === 1 ? 28 : stage === 2 ? 46 : 86;
@@ -102,6 +104,7 @@ export function FireflyForestScene({ stage, reducedMotion }: FireflyForestSceneP
       actors.forest.children.forEach((object) => {
         if (typeof object.userData.swayPhase === 'number') object.rotation.z = Math.sin(elapsed * 0.52 + object.userData.swayPhase) * 0.012;
       });
+      animateFireflyForestBackdrop(elapsed, backdrop, stage);
       animateLivingActors(elapsed, delta, actors, livingState, stage);
       const positionAttribute = fireflies.points.geometry.getAttribute('position') as THREE.BufferAttribute;
       const array = positionAttribute.array as Float32Array;
