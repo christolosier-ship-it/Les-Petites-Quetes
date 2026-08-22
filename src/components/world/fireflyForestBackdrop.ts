@@ -66,7 +66,7 @@ function addDistantHills(scene: THREE.Scene, stage: 0 | 1 | 2 | 3) {
   layout.forEach(([x, z, radius, heightScale], index) => {
     const hill = new THREE.Mesh(
       new THREE.SphereGeometry(radius, 18, 9, 0, Math.PI * 2, 0, Math.PI * 0.58),
-      new THREE.MeshStandardMaterial({ color: colors[index] ?? colors[0], roughness: 1, flatShading: true }),
+      new THREE.MeshStandardMaterial({ color: colors[index] ?? 0x102b31, roughness: 1, flatShading: true }),
     );
     hill.scale.y = 0.26 * heightScale;
     hill.position.set(x, -2.1, z);
