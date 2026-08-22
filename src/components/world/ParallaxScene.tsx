@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import { getAssetUrl } from '../../assets/registry/catalog';
 import { createSceneDefinition } from '../../content/world/parallaxScenes';
 import type { WorldDefinition } from '../../domain/world/WorldDefinition';
+import { FireflyForestScene } from './FireflyForestScene';
 
 interface ParallaxSceneProps {
   readonly world: WorldDefinition;
@@ -13,10 +14,24 @@ interface ParallaxSceneProps {
 export function ParallaxScene({ world, stage, reducedMotion, compact = false }: ParallaxSceneProps) {
   const [pointer, setPointer] = useState({ x: 0, y: 0 });
   const scene = useMemo(() => createSceneDefinition(world.id, world.stageAssetIds), [world]);
+  const className = compact ? 'parallax-scene parallax-scene--compact' : 'parallax-scene';
+
+  if (world.id === 'world.firefly-forest') {
+    return (
+      <div className={`${className} parallax-scene--three`} data-world-id={world.id} data-world-stage={stage}>
+        <FireflyForestScene stage={stage} reducedMotion={reducedMotion} />
+        <div className="parallax-scene__content">
+          <span className="mascot-bubble">{world.mascotName}</span>
+          <h3>{world.name}</h3>
+          <p>{world.focus}</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div
-      className={compact ? 'parallax-scene parallax-scene--compact' : 'parallax-scene'}
+      className={className}
       data-world-id={world.id}
       data-world-stage={stage}
       onPointerMove={(event) => {
