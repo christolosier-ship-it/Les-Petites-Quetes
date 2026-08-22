@@ -1,72 +1,49 @@
-# Cahier des charges cible multi-univers
+# Cahier des charges
 
 ## 1. Objet
 
-Les Petites Quêtes doit permettre à un adulte de préparer des quêtes simples et à un enfant de les découvrir, les accomplir puis faire évoluer l’univers narratif auquel elles appartiennent.
+Les Petites Quêtes permet à un adulte de préparer de petites actions du quotidien et à un enfant de les vivre comme des aventures dans six univers illustrés.
 
-L’application reste locale, privée, installable et utilisable hors ligne. Le changement multi-univers constitue le prochain cycle fonctionnel après la V1 technique existante.
+Le contrat actuel est celui d’une PWA familiale :
 
-## 2. Périmètre utilisateur
+- privée ;
+- local-first ;
+- installable ;
+- utilisable sans backend applicatif ;
+- pensée pour des enfants de 3 à 10 ans ;
+- conçue pour limiter le temps d’écran plutôt que le maximiser.
 
-### Espace parent
+Le multi-univers et le schéma V3 sont déjà implémentés. Les travaux restants concernent principalement la qualité graphique, l’extension des scènes, les tests sur appareils réels et le pilote familial.
 
-Le parent peut :
+## 2. Principes non négociables
 
-- créer, modifier, archiver et restaurer plusieurs profils enfants ;
-- choisir un prénom ou pseudonyme, une tranche d’âge, un niveau de lecture et un avatar compatible ;
-- créer une quête depuis une famille de quête ou depuis zéro ;
-- choisir obligatoirement l’univers d’une quête personnalisée ;
-- planifier une quête ponctuelle ou récurrente ;
-- attribuer une quête à un ou plusieurs enfants ;
-- vérifier la compatibilité de chaque variante d’âge ;
-- définir si la validation adulte est nécessaire ;
-- consulter les quêtes prévues, terminées, ignorées ou reportées ;
-- valider ou demander une petite étape supplémentaire ;
-- consulter la progression de chaque enfant par univers ;
-- régler le son, la voix, les animations et la durée des célébrations ;
-- exporter et importer une sauvegarde complète ;
-- protéger l’espace parent par un code local.
+- Le parent prépare, l’enfant joue.
+- Chaque quête appartient à un univers précis.
+- Chaque enfant possède une progression indépendante dans chaque univers.
+- L’effort est valorisé, jamais la perfection.
+- Une quête non réalisée ne retire rien et ne dégrade aucun monde.
+- Aucun classement entre enfants.
+- Aucune série à préserver.
+- Aucun achat intégré, publicité, réseau social ou géolocalisation.
+- Les données familiales restent locales dans l’architecture actuelle.
+- Une fonction essentielle ne doit pas dépendre d’une animation ou d’un son.
 
-Les options compagnon et couleur sont supprimées.
+## 3. Univers disponibles
 
-### Espace enfant
+| ID | Nom | Mascotte | Usage principal |
+|---|---|---|---|
+| `world.firefly-forest` | La Forêt des Lucioles | Luma | soirée, calme et coucher |
+| `world.dragon-mountain` | La Montagne du Dragon | Flammèche | réveil et routines du matin |
+| `world.space-station` | La Station Spatiale | Nova | sorties et défis de journée |
+| `world.gnome-village` | Le Village des Lutins | Pico | école, lecture et organisation |
+| `world.nature-discovery` | Nature et découvertes | Brindille | jardin, animaux et observation |
+| `world.creativity-workshop` | L’Atelier créatif | Mimo | dessin, musique et imagination |
 
-L’enfant peut :
+Ces six IDs sont les références techniques actuelles.
 
-- sélectionner son profil si plusieurs profils existent ;
-- voir les six univers ;
-- connaître le nombre de quêtes disponibles dans chaque univers ;
-- ouvrir un univers et sa scène évolutive ;
-- consulter uniquement les quêtes compatibles avec son âge ;
-- écouter la consigne ;
-- ouvrir une quête et voir ses étapes ;
-- signaler qu’il a terminé ;
-- attendre ou demander la validation d’un adulte ;
-- découvrir une récompense appartenant au même univers ;
-- consulter le trésor et l’histoire de chaque univers.
+## 4. Profils enfants
 
-## 3. Accueil familial
-
-L’écran principal comporte deux fenêtres.
-
-### Fenêtre enfant
-
-- position gauche sur tablette et ordinateur ;
-- ouvre directement le profil unique ;
-- ouvre le sélecteur de profils s’il existe plusieurs enfants ;
-- utilise les avatars, sans comparaison de progression.
-
-### Fenêtre parent
-
-- position droite sur tablette et ordinateur ;
-- ouvre le verrou parent ;
-- ne montre aucune donnée familiale détaillée avant déverrouillage.
-
-Sur smartphone étroit, les deux fenêtres peuvent être empilées sans créer un troisième niveau de navigation.
-
-## 4. Profils et avatars
-
-Le profil contient :
+Un profil contient :
 
 - prénom ou pseudonyme ;
 - tranche d’âge `3-5`, `6-8` ou `9-10` ;
@@ -74,366 +51,340 @@ Le profil contient :
 - avatar ;
 - statut d’archivage.
 
-Collection initiale :
+Le catalogue propose une fille et un garçon pour chacune des trois tranches d’âge. Le runtime refuse un avatar incompatible avec l’âge du profil.
 
-- garçon 3-5 ans ;
-- fille 3-5 ans ;
-- garçon 6-8 ans ;
-- fille 6-8 ans ;
-- garçon 9-10 ans ;
-- fille 9-10 ans.
+Le profil ne possède plus de compagnon, couleur personnalisée ou univers actif permanent.
 
-Un avatar incompatible avec la tranche d’âge ne peut pas être enregistré.
+## 5. Accueil familial
 
-L’avatar enfant est distinct de la mascotte d’un univers.
+Après l’onboarding, l’application propose deux accès principaux :
 
-## 5. Univers
+- espace enfant ;
+- espace parent.
 
-Le produit cible six univers.
+L’espace parent est protégé par un code local à quatre chiffres.
 
-| Univers | Quêtes principales |
-|---|---|
-| La Forêt des Lucioles | soirée, calme et coucher |
-| La Montagne du Dragon | réveil, toilette, habillage et matin |
-| La Station Spatiale | sorties, trajet et activités de journée |
-| Le Village des Lutins | école, cartable, lecture et devoirs |
-| Univers nature, nom à définir | jardin, observation, animaux et découverte |
-| Univers créativité, nom à définir | dessin, musique, construction et imagination |
+L’espace enfant ouvre le profil actif et permet de changer de profil lorsque plusieurs enfants sont présents.
 
-Chaque univers possède :
+## 6. Carrefour enfant
 
-- une définition stable ;
-- une mascotte ;
-- une couverture ;
-- une scène parallaxe ;
-- plusieurs états de progression ;
-- des récompenses ;
-- des habitants ou objets ;
-- une histoire ou une suite de découvertes ;
-- un fallback statique.
+L’enfant voit les six univers dans un carrefour.
 
-## 6. Carrefour des univers
+Chaque univers peut afficher le nombre de quêtes disponibles pour l’enfant concerné. Ce nombre :
 
-Après le choix du profil, un pavé est affiché pour chaque univers.
+- est dérivé de l’état réel des occurrences ;
+- n’est pas persisté comme score ;
+- disparaît lorsqu’il vaut zéro ;
+- ne représente jamais une dette ou un retard.
 
-Chaque pavé présente :
+L’enfant ouvre ensuite le monde de son choix.
 
-- couverture ;
-- nom ;
-- mascotte ;
-- aperçu du stade actuel ;
-- nombre de quêtes disponibles.
+## 7. Espace d’un univers
 
-La pastille de disponibilité :
+Un espace de monde rassemble :
 
-- est rouge ;
-- contient un chiffre ;
-- est absente lorsque le nombre vaut zéro ;
-- ne compte que les occurrences réellement disponibles ;
-- ne représente jamais un retard ou un échec ;
-- possède un libellé accessible.
+- sa scène ;
+- ses quêtes disponibles ;
+- sa progression ;
+- ses récompenses ;
+- son histoire.
 
-## 7. Tranches d’expérience
+La progression d’un monde n’est alimentée que par les récompenses rattachées à ce même monde.
 
-### 3 à 5 ans
+## 8. Quêtes intégrées
 
-- navigation principalement visuelle ;
-- une à trois quêtes visibles par univers ;
-- consignes de 4 à 12 mots ;
-- une étape à la fois ;
-- validation adulte par défaut ;
-- aucune notion numérique abstraite nécessaire.
+Le catalogue courant contient :
 
-### 6 à 8 ans
+- 30 familles logiques ;
+- 90 `QuestTemplate` ;
+- trois variantes par famille ;
+- une variante pour chacune des tranches d’âge.
 
-- textes courts ;
-- plusieurs quêtes visibles ;
-- jusqu’à trois étapes ;
-- choix facultatifs ;
-- progression narrative explicite.
+Le modèle réel utilise un `familyId` commun pour relier les trois `QuestTemplate` d’une famille.
 
-### 9 à 10 ans
+Une quête intégrée possède notamment :
 
-- consignes plus détaillées ;
-- petits projets ;
-- étapes et durée indicative ;
-- autonomie renforcée ;
-- validation adulte paramétrable.
-
-## 8. Modèle éditorial d’une quête
-
-Une quête intégrée est composée d’une famille et de variantes d’âge.
-
-### Famille de quête
-
-- identifiant stable ;
-- univers obligatoire ;
-- intention réelle ;
-- catégories transversales ;
-- besoin éventuel d’un adulte ;
-- récompense du même univers ;
-- statut d’archivage.
-
-### Variante d’âge
-
-- identifiant stable ;
-- tranche d’âge ;
-- niveau de lecture ;
-- titre narratif ;
-- action réelle ;
+- `familyId` ;
+- `worldId` ;
+- titre ;
 - consigne ;
-- étapes ;
-- durée ;
+- catégorie ;
 - illustration ;
-- texte alternatif ;
-- éventuelle variante douce.
+- tranche(s) d’âge ;
+- niveau de lecture ;
+- étapes ;
+- mode de validation par défaut ;
+- définition de récompense.
 
-Une famille de quête intégrée doit posséder au moins une variante. Le catalogue complet vise une variante pour chaque tranche d’âge.
+Les modèles intégrés sont en lecture seule. Le parent peut en créer une version personnalisée.
 
-## 9. Catégories
+## 9. Quêtes personnalisées
 
-Les catégories restent utiles pour rechercher ou filtrer :
+Le parent peut créer une quête depuis zéro ou personnaliser un modèle intégré.
 
-- autonomie ;
-- hygiène ;
-- participation familiale ;
-- créativité ;
-- découverte ;
-- bien-être ;
-- gentillesse ;
-- aventure spéciale.
+Une quête personnalisée permet actuellement de choisir :
 
-Une catégorie peut apparaître dans plusieurs univers. Elle ne détermine jamais la progression.
+- l’univers ;
+- le titre ;
+- la consigne ;
+- la catégorie ;
+- l’illustration enregistrée ;
+- une ou plusieurs tranches d’âge compatibles ;
+- le niveau de lecture ;
+- la durée indicative ;
+- les étapes ;
+- l’aide adulte éventuelle ;
+- le mode de validation ;
+- la récompense ;
+- une note parentale.
+
+Le modèle courant ne crée pas trois entités `QuestVariant` persistantes séparées pour une quête personnalisée. Une évolution de ce type devra être motivée par un besoin réel et documentée comme changement de modèle.
 
 ## 10. Planification
 
-Une quête peut être :
+Le parent peut préparer une quête :
 
-- disponible immédiatement ;
-- planifiée à une date ;
-- récurrente certains jours ;
-- liée à un moment de la journée ;
-- suspendue ;
-- dupliquée.
+- immédiatement ;
+- à une date ponctuelle ;
+- chaque semaine sur certains jours.
 
-Une planification multi-enfants résout la variante d’âge individuellement lors de la génération de chaque occurrence.
+Une planification contient :
 
-L’enregistrement est refusé lorsqu’un enfant ciblé ne possède aucune variante compatible.
-
-## 11. Occurrence
-
-Une occurrence mémorise notamment :
-
-- planification ;
-- enfant ;
-- famille de quête ;
-- variante d’âge ;
+- template ;
+- famille ;
 - univers ;
-- date locale ;
-- statut ;
-- validation ;
-- réalisation éventuelle.
+- un ou plusieurs enfants ;
+- date de début ;
+- éventuelle date de fin pour une récurrence ;
+- jours de semaine éventuels ;
+- moment de la journée ;
+- heure précise éventuelle ;
+- priorité `required` ou `optional` ;
+- mode de validation ;
+- état suspendu ou actif.
 
-Le snapshot de l’univers et de la variante préserve l’historique lorsque les contenus évoluent.
+## 11. Occurrences
 
-## 12. Cycle de vie
+La génération crée des occurrences datées pour chaque enfant concerné.
+
+Statuts actuels :
 
 ```text
-À venir → Disponible → Commencée → Validation demandée → Terminée
-                         ↘ Reportée
-                         ↘ Ignorée
+upcoming
+available
+started
+validation-requested
+completed
+postponed
+ignored
 ```
 
-Règles :
+Une occurrence retient son `questTemplateId`, son `questFamilyId` et son `worldId`.
 
-- une occurrence passée non réalisée n’est jamais qualifiée d’échec ;
-- aucune série n’est cassée ;
-- aucune récompense déjà obtenue n’est retirée ;
-- un refus de validation renvoie vers un état neutre ;
-- une réalisation ne peut être comptée qu’une fois.
+La clé métier est :
 
-## 13. Validation et récompense
+```text
+scheduleId + childId + localDate
+```
 
-Types :
+Le runtime interdit deux occurrences partageant cette clé.
 
-- validation immédiate par l’enfant ;
-- validation adulte ;
-- validation ensemble.
+## 12. Validation
 
-Une récompense :
+Une quête peut être validée :
 
-- appartient au même univers que la quête ;
-- est attribuée une seule fois ;
-- fait progresser uniquement cet univers ;
-- peut être présentée immédiatement ou au prochain passage enfant.
+- par l’enfant ;
+- par le parent ;
+- ensemble.
 
-## 14. Progression par univers
+Une réalisation ne peut être enregistrée qu’une fois pour une occurrence.
 
-Chaque enfant possède une progression indépendante dans chaque univers.
+Lorsqu’une récompense est attribuée, la progression correspondante est recalculée à partir de l’historique.
 
-La progression peut débloquer :
+## 13. Récompenses et progression
 
-- états de scène ;
-- calques parallaxes ;
-- objets ;
-- habitants ;
-- réactions de mascotte ;
-- chapitres ;
-- badges non compétitifs.
+Les définitions de récompenses appartiennent à un univers.
 
-Aucune progression globale chiffrée ne compare les univers ou les enfants.
+La progression familiale est stockée par couple :
 
-## 15. Scènes parallaxes
+```text
+childId + worldId
+```
 
-Les scènes sont décrites par des manifestes de contenu.
+Elle contient actuellement :
 
-Chaque manifeste définit :
+- stade `0 | 1 | 2 | 3` ;
+- nombre de réalisations prises en compte ;
+- récompenses débloquées ;
+- chapitres débloqués ;
+- éventuel instant de dernière célébration.
 
-- calques et profondeurs ;
-- format et zones sûres ;
-- paliers de progression ;
-- emplacements débloquables ;
-- ancres de mascotte ;
-- mouvements légers ;
-- mode réduit ;
-- fallback statique.
+Les seuils actuels sont déterminés par le nombre de récompenses du monde :
 
-Une quête reste réalisable si les calques animés ne sont pas disponibles.
+- 0 à 1 : stade 0 ;
+- 2 à 5 : stade 1 ;
+- 6 à 11 : stade 2 ;
+- 12 et plus : stade 3.
 
-## 16. Bibliothèque initiale cible
+Le runtime vérifie que la progression enregistrée correspond réellement aux attributions de récompenses.
 
-Le premier pack multi-univers complet vise :
+## 14. Espace parent
 
-- 6 univers ;
-- 5 familles minimum par univers ;
-- 3 variantes d’âge par famille ;
-- 30 familles minimum ;
-- 90 variantes minimum.
+L’espace parent possède cinq onglets :
 
-Les 40 modèles actuels doivent être audités et redistribués. La quantité finale pourra augmenter sans modifier le modèle.
+1. Aujourd’hui ;
+2. Quêtes ;
+3. Enfants ;
+4. Univers ;
+5. Réglages.
 
-## 17. Écrans enfant
+Il permet notamment :
 
-1. Accueil familial en deux fenêtres
-2. Sélection du profil
-3. Carrefour des univers
-4. Intérieur d’un univers
-5. Quêtes de l’univers
-6. Détail d’une quête
-7. Validation demandée
-8. Récompense
-9. Trésor de l’univers
-10. Histoire de l’univers
+- validation des demandes ;
+- filtrage de la bibliothèque par univers, âge et catégorie ;
+- planification ;
+- gestion des quêtes personnalisées ;
+- gestion des routines ;
+- gestion des profils ;
+- consultation des progressions ;
+- préférences de son, narration, animations et célébrations ;
+- export/import ;
+- restauration des sauvegardes automatiques ;
+- changement du code parent ;
+- suppression totale des données locales.
 
-## 18. Écrans parent
+## 15. Migration des anciennes données
 
-1. Verrou parent
-2. Tableau de bord
-3. Profils enfants simplifiés
-4. Bibliothèque filtrée par univers et âge
-5. Familles et variantes de quêtes
-6. Planification
-7. Routines
-8. Demandes de validation
-9. Progressions par univers
-10. Sauvegardes et réglages
-11. Revue des quêtes personnalisées migrées
+Le schéma courant est V3.
 
-## 19. Audio et accessibilité
+Le chargeur accepte les snapshots V1, V2 et V3.
 
-- chaque consigne peut être lue à voix haute ;
-- aucune fonction essentielle ne dépend du son ;
-- grandes zones tactiles ;
-- contraste suffisant ;
+Lors d’une migration V2 vers V3 :
+
+- `accentId` et `activeWorldId` sont supprimés ;
+- les avatars sont remis en conformité si nécessaire ;
+- les anciennes données sans univers explicite sont rattachées à La Forêt des Lucioles ;
+- les anciennes quêtes personnalisées sont signalées dans `questTemplateIdsNeedingWorldReview` ;
+- une sauvegarde préalable est créée en IndexedDB ;
+- le résultat est validé avant utilisation.
+
+## 16. Sauvegarde et restauration
+
+Le parent peut télécharger une sauvegarde JSON complète des données familiales.
+
+Lors d’un import :
+
+- le fichier est lu localement ;
+- l’état est migré si nécessaire ;
+- l’état est validé ;
+- l’état actuel est sauvegardé avant remplacement ;
+- le remplacement est effectué par le repository.
+
+Les sauvegardes automatiques disponibles sont listées dans les réglages et peuvent être restaurées.
+
+## 17. PWA et fonctionnement hors ligne
+
+Le service worker est généré pendant le build et n’est enregistré qu’en production.
+
+Règles actuelles :
+
+- une seule stratégie de cache ;
+- aucune dépendance graphique réseau nécessaire ;
+- ressources essentielles locales précachées ;
+- ressources locales dynamiques mises en cache après première utilisation ;
+- anciens caches applicatifs supprimés lors de l’activation d’une nouvelle version ;
+- navigation de secours vers `index.html` hors ligne.
+
+## 18. Scènes
+
+L’orchestrateur générique `ParallaxScene` sélectionne un renderer déclaré.
+
+Deux renderers existent :
+
+- `generic-parallax` ;
+- `firefly-diorama`.
+
+La Forêt des Lucioles combine un décor illustré local 2.5D et une couche Three.js chargée à la demande.
+
+Les autres mondes utilisent actuellement le renderer générique avec des assets de stade dont plusieurs sont encore des placeholders.
+
+Le mode mouvements réduits doit conserver toute information de progression sans dépendre du mouvement.
+
+## 19. Assets
+
+Les assets applicatifs passent par les registres typés de `src/assets/registry`.
+
+La CI vérifie notamment :
+
+- IDs ;
+- métadonnées ;
+- présence physique ;
+- dimensions ;
+- budget de poids.
+
+Les ressources graphiques externes doivent être rapatriées, optimisées et documentées avant de devenir nécessaires au runtime.
+
+## 20. Accessibilité et sécurité enfant
+
+Le produit doit préserver :
+
+- zones tactiles adaptées ;
+- navigation parent utilisable au clavier ;
+- mode mouvements réduits ;
+- fonctionnement sans effets sonores ;
 - textes alternatifs ;
-- pastilles compréhensibles sans la couleur seule ;
-- navigation clavier dans l’espace parent ;
-- mouvements réduits ;
-- aucun délai bloquant.
+- formulations non culpabilisantes ;
+- absence de comparaison ;
+- actions réelles compréhensibles par l’enfant ;
+- temps d’écran bref.
 
-## 20. Stockage et schéma V3
+`CHILD-SAFETY.md` et `CONTENT-GUIDELINES.md` détaillent ces règles.
 
-Le schéma cible V3 ajoute :
+## 21. Qualité technique
 
-- définitions d’univers versionnées ;
-- univers obligatoire sur les familles de quête ;
-- variantes d’âge ;
-- univers et variante dans les occurrences ;
-- progression par enfant et univers ;
-- avatars contraints par âge ;
-- suppression des champs compagnon, couleur et univers actif.
+Une PR vers `main` doit passer la CI essentielle :
 
-## 21. Migration V2 vers V3
+```text
+architecture
+cycles
+assets
+lint sans warning
+typecheck
+tests
+build de production
+```
 
-La migration doit :
+Le contrôle plus lourd est disponible via :
 
-- créer une sauvegarde ;
-- convertir les profils ;
-- préserver toutes les réalisations ;
-- répartir les contenus intégrés par table explicite ;
-- conserver l’historique incertain dans son univers actuel ;
-- signaler les quêtes personnalisées à revoir ;
-- valider la cohérence avant remplacement.
+```bash
+npm run audit
+```
 
-## 22. PWA et chargement
+Il n’est pas exécuté automatiquement à chaque PR afin de garder un signal CI court et utile.
 
-- shell, avatars, couvertures et contenus textuels précachés ;
-- scènes lourdes chargées par univers ;
-- mise en cache après première ouverture ;
-- fallback statique hors ligne ;
-- aucun écran blanc si un asset manque ;
-- budgets par univers contrôlés au build.
+## 22. Déploiement
 
-## 23. Confidentialité et sécurité
+Vercel est la plateforme de déploiement actuelle :
 
-- aucun compte enfant ;
-- aucune publicité ou télémétrie ;
-- aucune localisation ;
-- aucune comparaison ;
-- prénom ou pseudonyme suffisant ;
-- suppression totale accessible au parent ;
-- aucune mascotte triste à cause d’une quête non réalisée.
+```text
+branche / PR → preview
+main         → production
+```
 
-## 24. Exigences de qualité
+GitHub Pages ne fait plus partie de la chaîne de livraison.
 
-Le dépôt doit ajouter des contrôles pour :
+## 23. Travaux restant hors de ce contrat
 
-- quête sans univers ;
-- variante d’âge absente ou dupliquée ;
-- attribution incompatible avec l’âge ;
-- récompense d’un autre univers ;
-- progression croisée ;
-- manifeste parallaxe incomplet ;
-- fallback absent ;
-- pastille incorrecte ;
-- migration V2 vers V3 ;
-- chargement différé et hors ligne.
+Les travaux futurs ne redéfinissent pas le socle : ils l’enrichissent.
 
-## 25. Hors périmètre du prochain cycle
+Ils concernent notamment :
 
-- synchronisation familiale ;
-- comptes en ligne ;
-- classement ;
-- amis ou chat ;
-- géolocalisation ;
-- publicité et achats intégrés ;
-- intelligence artificielle ;
-- analyse automatique d’images ou d’émotions ;
-- création procédurale d’univers ;
-- boutique de récompenses.
+- finition graphique de La Forêt des Lucioles ;
+- réalisation d’un deuxième monde complet ;
+- remplacement progressif des placeholders ;
+- mascottes et illustrations finales ;
+- finition PWA iOS ;
+- accessibilité sur appareils réels ;
+- pilote familial.
 
-## 26. Critères d’acceptation
-
-Le recalage multi-univers est acceptable lorsque :
-
-- l’accueil comporte les deux fenêtres enfant et parent ;
-- les six univers sont visibles pour chaque enfant ;
-- les pastilles reflètent exactement les quêtes disponibles ;
-- chaque quête possède un univers ;
-- chaque enfant reçoit une variante compatible avec son âge ;
-- une réalisation ne fait progresser que le bon univers ;
-- les profils n’affichent plus compagnon ni couleur ;
-- les six avatars initiaux sont disponibles ;
-- la migration V2 vers V3 préserve l’historique ;
-- chaque scène fonctionne avec mouvements réduits et fallback ;
-- les parcours principaux passent sur mobile, tablette et ordinateur.
+Le détail et l’ordre sont maintenus uniquement dans `ROADMAP.md`.
