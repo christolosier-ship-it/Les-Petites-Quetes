@@ -1,329 +1,250 @@
-# Feuille de route multi-univers
+# Feuille de route
 
-## 1. Situation actuelle
+## 1. Principe
 
-La V1 technique et fonctionnelle existante a validé :
+Cette feuille de route part de l’état actuel de `main`.
 
-- boucle parent-enfant ;
-- profils ;
-- planification ;
-- validation ;
-- récompenses ;
-- progression ;
-- IndexedDB ;
-- migrations ;
-- sauvegardes ;
-- PWA ;
-- contrôles statiques et dynamiques.
+Elle ne redessine pas un produit V4 théorique. Les briques déjà livrées sont considérées comme acquises ; les prochains lots doivent améliorer ou étendre le système existant sans recréer une architecture parallèle.
 
-Cette base est actuellement centrée sur La Forêt des Lucioles. Le prochain cycle doit la transformer en moteur multi-univers avant la production graphique définitive.
+## 2. Socle acquis
 
-## 2. Nouveau programme
+### Domaine et données
 
-Le programme cible :
+- [x] schéma familial V3 ;
+- [x] migrations V1 → V2 → V3 et V2 → V3 ;
+- [x] validation runtime des imports et snapshots ;
+- [x] sauvegarde automatique avant migration ;
+- [x] journal de migration ;
+- [x] profils enfants sans compagnon ni couleur ;
+- [x] six avatars contraints par tranche d’âge ;
+- [x] `worldId` dans les quêtes, planifications et occurrences ;
+- [x] progression indépendante par enfant et univers ;
+- [x] cohérence de progression recalculée depuis l’historique des récompenses.
 
-- 6 univers ;
-- 6 mascottes ;
-- 6 avatars enfants initiaux ;
-- progression indépendante par enfant et univers ;
-- familles de quêtes avec variantes d’âge ;
-- accueil familial en deux fenêtres ;
-- carrefour enfant avec pastilles de disponibilité ;
-- scènes parallaxes déclaratives ;
-- migration V2 vers V3.
+### Contenus
 
-## 3. Porte 0, cadrage multi-univers
+- [x] six univers avec IDs stables ;
+- [x] six mascottes nommées dans le catalogue ;
+- [x] 30 familles de quêtes intégrées ;
+- [x] 90 variantes, trois par famille ;
+- [x] récompenses rattachées aux univers ;
+- [x] 48 chapitres d’histoire intégrés ;
+- [x] catalogue d’assets typé et contrôlé.
 
-### Livrables
+### Expérience
 
-- vision mise à jour ;
-- cahier des charges cible ;
-- architecture cible ;
-- modèle V3 ;
-- nouveaux parcours ;
-- bible des assets ;
-- règles éditoriales ;
-- sécurité enfant ;
-- plan directeur ;
-- ADR-0005.
+- [x] onboarding ;
+- [x] accueil familial ;
+- [x] espace enfant ;
+- [x] sélection de profil ;
+- [x] carrefour des six univers ;
+- [x] navigation vers un monde ;
+- [x] quêtes du jour et boucle de validation ;
+- [x] célébration des récompenses ;
+- [x] trésor / progression / histoire par monde ;
+- [x] espace parent protégé par code local ;
+- [x] onglets Aujourd’hui, Quêtes, Enfants, Univers et Réglages ;
+- [x] création de quêtes personnalisées et planification ;
+- [x] import, sauvegarde et restauration.
 
-### Porte de sortie
+### PWA et livraison
 
-- univers obligatoire pour chaque quête ;
-- distinction claire avatar/mascotte ;
-- navigation validée ;
-- stratégie d’âge validée ;
-- migration définie ;
-- aucun code modifié avant validation documentaire.
+- [x] PWA installable ;
+- [x] service worker unique généré au build ;
+- [x] aucun SW enregistré en développement ;
+- [x] cache limité aux ressources locales ;
+- [x] assets du diorama Firefly rapatriés dans le dépôt ;
+- [x] suppression de GitHub Pages ;
+- [x] previews Vercel sur branches/PR ;
+- [x] production Vercel sur `main` ;
+- [x] Node 24 et installation reproductible avec `npm ci`.
 
-**Statut : en cours dans la PR documentaire multi-univers.**
+### Qualité
 
-## 4. Porte 1, domaine multi-univers
+- [x] TypeScript strict ;
+- [x] lint bloquant à zéro warning ;
+- [x] contrôle des cycles ;
+- [x] contrôle des assets ;
+- [x] 85 tests automatisés ;
+- [x] budget de bundle ;
+- [x] CI GitHub essentielle, courte et lisible ;
+- [x] audit lourd conservé en commande séparée.
 
-### Livrables
+## 3. Consolidation des scènes, acquise
 
-- `WorldDefinition` ;
-- `QuestFamily` ;
-- `QuestVariant` ;
-- progression par enfant-univers ;
-- univers et variante figés dans les occurrences ;
-- avatars contraints par âge ;
-- nouveaux invariants.
+L’architecture permettant d’étendre les univers sans copier les exceptions du premier monde est maintenant en place.
 
-### Tests
+- [x] `ParallaxScene` réduit à un dispatcher ;
+- [x] catalogue déclaratif de renderers ;
+- [x] `GenericParallaxScene` commun ;
+- [x] `FireflyForestDiorama` spécialisé ;
+- [x] `FireflyForestScene` limité à la couche Three.js vivante ;
+- [x] décor illustré séparé des acteurs ;
+- [x] CSS générique séparé du CSS Firefly ;
+- [x] suppression des anciens objets Three.js de décor inutilisés ;
+- [x] suppression de la logique `sparkleGroups` morte.
 
-- quête sans univers refusée ;
-- variante incompatible refusée ;
-- récompense croisée refusée ;
-- progression isolée ;
-- historique stable.
+Le prochain monde spécialisé ne doit pas réintroduire de `if (world.id === ...)` dans l’orchestrateur.
 
-### Porte de sortie
+## 4. Prochain lot prioritaire : finir La Forêt des Lucioles
 
-- règles testées sans navigateur ;
-- aucune condition spécifique à un nom d’univers dans le moteur ;
-- typecheck, lint et couverture verts.
+La Forêt est le premier monde ayant dépassé le stade du placeholder générique. Elle doit maintenant devenir la référence qualitative du projet.
 
-## 5. Porte 2, schéma V3 et migration
+### À faire
 
-### Livrables
-
-- schéma V3 ;
-- migration V2 vers V3 ;
-- conversion des profils ;
-- table de correspondance des contenus intégrés ;
-- revue des quêtes personnalisées ;
-- import V2 et V3 ;
-- restauration.
-
-### Porte de sortie
-
-- historique conservé ;
-- aucune progression déplacée silencieusement ;
-- sauvegarde avant migration ;
-- import invalide sans effet ;
-- tests de migration réels.
-
-## 6. Porte 3, catalogue des univers et des quêtes
-
-### Livrables
-
-- six `WorldDefinition` ;
-- six mascottes provisoires dans le registre ;
-- audit des 40 modèles actuels ;
-- familles de quêtes ;
-- variantes d’âge ;
-- matrice de couverture.
-
-### Objectif initial
-
-- 5 familles minimum par univers ;
-- 3 variantes d’âge par famille ;
-- 30 familles ;
-- 90 variantes.
+- [ ] harmoniser définitivement le style entre décor illustré, enfant et Luma ;
+- [ ] remplacer les éléments visuels encore provisoires de la Forêt ;
+- [ ] vérifier les quatre stades visuellement à taille réelle ;
+- [ ] vérifier le plein écran sur smartphone et tablette ;
+- [ ] contrôler les mouvements réduits ;
+- [ ] contrôler le fonctionnement hors ligne après première ouverture ;
+- [ ] vérifier les performances sur appareil iOS modeste ;
+- [ ] supprimer toute ressource Firefly restante qui ne contribue plus au rendu final.
 
 ### Porte de sortie
 
-- chaque univers possède un panel pour chaque âge ;
-- récompenses cohérentes ;
-- aucun contenu sans illustration ou fallback ;
-- validation éditoriale automatique verte.
+La Forêt doit pouvoir servir de référence visuelle et technique sans documentation spéciale nécessaire pour comprendre ses exceptions.
 
-## 7. Porte 4, accueil familial et carrefour enfant
+## 5. Deuxième priorité : construire un monde 2 complet
 
-### Livrables
+Le meilleur test de l’architecture n’est plus un document, c’est un deuxième monde réel.
 
-- écran principal à deux fenêtres ;
-- accès enfant à gauche ;
-- accès parent à droite ;
-- sélection du profil ;
-- six pavés d’univers ;
-- compteur de quêtes disponibles ;
-- badge absent à zéro ;
-- navigation responsive.
+Ordre recommandé : **La Montagne du Dragon**.
 
-### Porte de sortie
+### Objectifs
 
-- un enfant atteint un univers en deux interactions maximum ;
-- les compteurs sont exacts ;
-- aucune comparaison entre profils ;
-- mobile, tablette et bureau validés.
-
-## 8. Porte 5, espace parent multi-univers
-
-### Livrables
-
-- suppression compagnon et couleur ;
-- choix d’avatar filtré par âge ;
-- bibliothèque filtrée par univers ;
-- filtre par tranche d’âge ;
-- éditeur avec univers obligatoire ;
-- gestion des variantes ;
-- attribution multi-enfants compatible ;
-- progression par univers ;
-- revue des quêtes migrées.
+- [ ] définir si le renderer générique suffit ou si un renderer spécialisé est réellement justifié ;
+- [ ] produire ses assets sans dépendance réseau ;
+- [ ] utiliser les IDs déjà existants ;
+- [ ] remplacer couverture et quatre stades placeholders ;
+- [ ] intégrer Flammèche ;
+- [ ] vérifier qu’aucune modification spécifique n’est requise dans `ParallaxScene` ;
+- [ ] valider le cache, les budgets et les mouvements réduits.
 
 ### Porte de sortie
 
-- aucun enfant ne reçoit une variante incompatible ;
-- création simple en moins de 30 secondes ;
-- options avancées repliées ;
-- navigation clavier validée.
+Un deuxième monde complet doit pouvoir être livré principalement par contenu, assets et éventuellement un renderer déclaré, sans duplication du moteur Firefly.
 
-## 9. Porte 6, moteur parallaxe
+## 6. Remplacement progressif des placeholders
 
-### Livrables
+Après validation du monde 2, poursuivre monde par monde :
 
-- manifeste typé de scène ;
-- calques par profondeur ;
-- slots débloquables ;
-- ancres de mascotte ;
-- responsive ;
-- mouvements réduits ;
-- fallback statique ;
-- chargement différé ;
-- cache par univers.
+1. La Station Spatiale ;
+2. Le Village des Lutins ;
+3. Nature et découvertes ;
+4. L’Atelier créatif.
 
-### Prototype obligatoire
+Pour chaque univers :
 
-La Forêt des Lucioles sert de premier prototype complet avec Luma.
+- [ ] couverture définitive ;
+- [ ] quatre états visuels cohérents ;
+- [ ] mascotte finalisée ;
+- [ ] récompenses principales illustrées ;
+- [ ] illustrations de quêtes prioritaires ;
+- [ ] histoire illustrée lorsque pertinente ;
+- [ ] alt text ;
+- [ ] budgets ;
+- [ ] test mobile/tablette ;
+- [ ] test hors ligne.
 
-### Porte de sortie
+Il n’est pas nécessaire de produire six mondes en parallèle.
 
-- aucun composant spécifique à la forêt ;
-- scène fluide sur tablette cible ;
-- fallback fonctionnel hors ligne ;
-- budgets respectés ;
-- ajout d’un second univers sans modifier le moteur.
+## 7. Illustrations de quêtes
 
-## 10. Porte 7, avatars et identité commune
+Le modèle métier 30 × 3 est déjà stable. Le chantier restant est surtout graphique et éditorial.
 
-### Livrables
+- [ ] remplacer progressivement les placeholders par des illustrations propres aux familles/âges ;
+- [ ] conserver les IDs logiques stables ;
+- [ ] prioriser les quêtes réellement utilisées lors du pilote ;
+- [ ] vérifier la compréhension sans texte pour les 3-5 ans ;
+- [ ] éviter trois images quasi identiques si l’âge justifie une composition différente.
 
-- six avatars ;
-- bustes et corps entiers ;
-- design system personnages ;
-- tests en 96 px ;
-- intégration au registre ;
-- migration des anciens avatars.
+La production graphique ne doit pas provoquer une nouvelle refonte du domaine.
 
-### Porte de sortie
+## 8. PWA et finition mobile
 
-- chaque âge possède garçon et fille ;
-- aucun avatar incompatible ;
-- style cohérent avec les mascottes ;
-- lisibilité sur les trois formats.
+Le socle PWA est consolidé. Les finitions restantes concernent surtout la qualité d’installation et les appareils réels.
 
-## 11. Porte 8, production univers par univers
+- [ ] fournir des icônes PWA raster adaptées à iOS, notamment pour `apple-touch-icon` ;
+- [ ] tester installation et mise à jour sur Safari iOS ;
+- [ ] tester reprise après changement de service worker ;
+- [ ] tester un premier lancement hors connexion après installation ;
+- [ ] mesurer les temps d’ouverture du chunk Firefly ;
+- [ ] vérifier le comportement après plusieurs versions mises en cache.
 
-L’ordre proposé :
+Aucune deuxième stratégie de service worker ne doit être ajoutée pour résoudre ces points.
 
-1. La Forêt des Lucioles ;
-2. La Montagne du Dragon ;
-3. La Station Spatiale ;
-4. Le Village des Lutins ;
-5. univers nature ;
-6. univers créativité.
+## 9. Accessibilité et sécurité enfant
 
-Chaque univers livre :
+Avant pilote élargi :
 
-- couverture ;
-- mascotte ;
-- scène parallaxe ;
-- fallback ;
-- récompenses ;
-- habitants ;
-- histoire ;
-- illustrations de quêtes ;
-- sons facultatifs ;
-- textes alternatifs.
+- [ ] revue clavier complète de l’espace parent ;
+- [ ] revue VoiceOver / lecteur d’écran ;
+- [ ] audit des textes alternatifs ;
+- [ ] vérification des zones tactiles ;
+- [ ] vérification des contrastes ;
+- [ ] revue de tous les écrans 3-5 ans sans dépendance à la lecture ;
+- [ ] vérification du mode silencieux ;
+- [ ] vérification des mouvements réduits ;
+- [ ] revue de toute formulation pouvant être vécue comme pression ou échec.
 
-Un univers doit être validé avant de lancer le volume complet du suivant.
+Les règles de `CHILD-SAFETY.md` et `CONTENT-GUIDELINES.md` restent les références produit.
 
-## 12. Porte 9, stabilisation
+## 10. Audit avant pilote
 
-### Contrôles
+L’audit lourd n’est pas exécuté à chaque PR, mais devient obligatoire avant un jalon de diffusion.
 
-- TypeScript strict ;
-- architecture ;
-- cycles ;
-- contenu ;
-- assets ;
-- budgets ;
-- migration ;
-- navigation ;
-- responsive ;
-- hors ligne ;
-- Safari/iOS ;
-- accessibilité ;
-- performance sur appareils modestes.
+```bash
+npm run check
+npm run audit
+```
 
-### Porte de sortie
+À compléter par :
 
-- aucune perte de données ;
-- aucun défaut bloquant ;
-- aucune progression croisée ;
-- aucune quête hors âge ;
-- chaque scène possède un fallback ;
-- documentation à jour.
+- test iOS réel ;
+- test Android réel ;
+- test tablette ;
+- test restauration de sauvegarde ;
+- test migration depuis un jeu V1/V2 représentatif ;
+- test hors ligne ;
+- vérification Vercel production ;
+- revue documentaire.
 
-## 13. Porte 10, pilote familial
+## 11. Pilote familial
 
-### Déroulement
+Quand La Forêt et au moins un deuxième monde sont visuellement représentatifs :
 
-- installation chez quelques familles ;
-- observation de l’accueil à deux fenêtres ;
-- compréhension des six univers ;
-- compréhension des pastilles ;
-- temps de création parent ;
-- usage des variantes d’âge ;
-- perception des mascottes ;
-- performance des scènes ;
-- corrections ciblées.
+- [ ] installer l’application chez quelques familles ;
+- [ ] mesurer la compréhension de l’accueil ;
+- [ ] vérifier que les enfants identifient les univers ;
+- [ ] observer la compréhension des quêtes selon l’âge ;
+- [ ] mesurer le temps de création parent ;
+- [ ] vérifier que les pastilles ne sont pas vécues comme une pression ;
+- [ ] observer l’intérêt pour la progression narrative ;
+- [ ] relever les problèmes de performance et d’installation.
 
-### Porte de sortie
+Le pilote doit décider des priorités suivantes à partir de l’usage réel, pas déclencher automatiquement une nouvelle refonte générale.
 
-- parents autonomes ;
-- enfants capables de choisir le bon univers ;
-- pastilles non vécues comme une pression ;
-- univers reconnus visuellement ;
-- temps d’écran bref ;
-- aucune confusion avatar/mascotte.
+## 12. Évolutions de modèle possibles, mais non engagées
 
-## 14. Porte 11, diffusion
+Le modèle V3 fonctionne actuellement sans les concepts suivants :
 
-### Livrables
+- entités persistantes `QuestFamily` / `QuestVariant` séparées ;
+- snapshot explicite de tranche d’âge dans l’occurrence ;
+- `worldId` dupliqué dans `Completion` et `RewardGrant` ;
+- slots de scène persistés dans `WorldProgress` ;
+- navigation URL avec routeur.
 
-- build de production ;
-- icônes PWA finales ;
-- politique de confidentialité ;
-- guide parent ;
-- notes de version ;
-- procédure de retour arrière ;
-- support minimal ;
-- bilan pilote.
+Ces sujets ne constituent **pas** une V4 planifiée.
 
-## 15. Séquence des PR
+Ils ne doivent être ouverts que si un besoin utilisateur, une limite technique ou une migration concrète le justifie.
 
-1. documentation multi-univers ;
-2. domaine et types V3 ;
-3. migration et validation runtime ;
-4. catalogues de mondes et variantes ;
-5. accueil familial et carrefour ;
-6. espace parent ;
-7. moteur parallaxe ;
-8. avatars ;
-9. intégration de La Forêt des Lucioles ;
-10. un PR graphique par univers restant ;
-11. stabilisation et pilote.
+## 13. Règle pour les prochaines PR
 
-## 16. Décisions encore ouvertes
+Une PR future doit pouvoir répondre simplement à trois questions :
 
-- nom public de l’univers nature ;
-- nom public de l’univers créativité ;
-- noms des cinq mascottes restantes ;
-- nombre final de paliers par univers ;
-- technique d’animation après prototype ;
-- répartition définitive des 40 quêtes existantes.
+1. Quel problème réel résout-elle ?
+2. Quelle couche existante modifie-t-elle ?
+3. Quel contrôle prouve qu’elle n’a pas cassé le reste ?
 
-Ces décisions n’empêchent pas de stabiliser les identifiants techniques et le modèle métier.
+Si la réponse nécessite d’inventer un deuxième plan directeur complet, le périmètre est probablement trop large.
