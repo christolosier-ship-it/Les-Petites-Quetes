@@ -1,21 +1,13 @@
 import { Field } from '../../components/primitives/Field';
 import { dayMomentLabels, validationLabels } from '../../content/copy/labels';
-import type { QuestScheduleInput } from '../../domain/schedule/QuestSchedule';
 import type { DayMoment, ValidationMode, Weekday } from '../../domain/shared/types';
-import { SystemClock } from '../../platform/clock/SystemClock';
+import type { ScheduleDraft } from './ScheduleDraft';
 
-const clock = new SystemClock();
 const weekdayOptions: readonly { id: Weekday; label: string }[] = [
   { id: 'mon', label: 'Lun' }, { id: 'tue', label: 'Mar' }, { id: 'wed', label: 'Mer' },
   { id: 'thu', label: 'Jeu' }, { id: 'fri', label: 'Ven' }, { id: 'sat', label: 'Sam' }, { id: 'sun', label: 'Dim' },
 ];
-export interface ScheduleDraft { readonly childIds: readonly string[]; readonly kind: 'immediate' | 'one-off' | 'weekly'; readonly startDate: string; readonly endDate: string; readonly weekdays: readonly Weekday[]; readonly dayMoment: DayMoment; readonly exactTime: string; readonly priority: 'required' | 'optional'; readonly validationMode: ValidationMode; }
-export function createScheduleDraft(childId: string, validationMode: ValidationMode): ScheduleDraft {
-  return { childIds: childId ? [childId] : [], kind: 'immediate', startDate: clock.todayLocal(), endDate: '', weekdays: ['mon'], dayMoment: 'anytime', exactTime: '', priority: 'required', validationMode };
-}
-export function scheduleInputFromDraft(draft: ScheduleDraft): Omit<QuestScheduleInput, 'questTemplateId' | 'questFamilyId' | 'worldId'> {
-  return { childIds: draft.childIds, kind: draft.kind, startDate: draft.kind === 'immediate' ? clock.todayLocal() : draft.startDate, ...(draft.kind === 'weekly' && draft.endDate !== '' ? { endDate: draft.endDate } : {}), ...(draft.kind === 'weekly' ? { weekdays: draft.weekdays } : {}), dayMoment: draft.dayMoment, ...(draft.exactTime !== '' ? { exactTime: draft.exactTime } : {}), priority: draft.priority, validationMode: draft.validationMode };
-}
+
 export function ScheduleDraftFields({ draft, childOptions, onChange }: { readonly draft: ScheduleDraft; readonly childOptions: readonly { readonly id: string; readonly label: string }[]; readonly onChange: (draft: ScheduleDraft) => void; }) {
   function toggle<T extends string>(value: T, values: readonly T[]): readonly T[] { return values.includes(value) ? values.filter((candidate) => candidate !== value) : [...values, value]; }
   return <>
