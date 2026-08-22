@@ -15,9 +15,10 @@ export interface FireflyForestActors {
  * volontairement limité aux acteurs et aux effets vivants afin d'éviter de
  * superposer l'ancien prototype low-poly au nouveau tableau illustré.
  */
-export function addFireflyForest(scene: THREE.Scene, _stage: 0 | 1 | 2 | 3): FireflyForestActors {
+export function addFireflyForest(scene: THREE.Scene, stage: 0 | 1 | 2 | 3): FireflyForestActors {
   const forest = new THREE.Group();
   forest.name = 'firefly-living-actors';
+  forest.userData.stage = stage;
 
   const child = createChildInPyjamas();
   child.position.set(-1.05, 0, 0.65);
