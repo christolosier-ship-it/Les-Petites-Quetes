@@ -1,0 +1,37 @@
+name: Materialize Firefly assets
+
+on:
+  push:
+    branches:
+      - chore/pwa-local-assets
+    paths:
+      - .github/workflows/materialize-firefly-assets.yml
+
+permissions:
+  contents: write
+
+jobs:
+  materialize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: chore/pwa-local-assets
+      - name: Télécharger les assets CC0 de la Forêt
+        run: |
+          set -euo pipefail
+          mkdir -p public/worlds/firefly-forest
+          curl --fail --location --retry 3 --output public/worlds/firefly-forest/meadow.png https://openclipart.org/image/800px/251204
+          curl --fail --location --retry 3 --output public/worlds/firefly-forest/cottage.png https://openclipart.org/image/800px/311437
+          curl --fail --location --retry 3 --output public/worlds/firefly-forest/rustic-house.png https://openclipart.org/image/800px/299648
+          curl --fail --location --retry 3 --output public/worlds/firefly-forest/tree-house.png https://openclipart.org/image/800px/298682
+          curl --fail --location --retry 3 --output public/worlds/firefly-forest/foliage.png https://openclipart.org/image/800px/208754
+          file public/worlds/firefly-forest/*
+          wc -c public/worlds/firefly-forest/*
+      - name: Committer les assets locaux
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/worlds/firefly-forest
+          git commit -m "chore: embarquer les assets CC0 de la Forêt"
+          git push origin HEAD:chore/pwa-local-assets
