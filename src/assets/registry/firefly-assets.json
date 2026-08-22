@@ -1,0 +1,57 @@
+[
+  {
+    "id": "world.firefly-forest.diorama-meadow",
+    "type": "illustration",
+    "path": "worlds/firefly-forest/meadow.webp",
+    "width": 800,
+    "height": 536,
+    "alt": "Prairie illustrée de la Forêt des Lucioles.",
+    "maxBytes": 250000,
+    "ageBands": ["3-5", "6-8", "9-10"],
+    "states": ["diorama", "backdrop"]
+  },
+  {
+    "id": "world.firefly-forest.diorama-cottage",
+    "type": "illustration",
+    "path": "worlds/firefly-forest/cottage.webp",
+    "width": 784,
+    "height": 800,
+    "alt": "Cottage illustré de la Forêt des Lucioles.",
+    "maxBytes": 250000,
+    "ageBands": ["3-5", "6-8", "9-10"],
+    "states": ["diorama", "stage-1"]
+  },
+  {
+    "id": "world.firefly-forest.diorama-rustic-house",
+    "type": "illustration",
+    "path": "worlds/firefly-forest/rustic-house.webp",
+    "width": 800,
+    "height": 708,
+    "alt": "Maison rustique illustrée de la Forêt des Lucioles.",
+    "maxBytes": 250000,
+    "ageBands": ["3-5", "6-8", "9-10"],
+    "states": ["diorama", "stage-2"]
+  },
+  {
+    "id": "world.firefly-forest.diorama-tree-house",
+    "type": "illustration",
+    "path": "worlds/firefly-forest/tree-house.webp",
+    "width": 652,
+    "height": 800,
+    "alt": "Maison-arbre illustrée de la Forêt des Lucioles.",
+    "maxBytes": 250000,
+    "ageBands": ["3-5", "6-8", "9-10"],
+    "states": ["diorama", "stage-3"]
+  },
+  {
+    "id": "world.firefly-forest.diorama-foliage",
+    "type": "illustration",
+    "path": "worlds/firefly-forest/foliage.webp",
+    "width": 800,
+    "height": 354,
+    "alt": "Végétation illustrée de premier plan de la Forêt des Lucioles.",
+    "maxBytes": 250000,
+    "ageBands": ["3-5", "6-8", "9-10"],
+    "states": ["diorama", "foreground"]
+  }
+]

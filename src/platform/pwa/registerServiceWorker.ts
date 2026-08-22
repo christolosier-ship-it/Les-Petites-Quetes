@@ -8,7 +8,7 @@ function announceUpdate(worker: ServiceWorker): void {
 }
 
 export async function registerServiceWorker(): Promise<void> {
-  if (!('serviceWorker' in navigator)) return;
+  if (!import.meta.env.PROD || !('serviceWorker' in navigator)) return;
 
   try {
     const registration = await navigator.serviceWorker.register(

@@ -55,7 +55,6 @@ const cacheName = `les-petites-quetes-${version}`;
 const source = `const CACHE_NAME = ${JSON.stringify(cacheName)};
 const CACHE_PREFIX = 'les-petites-quetes-';
 const PRECACHE = ${JSON.stringify(files, null, 2)};
-const RUNTIME_ASSET_HOSTS = new Set(['openclipart.org']);
 
 self.addEventListener('install', (event) => {
   event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(PRECACHE)));
@@ -77,20 +76,7 @@ self.addEventListener('fetch', (event) => {
   const request = event.request;
   if (request.method !== 'GET') return;
   const url = new URL(request.url);
-
-  if (url.origin !== self.location.origin) {
-    if (!RUNTIME_ASSET_HOSTS.has(url.hostname)) return;
-    event.respondWith(
-      caches.match(request).then((cached) => cached ?? fetch(request).then((response) => {
-        if (response.ok || response.type === 'opaque') {
-          const copy = response.clone();
-          caches.open(CACHE_NAME).then((cache) => cache.put(request, copy));
-        }
-        return response;
-      })),
-    );
-    return;
-  }
+  if (url.origin !== self.location.origin) return;
 
   if (request.mode === 'navigate') {
     event.respondWith(
@@ -104,6 +90,7 @@ self.addEventListener('fetch', (event) => {
     );
     return;
   }
+
   event.respondWith(
     caches.match(request).then((cached) => cached ?? fetch(request).then((response) => {
       if (response.ok) {
@@ -121,4 +108,4 @@ const html = readFileSync(join(dist, 'index.html'), 'utf8');
 if (!html.includes('.js') || !files.some((file) => file.endsWith('.js'))) {
   throw new Error('Le service worker ne peut pas être généré sans bundle JavaScript initial.');
 }
-console.log(`Service worker ${version} généré avec ${files.length} ressources précachées ; les mondes 3D et leurs décors illustrés sont mis en cache à leur première ouverture.`);
+console.log(`Service worker ${version} généré avec ${files.length} ressources locales précachées ; les chunks dynamiques sont mis en cache à leur première ouverture.`);

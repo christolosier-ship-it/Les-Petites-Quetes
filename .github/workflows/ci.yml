@@ -27,12 +27,13 @@ jobs:
         uses: actions/setup-node@v5
         with:
           node-version: 24
+          cache: npm
 
-      - name: Installer les dépendances
-        run: npm install --no-audit --no-fund --legacy-peer-deps
+      - name: Installer les dépendances verrouillées
+        run: npm ci --no-audit --no-fund
 
-      - name: Vérifier l’architecture et les cycles
-        run: npm run check:architecture && npm run check:cycles
+      - name: Vérifier l’architecture, les cycles et les assets
+        run: npm run check:architecture && npm run check:cycles && npm run check:assets
 
       - name: Vérifier le lint et le typage
         run: npm run lint && npm run typecheck
