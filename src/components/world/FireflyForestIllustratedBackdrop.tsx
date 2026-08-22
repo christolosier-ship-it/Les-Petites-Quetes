@@ -11,8 +11,6 @@ const OPENCLIPART = {
   foliage: 'https://openclipart.org/image/800px/208754',
 } as const;
 
-export const FIREFLY_FOREST_REMOTE_ASSETS = Object.values(OPENCLIPART);
-
 export function FireflyForestIllustratedBackdrop({ stage, reducedMotion }: FireflyForestIllustratedBackdropProps) {
   return (
     <div
