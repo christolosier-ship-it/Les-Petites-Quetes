@@ -106,10 +106,13 @@ export function FireflyForestScene({ stage, reducedMotion }: FireflyForestSceneP
       const array = positionAttribute.array as Float32Array;
       for (let index = 0; index < fireflies.phases.length; index += 1) {
         const offset = index * 3;
-        const phase = fireflies.phases[index];
-        array[offset] = fireflies.basePositions[offset] + Math.sin(elapsed * 0.55 + phase) * 0.3;
-        array[offset + 1] = fireflies.basePositions[offset + 1] + Math.sin(elapsed * 0.8 + phase * 1.3) * 0.22;
-        array[offset + 2] = fireflies.basePositions[offset + 2] + Math.cos(elapsed * 0.48 + phase) * 0.24;
+        const phase = fireflies.phases[index] ?? 0;
+        const baseX = fireflies.basePositions[offset] ?? 0;
+        const baseY = fireflies.basePositions[offset + 1] ?? 0;
+        const baseZ = fireflies.basePositions[offset + 2] ?? 0;
+        array[offset] = baseX + Math.sin(elapsed * 0.55 + phase) * 0.3;
+        array[offset + 1] = baseY + Math.sin(elapsed * 0.8 + phase * 1.3) * 0.22;
+        array[offset + 2] = baseZ + Math.cos(elapsed * 0.48 + phase) * 0.24;
       }
       positionAttribute.needsUpdate = true;
       fireflies.points.material.opacity = 0.72 + Math.sin(elapsed * 2.1) * 0.18;
