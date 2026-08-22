@@ -1,215 +1,304 @@
-# Parcours utilisateurs cibles
+# Parcours utilisateurs
 
-## 1. Accueil familial
+## 1. Statut
 
-1. L’application affiche deux grandes fenêtres.
-2. À gauche : « Espace enfant ».
-3. À droite : « Espace parent ».
-4. Sur tablette et ordinateur, les deux fenêtres occupent chacune environ la moitié de l’écran.
-5. Sur smartphone, elles peuvent être empilées sans changer leur importance.
+Ce document décrit les parcours effectivement proposés par l’application actuelle.
 
-### Accès enfant
-
-- un seul profil : ouverture directe de son carrefour des univers ;
-- plusieurs profils : ouverture du sélecteur d’avatars.
-
-### Accès parent
-
-- ouverture du verrou local ;
-- accès au tableau de bord après validation du code.
+Les évolutions non encore livrées sont suivies dans `ROADMAP.md` et ne sont pas décrites ici comme des écrans existants.
 
 ## 2. Premier lancement
 
-1. Présentation courte du principe.
-2. Confirmation de l’usage familial privé.
-3. Création du premier profil :
-   - prénom ou pseudonyme ;
-   - tranche d’âge ;
-   - niveau de lecture ;
-   - choix entre les avatars compatibles.
-4. Création du code parent.
-5. Choix du mode de validation par défaut.
-6. Sélection de premières familles de quêtes suggérées parmi plusieurs univers.
-7. Arrivée à l’accueil familial.
-8. Ouverture de la fenêtre enfant puis du carrefour des univers.
+1. L’application charge ou crée l’état familial local.
+2. Si l’onboarding n’est pas terminé, le parcours de démarrage s’ouvre.
+3. Le parent crée le premier profil enfant avec prénom ou pseudonyme, tranche d’âge, niveau de lecture et avatar compatible.
+4. Il choisit un code parent à quatre chiffres.
+5. Il choisit le mode de validation par défaut.
+6. Il sélectionne entre une et trois premières quêtes suggérées.
+7. Ces quêtes sont planifiées immédiatement pour le premier enfant.
+8. L’onboarding est marqué comme terminé et l’espace enfant peut s’ouvrir.
 
-Aucun choix de compagnon ou de couleur n’est demandé.
+Aucun compagnon ni couleur de profil n’est demandé.
 
-## 3. Sélectionner un enfant
+## 3. Accueil familial
 
-1. L’enfant ouvre la fenêtre enfant.
-2. Les avatars et prénoms des profils actifs apparaissent.
-3. Il touche son avatar.
-4. Le carrefour des six univers s’ouvre.
+Une fois l’onboarding terminé, l’accueil permet d’ouvrir :
 
-Aucun niveau de progression comparatif n’est affiché sur le sélecteur.
+- l’espace enfant ;
+- l’espace parent.
 
-## 4. Voir les univers
+L’espace parent reste verrouillé tant que le code local n’a pas été validé.
 
-1. Le carrefour affiche six grands pavés.
-2. Chaque pavé montre sa couverture, son nom, sa mascotte et son état actuel.
-3. Une pastille rouge apparaît lorsque des quêtes sont disponibles.
-4. La pastille contient uniquement le nombre de quêtes disponibles maintenant.
-5. Elle est absente à zéro.
-6. L’enfant touche un univers.
+## 4. Choisir un enfant
 
-## 5. Ouvrir un univers
+Dans l’espace enfant :
 
-1. La scène parallaxe ou son fallback statique s’affiche.
-2. La mascotte de l’univers accueille l’enfant.
-3. Les quêtes disponibles dans cet univers sont accessibles.
-4. Le trésor et l’histoire concernent uniquement cet univers.
-5. Les animations respectent le mode mouvements réduits.
+- s’il existe un seul profil actif, il devient le profil courant ;
+- s’il existe plusieurs profils actifs, leurs avatars et prénoms sont affichés dans un sélecteur ;
+- toucher un profil le rend actif et ramène au carrefour des univers.
 
-## 6. Découvrir une quête
+Aucun score comparatif n’est affiché entre enfants.
 
-1. L’enfant ouvre la liste des quêtes de l’univers.
-2. Seules les quêtes compatibles avec sa tranche d’âge sont visibles.
-3. Pour les 3 à 5 ans, une à trois cartes maximum sont mises en avant.
-4. Les quêtes nécessaires et facultatives sont distinguées sans vocabulaire culpabilisant.
-5. L’enfant touche une carte.
-6. La consigne et l’illustration de sa variante d’âge apparaissent.
-7. La lecture vocale reste disponible.
+## 5. Carrefour des univers
 
-## 7. Commencer et terminer
+Le carrefour affiche les six mondes du catalogue.
 
-1. L’enfant ouvre la quête.
-2. Il touche « Je commence » ou réalise directement l’action.
-3. Les étapes sont montrées selon son âge.
-4. Il quitte l’écran pour agir dans le monde réel.
-5. Il revient et touche « J’ai terminé ».
-6. Selon la règle :
-   - validation immédiate ;
-   - demande à un adulte ;
-   - validation ensemble.
+Pour chaque monde :
 
-## 8. Valider côté parent
+- le renderer de scène fournit l’aperçu ;
+- le nom, la mascotte et le focus sont affichés ;
+- le stade de progression de l’enfant est utilisé ;
+- une pastille apparaît uniquement lorsqu’au moins une occurrence de ce monde est actuellement au statut `available`.
 
-1. La demande apparaît dans le tableau de bord parent.
-2. Le parent voit l’enfant, l’univers, la quête et l’heure.
-3. Il choisit :
-   - valider ;
-   - regarder ensemble ;
-   - indiquer qu’une petite étape reste.
-4. En cas de validation, une seule récompense du même univers est attribuée.
-5. La progression de cet univers est recalculée.
+La pastille indique donc des quêtes prêtes maintenant, pas un retard.
 
-## 9. Découvrir la récompense
+Toucher un pavé ouvre l’espace de ce monde.
 
-1. La célébration se produit immédiatement ou au prochain passage enfant.
-2. La mascotte de l’univers réagit.
-3. L’objet, l’habitant ou le fragment apparaît.
-4. Une phrase explique ce qui a changé dans cet univers.
-5. L’enfant peut ouvrir la scène pour voir le changement.
-6. La célébration se ferme automatiquement selon le réglage parent.
+## 6. Espace d’un monde
 
-## 10. Créer une quête depuis la bibliothèque
+Chaque monde possède trois onglets enfant :
 
-1. Le parent ouvre « Quêtes ».
-2. Il choisit un univers.
-3. Il filtre éventuellement par tranche d’âge ou catégorie.
-4. Il ouvre une famille de quête.
-5. Il voit les variantes disponibles.
-6. Il sélectionne les enfants.
-7. L’application vérifie la compatibilité d’âge.
-8. Il choisit date, récurrence, moment et validation.
-9. Il enregistre.
-10. Une synthèse indique l’univers et la variante qui seront utilisées pour chaque enfant.
+1. **Mon univers** ;
+2. **Mes quêtes** ;
+3. **Mon trésor**.
 
-Objectif : moins de 30 secondes sans personnalisation avancée.
+L’en-tête permet aussi de revenir :
 
-## 11. Créer une quête personnalisée
+- à l’accueil familial ;
+- au carrefour de tous les univers.
 
-1. Le parent choisit obligatoirement l’univers.
-2. Il saisit l’intention réelle et les catégories.
-3. Il crée au moins une variante d’âge :
-   - titre ;
-   - consigne ;
-   - étapes ;
-   - illustration ;
-   - durée.
-4. Il peut ajouter les variantes des deux autres tranches.
-5. Il choisit une récompense du même univers.
-6. Il attribue et planifie.
-7. L’application refuse une attribution sans variante compatible.
+### Mon univers
 
-## 12. Gérer les profils
+Affiche la scène du monde selon la progression de l’enfant.
 
-1. Le parent ouvre « Enfants ».
-2. Il crée ou modifie le prénom, la tranche d’âge, le niveau de lecture et l’avatar.
-3. Les avatars proposés sont filtrés par âge.
-4. Un changement de tranche d’âge propose un avatar compatible si nécessaire.
-5. Les champs compagnon et couleur n’existent plus.
-6. Les occurrences historiques conservent leur variante d’origine.
+### Mes quêtes
 
-## 13. Gérer plusieurs enfants
+Affiche les occurrences pertinentes de cet enfant et de cet univers et permet de suivre leur cycle de réalisation.
 
-1. Une planification peut viser plusieurs enfants.
-2. Chaque enfant reçoit la variante correspondant à son âge.
-3. Chaque enfant possède une progression propre dans chaque univers.
-4. Les pastilles sont calculées individuellement.
-5. Aucun classement n’est affiché.
+### Mon trésor
 
-## 14. Journée sans quête terminée
+Affiche :
 
-1. Aucun compteur de retard n’apparaît.
-2. Les pastilles affichent uniquement les quêtes actuellement disponibles.
-3. Le parent peut reporter ou ignorer une occurrence.
-4. Les scènes et mascottes restent neutres ou chaleureuses.
-5. Aucun univers ne se dégrade à cause d’une journée vide.
+- les récompenses débloquées de ce monde ;
+- les chapitres d’histoire débloqués de ce monde.
 
-## 15. Mettre une routine en pause
+Une récompense ou un chapitre d’un autre univers ne doit pas apparaître ici.
 
-1. Le parent ouvre une planification.
-2. Il choisit « Suspendre ».
-3. Aucune nouvelle occurrence n’est créée pendant la pause.
-4. Les progressions des univers restent intactes.
-5. La reprise ne crée aucun doublon.
+## 7. Réaliser une quête
 
-## 16. Revoir les quêtes migrées
+Le cycle métier d’une occurrence utilise les statuts :
 
-1. Après migration V2 vers V3, le tableau parent affiche les quêtes personnalisées à vérifier.
-2. Le parent ouvre une quête.
-3. Il confirme ou change son univers.
-4. Il complète éventuellement les variantes d’âge manquantes.
-5. Les occurrences historiques ne sont pas déplacées.
-6. Les nouvelles occurrences utilisent la configuration validée.
+```text
+upcoming
+→ available
+→ started
+→ validation-requested
+→ completed
+```
 
-## 17. Sauvegarder et restaurer
+Selon l’action de la famille, une occurrence peut aussi devenir :
 
-### Export
+```text
+postponed
+ignored
+```
 
-1. Le parent ouvre les réglages.
-2. Il génère une sauvegarde locale.
-3. Le résumé indique le schéma, les enfants, les quêtes personnalisées et les progressions par univers.
-4. Un avertissement rappelle le caractère familial des données.
+Le vocabulaire visible doit rester neutre. Une quête non faite n’est pas transformée en échec ou en dette.
 
-### Import
+## 8. Validation
 
-1. Le parent sélectionne un fichier V2 ou V3.
-2. L’application vérifie et migre en mémoire si nécessaire.
-3. Un résumé affiche les éventuelles quêtes à reclasser.
-4. Le parent confirme.
-5. Une sauvegarde automatique est créée.
-6. Le remplacement est transactionnel.
+Selon le mode configuré :
 
-## 18. Utilisation hors ligne
+- l’enfant peut terminer directement ;
+- une validation parent peut être demandée ;
+- la réalisation peut être validée ensemble.
 
-1. Le carrefour, les couvertures et les contenus textuels restent disponibles.
-2. Un univers déjà ouvert utilise ses calques mis en cache.
-3. Un univers non chargé utilise son fallback statique.
-4. Les quêtes restent entièrement réalisables.
-5. La synchronisation réseau n’est jamais nécessaire.
+L’espace parent, onglet **Aujourd’hui**, centralise les actions liées aux occurrences et validations courantes.
 
-## 19. Mode sans lecture
+Une réalisation validée :
 
-Chaque action critique est compréhensible grâce à :
+1. crée une `Completion` ;
+2. crée une seule attribution principale de récompense ;
+3. recalcule la progression de l’enfant dans le monde de la récompense ;
+4. rend la célébration disponible côté enfant.
 
-- illustration ;
-- avatar ou mascotte ;
-- position constante ;
-- icône ;
-- lecture vocale ;
-- texte très court.
+## 9. Célébration
 
-Le nombre de la pastille possède toujours un libellé vocal complet.
+Lorsqu’une récompense attribuée n’a pas encore été reconnue par l’enfant, une célébration peut être affichée dans l’espace enfant.
+
+Le parent règle sa durée sur :
+
+- 3 secondes ;
+- 5 secondes ;
+- 8 secondes.
+
+Après reconnaissance, l’ID de l’attribution est conservé dans `acknowledgedRewardGrantIds` pour éviter de rejouer la même célébration indéfiniment.
+
+## 10. Ouvrir l’espace parent
+
+1. Depuis l’accueil, le parent ouvre son espace.
+2. Si nécessaire, `ParentLock` demande le code à quatre chiffres.
+3. Après déverrouillage, cinq onglets sont disponibles :
+   - Aujourd’hui ;
+   - Quêtes ;
+   - Enfants ;
+   - Univers ;
+   - Réglages.
+4. Le bouton **Verrouiller** referme explicitement l’espace parent.
+
+## 11. Bibliothèque de quêtes
+
+Dans **Quêtes > Bibliothèque** :
+
+- le parent choisit une tranche d’âge ;
+- il peut filtrer par univers ;
+- il peut filtrer par catégorie ;
+- le catalogue annonce 30 familles et 90 variantes ;
+- chaque carte correspond à un `QuestTemplate` adapté à la tranche d’âge sélectionnée.
+
+Depuis une carte, le parent peut :
+
+- **Préparer** le template ;
+- **Personnaliser** le template intégré pour créer une version familiale.
+
+## 12. Créer une quête personnalisée
+
+Depuis **Créer depuis zéro** ou depuis la personnalisation d’un modèle intégré :
+
+1. le parent remplit le modèle de quête ;
+2. il choisit notamment l’univers et les tranches d’âge concernées ;
+3. il remplit ensuite la planification ;
+4. au moins une tranche d’âge et un enfant sont requis ;
+5. l’application crée un `QuestTemplate` personnalisé ;
+6. elle crée immédiatement la planification associée.
+
+Le modèle courant ne demande pas de créer trois entités séparées de variantes d’âge pour une quête personnalisée.
+
+## 13. Gérer les modèles familiaux
+
+Dans **Quêtes > Mes modèles** :
+
+- les quêtes personnalisées peuvent être gérées ;
+- les anciennes quêtes migrées nécessitant une vérification d’univers sont signalées ;
+- le parent peut ouvrir une quête concernée et corriger son classement pour les usages futurs.
+
+L’historique déjà produit n’est pas déplacé silencieusement.
+
+## 14. Gérer les routines
+
+Dans **Quêtes > Routines**, le parent gère les planifications existantes.
+
+Une planification peut notamment être suspendue puis reprise. La suspension empêche la production attendue de nouvelles occurrences sans effacer l’historique ni la progression acquise.
+
+## 15. Gérer les enfants
+
+Dans l’onglet **Enfants** :
+
+- création de profils ;
+- modification des informations ;
+- changement de tranche d’âge ;
+- choix d’un avatar compatible ;
+- archivage et restauration selon les actions disponibles.
+
+La validation runtime protège également la cohérence avatar-âge lors du chargement des données.
+
+## 16. Consulter les univers côté parent
+
+L’onglet **Univers** présente la progression familiale par monde.
+
+La donnée de référence est `WorldProgress`, identifiée par le couple enfant-univers et validée contre l’historique des récompenses attribuées.
+
+## 17. Réglages de confort
+
+L’onglet **Réglages** permet actuellement de modifier :
+
+- activation de la narration ;
+- activation des effets sonores ;
+- politique de mouvements `system`, `reduce` ou `allow` ;
+- durée de célébration.
+
+Le mode `reduce` neutralise les déplacements décoratifs qui ne sont pas nécessaires à la compréhension.
+
+## 18. Exporter les données
+
+Dans **Réglages > Sauvegarder et restaurer** :
+
+1. le parent télécharge un fichier JSON ;
+2. ce fichier contient les données familiales privées nécessaires à la restauration ;
+3. l’interface rappelle explicitement le caractère privé de cette sauvegarde.
+
+Le fichier reste local : aucun compte cloud n’est nécessaire.
+
+## 19. Importer une sauvegarde
+
+1. Le parent choisit un fichier JSON.
+2. Une prévisualisation affiche le nombre de profils, planifications et réalisations détectés.
+3. Le parent confirme le remplacement.
+4. Le contenu passe par la logique de migration et validation.
+5. L’ancien état est conservé en sauvegarde avant remplacement.
+6. Si le fichier est invalide, il ne devient pas l’état familial courant.
+
+## 20. Restaurer une sauvegarde automatique
+
+Les sauvegardes automatiques disponibles sont listées avec leur raison et leur date.
+
+Lors d’une restauration :
+
+1. le parent choisit une sauvegarde ;
+2. il confirme ;
+3. l’état actuel est lui-même sauvegardé sous la raison `before-restore` ;
+4. la sauvegarde choisie est migrée/validée puis restaurée.
+
+## 21. Changer le code parent
+
+Le parent saisit un nouveau code de quatre chiffres et l’enregistre.
+
+Le code protège une séparation d’interface locale. Il ne constitue pas un système de compte distant.
+
+## 22. Supprimer les données locales
+
+Dans la zone de suppression totale :
+
+1. le parent doit écrire `SUPPRIMER` ;
+2. le bouton d’effacement devient disponible ;
+3. les données locales de l’application sont supprimées.
+
+Cette action doit rester volontaire et difficile à déclencher par erreur.
+
+## 23. Utilisation hors ligne
+
+Après chargement et mise en cache des ressources nécessaires :
+
+- la navigation applicative ne dépend pas d’un backend ;
+- les données métier restent dans IndexedDB ;
+- le service worker fournit les ressources locales mises en cache ;
+- une scène lourde chargée dynamiquement est mise en cache à sa première récupération ;
+- aucune image essentielle de La Forêt ne dépend d’un hôte externe.
+
+## 24. La Forêt des Lucioles
+
+Dans La Forêt :
+
+- le diorama illustré local est rendu par `FireflyForestDiorama` ;
+- la couche Three.js est chargée à la demande ;
+- la scène peut être agrandie hors mode compact ;
+- les quatre stades modifient le rendu ;
+- les mouvements réduits sont respectés ;
+- un fallback visuel existe pendant le chargement de la couche Three.js.
+
+Les autres mondes passent actuellement par le renderer parallaxe générique.
+
+## 25. Ce qui n’est pas un parcours actuel
+
+Les éléments suivants ne doivent pas être décrits comme déjà livrés :
+
+- compte utilisateur distant ;
+- synchronisation familiale cloud ;
+- boutique ;
+- classement ;
+- réseau social ;
+- géolocalisation ;
+- routeur URL complet par écran ;
+- éditeur de trois entités `QuestVariant` persistantes ;
+- production graphique finale des six mondes.
+
+Les évolutions retenues ultérieurement seront ajoutées ici uniquement lorsqu’elles deviendront de vrais parcours.
