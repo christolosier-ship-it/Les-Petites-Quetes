@@ -2,7 +2,7 @@ import { existsSync, readFileSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 
 const root = process.cwd();
-const registryFiles = ['assets.json', 'avatars.json'];
+const registryFiles = ['assets.json', 'firefly-assets.json', 'avatars.json'];
 const registries = registryFiles.map((file) => ({
   file,
   assets: JSON.parse(readFileSync(join(root, 'src/assets/registry', file), 'utf8')),
@@ -17,11 +17,22 @@ for (const registry of registries) {
   }
 }
 
-const avatarIds = new Set(registries[1].assets.map((asset) => asset.id));
+const avatarRegistry = registries.find((registry) => registry.file === 'avatars.json');
+if (!avatarRegistry) throw new Error('Registre avatars introuvable.');
+const avatarIds = new Set(avatarRegistry.assets.map((asset) => asset.id));
 const assets = [
-  ...registries[0].assets.filter((asset) => !avatarIds.has(asset.id)),
-  ...registries[1].assets,
+  ...registries
+    .filter((registry) => registry.file !== 'avatars.json')
+    .flatMap((registry) => registry.assets)
+    .filter((asset) => !avatarIds.has(asset.id)),
+  ...avatarRegistry.assets,
 ];
+
+const globalIds = new Set();
+for (const asset of assets) {
+  if (globalIds.has(asset.id)) errors.push(`Identifiant dupliqué entre registres : ${asset.id}.`);
+  globalIds.add(asset.id);
+}
 
 if (assets.length === 0) errors.push('Le registre doit contenir au moins un asset.');
 
