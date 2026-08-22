@@ -8,6 +8,7 @@ export default defineConfig({
     target: 'es2022',
     sourcemap: true,
     manifest: true,
+    chunkSizeWarningLimit: 650,
   },
   test: {
     environment: 'jsdom',

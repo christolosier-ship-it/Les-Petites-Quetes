@@ -10,7 +10,7 @@
     "dev": "vite --host 0.0.0.0",
     "build": "tsc -b && vite build && node scripts/generate-service-worker.mjs && npm run check:bundle",
     "preview": "vite preview --host 0.0.0.0",
-    "lint": "eslint .",
+    "lint": "eslint . --max-warnings=0",
     "typecheck": "tsc -b --pretty false",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
@@ -21,7 +21,8 @@
     "check:content": "node scripts/check-content.mjs",
     "check:bundle": "node scripts/check-bundle-size.mjs",
     "check:browser": "node scripts/browser-smoke.mjs",
-    "check": "npm run check:architecture && npm run lint && npm run typecheck && npm test && npm run build"
+    "check": "npm run check:architecture && npm run check:cycles && npm run lint && npm run typecheck && npm test && npm run build",
+    "audit": "npm run check:files && npm run check:assets && npm run check:content && npm run test:coverage && npm run check:browser"
   },
   "dependencies": {
     "react": "18.3.1",

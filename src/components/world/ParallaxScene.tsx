@@ -24,6 +24,27 @@ export function ParallaxScene({ world, stage, reducedMotion, compact = false }: 
 
   if (world.id === 'world.firefly-forest') {
     const sceneClassName = `${className} parallax-scene--three${expanded ? ' parallax-scene--expanded' : ''}`;
+    const content = (
+      <>
+        <Suspense fallback={<FireflySceneFallback stage={stage} />}>
+          <FireflyForestScene stage={stage} reducedMotion={reducedMotion} />
+        </Suspense>
+        <div className="parallax-scene__content">
+          <span className="mascot-bubble">{world.mascotName}</span>
+          <h3>{world.name}</h3>
+          <p>{world.focus}</p>
+        </div>
+      </>
+    );
+
+    if (compact) {
+      return (
+        <div className={sceneClassName} data-world-id={world.id} data-world-stage={stage}>
+          {content}
+        </div>
+      );
+    }
+
     return (
       <div
         className={sceneClassName}
@@ -41,9 +62,7 @@ export function ParallaxScene({ world, stage, reducedMotion, compact = false }: 
           if (event.key === 'Escape') setExpanded(false);
         }}
       >
-        <Suspense fallback={<FireflySceneFallback stage={stage} />}>
-          <FireflyForestScene stage={stage} reducedMotion={reducedMotion} />
-        </Suspense>
+        {content}
         <button
           type="button"
           className="parallax-scene__expand"
@@ -57,11 +76,6 @@ export function ParallaxScene({ world, stage, reducedMotion, compact = false }: 
           <span>{expanded ? 'Réduire' : 'Grand écran'}</span>
         </button>
         {!expanded && <div className="parallax-scene__hint">Touchez le tableau pour entrer dans la forêt</div>}
-        <div className="parallax-scene__content">
-          <span className="mascot-bubble">{world.mascotName}</span>
-          <h3>{world.name}</h3>
-          <p>{world.focus}</p>
-        </div>
       </div>
     );
   }
