@@ -21,8 +21,8 @@ export function WorldView({ app, childId, worldId = 'world.firefly-forest', comp
   const world = findWorldDefinition(worldId);
   const progress = app.state.worldProgress.find((candidate) => candidate.childId === selectedChildId && candidate.worldId === worldId);
   const stage = progress?.stage ?? 0;
-  const isFireflyForestDev = import.meta.env.DEV && worldId === 'world.firefly-forest';
-  const sceneStage: 0 | 1 | 2 | 3 = isFireflyForestDev && devSceneUnlocked ? 3 : stage;
+  const hasFireflySceneTools = worldId === 'world.firefly-forest';
+  const sceneStage: 0 | 1 | 2 | 3 = hasFireflySceneTools && devSceneUnlocked ? 3 : stage;
   const rewards = rewardsForWorld(worldId).filter((reward) => progress?.unlockedRewardIds.includes(reward.id));
   const chapters = chaptersForWorld(worldId).filter((chapter) => progress?.unlockedStoryChapterIds.includes(chapter.id));
   if (!child) return <Card><p>Choisis ou crée un profil pour découvrir les univers.</p></Card>;
@@ -32,7 +32,7 @@ export function WorldView({ app, childId, worldId = 'world.firefly-forest', comp
     <div className={compact ? 'world-layout world-layout--compact' : 'world-layout'}>
       <Card className={`world-scene world-scene--stage-${sceneStage}`}>
         <ParallaxScene world={world} stage={sceneStage} reducedMotion={reducedMotion} />
-        {isFireflyForestDev && (
+        {hasFireflySceneTools && (
           <div className="dev-scene-tools" data-dev-scene-tools="true">
             <span>DEV · scène</span>
             <button type="button" className="dev-scene-toggle" onClick={() => setDevSceneUnlocked((value) => !value)}>
