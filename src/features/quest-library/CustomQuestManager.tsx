@@ -4,12 +4,8 @@ import { Button } from '../../components/primitives/Button';
 import { Card } from '../../components/primitives/Card';
 import type { QuestTemplate } from '../../domain/quest/QuestTemplate';
 import { QuestScheduleForm } from './QuestScheduleForm';
-import {
-  draftFromTemplate,
-  inputFromDraft,
-  QuestTemplateFields,
-  type QuestTemplateDraft,
-} from './QuestTemplateFields';
+import { QuestTemplateFields } from './QuestTemplateFields';
+import { draftFromTemplate, inputFromDraft, type QuestTemplateDraft } from './QuestTemplateDraft';
 
 interface CustomQuestManagerProps {
   readonly app: FamilyAppController;
