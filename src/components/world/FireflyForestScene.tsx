@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
+import { animateLivingActors, createLivingAnimationState } from './fireflyForestAnimation';
 import { createFireflies } from './fireflyForestObjects';
 import { addFireflyForest } from './fireflyForestWorld';
 
@@ -39,27 +40,28 @@ export function FireflyForestScene({ stage, reducedMotion }: FireflyForestSceneP
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.6));
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.08;
+    renderer.toneMappingExposure = stage >= 3 ? 1.18 : 1.08;
     renderer.domElement.className = 'firefly-forest-three__canvas';
     renderer.domElement.setAttribute('aria-hidden', 'true');
     container.append(renderer.domElement);
 
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x071a1c);
-    scene.fog = new THREE.FogExp2(0x071a1c, 0.055);
+    scene.background = new THREE.Color(stage >= 3 ? 0x081827 : 0x071a1c);
+    scene.fog = new THREE.FogExp2(stage >= 3 ? 0x0b2030 : 0x071a1c, stage >= 3 ? 0.045 : 0.055);
     const camera = new THREE.PerspectiveCamera(38, 1, 0.1, 60);
     camera.position.set(0, 4.3, 12.8);
     camera.lookAt(0, 1.7, 0.8);
 
-    scene.add(new THREE.HemisphereLight(0x9cced2, 0x13271e, 1.25));
-    const moon = new THREE.DirectionalLight(0xb7d7df, 1.1);
+    scene.add(new THREE.HemisphereLight(stage >= 3 ? 0xc7d9ff : 0x9cced2, 0x13271e, stage >= 3 ? 1.45 : 1.25));
+    const moon = new THREE.DirectionalLight(0xb7d7df, stage >= 3 ? 1.35 : 1.1);
     moon.position.set(-4, 8, 6);
-    const warmth = new THREE.PointLight(0xffc574, stage >= 3 ? 2.4 : 1.45, 14, 2);
+    const warmth = new THREE.PointLight(0xffc574, stage >= 3 ? 2.7 : 1.45, 14, 2);
     warmth.position.set(1, 4.5, 2.5);
     scene.add(moon, warmth);
 
-    const { forest, child, luma } = addFireflyForest(scene, stage);
-    const fireflyCount = stage === 0 ? 12 : stage === 1 ? 28 : stage === 2 ? 46 : 70;
+    const actors = addFireflyForest(scene, stage);
+    const livingState = createLivingAnimationState();
+    const fireflyCount = stage === 0 ? 12 : stage === 1 ? 28 : stage === 2 ? 46 : 86;
     const fireflies = createFireflies(fireflyCount, stage);
     scene.add(fireflies.points);
 
@@ -92,16 +94,15 @@ export function FireflyForestScene({ stage, reducedMotion }: FireflyForestSceneP
     const clock = new THREE.Clock();
     let frame = 0;
     const renderFrame = () => {
-      const elapsed = clock.getElapsedTime();
+      const delta = Math.min(clock.getDelta(), 0.05);
+      const elapsed = clock.elapsedTime;
       pointerCurrent.lerp(pointerTarget, 0.055);
       camera.position.set(pointerCurrent.x * 0.52, 4.3 - pointerCurrent.y * 0.24, 12.8);
       camera.lookAt(pointerCurrent.x * 0.18, 1.7 - pointerCurrent.y * 0.08, 0.8);
-      forest.children.forEach((object) => {
+      actors.forest.children.forEach((object) => {
         if (typeof object.userData.swayPhase === 'number') object.rotation.z = Math.sin(elapsed * 0.52 + object.userData.swayPhase) * 0.012;
       });
-      child.rotation.z = Math.sin(elapsed * 1.15) * 0.008;
-      luma.position.y = 2.8 + Math.sin(elapsed * 1.8) * 0.16;
-      luma.rotation.z = Math.sin(elapsed * 2.4) * 0.08;
+      animateLivingActors(elapsed, delta, actors, livingState, stage);
       const positionAttribute = fireflies.points.geometry.getAttribute('position') as THREE.BufferAttribute;
       const array = positionAttribute.array as Float32Array;
       for (let index = 0; index < fireflies.phases.length; index += 1) {
@@ -110,9 +111,10 @@ export function FireflyForestScene({ stage, reducedMotion }: FireflyForestSceneP
         const baseX = fireflies.basePositions[offset] ?? 0;
         const baseY = fireflies.basePositions[offset + 1] ?? 0;
         const baseZ = fireflies.basePositions[offset + 2] ?? 0;
-        array[offset] = baseX + Math.sin(elapsed * 0.55 + phase) * 0.3;
-        array[offset + 1] = baseY + Math.sin(elapsed * 0.8 + phase * 1.3) * 0.22;
-        array[offset + 2] = baseZ + Math.cos(elapsed * 0.48 + phase) * 0.24;
+        const dreamBoost = stage >= 3 ? 1.25 : 1;
+        array[offset] = baseX + Math.sin(elapsed * 0.55 + phase) * 0.3 * dreamBoost;
+        array[offset + 1] = baseY + Math.sin(elapsed * 0.8 + phase * 1.3) * 0.22 * dreamBoost;
+        array[offset + 2] = baseZ + Math.cos(elapsed * 0.48 + phase) * 0.24 * dreamBoost;
       }
       positionAttribute.needsUpdate = true;
       fireflies.points.material.opacity = 0.72 + Math.sin(elapsed * 2.1) * 0.18;
