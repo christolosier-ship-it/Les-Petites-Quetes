@@ -11,11 +11,13 @@ interface FireflyForestSceneProps {
 function disposeScene(scene: THREE.Scene) {
   scene.traverse((object) => {
     if (!(object instanceof THREE.Mesh || object instanceof THREE.Points)) return;
-    object.geometry.dispose();
-    const materials = Array.isArray(object.material) ? object.material : [object.material];
-    materials.forEach((material) => {
-      if (material instanceof THREE.PointsMaterial) material.map?.dispose();
-      material.dispose();
+    const geometry = object.geometry as THREE.BufferGeometry;
+    const material = object.material as THREE.Material | THREE.Material[];
+    geometry.dispose();
+    const materials: THREE.Material[] = Array.isArray(material) ? material : [material];
+    materials.forEach((entry) => {
+      if (entry instanceof THREE.PointsMaterial) entry.map?.dispose();
+      entry.dispose();
     });
   });
 }
