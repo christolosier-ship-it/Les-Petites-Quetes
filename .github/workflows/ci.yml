@@ -33,7 +33,7 @@ jobs:
         uses: browser-actions/setup-chrome@v1
 
       - name: Installer les dépendances
-        run: npm install --no-audit --no-fund
+        run: npm install --no-audit --no-fund --legacy-peer-deps
 
       - name: Vérifier l’architecture
         run: npm run check:architecture
