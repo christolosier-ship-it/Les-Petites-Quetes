@@ -32,17 +32,17 @@ function createStarLayer(count: number, salt: number, size: number, opacity: num
 
 function createMoon() {
   const group = new THREE.Group();
-  group.position.set(-4.6, 7.15, -13.8);
+  group.position.set(-4.55, 6.72, -13.8);
 
   const haloMaterial = new THREE.MeshBasicMaterial({
     color: 0xdde8ff,
     transparent: true,
-    opacity: 0.13,
+    opacity: 0.12,
     blending: THREE.AdditiveBlending,
     depthWrite: false,
     fog: false,
   });
-  const halo = new THREE.Mesh(new THREE.SphereGeometry(1.42, 22, 16), haloMaterial);
+  const halo = new THREE.Mesh(new THREE.SphereGeometry(1.28, 22, 16), haloMaterial);
 
   const disc = new THREE.Mesh(
     new THREE.SphereGeometry(0.73, 28, 20),
@@ -80,8 +80,8 @@ export function animateFireflyForestBackdrop(elapsed: number, backdrop: FireflyF
     layer.material.opacity = baseOpacity + Math.sin(elapsed * (0.72 + index * 0.17) + index * 1.9) * 0.16;
   });
   const moonPulse = (Math.sin(elapsed * 0.58) + 1) * 0.5;
-  backdrop.moonHaloMaterial.opacity = 0.1 + moonPulse * (stage >= 3 ? 0.11 : 0.06);
-  const haloScale = 1 + moonPulse * 0.055;
+  backdrop.moonHaloMaterial.opacity = 0.09 + moonPulse * (stage >= 3 ? 0.1 : 0.055);
+  const haloScale = 1 + moonPulse * 0.05;
   backdrop.moonHalo.scale.setScalar(haloScale);
   backdrop.moonDisc.rotation.y = elapsed * 0.015;
 }
