@@ -1,133 +1,195 @@
 # Les Petites Quêtes
 
-Une application familiale qui transforme les petites actions du quotidien en aventures illustrées pour les enfants de 3 à 10 ans.
+Les Petites Quêtes est une PWA familiale, privée et local-first qui transforme de petites actions du quotidien en aventures illustrées pour les enfants de 3 à 10 ans.
 
 > Petit effort, morceau d’aventure, univers qui grandit.
 
-## Statut
+## État actuel
 
-Le socle V1 local-first est fonctionnel et contrôlé. Il couvre profils, quêtes, routines, validation, récompenses, sauvegardes et PWA.
+Le projet possède aujourd’hui un socle multi-univers réellement implémenté, et non plus seulement planifié.
 
-Le produit entre maintenant dans un recalage structurant : le code actuel, centré sur La Forêt des Lucioles, doit devenir un moteur de **six univers indépendants** avant l’intégration des assets définitifs.
+Sont en place :
 
-Aucun code multi-univers n’est encore présenté comme terminé dans cette documentation. Le plan cible est défini avant le prochain chantier d’implémentation.
+- six univers typés avec une mascotte et une progression propres ;
+- six avatars enfants, deux par tranche d’âge ;
+- 30 familles de quêtes intégrées et 90 variantes d’âge ;
+- profils enfants, planifications, occurrences, validation et récompenses ;
+- progression indépendante par couple enfant-univers ;
+- onboarding, espace enfant, carrefour des univers et espace parent protégé par code local ;
+- sauvegarde, restauration et import ;
+- persistance IndexedDB avec migration automatique des schémas V1 et V2 vers le schéma V3 courant ;
+- PWA installable et utilisable hors ligne après mise en cache ;
+- déploiement Vercel depuis `main` et previews automatiques sur les branches/PR ;
+- CI GitHub volontairement courte et bloquante sur les contrôles essentiels.
 
-## Univers cibles
+Production : https://les-petites-quetes.vercel.app
 
-| Univers | Quêtes principales |
-|---|---|
-| La Forêt des Lucioles | routines et petits défis du soir ou du coucher |
-| La Montagne du Dragon | routines et petits défis du matin |
-| La Station Spatiale | préparation des sorties et défis de journée |
-| Le Village des Lutins | routines et petits défis scolaires |
-| Univers nature, nom à définir | nature, observation et découverte |
-| Univers créativité, nom à définir | imagination, construction et expression |
+## Les six univers
 
-Chaque univers possédera :
+| ID stable | Univers | Mascotte | Périmètre |
+|---|---|---|---|
+| `world.firefly-forest` | La Forêt des Lucioles | Luma | soirée, calme et coucher |
+| `world.dragon-mountain` | La Montagne du Dragon | Flammèche | réveil et routines du matin |
+| `world.space-station` | La Station Spatiale | Nova | sorties et défis de journée |
+| `world.gnome-village` | Le Village des Lutins | Pico | école, lecture et organisation |
+| `world.nature-discovery` | Nature et découvertes | Brindille | jardin, animaux et observation |
+| `world.creativity-workshop` | L’Atelier créatif | Mimo | dessin, musique et imagination |
 
-- une mascotte ;
-- une scène parallaxe évolutive ;
-- une progression propre à chaque enfant ;
-- des récompenses ;
-- une histoire ;
-- un panel de quêtes adapté aux trois tranches d’âge.
+Les identifiants techniques sont stables. Les libellés et contenus narratifs peuvent évoluer sans migration de données.
 
-Luma la luciole reste la mascotte de La Forêt des Lucioles.
-
-## Expérience cible
-
-### Accueil familial
-
-L’écran principal se divise en deux fenêtres :
-
-- à gauche, l’espace enfant ;
-- à droite, l’espace parent protégé.
-
-### Espace enfant
-
-Après sélection du profil, six pavés donnent accès aux univers.
-
-Une pastille rouge affiche le nombre de quêtes actuellement disponibles dans chaque univers. Elle disparaît lorsque ce nombre vaut zéro et ne représente jamais un retard ou un échec.
-
-### Espace parent
-
-Le parent pourra :
-
-- gérer les profils sans compagnon ni couleur ;
-- choisir un avatar compatible avec l’âge ;
-- filtrer les quêtes par univers et tranche d’âge ;
-- créer une quête avec un univers obligatoire ;
-- planifier pour plusieurs enfants ;
-- consulter les progressions par univers.
-
-## Avatars initiaux
-
-La première collection prévoit :
-
-- garçon et fille 3 à 5 ans ;
-- garçon et fille 6 à 8 ans ;
-- garçon et fille 9 à 10 ans.
-
-L’avatar représente l’enfant. La mascotte appartient à un univers.
-
-## Contenus adaptés à l’âge
-
-Une quête cible devient une famille contenant plusieurs variantes :
+## Boucle d’usage
 
 ```text
-Famille de quête
-├── variante 3-5 ans
-├── variante 6-8 ans
-└── variante 9-10 ans
+Le parent prépare ou planifie une quête
+→ l’enfant choisit son profil
+→ il ouvre un univers
+→ il réalise une quête adaptée
+→ la quête est validée
+→ une récompense est attribuée
+→ seul l’univers concerné progresse
 ```
 
-Le premier catalogue complet vise au minimum :
+L’application n’est pas conçue pour retenir l’enfant longtemps à l’écran. L’action importante se déroule dans le monde réel.
 
-- 6 univers ;
-- 30 familles de quêtes ;
-- 90 variantes d’âge.
+## Architecture actuelle
 
-## Architecture cible
+Le projet est un monolithe modulaire React + TypeScript :
 
 ```text
-Interface
-→ cas d’usage
-→ domaine multi-univers
-→ contenus et manifestes
-→ persistance locale
+React / pages / features
+        ↓
+contrôleur d’application
+        ↓
+services applicatifs
+        ↓
+domaine métier
+        ↓
+ports de persistance
+        ↓
+IndexedDB
 ```
 
-Le moteur commun gérera :
+Les contenus et assets restent séparés des données familiales :
 
-- familles et variantes de quêtes ;
-- progression par enfant et univers ;
-- compteurs de disponibilité ;
-- scènes parallaxes déclaratives ;
-- fallbacks statiques ;
-- chargement différé par univers.
+```text
+content/  → catalogues versionnés
+assets/   → registres typés
+FamilyState V3 → données privées de la famille
+```
 
-Les composants ne devront jamais coder un comportement particulier avec une succession de conditions sur les noms des mondes.
+### Scènes de monde
 
-## Prochain schéma de données
+`ParallaxScene` ne contient plus d’exception codée en dur pour un univers. Il choisit un renderer depuis `sceneRendererCatalog` :
 
-Le schéma V3 ajoutera notamment :
+- `generic-parallax` est le renderer par défaut ;
+- `firefly-diorama` est le renderer spécialisé de La Forêt des Lucioles.
 
-- `worldId` obligatoire sur chaque famille de quête ;
-- variantes par tranche d’âge ;
-- univers et variante figés dans chaque occurrence ;
-- progression par couple enfant-univers ;
-- avatars contraints par âge ;
-- suppression de `accentId` et `activeWorldId`.
+La Forêt combine :
 
-La migration V2 vers V3 préservera l’historique et signalera les quêtes personnalisées dont l’univers doit être vérifié.
+- un décor illustré 2.5D local ;
+- des acteurs, étoiles, lune et lucioles rendus avec Three.js ;
+- un chargement différé de la couche Three.js ;
+- un comportement adapté aux mouvements réduits.
+
+Cette séparation permet de créer un second renderer spécialisé sans polluer l’orchestrateur générique.
+
+## Données
+
+Le schéma courant est **V3** (`SCHEMA_VERSION = 3`, contenu `3.0.0`).
+
+Le snapshot familial contient notamment :
+
+- les enfants ;
+- les quêtes personnalisées ;
+- les planifications ;
+- les occurrences ;
+- les réalisations ;
+- les récompenses attribuées ;
+- la progression par univers ;
+- les réglages ;
+- la liste des anciennes quêtes personnalisées dont l’univers reste à vérifier après migration.
+
+Les catalogues intégrés de mondes, quêtes, récompenses, histoires et assets ne sont pas dupliqués dans les données familiales.
 
 ## PWA et assets
 
-- couvertures, avatars, textes et fallbacks précachés ;
-- scènes parallaxes chargées univers par univers ;
-- cache après première ouverture ;
-- fonctionnement des quêtes garanti sans animation ;
-- mode mouvements réduits obligatoire.
+La stratégie PWA est unique : le service worker est généré pendant le build par `scripts/generate-service-worker.mjs`.
+
+- aucun service worker n’est enregistré en développement ;
+- l’ancien `public/sw.js` n’existe plus ;
+- le precache ne contient que des ressources locales ;
+- les chunks dynamiques sont mis en cache à leur première utilisation ;
+- les assets graphiques utilisés par La Forêt sont embarqués dans le dépôt ;
+- Openclipart reste uniquement une provenance documentaire des ressources CC0, jamais une dépendance réseau d’exécution.
+
+Les assets applicatifs passent par le registre typé de `src/assets/registry` et par les contrôles de budget.
+
+## Stack
+
+- React 18.3 ;
+- TypeScript 6 ;
+- Vite 8 ;
+- Three.js 0.185 pour la couche vivante de la Forêt ;
+- Vitest ;
+- IndexedDB ;
+- Vercel ;
+- Node.js 24.
+
+## Démarrage local
+
+Prérequis : Node.js 24.
+
+```bash
+npm ci
+npm run dev
+```
+
+Build local :
+
+```bash
+npm run build
+npm run preview
+```
+
+## Qualité
+
+Le contrôle quotidien est volontairement compact :
+
+```bash
+npm run check
+```
+
+Il vérifie :
+
+- architecture ;
+- cycles de dépendances ;
+- lint sans warning ;
+- typage ;
+- tests ;
+- build de production et budget du bundle.
+
+La CI GitHub ajoute la validation des assets au même parcours essentiel.
+
+Les contrôles plus lourds restent disponibles à la demande :
+
+```bash
+npm run audit
+```
+
+Ils couvrent les budgets de fichiers, les assets, les contenus, la couverture et le smoke test navigateur. Ils ne bloquent pas chaque PR par défaut.
+
+## Déploiement
+
+Le dépôt GitHub est la source de code. Vercel est la plateforme de déploiement :
+
+```text
+branche / PR → Preview Vercel
+main         → Production Vercel
+```
+
+`vercel.json` utilise `npm ci`, `npm run build` et publie `dist` avec une réécriture SPA vers `index.html`.
+
+GitHub Pages n’est plus utilisé.
 
 ## Principes fondateurs
 
@@ -138,36 +200,23 @@ La migration V2 vers V3 préservera l’historique et signalera les quêtes pers
 - Aucun classement, aucune série cassable et aucun retrait de récompense.
 - Le temps d’écran reste bref.
 - La sécurité, l’accessibilité et la vie privée des enfants restent intégrées dès la conception.
+- Les données familiales restent locales à l’appareil dans l’architecture actuelle.
 
-## Démarrage local
+## Documentation
 
-Prérequis : Node.js 22.
+La documentation de référence est organisée depuis [`docs/00-INDEX.md`](./docs/00-INDEX.md).
 
-```bash
-npm install
-npm run dev
-```
+Documents principaux :
 
-## Contrôles actuels
-
-```bash
-npm run check
-```
-
-Le socle actuel vérifie TypeScript strict, architecture, cycles, contenus, assets, tests, couverture, build PWA et parcours Chrome.
-
-Le prochain cycle ajoutera les contrôles multi-univers, variantes d’âge, migration V3, compteurs par monde et manifestes parallaxes.
-
-## Documents
-
+- [Architecture réelle](./docs/ARCHITECTURE.md)
+- [Modèle de données V3 réel](./docs/DATA-MODEL.md)
+- [Bible des assets](./docs/ASSET-BIBLE.md)
+- [Feuille de route](./docs/ROADMAP.md)
 - [Vision produit](./docs/PRODUCT-VISION.md)
-- [Cahier des charges cible](./docs/CAHIER-DES-CHARGES.md)
-- [Plan directeur multi-univers](./docs/MULTI-UNIVERSE-PLAN.md)
-- [Architecture](./docs/ARCHITECTURE.md)
-- [Modèle de données V3](./docs/DATA-MODEL.md)
+- [Cahier des charges](./docs/CAHIER-DES-CHARGES.md)
 - [Parcours utilisateurs](./docs/USER-FLOWS.md)
 - [Sécurité enfant](./docs/CHILD-SAFETY.md)
 - [Règles éditoriales](./docs/CONTENT-GUIDELINES.md)
-- [Bible des assets](./docs/ASSET-BIBLE.md)
-- [Feuille de route](./docs/ROADMAP.md)
-- [Décisions structurantes](./docs/00-INDEX.md)
+- [Sources des assets de La Forêt](./docs/FIREFLY-FOREST-ASSETS.md)
+
+Les ADR conservent l’historique des décisions. Ils ne remplacent pas la documentation courante lorsqu’une architecture a depuis été implémentée ou consolidée.

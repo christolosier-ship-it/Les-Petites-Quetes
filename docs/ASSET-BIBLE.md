@@ -1,51 +1,149 @@
-# Bible des assets multi-univers
+# Bible des assets
 
-## 1. Finalité
+## 1. Rôle de ce document
 
-Créer six univers visuellement cohérents entre eux, mais immédiatement reconnaissables, avec des scènes parallaxes évolutives, six mascottes et six avatars enfants initiaux.
+Cette bible fixe les règles visuelles et techniques des assets réellement utilisés par Les Petites Quêtes.
 
-Aucun lot massif ne doit être produit avant validation :
+Elle distingue clairement :
 
-- du style global ;
-- de la silhouette de chaque mascotte ;
-- des avatars par tranche d’âge ;
-- du format des scènes ;
-- des budgets ;
-- des calques animables ;
-- des conventions de nommage.
+- ce qui existe dans le dépôt ;
+- les placeholders encore assumés ;
+- les règles à respecter lors du remplacement progressif par des visuels définitifs.
 
-## 2. Cohérence globale
+Elle ne suppose pas que les six mondes possèdent déjà leur production graphique finale.
 
-Tous les univers partagent :
+## 2. État actuel
 
-- une direction album jeunesse contemporain ;
-- des formes lisibles ;
-- des textures légères ;
-- des expressions franches ;
-- un niveau de détail compatible tablette et smartphone ;
-- des proportions de personnages communes ;
-- des contours et ombres cohérents ;
-- une même logique d’animation douce ;
-- aucune esthétique inquiétante pour les plus jeunes.
+Le build valide actuellement **171 assets effectifs répartis dans trois registres** :
 
-Chaque univers possède ensuite sa palette, ses formes dominantes, sa lumière et sa matière.
+```text
+src/assets/registry/assets.json
+src/assets/registry/avatars.json
+src/assets/registry/firefly-assets.json
+```
 
-## 3. Carte graphique des univers
+La situation graphique est volontairement asymétrique :
 
-| ID | Nom | Intention visuelle | Mascotte |
+- les six univers, leurs quatre stades, les quêtes et de nombreuses récompenses disposent déjà d’identifiants stables ;
+- une partie importante de ces entrées pointe encore vers des SVG de placeholder ;
+- La Forêt des Lucioles possède un premier diorama illustré réellement intégré ;
+- les cinq images CC0 utilisées par ce diorama sont locales en WebP ;
+- la couche vivante de La Forêt est générée avec Three.js ;
+- les autres mondes utilisent actuellement le renderer parallaxe générique et leurs assets de stade enregistrés.
+
+Un placeholder enregistré et explicite est préférable à un faux statut « asset final » dans la documentation.
+
+## 3. Direction artistique commune
+
+Tous les mondes appartiennent au même livre illustré :
+
+- album jeunesse contemporain ;
+- formes lisibles ;
+- textures légères ;
+- expressions chaleureuses ;
+- détails compréhensibles sur tablette et smartphone ;
+- animation douce ;
+- aucune esthétique inquiétante pour les plus jeunes ;
+- aucune interface visuelle construite autour de la culpabilité, du retard ou de la compétition.
+
+Chaque univers peut ensuite avoir sa lumière, ses matériaux, sa palette et son rythme.
+
+## 4. Identité actuelle des univers
+
+| ID | Nom | Mascotte | Direction |
 |---|---|---|---|
-| `world.firefly-forest` | La Forêt des Lucioles | nuit douce, bois, lumière chaude, calme | Luma la luciole |
-| `world.dragon-mountain` | La Montagne du Dragon | aube, roche ronde, vapeur, énergie du matin | à concevoir |
-| `world.space-station` | La Station Spatiale | journée lumineuse, modules, étoiles, départ | à concevoir |
-| `world.elven-village` | Le Village des Lutins | bois, papier, école miniature, curiosité | à concevoir |
-| `world.nature-discovery` | nom à définir | végétal, observation, saisons, petites bêtes | à concevoir |
-| `world.creative-studio` | nom à définir | couleurs, matières, formes, imagination | à concevoir |
+| `world.firefly-forest` | La Forêt des Lucioles | Luma | nuit douce, bois, lumière chaude, calme |
+| `world.dragon-mountain` | La Montagne du Dragon | Flammèche | aube, roche ronde, chaleur, énergie du matin |
+| `world.space-station` | La Station Spatiale | Nova | lumière claire, modules, étoiles, départ |
+| `world.gnome-village` | Le Village des Lutins | Pico | bois, papier, école miniature, curiosité |
+| `world.nature-discovery` | Nature et découvertes | Brindille | végétal, observation, saisons, petites bêtes |
+| `world.creativity-workshop` | L’Atelier créatif | Mimo | couleurs, matières, formes, imagination |
 
-Les deux noms publics provisoires ne doivent pas apparaître dans les noms de fichiers. Les identifiants techniques restent stables.
+Les anciens IDs `world.elven-village` et `world.creative-studio` ne doivent plus être utilisés.
 
-## 4. Avatars enfants
+## 5. Règle de licence
 
-La première collection comprend six avatars :
+Le projet n’intègrere pas d’asset payant comme dépendance nécessaire à l’application.
+
+Pour les ressources externes gratuites :
+
+- licence explicite obligatoire ;
+- usage commercial autorisé ;
+- provenance conservée ;
+- auteur conservé lorsque pertinent ;
+- transformations documentées ;
+- fichier embarqué localement avant dépendance en production.
+
+Les ressources CC0 sont privilégiées lorsqu’elles correspondent à la direction artistique.
+
+Les sources détaillées du diorama de La Forêt sont conservées dans `FIREFLY-FOREST-ASSETS.md`.
+
+## 6. Aucune dépendance graphique réseau
+
+Une ressource graphique nécessaire à l’expérience ne doit pas dépendre d’un domaine tiers à l’exécution.
+
+Règle :
+
+```text
+source externe
+→ vérification licence
+→ téléchargement
+→ optimisation
+→ enregistrement dans le repo
+→ entrée de registre
+→ consommation locale
+```
+
+Openclipart est aujourd’hui une **provenance documentaire** de certaines ressources Glitch CC0. Il n’est plus un fournisseur runtime et n’apparaît pas dans le service worker.
+
+## 7. Registre réel
+
+Le contrat courant est :
+
+```ts
+interface AssetDefinition {
+  id: string
+  type: 'icon' | 'illustration' | 'avatar' | 'mascot' | 'reward' | 'sound'
+  path: string
+  width: number
+  height: number
+  alt: string
+  maxBytes: number
+  ageBands: readonly ('3-5' | '6-8' | '9-10')[]
+  states: readonly string[]
+}
+```
+
+Il n’existe actuellement pas dans ce contrat de champs `worldId`, `preload`, `fallbackId` ou `animationSlots`. Ne pas les documenter comme déjà disponibles.
+
+Les composants résolvent un asset enregistré avec :
+
+```ts
+getAsset(id)
+getAssetUrl(id)
+```
+
+Les chemins bruts ne doivent pas devenir une seconde API d’assets parallèle.
+
+## 8. Validation automatique
+
+`npm run check:assets` contrôle les trois registres.
+
+Il vérifie notamment :
+
+- IDs présents et uniques par registre ;
+- métadonnées minimales ;
+- dimensions entières ;
+- budget `maxBytes` valide ;
+- au moins une tranche d’âge ;
+- présence du fichier dans `public/` ;
+- poids réel inférieur ou égal au budget déclaré.
+
+Ce contrôle fait partie de la CI GitHub essentielle.
+
+## 9. Avatars
+
+Le catalogue contient six avatars :
 
 ```text
 avatar.child.3-5.boy
@@ -56,416 +154,244 @@ avatar.child.9-10.boy
 avatar.child.9-10.girl
 ```
 
-Exigences :
+Règles :
 
-- silhouette claire en 96 px ;
-- proportions différentes selon l’âge ;
-- style commun aux six personnages ;
-- vêtements non liés à un univers ;
-- activités et couleurs non genrées ;
-- expressions neutres et accueillantes ;
-- lisibilité sur fond clair et sombre ;
-- version buste pour les sélecteurs ;
-- version corps entier pour les futurs écrans narratifs.
+- l’avatar représente l’enfant, jamais la mascotte ;
+- il doit rester lisible en petite taille ;
+- il doit fonctionner sur fond clair et sombre ;
+- l’âge visuel doit rester cohérent avec `ageBand` ;
+- vêtements, couleurs et activités ne doivent pas enfermer les enfants dans des rôles genrés ;
+- toute nouvelle entrée doit être déclarée dans `avatars.json` et validée par le catalogue.
 
-Les options compagnon et couleur de profil ne nécessitent plus aucun asset.
+Le runtime refuse un avatar incompatible avec l’âge du profil.
 
-## 5. Mascottes
+## 10. Mascottes
 
-Chaque univers possède exactement une mascotte principale.
+Chaque univers possède actuellement un identifiant et un nom de mascotte dans `worldCatalog` :
 
-Une mascotte doit rester reconnaissable :
+- Luma ;
+- Flammèche ;
+- Nova ;
+- Pico ;
+- Brindille ;
+- Mimo.
 
-- en silhouette ;
-- en taille 96 px ;
-- sans texte ;
-- dans toutes ses expressions ;
-- sur fonds clairs et sombres ;
-- sans se confondre avec les avatars enfants.
+Les visuels définitifs et jeux d’expressions ne sont pas tous produits. Le fait que l’identité métier existe ne signifie pas que tous les assets artistiques associés sont finalisés.
 
-### Expressions communes
+Principes visuels :
 
-- neutre ;
-- heureuse ;
-- encourageante ;
-- curieuse ;
-- surprise ;
-- fière ;
-- calme ;
-- repos.
+- silhouette reconnaissable ;
+- lecture possible en petite taille ;
+- émotions positives ou neutres ;
+- poses d’accueil, aide, découverte et célébration ;
+- aucune expression de reproche.
 
-Aucune expression destinée à culpabiliser l’enfant.
+## 11. Scènes de monde
 
-### Poses communes
+### Renderer générique
 
-- accueil ;
-- montre une quête ;
-- écoute ;
-- découvre un objet ;
-- célèbre ;
-- lit une histoire ;
-- se repose.
+Les mondes sans renderer spécialisé utilisent `GenericParallaxScene`.
 
-Chaque mascotte peut ajouter deux poses spécifiques à son univers.
+Une définition générique assemble des calques à profondeur variable et les révèle selon le stade de progression.
 
-## 6. Construction animable des mascottes
+Les assets doivent donc prévoir suffisamment de marge pour de petits déplacements sans révéler de bord vide.
 
-Éléments séparables :
+### La Forêt des Lucioles
 
-- corps ;
-- tête ;
-- yeux ;
-- paupières ;
-- bouche ;
-- bras ou ailes ;
-- accessoire ;
-- ombre ;
-- particules propres à l’univers.
+La Forêt utilise `FireflyForestDiorama`, composé de deux couches distinctes :
 
-Le prototype décide entre :
+```text
+FireflyForestIllustratedBackdrop
++ FireflyForestScene (Three.js lazy)
+```
 
-- SVG articulé ;
-- sprites WebP ;
-- calques WebP transparents ;
-- animation vectorielle dédiée.
+Le décor 2.5D contient actuellement cinq ressources locales :
 
-La même technique doit être réutilisable sur les six mascottes, sauf décision documentée.
+```text
+public/worlds/firefly-forest/meadow.webp
+public/worlds/firefly-forest/cottage.webp
+public/worlds/firefly-forest/rustic-house.webp
+public/worlds/firefly-forest/tree-house.webp
+public/worlds/firefly-forest/foliage.webp
+```
 
-## 7. Couverture des univers
+Elles sont enregistrées sous les IDs :
 
-Chaque pavé du carrefour possède :
+```text
+world.firefly-forest.diorama-meadow
+world.firefly-forest.diorama-cottage
+world.firefly-forest.diorama-rustic-house
+world.firefly-forest.diorama-tree-house
+world.firefly-forest.diorama-foliage
+```
 
-- couverture principale ;
-- miniature de mascotte ;
-- version avec zone libre pour la pastille ;
-- fallback statique ;
-- texte alternatif ;
-- cadrage carré et horizontal.
+La couche Three.js ne doit pas reconstruire un second décor concurrent. Elle porte actuellement :
 
-La pastille rouge appartient à l’interface. Elle ne doit jamais être intégrée dans l’image.
+- l’enfant ;
+- Luma ;
+- les étoiles ;
+- la lune ;
+- les lucioles.
 
-## 8. Scènes parallaxes
+## 12. États de progression
 
-Chaque univers possède une scène principale déclarative.
+Les scènes utilisent quatre stades :
 
-### Calques de base
+```text
+0 → découverte
+1 → premiers changements
+2 → monde vivant
+3 → monde enrichi
+```
 
-- ciel ou fond ;
-- arrière-plan très lointain ;
-- relief ou architecture lointaine ;
-- plan intermédiaire ;
-- sol ;
-- bâtiment ou élément central ;
-- emplacements débloquables ;
-- habitants ;
-- mascotte ;
-- particules ;
-- premier plan ;
-- couche d’interaction éventuelle.
+Le passage d’un stade à l’autre doit ajouter de la richesse, jamais représenter une dégradation provoquée par l’absence d’activité.
 
-### Exigences
+Un asset de stade doit être remplaçable sans changer l’identité technique du monde.
 
-- chaque calque possède de la marge hors cadre ;
-- aucune couture visible lors d’un léger déplacement ;
-- les zones importantes restent dans les zones sûres ;
-- chaque scène possède un fallback aplati ;
-- le mode mouvements réduits conserve les changements de progression sans parallaxe ;
-- les éléments débloqués utilisent des slots stables ;
-- un calque peut être remplacé sans changer le code React.
+## 13. Mouvements réduits
 
-## 9. États de progression
+Le mode mouvements réduits est une contrainte produit, pas un bonus.
 
-Chaque univers vise au minimum quatre états :
+Lorsqu’il est actif :
 
-1. découverte ;
-2. premiers changements ;
-3. univers vivant ;
-4. univers enrichi.
+- la progression reste visible ;
+- le parallaxe au pointeur est neutralisé ;
+- les animations décoratives peuvent être arrêtées ;
+- le contenu et les actions restent compréhensibles ;
+- aucun élément métier ne dépend du mouvement.
 
-Les noms narratifs sont propres à chaque monde.
+## 14. Illustrations de quêtes
 
-Une progression peut :
+Le catalogue métier contient 30 familles et 90 variantes. Le registre graphique utilise encore de nombreux placeholders communs.
 
-- révéler un calque ;
-- ajouter un objet ;
-- réveiller un habitant ;
-- modifier la lumière ;
-- déclencher une réaction de mascotte ;
-- ouvrir un chapitre.
+Le remplacement progressif doit respecter :
 
-Aucun état ne représente une dégradation liée à l’absence de quête.
+- compréhension de l’action sans texte ;
+- composition adaptée à l’âge ;
+- pas de geste dangereux ;
+- cohérence avec le monde de la quête ;
+- texte alternatif utile ;
+- même ID d’asset tant qu’il représente la même fonction logique.
 
-## 10. Illustrations de quêtes
+Un chantier graphique ne doit pas obliger à modifier les règles métier.
 
-Une illustration appartient à :
+## 15. Récompenses et histoires
 
-- une famille de quête ;
-- une tranche d’âge ;
-- un univers.
+Les définitions métier de récompenses et de chapitres sont déjà rattachées aux six univers.
 
-Elle doit :
+Leur couverture visuelle reste progressive.
 
-- montrer l’action principale ;
-- être comprise sans texte ;
-- éviter les détails parasites ;
-- représenter l’âge de la variante ;
-- respecter le contexte de l’univers sans masquer l’action réelle ;
-- ne montrer aucun geste dangereux ;
-- fonctionner en carte carrée ou verticale ;
-- posséder un texte alternatif.
+Lorsqu’un visuel définitif remplace un placeholder :
 
-Une même action peut utiliser trois compositions différentes selon l’âge.
+- conserver l’ID stable lorsque le sens ne change pas ;
+- mettre à jour dimensions et budget ;
+- valider le fichier ;
+- vérifier le rendu à taille réelle ;
+- conserver le fonctionnement hors ligne.
 
-## 11. Récompenses
+## 16. Formats
 
-Chaque récompense appartient à un seul univers.
-
-Par univers, prévoir progressivement :
-
-- objets décoratifs ;
-- habitants ;
-- fragments narratifs ;
-- badges non compétitifs ;
-- particules de célébration ;
-- éléments de scène débloquables.
-
-Une récompense doit indiquer son `worldId` et son `unlockSlotId` éventuel.
-
-## 12. Histoires
-
-Chaque univers possède ses propres chapitres ou découvertes illustrées.
-
-Exigences :
-
-- format commun ;
-- texte hors image ;
-- illustration lisible en tablette ;
-- narration indépendante d’une cadence quotidienne ;
-- continuité après une longue pause ;
-- aucune menace provoquée par l’enfant.
-
-## 13. Icônes fonctionnelles
-
-Les icônes fonctionnelles restent indépendantes des univers.
-
-Actions principales :
-
-- enfant ;
-- parent ;
-- univers ;
-- écouter ;
-- commencer ;
-- terminer ;
-- demander de l’aide ;
-- valider ;
-- reporter ;
-- modifier ;
-- archiver ;
-- son ;
-- animation ;
-- sauvegarde.
-
-Les catégories restent des icônes transversales.
-
-## 14. Formats
+Formats privilégiés :
 
 ### SVG
 
 - icônes ;
-- interface ;
-- formes simples ;
-- mascottes si le prototype articulé est concluant.
+- placeholders ;
+- formes simples d’interface ;
+- illustrations réellement vectorielles.
 
-### WebP transparent
+### WebP
 
-- avatars ;
-- mascottes complexes ;
-- illustrations de quêtes ;
-- récompenses ;
-- habitants ;
-- calques parallaxes.
+- décors illustrés ;
+- personnages raster ;
+- récompenses complexes ;
+- calques de scènes ;
+- images nécessitant transparence ou compression forte.
 
 ### PNG
 
-- icônes PWA ;
-- sources de travail ;
-- besoins de compatibilité.
+À réserver aux besoins de compatibilité ou de source lorsque WebP/SVG n’est pas approprié.
 
-### Audio
+### Three.js
 
-- sons très courts ;
-- ambiances facultatives ;
-- alternative silencieuse systématique.
+À utiliser pour des éléments dont le mouvement, la profondeur ou l’éclairage justifient réellement une couche 3D. Three.js n’est pas une obligation pour chaque monde.
 
-## 15. Dimensions de référence
+## 17. Dimensions de travail recommandées
+
+Ces dimensions restent des références de production, pas une promesse sur tous les fichiers déjà présents :
 
 - avatar source : 1024 × 1024 px ;
-- couverture d’univers : 1200 × 900 px ;
+- couverture : environ 1200 × 900 px ;
 - illustration de quête : 768 × 768 px ;
 - récompense : 512 × 512 px ;
 - mascotte : 1024 × 1024 px ou vectoriel ;
-- scène source : 2048 × 1536 px avec marges parallaxe ;
-- chapitre : 1280 × 960 px ;
+- tableau de scène : environ 2048 × 1536 px avec marge de parallaxe ;
+- chapitre : environ 1280 × 960 px ;
 - icône PWA : 512 × 512 px.
 
-Les zones sûres couvrent smartphone portrait, tablette paysage et bureau.
+La vérification importante reste le rendu réel sur smartphone et tablette.
 
-## 16. Budgets initiaux
+## 18. Budgets
 
-- avatar : moins de 180 Ko ;
-- couverture : moins de 160 Ko ;
-- illustration de quête : moins de 120 Ko ;
-- récompense : moins de 100 Ko ;
-- pose de mascotte : moins de 180 Ko ;
-- calque parallaxe : moins de 250 Ko ;
-- fallback de scène : moins de 450 Ko ;
-- éléments critiques du carrefour : moins de 1,5 Mo ;
-- scène complète : budget séparé par univers ;
-- aucun préchargement simultané des six scènes complètes.
+Les budgets sont déclarés **par asset dans le registre** via `maxBytes`. C’est cette valeur qui fait foi pour le build.
 
-## 17. Nommage
+Garde-fous recommandés lors de la production :
+
+- avatar : environ 180 Ko maximum ;
+- couverture : environ 160 Ko ;
+- illustration de quête : environ 120 Ko ;
+- récompense : environ 100 Ko ;
+- calque de scène : environ 250 Ko ;
+- fallback aplati : environ 450 Ko.
+
+Un besoin exceptionnel doit ajuster explicitement le budget de l’entrée concernée, pas contourner le contrôle.
+
+## 19. Nommage
+
+Les IDs applicatifs sont plus importants que les noms de fichiers. Ils doivent rester stables et descriptifs.
+
+Exemples actuels :
 
 ```text
-<world-id-court>__<famille>__<sujet>__<etat-ou-age>__v<version>.<ext>
+world.firefly-forest-cover
+world.dragon-mountain-stage-2
+quest.firefly.brush-teeth
+world.firefly-forest.diorama-cottage
 ```
 
-Exemples :
+Pour les nouveaux fichiers physiques, préférer :
 
 ```text
-firefly-forest__mascot__luma__happy__v01.webp
-dragon-mountain__cover__main__default__v01.webp
-space-station__quest__prepare-bag__6-8__v01.webp
-elven-village__scene-layer__schoolhouse__stage-02__v01.webp
-nature-discovery__scene__fallback__default__v01.webp
-creative-studio__reward__paper-bird__unlocked__v01.webp
-avatar__child__girl__3-5__v01.webp
+<world>__<fonction>__<sujet>__<etat>.<ext>
 ```
 
-Aucun nom public provisoire ne doit entrer dans un chemin stable.
+Ne jamais réintroduire d’anciens IDs ou de noms provisoires dans les chemins stables.
 
-## 18. Registre typé
+## 20. Processus d’intégration
 
-```ts
-interface AssetDefinition {
-  id: string
-  worldId?: string
-  ageBand?: '3-5' | '6-8' | '9-10'
-  kind:
-    | 'icon'
-    | 'avatar'
-    | 'quest'
-    | 'mascot'
-    | 'world-cover'
-    | 'world-layer'
-    | 'world-fallback'
-    | 'reward'
-    | 'story'
-    | 'audio'
-  source: string
-  width?: number
-  height?: number
-  bytesBudget: number
-  alt: string
-  fallbackId?: string
-  preload: boolean
-  animationSlots?: string[]
-}
-```
+Pour un nouvel asset :
 
-## 19. Manifeste de scène
+1. vérifier le besoin et l’ID logique ;
+2. vérifier la licence si la source est externe ;
+3. importer le fichier dans `public/` ;
+4. optimiser le format et le poids ;
+5. ajouter ou mettre à jour l’entrée de registre ;
+6. documenter la provenance si nécessaire ;
+7. exécuter `npm run check:assets` ;
+8. vérifier l’écran réel et le mode mouvements réduits ;
+9. vérifier la preview Vercel ;
+10. fusionner uniquement avec CI verte.
 
-Chaque couche déclare :
+## 21. Ordre graphique à venir
 
-- asset ;
-- profondeur ;
-- stade d’apparition ;
-- slot éventuel ;
-- profil de mouvement ;
-- comportement responsive ;
-- variante mouvements réduits ;
-- priorité de chargement.
+La priorité n’est plus de construire un « moteur cible » avant les assets : le moteur multi-univers et les renderers sont déjà séparés.
 
-Le build refuse une scène sans fallback ou avec une référence inconnue.
+Le travail graphique restant peut donc avancer monde par monde :
 
-## 20. Fallbacks
+1. terminer et polir La Forêt des Lucioles ;
+2. produire un deuxième monde complet pour éprouver l’extensibilité du système ;
+3. remplacer progressivement les couvertures/stades placeholders ;
+4. enrichir les illustrations de quêtes et récompenses ;
+5. finaliser mascottes et histoires.
 
-- avatar neutre compatible avec l’âge ;
-- silhouette générique de quête ;
-- pose neutre de mascotte ;
-- couverture simplifiée ;
-- scène aplatie ;
-- icône fonctionnelle ;
-- texte alternatif.
-
-Un asset manquant ne doit jamais empêcher l’enfant de comprendre ou terminer une quête.
-
-## 21. Ordre de production
-
-### Lot A, système commun
-
-- proportions des avatars et mascottes ;
-- langage de formes ;
-- contours, lumière et textures ;
-- prototype de carte univers ;
-- prototype de scène parallaxe ;
-- règles de compression.
-
-### Lot B, avatars
-
-- six avatars ;
-- bustes et corps entiers ;
-- tests à 96 px ;
-- validation sur les trois formats d’écran.
-
-### Lot C, couvertures et mascottes
-
-- six couvertures ;
-- planche de chaque mascotte ;
-- expressions et poses communes ;
-- miniatures du carrefour.
-
-### Lot D, prototype parallaxe
-
-- La Forêt des Lucioles complète ;
-- calques séparés ;
-- Luma animable ;
-- mode réduit ;
-- fallback ;
-- tests de performance.
-
-### Lot E, extension des scènes
-
-- une scène par univers ;
-- validation univers par univers ;
-- aucun lancement simultané des six productions.
-
-### Lot F, quêtes et récompenses
-
-- matrice 30 familles × 3 âges ;
-- illustrations ;
-- récompenses ;
-- textes alternatifs ;
-- intégration au registre.
-
-### Lot G, histoires
-
-- chapitres ;
-- illustrations ;
-- réactions de mascotte ;
-- sons éventuels.
-
-## 22. Processus de validation
-
-1. planche de concept ;
-2. sélection du style ;
-3. normalisation ;
-4. découpage animable ;
-5. test à taille réelle ;
-6. test mouvements réduits ;
-7. compression ;
-8. enregistrement au registre ;
-9. validation automatique ;
-10. validation humaine ;
-11. production du lot suivant.
-
-Cette méthode garde six univers dans le même livre illustré, sans les transformer en six applications cousues ensemble au ruban adhésif.
+Chaque monde doit garder son identité sans transformer le projet en six applications visuellement incompatibles.
