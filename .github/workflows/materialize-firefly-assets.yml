@@ -16,21 +16,23 @@ jobs:
       - uses: actions/checkout@v5
         with:
           ref: chore/pwa-local-assets
-      - name: Télécharger les assets CC0 de la Forêt
+      - name: Optimiser les assets CC0 en WebP
         run: |
           set -euo pipefail
-          mkdir -p public/worlds/firefly-forest
-          curl --fail --location --retry 3 --output public/worlds/firefly-forest/meadow.png https://openclipart.org/image/800px/251204
-          curl --fail --location --retry 3 --output public/worlds/firefly-forest/cottage.png https://openclipart.org/image/800px/311437
-          curl --fail --location --retry 3 --output public/worlds/firefly-forest/rustic-house.png https://openclipart.org/image/800px/299648
-          curl --fail --location --retry 3 --output public/worlds/firefly-forest/tree-house.png https://openclipart.org/image/800px/298682
-          curl --fail --location --retry 3 --output public/worlds/firefly-forest/foliage.png https://openclipart.org/image/800px/208754
+          sudo apt-get update -qq
+          sudo apt-get install -y webp
+          for name in meadow cottage rustic-house tree-house foliage; do
+            cwebp -quiet -q 84 -alpha_q 90 "public/worlds/firefly-forest/${name}.png" -o "public/worlds/firefly-forest/${name}.webp"
+          done
+          rm public/worlds/firefly-forest/*.png
           file public/worlds/firefly-forest/*
           wc -c public/worlds/firefly-forest/*
-      - name: Committer les assets locaux
+      - name: Générer le lockfile npm reproductible
+        run: npm install --package-lock-only --legacy-peer-deps --no-audit --no-fund
+      - name: Committer les fichiers stabilisés
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add public/worlds/firefly-forest
-          git commit -m "chore: embarquer les assets CC0 de la Forêt"
+          git add public/worlds/firefly-forest package-lock.json
+          git commit -m "chore: optimiser les assets locaux et verrouiller npm"
           git push origin HEAD:chore/pwa-local-assets
