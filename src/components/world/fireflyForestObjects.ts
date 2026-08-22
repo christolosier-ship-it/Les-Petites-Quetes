@@ -35,12 +35,20 @@ export function createFireflies(count: number, stage: number): AnimatedFireflies
   const phases = new Float32Array(count);
   for (let index = 0; index < count; index += 1) {
     const offset = index * 3;
-    const spread = stage >= 3 ? 11 : 8.5;
-    const values = [
-      (seededNoise(index, 1) - 0.5) * spread,
-      0.8 + seededNoise(index, 2) * 4.8,
-      -2 + seededNoise(index, 3) * 8,
-    ];
+    const highFlyer = seededNoise(index, 7) > 0.84;
+    const clusterCenter = seededNoise(index, 8) > 0.5 ? -2.25 : 2.15;
+    const clusterSpread = stage >= 3 ? 4.8 : 3.9;
+    const x = THREE.MathUtils.clamp(
+      clusterCenter + (seededNoise(index, 1) - 0.5) * clusterSpread,
+      -5.1,
+      5.1,
+    );
+    const yNoise = seededNoise(index, 2);
+    const y = highFlyer
+      ? 2.65 + yNoise * 1.85
+      : 0.62 + Math.pow(yNoise, 1.7) * (stage >= 3 ? 2.85 : 2.35);
+    const z = -1.6 + seededNoise(index, 3) * 6.4;
+    const values = [x, y, z];
     values.forEach((value, axis) => {
       positions[offset + axis] = value;
       basePositions[offset + axis] = value;
@@ -53,48 +61,14 @@ export function createFireflies(count: number, stage: number): AnimatedFireflies
   const material = new THREE.PointsMaterial({
     color: 0xffec91,
     map: texture,
-    size: stage >= 3 ? 0.28 : 0.22,
+    size: stage >= 3 ? 0.24 : 0.2,
     transparent: true,
-    opacity: 0.88,
+    opacity: 0.84,
     blending: THREE.AdditiveBlending,
     depthWrite: false,
     sizeAttenuation: true,
   });
   return { points: new THREE.Points(geometry, material), basePositions, phases };
-}
-
-export function createChildInPyjamas() {
-  const child = new THREE.Group();
-  const skin = new THREE.MeshStandardMaterial({ color: 0xdba982, roughness: 0.92, flatShading: true });
-  const pyjama = new THREE.MeshStandardMaterial({ color: 0x6f79ac, roughness: 0.92, flatShading: true });
-  const pyjamaLight = new THREE.MeshStandardMaterial({ color: 0x9aa4d0, roughness: 0.92, flatShading: true });
-  const hair = new THREE.MeshStandardMaterial({ color: 0x5b3e2d, roughness: 0.95, flatShading: true });
-  const head = new THREE.Mesh(new THREE.SphereGeometry(0.33, 12, 9), skin);
-  head.position.y = 2.06;
-  const hairCap = new THREE.Mesh(new THREE.SphereGeometry(0.35, 12, 7, 0, Math.PI * 2, 0, Math.PI * 0.52), hair);
-  hairCap.position.set(0, 2.14, 0.01);
-  const torso = new THREE.Mesh(new THREE.CapsuleGeometry(0.31, 0.68, 5, 9), pyjama);
-  torso.position.y = 1.3;
-  const arms = [-0.4, 0.4].map((x, index) => {
-    const arm = new THREE.Mesh(new THREE.CapsuleGeometry(0.09, 0.58, 4, 7), pyjamaLight);
-    arm.position.set(x, 1.37, 0);
-    arm.rotation.z = index === 0 ? 0.16 : -0.28;
-    return arm;
-  });
-  const legs = [-0.17, 0.17].map((x) => {
-    const leg = new THREE.Mesh(new THREE.CapsuleGeometry(0.11, 0.58, 4, 7), pyjamaLight);
-    leg.position.set(x, 0.55, 0);
-    return leg;
-  });
-  const slippers = [-0.17, 0.17].map((x) => {
-    const slipper = new THREE.Mesh(new THREE.SphereGeometry(0.15, 8, 6), pyjama);
-    slipper.scale.set(1, 0.55, 1.35);
-    slipper.position.set(x, 0.13, 0.08);
-    return slipper;
-  });
-  child.add(head, hairCap, torso, ...arms, ...legs, ...slippers);
-  child.scale.setScalar(0.88);
-  return child;
 }
 
 export function createLuma() {
