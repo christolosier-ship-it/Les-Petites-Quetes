@@ -23,6 +23,8 @@ export function FireflyForestIllustratedBackdrop({ stage, reducedMotion }: Firef
       <img className="firefly-illustrated__meadow" src={getAssetUrl(DIORAMA_ASSETS.meadow)} alt="" decoding="async" />
       <div className="firefly-illustrated__horizon-haze" />
 
+      {stage >= 2 && <div className="firefly-illustrated__stream"><span /></div>}
+
       {stage >= 1 && (
         <div className="firefly-illustrated__house firefly-illustrated__house--cottage">
           <span className="firefly-illustrated__house-glow" />
@@ -43,8 +45,6 @@ export function FireflyForestIllustratedBackdrop({ stage, reducedMotion }: Firef
           <img src={getAssetUrl(DIORAMA_ASSETS.treeHouse)} alt="" decoding="async" />
         </div>
       )}
-
-      {stage >= 2 && <div className="firefly-illustrated__stream"><span /></div>}
 
       <img className="firefly-illustrated__foliage firefly-illustrated__foliage--left" src={getAssetUrl(DIORAMA_ASSETS.foliage)} alt="" decoding="async" />
       <img className="firefly-illustrated__foliage firefly-illustrated__foliage--right" src={getAssetUrl(DIORAMA_ASSETS.foliage)} alt="" decoding="async" />
