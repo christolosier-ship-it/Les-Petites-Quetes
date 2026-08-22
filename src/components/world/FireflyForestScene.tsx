@@ -2,7 +2,6 @@ import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import { animateLivingActors, createLivingAnimationState } from './fireflyForestAnimation';
 import { addFireflyForestBackdrop, animateFireflyForestBackdrop } from './fireflyForestBackdrop';
-import { FireflyForestIllustratedBackdrop } from './FireflyForestIllustratedBackdrop';
 import { createFireflies } from './fireflyForestObjects';
 import { addFireflyForest } from './fireflyForestWorld';
 
@@ -23,15 +22,6 @@ function disposeScene(scene: THREE.Scene) {
       entry.dispose();
     });
   });
-}
-
-function updateIllustratedParallax(container: HTMLDivElement, x: number, y: number) {
-  container.style.setProperty('--forest-x-far', `${x * -4}px`);
-  container.style.setProperty('--forest-y-far', `${y * -2}px`);
-  container.style.setProperty('--forest-x-mid', `${x * -9}px`);
-  container.style.setProperty('--forest-y-mid', `${y * -4}px`);
-  container.style.setProperty('--forest-x-near', `${x * -16}px`);
-  container.style.setProperty('--forest-y-near', `${y * -7}px`);
 }
 
 export function FireflyForestScene({ stage, reducedMotion }: FireflyForestSceneProps) {
@@ -72,7 +62,7 @@ export function FireflyForestScene({ stage, reducedMotion }: FireflyForestSceneP
     scene.add(moonlight, warmth);
 
     const backdrop = addFireflyForestBackdrop(scene, stage);
-    const actors = addFireflyForest(scene, stage);
+    const actors = addFireflyForest(scene);
     const livingState = createLivingAnimationState();
     const fireflyCount = stage === 0 ? 12 : stage === 1 ? 28 : stage === 2 ? 46 : 86;
     const fireflies = createFireflies(fireflyCount, stage);
@@ -87,12 +77,8 @@ export function FireflyForestScene({ stage, reducedMotion }: FireflyForestSceneP
         ((event.clientX - bounds.left) / Math.max(bounds.width, 1) - 0.5) * 2,
         ((event.clientY - bounds.top) / Math.max(bounds.height, 1) - 0.5) * 2,
       );
-      updateIllustratedParallax(container, pointerTarget.x, pointerTarget.y);
     };
-    const onPointerLeave = () => {
-      pointerTarget.set(0, 0);
-      updateIllustratedParallax(container, 0, 0);
-    };
+    const onPointerLeave = () => pointerTarget.set(0, 0);
     container.addEventListener('pointermove', onPointerMove);
     container.addEventListener('pointerleave', onPointerLeave);
 
@@ -116,9 +102,6 @@ export function FireflyForestScene({ stage, reducedMotion }: FireflyForestSceneP
       pointerCurrent.lerp(pointerTarget, 0.055);
       camera.position.set(pointerCurrent.x * 0.5, 4.3 - pointerCurrent.y * 0.22, 12.8);
       camera.lookAt(pointerCurrent.x * 0.16, 1.7 - pointerCurrent.y * 0.07, 0.8);
-      actors.forest.children.forEach((object) => {
-        if (typeof object.userData.swayPhase === 'number') object.rotation.z = Math.sin(elapsed * 0.52 + object.userData.swayPhase) * 0.012;
-      });
       animateFireflyForestBackdrop(elapsed, backdrop, stage);
       animateLivingActors(elapsed, delta, actors, livingState, stage);
       const positionAttribute = fireflies.points.geometry.getAttribute('position') as THREE.BufferAttribute;
@@ -153,8 +136,7 @@ export function FireflyForestScene({ stage, reducedMotion }: FireflyForestSceneP
   }, [reducedMotion, stage]);
 
   return (
-    <div ref={containerRef} className={`firefly-forest-three firefly-forest-three--stage-${stage}`} data-firefly-forest-three="true" aria-hidden="true">
-      <FireflyForestIllustratedBackdrop stage={stage} reducedMotion={reducedMotion} />
+    <div ref={containerRef} className="firefly-forest-three__actors" data-firefly-forest-actors="true" aria-hidden="true">
       <div className="firefly-forest-three__fallback" />
     </div>
   );

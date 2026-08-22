@@ -3,7 +3,6 @@ import * as THREE from 'three';
 interface LivingAnimationActors {
   readonly child: THREE.Group;
   readonly luma: THREE.Group;
-  readonly sparkleGroups: readonly THREE.Object3D[];
 }
 
 interface LivingAnimationState {
@@ -12,7 +11,6 @@ interface LivingAnimationState {
   nextGestureAt: number;
   gestureUntil: number;
   gestureKind: number;
-  nextSparkleAt: number;
 }
 
 export function createLivingAnimationState(): LivingAnimationState {
@@ -22,7 +20,6 @@ export function createLivingAnimationState(): LivingAnimationState {
     nextGestureAt: 5,
     gestureUntil: 0,
     gestureKind: 0,
-    nextSparkleAt: 4,
   };
 }
 
@@ -75,11 +72,4 @@ export function animateLivingActors(
   actors.luma.position.z = actors.child.position.z + Math.cos(elapsed * 0.82) * 0.55;
   actors.luma.position.y = 2.45 + Math.sin(elapsed * 1.8) * 0.18;
   actors.luma.rotation.z = Math.sin(elapsed * 2.4) * 0.08;
-
-  if (stage >= 3 && elapsed >= state.nextSparkleAt) {
-    actors.sparkleGroups.forEach((object, index) => {
-      object.visible = index % 2 === Math.floor(elapsed) % 2;
-    });
-    state.nextSparkleAt = elapsed + 2.6 + (Math.sin(elapsed * 1.33) + 1) * 1.7;
-  }
 }
