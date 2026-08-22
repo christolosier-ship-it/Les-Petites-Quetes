@@ -1,375 +1,430 @@
-# Architecture cible multi-univers
+# Architecture
 
-## 1. Objectif
+## 1. Statut de ce document
 
-Faire évoluer la V1 locale existante vers un moteur multi-univers sans dupliquer les règles, les écrans ou le moteur d’animation pour chaque monde.
+Ce document décrit l’architecture **réellement présente sur `main`** après la consolidation du dépôt, de la PWA et des renderers de scènes.
 
-L’architecture reste un monolithe modulaire React + TypeScript, local-first et piloté par le domaine métier.
+Il ne décrit pas une architecture V4 à construire. Lorsqu’une évolution future est envisagée, elle appartient à `ROADMAP.md`.
 
-## 2. Principe directeur
+## 2. Vue d’ensemble
 
-```text
-Une seule application
-+ un seul moteur de quêtes
-+ un seul moteur de progression
-+ un seul moteur parallaxe
-+ plusieurs définitions d’univers
-```
-
-Les différences entre univers proviennent des données et des manifestes, jamais de branches conditionnelles dispersées dans React.
-
-## 3. Dépendances autorisées
+Les Petites Quêtes est un monolithe modulaire React + TypeScript, local-first, sans backend applicatif.
 
 ```text
-UI → application → domaine
-                  ↑
-        ports ← adaptateurs
-
-contenus → domaine typé
-assets → registre typé
-scènes → moteur parallaxe
+main.tsx
+  ↓
+App / pages / features / components
+  ↓
+contrôleur d’application
+  ↓
+services applicatifs
+  ↓
+domaine métier
+  ↓
+port FamilyRepository
+  ↓
+IndexedDB
 ```
 
-Le domaine ne dépend ni de React, ni du navigateur, ni du format des fichiers d’assets.
+En parallèle :
 
-## 4. Concepts métier ajoutés
+```text
+content/ → catalogues intégrés et versionnés
+assets/  → registre typé de ressources locales
+platform/ → horloge, identifiants, PWA et adaptateurs navigateur
+```
 
-### `WorldDefinition`
+Les données familiales ne sont jamais mélangées aux catalogues intégrés.
 
-Décrit un univers : identifiant, nom public, périmètre éditorial, mascotte, couvertures, progression et scène.
+## 3. Stack et exécution
 
-### `QuestFamily`
+- React 18.3 ;
+- TypeScript 6 en mode strict ;
+- Vite 8 ;
+- Vitest ;
+- Three.js 0.185 pour le renderer vivant de La Forêt des Lucioles ;
+- IndexedDB pour la persistance ;
+- Node.js 24 pour l’installation, la CI et le build ;
+- Vercel pour previews et production.
 
-Décrit une intention de quête commune et son univers obligatoire.
+L’installation reproductible repose sur `package-lock.json` et `npm ci`.
 
-### `QuestVariant`
-
-Décrit le texte, les étapes, la durée et l’illustration adaptés à une tranche d’âge.
-
-### `WorldProgress`
-
-Projection de progression pour un couple enfant-univers.
-
-### `WorldSceneDefinition`
-
-Manifeste déclaratif de la scène parallaxe et de ses états.
-
-## 5. Arborescence cible
+## 4. Arborescence actuelle
 
 ```text
 src/
 ├── app/
+│   ├── App.tsx
 │   ├── controller/
-│   ├── navigation/
 │   └── state/
+├── application/
+│   ├── model/
+│   ├── ports/
+│   ├── selectors/
+│   └── services/
+├── assets/
+│   └── registry/
+├── components/
+│   ├── layout/
+│   └── world/
+├── content/
+│   ├── avatars/
+│   ├── quests/
+│   ├── validation/
+│   └── world/
 ├── domain/
 │   ├── child/
-│   ├── world/
-│   ├── quest/
-│   ├── quest-variant/
-│   ├── schedule/
 │   ├── completion/
 │   ├── progression/
-│   ├── story/
-│   └── shared/
-├── application/
-│   ├── services/
-│   ├── selectors/
-│   ├── ports/
-│   └── model/
+│   ├── quest/
+│   ├── schedule/
+│   ├── shared/
+│   └── world/
 ├── features/
-│   ├── family-gateway/
 │   ├── child-profile/
-│   ├── world-hub/
-│   ├── world-scene/
 │   ├── daily-quests/
+│   ├── onboarding/
+│   ├── parent-lock/
 │   ├── quest-library/
-│   ├── validation/
-│   ├── storybook/
 │   ├── settings/
-│   └── backup/
+│   ├── storybook/
+│   ├── validation/
+│   ├── world-hub/
+│   └── world-progression/
 ├── pages/
-│   ├── family/
 │   ├── child/
 │   └── parent/
-├── content/
-│   ├── worlds/
-│   ├── quest-families/
-│   ├── quest-variants/
-│   ├── rewards/
-│   ├── stories/
-│   └── validation/
-├── assets/
-│   ├── registry/
-│   ├── avatars/
-│   ├── worlds/
-│   ├── loaders/
-│   └── fallbacks/
-├── platform/
-│   ├── parallax/
-│   ├── audio/
-│   ├── pwa/
-│   ├── files/
-│   ├── clock/
-│   └── ids/
 ├── persistence/
+│   ├── backup/
 │   ├── migrations/
 │   ├── repositories/
-│   ├── backup/
 │   └── schemas/
-└── tests/
+├── platform/
+│   ├── clock/
+│   ├── ids/
+│   └── pwa/
+└── styles/
 ```
 
-## 6. Responsabilités
+Cette arborescence est la référence. Les anciennes arborescences « cibles » ne doivent pas être utilisées pour créer artificiellement des dossiers ou couches inexistants.
 
-### Domaine
+## 5. Composition React
 
-Le domaine garantit :
+`src/main.tsx` :
 
-- qu’une quête possède un univers ;
-- qu’une variante est compatible avec l’âge ;
-- qu’une occurrence mémorise sa variante et son univers ;
-- qu’une récompense appartient au même univers ;
-- qu’une réalisation ne fait progresser qu’un univers ;
-- qu’un avatar est compatible avec la tranche d’âge.
+- monte l’application en `StrictMode` ;
+- charge les feuilles de styles ;
+- demande l’enregistrement du service worker, qui est ignoré hors production.
 
-### Application
+`src/app/App.tsx` compose quatre états principaux :
 
-La couche application orchestre notamment :
+1. chargement ;
+2. onboarding ;
+3. accueil familial ;
+4. espace enfant ou espace parent.
 
-- résolution de la variante d’âge ;
-- calcul des pastilles par univers ;
-- génération multi-enfants ;
-- sélection de l’univers ;
-- chargement différé d’une scène ;
-- migration et revue des quêtes personnalisées.
+La navigation principale n’utilise actuellement pas de routeur URL. Elle est pilotée par le reducer de session et par l’état des pages/features.
 
-### Contenus
+Ce choix est une réalité actuelle, pas une interdiction d’introduire un routeur plus tard si un besoin concret le justifie.
 
-Les six univers, familles de quêtes, variantes, récompenses et histoires sont des données validées au build.
+## 6. Contrôleur d’application
 
-### Assets
+`useFamilyApp` est la façade React du cœur applicatif.
 
-Le registre associe les identifiants stables aux fichiers. Aucun composant ne référence un chemin brut.
+Il assemble :
 
-### Plateforme parallaxe
+- `IndexedDbFamilyRepository` ;
+- `SystemClock` ;
+- `CryptoIdGenerator` ;
+- `StateCommitQueue` ;
+- les services de création, planification, progression, sauvegarde et import.
 
-Le moteur parallaxe :
-
-- interprète un manifeste ;
-- place les calques selon la profondeur ;
-- adapte le cadrage ;
-- applique les animations autorisées ;
-- respecte les mouvements réduits ;
-- utilise un fallback statique ;
-- ne connaît pas la logique de progression.
-
-## 7. Navigation cible
+Flux normal :
 
 ```text
-/
-├── /child
-│   ├── /select-profile
-│   └── /:childId
-│       ├── /worlds
-│       └── /world/:worldId
-│           ├── /quests
-│           ├── /quest/:occurrenceId
-│           ├── /treasure
-│           └── /story
-└── /parent
-    ├── /unlock
-    ├── /today
-    ├── /children
-    ├── /quests
-    ├── /worlds
-    └── /settings
+interaction UI
+→ commande du contrôleur
+→ transformation pure ou service applicatif
+→ StateCommitQueue
+→ validation / sauvegarde repository
+→ nouvel état React
 ```
 
-L’écran `/` compose les deux fenêtres enfant et parent. Il ne choisit pas automatiquement un espace.
+Les composants ne doivent pas écrire directement dans IndexedDB.
 
-## 8. Sélecteurs essentiels
+## 7. Domaine métier
 
-Les compteurs et vues dérivées ne sont pas persistés.
+Le domaine porte les règles qui doivent survivre à un changement d’interface ou de stockage.
 
-Sélecteurs prévus :
+Concepts actifs :
 
-- `selectAvailableOccurrencesByWorld(childId, date)` ;
-- `selectAvailableCountByWorld(childId, date)` ;
-- `selectCompatibleVariant(questFamilyId, ageBand)` ;
-- `selectWorldProgress(childId, worldId)` ;
-- `selectWorldTiles(childId, date)` ;
-- `selectWorldRewards(childId, worldId)`.
+- `ChildProfile` ;
+- `QuestTemplate` ;
+- `QuestSchedule` ;
+- `QuestOccurrence` ;
+- `Completion` ;
+- `RewardGrant` ;
+- `WorldProgress` ;
+- `WorldDefinition`.
 
-Le badge rouge est calculé depuis `selectAvailableCountByWorld`.
+Le multi-univers est déjà un concept central : `worldId` existe dans les quêtes, planifications et occurrences, et la progression est séparée par enfant et univers.
 
-## 9. Résolution des variantes
+Le catalogue intégré représente actuellement une « famille » par un `familyId` partagé entre trois `QuestTemplate` d’âge. Il n’existe pas encore d’agrégat persistant `QuestFamily` ou `QuestVariant` distinct. La documentation doit respecter ce modèle réel.
 
-Lors de la génération :
+## 8. Contenus intégrés
+
+`src/content` contient les données versionnées livrées avec l’application.
+
+État actuel :
+
+- 6 `WorldDefinition` ;
+- 6 avatars ;
+- 30 familles de quêtes ;
+- 90 `QuestTemplate` intégrés, soit une variante par tranche d’âge dans chaque famille ;
+- au moins 37 définitions de récompenses ;
+- 48 chapitres d’histoire ;
+- définitions de scènes génériques et catalogue de renderers.
+
+Ces contenus ne sont pas copiés dans `FamilyState`.
+
+## 9. Les six univers
+
+Les identifiants courants sont :
 
 ```text
-planification
-→ enfant
-→ tranche d’âge actuelle
-→ variante compatible
-→ occurrence avec snapshot de variante
+world.firefly-forest
+world.dragon-mountain
+world.space-station
+world.gnome-village
+world.nature-discovery
+world.creativity-workshop
 ```
 
-Une modification future de la tranche d’âge n’altère pas les occurrences historiques.
+Les anciens identifiants documentaires `world.elven-village` et `world.creative-studio` ne sont pas valides dans le code actuel.
 
-Une planification est refusée si un enfant ciblé ne possède aucune variante compatible.
+## 10. Architecture des scènes
 
-## 10. Progression
+### 10.1 Orchestrateur
 
-La progression commune reçoit :
+`ParallaxScene` est un dispatcher minimal :
 
-- `childId` ;
-- `worldId` ;
-- récompense ;
-- instant de validation.
+```text
+world.id
+→ sceneRendererForWorld(...)
+→ renderer déclaré
+```
 
-Elle ne contient aucun traitement spécifique à La Forêt des Lucioles ou aux autres univers.
-
-Les règles de seuil, les chapitres et les slots débloqués sont fournis par `WorldDefinition`.
-
-## 11. Scènes parallaxes déclaratives
+Il ne contient aucune branche du type :
 
 ```ts
-interface WorldSceneDefinition {
-  id: string
-  worldId: string
-  aspectRatio: string
-  safeAreas: ResponsiveSafeArea[]
-  stages: SceneStageDefinition[]
-  layers: ParallaxLayerDefinition[]
-  mascotAnchors: MascotAnchor[]
-  staticFallbackAssetId: string
-}
+if (world.id === 'world.firefly-forest') { ... }
 ```
 
-```ts
-interface ParallaxLayerDefinition {
-  id: string
-  assetId: string
-  depth: number
-  stageFrom: number
-  slotId?: string
-  motionProfile: 'none' | 'drift' | 'float' | 'sparkle' | 'custom'
-  reducedMotionAssetId?: string
-}
+### 10.2 Catalogue de renderers
+
+`sceneRendererCatalog.ts` connaît les associations monde-renderer.
+
+Renderers disponibles :
+
+- `generic-parallax` ;
+- `firefly-diorama`.
+
+Tous les mondes utilisent `generic-parallax` par défaut. La Forêt déclare l’override `firefly-diorama`.
+
+Un futur monde spécialisé doit ajouter un renderer et une association dans ce catalogue, sans ajouter une exception à `ParallaxScene`.
+
+### 10.3 Renderer générique
+
+`GenericParallaxScene` :
+
+- construit la définition de scène depuis le monde et ses assets de stade ;
+- filtre les calques selon le stade 0 à 3 ;
+- applique un léger déplacement au pointeur ;
+- coupe ce déplacement lorsque les mouvements sont réduits ;
+- résout les images via le registre d’assets.
+
+### 10.4 Renderer de La Forêt
+
+`FireflyForestDiorama` porte la composition spécifique de La Forêt :
+
+- décor illustré 2.5D ;
+- parallaxe illustré ;
+- plein écran ;
+- chargement lazy de la couche Three.js ;
+- fallback visuel pendant le chargement.
+
+`FireflyForestScene` ne porte plus le décor général. Sa responsabilité est limitée à la couche Three.js vivante :
+
+- enfant ;
+- Luma ;
+- étoiles ;
+- lune ;
+- lucioles ;
+- animation de ces éléments.
+
+Les anciens constructeurs Three.js d’arbres, champignons, lanterne, banc et la logique `sparkleGroups` ont été supprimés.
+
+### 10.5 CSS
+
+- `world.css` contient les styles communs ;
+- `firefly-world.css` contient les styles spécifiques au diorama de La Forêt.
+
+Un nouveau renderer spécialisé ne doit pas déposer ses règles visuelles dans le CSS générique.
+
+## 11. Assets
+
+Tous les composants doivent utiliser des identifiants d’assets et `getAssetUrl` lorsque l’asset appartient au registre.
+
+Le registre courant fusionne :
+
+- `assets.json` ;
+- `avatars.json` ;
+- `firefly-assets.json`.
+
+Les cinq ressources CC0 illustrées actuellement utilisées dans le diorama Firefly sont locales dans :
+
+```text
+public/worlds/firefly-forest/
 ```
 
-Le manifeste décrit, le moteur rend. Aucun manifeste ne contient de code exécutable.
+Aucune image du décor Firefly n’est téléchargée depuis Openclipart à l’exécution.
 
-## 12. Chargement et PWA
+## 12. Persistance et schéma
 
-### Précache global
+Le schéma familial courant est **V3**.
 
-- shell ;
-- six avatars ;
-- six couvertures ;
-- miniatures de mascottes ;
-- contenus textuels ;
-- fallbacks statiques.
+`IndexedDbFamilyRepository` encapsule le stockage. Les entrées chargées ou importées passent par migration puis validation runtime.
 
-### Chargement différé
+La migration supporte :
 
-- calques haute définition ;
-- animations ;
-- sons narratifs ;
-- illustrations de chapitres.
+```text
+V1 → V2 → V3
+V2 → V3
+V3 → validation directe
+```
 
-Un univers est mis en cache après sa première ouverture. Une quête reste accessible avec le fallback si les calques lourds ne sont pas présents.
+La migration V2 vers V3 :
 
-## 13. Migration V2 vers V3
+- retire `accentId` et `activeWorldId` des profils ;
+- rétablit un avatar compatible si nécessaire ;
+- rattache l’héritage V2 à La Forêt des Lucioles ;
+- ajoute `familyId` et `worldId` aux objets concernés ;
+- inscrit les anciennes quêtes personnalisées dans `questTemplateIdsNeedingWorldReview` ;
+- fixe `schemaVersion` et `contentVersion` courants.
 
-La migration est isolée dans `persistence/migrations` et testée depuis un état V2 réel.
+Le détail contractuel est dans `DATA-MODEL.md`.
 
-Elle devra :
+## 13. Validation runtime
 
-- convertir les profils ;
-- supprimer `accentId` et `activeWorldId` ;
-- remplacer les anciens avatars ;
-- transformer les modèles en familles et variantes ;
-- mémoriser l’univers sur les occurrences ;
-- préserver les récompenses historiques ;
-- reconstruire les progressions ;
-- marquer les quêtes personnalisées à revoir.
+`validateFamilyState` hydrate puis contrôle notamment :
 
-## 14. Contrôles anti-spaghetti
+- version de schéma ;
+- formats des réglages ;
+- unicité des identifiants ;
+- compatibilité avatar-âge ;
+- références croisées ;
+- cohérence `worldId` entre planification, occurrence et quête ;
+- cohérence de la famille ;
+- unicité métier d’une occurrence ;
+- cohérence entre réalisations et récompenses ;
+- reconstruction attendue de `WorldProgress` depuis l’historique des récompenses.
 
-Le build échoue si :
+Une sauvegarde invalide ne doit pas devenir l’état courant.
 
-- une famille de quête n’a pas d’univers ;
-- une variante d’âge est dupliquée ;
-- une récompense appartient à un autre univers ;
-- un composant contient un chemin d’asset brut ;
-- un monde n’a pas de fallback ;
-- une scène n’a pas de mode mouvements réduits ;
-- une feature importe les internes d’une autre ;
-- une logique métier teste directement un nom public d’univers ;
-- un composant dupliqué est créé pour un monde alors qu’un manifeste suffit.
+## 14. PWA
 
-## 15. Budgets
+Il existe une seule stratégie de service worker.
 
-- shell initial hors scènes : objectif inférieur à 1,5 Mo ;
-- couverture d’univers : moins de 160 Ko ;
-- avatar : moins de 180 Ko ;
-- calque parallaxe : moins de 250 Ko ;
-- scène complète chargée : budget propre par univers ;
-- aucun chargement simultané des six scènes haute définition.
+### Build
 
-## 16. Tests
+```text
+vite build
+→ scripts/generate-service-worker.mjs
+→ dist/sw.js
+```
 
-### Domaine
+Le fichier `public/sw.js` a été supprimé.
 
-- compatibilité d’âge ;
-- cohérence univers-récompense ;
-- progression isolée ;
-- historique figé ;
-- avatars valides.
+### Développement
 
-### Application
+`registerServiceWorker()` retourne immédiatement lorsque `import.meta.env.PROD` est faux. Un serveur Vite de développement ne doit donc pas être contaminé par un ancien cache applicatif.
 
-- compteurs par univers ;
-- résolution multi-enfants ;
-- filtrage parent ;
-- revue de migration.
+### Production
 
-### Persistance
+Le service worker :
 
-- migration V2 vers V3 ;
-- import V2 et V3 ;
-- restauration ;
-- conservation de l’historique.
+- précache le shell et les ressources locales non dynamiques retenues par le build ;
+- supprime les anciennes versions du cache applicatif ;
+- gère les navigations avec fallback vers `index.html` ;
+- met en cache les ressources locales récupérées au runtime ;
+- ne contient aucune liste d’hôtes graphiques externes.
 
-### Interface
+Les chunks dynamiques, dont Three.js/Firefly, sont récupérés et cachés à la première ouverture.
 
-- écran familial à deux fenêtres ;
-- sélection de profils ;
-- six pavés ;
-- badge présent ou absent ;
-- navigation par univers ;
-- profils sans compagnon ni couleur.
+## 15. Qualité et CI
 
-### Parallaxe
+La CI GitHub `Qualité légère` utilise Node 24 et `npm ci`.
 
-- profondeur ;
-- fallback ;
-- responsive ;
-- réduction des mouvements ;
-- chargement différé ;
-- mode hors ligne.
+Sur chaque PR vers `main` et chaque push sur `main`, elle exécute :
 
-## 17. Découpage des PR de code
+```text
+architecture + cycles + assets
+lint + typecheck
+85 tests
+build de production
+```
 
-1. domaine multi-univers et schéma V3 ;
-2. migration et validation runtime ;
-3. catalogue de mondes et variantes de quêtes ;
-4. accueil familial et carrefour enfant ;
-5. espace parent simplifié et filtres ;
-6. moteur parallaxe ;
-7. intégration des assets univers par univers ;
-8. stabilisation, accessibilité et pilote.
+`eslint` est exécuté avec `--max-warnings=0`.
 
-Chaque PR doit rester testable et ne pas mélanger production graphique massive et refonte du domaine.
+Les contrôles plus lourds sont regroupés dans `npm run audit` et ne sont pas des bloqueurs systématiques de PR.
+
+Cette séparation est volontaire : un feu vert quotidien doit rester lisible, rapide et significatif.
+
+## 16. Déploiement
+
+Vercel est la seule plateforme de déploiement actuelle.
+
+```text
+PR / branche → preview
+main         → production
+```
+
+`vercel.json` impose :
+
+- framework Vite ;
+- `npm ci --no-audit --no-fund` ;
+- `npm run build` ;
+- sortie `dist` ;
+- rewrite SPA vers `index.html`.
+
+GitHub Pages et son ancien sous-chemin ne font plus partie de l’architecture.
+
+## 17. Règles anti-spaghetti
+
+Une évolution doit préserver les frontières suivantes :
+
+- pas d’IndexedDB directement dans une page ou un composant ;
+- pas de règle métier dans React ;
+- pas de chemin d’asset brut lorsqu’un asset est enregistré ;
+- pas de nouveau `world.id === ...` dans les orchestrateurs génériques de scène ;
+- pas de CSS spécifique à un monde dans `world.css` ;
+- pas de second service worker parallèle ;
+- pas de dépendance graphique réseau requise au fonctionnement ;
+- pas de nouveau schéma de données sans migration et validation runtime ;
+- pas de contrôle CI désactivé pour obtenir artificiellement un vert.
+
+`npm run check:architecture` et `npm run check:cycles` protègent une partie de ces frontières automatiquement.
+
+## 18. Principe d’évolution
+
+L’architecture n’a pas besoin d’un nouveau « grand plan cible » pour chaque cycle.
+
+Une évolution structurante doit :
+
+1. partir du code et du modèle courants décrits ici ;
+2. identifier le besoin concret ;
+3. modifier la plus petite frontière nécessaire ;
+4. ajouter ou adapter les contrôles pertinents ;
+5. mettre ce document à jour dans la même PR si la structure réelle change.
+
+Les ADR servent à conserver la raison des décisions importantes, pas à maintenir une seconde architecture parallèle.
