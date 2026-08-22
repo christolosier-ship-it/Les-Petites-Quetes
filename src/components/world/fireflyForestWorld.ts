@@ -2,7 +2,6 @@ import * as THREE from 'three';
 import { createChildInPyjamas, createLuma } from './fireflyForestObjects';
 
 export interface FireflyForestActors {
-  readonly forest: THREE.Group;
   readonly child: THREE.Group;
   readonly luma: THREE.Group;
 }
@@ -14,21 +13,21 @@ export interface FireflyForestActors {
  * aux acteurs et aux effets vivants afin de ne jamais dupliquer le paysage.
  */
 export function addFireflyForest(scene: THREE.Scene, stage: 0 | 1 | 2 | 3): FireflyForestActors {
-  const forest = new THREE.Group();
-  forest.name = 'firefly-living-actors';
-  forest.userData.stage = stage;
+  const actors = new THREE.Group();
+  actors.name = 'firefly-living-actors';
+  actors.userData.stage = stage;
 
   const child = createChildInPyjamas();
   child.position.set(-1.05, 0, 0.65);
   child.rotation.y = 0.18;
   child.name = 'child-in-pyjamas';
-  forest.add(child);
+  actors.add(child);
 
   const luma = createLuma();
   luma.position.set(0.1, 2.8, 0.45);
   luma.name = 'luma';
-  forest.add(luma);
+  actors.add(luma);
 
-  scene.add(forest);
-  return { forest, child, luma };
+  scene.add(actors);
+  return { child, luma };
 }
