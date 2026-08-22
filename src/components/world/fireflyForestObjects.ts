@@ -52,7 +52,7 @@ export function createFireflies(count: number, stage: number): AnimatedFireflies
   const texture = createFireflyTexture();
   const material = new THREE.PointsMaterial({
     color: 0xffec91,
-    map: texture ?? undefined,
+    map: texture,
     size: stage >= 3 ? 0.28 : 0.22,
     transparent: true,
     opacity: 0.88,
