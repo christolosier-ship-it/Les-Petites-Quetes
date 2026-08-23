@@ -38,7 +38,6 @@ export function FireflyForestIllustratedBackdrop({ stage, reducedMotion }: Firef
         </>
       )}
 
-      {stage >= 1 && <div className="firefly-illustrated__path" />}
       {stage >= 2 && <div className="firefly-illustrated__stream"><span /></div>}
 
       {stage >= 1 && (
@@ -74,7 +73,6 @@ export function FireflyForestIllustratedBackdrop({ stage, reducedMotion }: Firef
       <img className="firefly-illustrated__foliage firefly-illustrated__foliage--left" src={getAssetUrl(DIORAMA_ASSETS.foliage)} alt="" decoding="async" />
       <img className="firefly-illustrated__foliage firefly-illustrated__foliage--right" src={getAssetUrl(DIORAMA_ASSETS.foliage)} alt="" decoding="async" />
       <div className="firefly-illustrated__mist firefly-illustrated__mist--far" />
-      <div className="firefly-illustrated__mist firefly-illustrated__mist--near" />
       <div className="firefly-illustrated__grade" />
     </div>
   );
