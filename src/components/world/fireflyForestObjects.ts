@@ -61,9 +61,9 @@ export function createFireflies(count: number, stage: number): AnimatedFireflies
   const material = new THREE.PointsMaterial({
     color: 0xffec91,
     map: texture,
-    size: stage >= 3 ? 0.24 : 0.2,
+    size: stage >= 3 ? 0.18 : 0.16,
     transparent: true,
-    opacity: 0.84,
+    opacity: 0.7,
     blending: THREE.AdditiveBlending,
     depthWrite: false,
     sizeAttenuation: true,
@@ -92,6 +92,6 @@ export function createLuma() {
   const rightWing = leftWing.clone();
   rightWing.position.x = 0.19;
   rightWing.rotation.z = -0.58;
-  group.add(body, head, leftWing, rightWing, new THREE.PointLight(0xffd46e, 2.2, 3.2, 2));
+  group.add(body, head, leftWing, rightWing, new THREE.PointLight(0xffd46e, 2.65, 4.2, 2));
   return group;
 }

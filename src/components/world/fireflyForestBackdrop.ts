@@ -55,12 +55,12 @@ function createMoon() {
 }
 
 export function addFireflyForestBackdrop(scene: THREE.Scene, stage: 0 | 1 | 2 | 3): FireflyForestBackdrop {
-  const starCounts = stage >= 3 ? [220, 120, 56, 18] : stage >= 2 ? [150, 82, 38, 12] : [92, 46, 22, 8];
+  const starCounts = stage >= 3 ? [160, 72, 24, 6] : stage >= 2 ? [118, 54, 18, 5] : [82, 38, 14, 4];
   const starLayers = [
-    createStarLayer(starCounts[0] ?? 92, 41, 0.09, 0.7, 0xfff2c4),
-    createStarLayer(starCounts[1] ?? 46, 51, 0.15, 0.64, 0xbdebdc),
-    createStarLayer(starCounts[2] ?? 22, 61, 0.23, stage >= 3 ? 0.76 : 0.58, 0xcabfff),
-    createStarLayer(starCounts[3] ?? 8, 73, 0.34, stage >= 3 ? 0.92 : 0.72, 0xffd98b),
+    createStarLayer(starCounts[0] ?? 82, 41, 0.075, 0.56, 0xfff2c4),
+    createStarLayer(starCounts[1] ?? 38, 51, 0.12, 0.5, 0xbdebdc),
+    createStarLayer(starCounts[2] ?? 14, 61, 0.19, stage >= 3 ? 0.62 : 0.48, 0xcabfff),
+    createStarLayer(starCounts[3] ?? 4, 73, 0.28, stage >= 3 ? 0.76 : 0.62, 0xffd98b),
   ];
   scene.add(...starLayers);
 
@@ -76,7 +76,7 @@ export function addFireflyForestBackdrop(scene: THREE.Scene, stage: 0 | 1 | 2 | 
 }
 
 export function animateFireflyForestBackdrop(elapsed: number, backdrop: FireflyForestBackdrop, stage: 0 | 1 | 2 | 3) {
-  const bases = stage >= 3 ? [0.65, 0.6, 0.7, 0.84] : [0.58, 0.52, 0.56, 0.68];
+  const bases = stage >= 3 ? [0.52, 0.46, 0.57, 0.7] : [0.48, 0.42, 0.48, 0.58];
   backdrop.starLayers.forEach((layer, index) => {
     const speed = 0.55 + index * 0.23;
     const amplitude = index === 3 ? 0.15 : 0.11 + index * 0.015;

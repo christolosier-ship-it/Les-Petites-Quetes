@@ -1,12 +1,10 @@
 import rawAssets from './assets.json';
 import rawAvatars from './avatars.json';
-import rawFireflyAssets from './firefly-assets.json';
 import type { AssetDefinition } from './types';
 
 const avatarIds = new Set(rawAvatars.map((asset) => asset.id));
 const assets = [
   ...rawAssets.filter((asset) => !avatarIds.has(asset.id)),
-  ...rawFireflyAssets,
   ...rawAvatars,
 ] as readonly AssetDefinition[];
 const assetsById = new Map(assets.map((asset) => [asset.id, asset]));

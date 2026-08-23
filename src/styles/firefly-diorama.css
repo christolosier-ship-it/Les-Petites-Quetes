@@ -1,4 +1,4 @@
-/* Panorama illustré Firefly : grands plans complets, inspirés des scènes Glitch multi-layer. */
+/* Panorama illustré Firefly : structure de couches, lumière et landmarks. */
 .firefly-illustrated{position:absolute;inset:0;overflow:hidden;pointer-events:none;background:#071b3b}
 .firefly-illustrated img{position:absolute;display:block;max-width:none;user-select:none;-webkit-user-drag:none}
 .firefly-panorama-layer{position:absolute;inset:0;pointer-events:none;will-change:transform}
@@ -14,12 +14,6 @@
 .firefly-panorama-aurora--violet{left:20%;width:36%;background:rgb(142 104 238/.2)}
 .firefly-panorama-aurora--mint{left:57%;width:30%;background:rgb(78 214 190/.18);animation-delay:-4s}
 
-.firefly-panorama-ridge{position:absolute;bottom:31%;height:28%;border-radius:50% 50% 0 0;filter:saturate(.9)}
-.firefly-panorama-ridge--one{left:-2%;width:34%;background:linear-gradient(180deg,#34558d,#234d70 58%,#173e58);clip-path:polygon(0 100%,0 77%,7% 67%,13% 70%,19% 51%,25% 62%,32% 35%,39% 58%,47% 29%,56% 56%,64% 40%,73% 61%,83% 42%,92% 67%,100% 57%,100% 100%)}
-.firefly-panorama-ridge--two{left:25%;width:34%;background:linear-gradient(180deg,#4b629a,#2d5d79 58%,#174a5c);clip-path:polygon(0 100%,0 64%,8% 53%,15% 62%,22% 40%,30% 56%,39% 27%,49% 54%,58% 37%,67% 57%,76% 33%,86% 59%,94% 47%,100% 55%,100% 100%)}
-.firefly-panorama-ridge--three{left:52%;width:31%;background:linear-gradient(180deg,#365d91,#2d6377 56%,#15535e);clip-path:polygon(0 100%,0 57%,8% 47%,17% 60%,26% 34%,35% 54%,45% 28%,56% 57%,66% 38%,76% 61%,86% 42%,94% 57%,100% 50%,100% 100%)}
-.firefly-panorama-ridge--four{right:-2%;width:28%;background:linear-gradient(180deg,#345387,#275a72 57%,#174953);clip-path:polygon(0 100%,0 60%,10% 48%,19% 57%,29% 31%,39% 52%,50% 25%,61% 54%,72% 36%,82% 58%,91% 46%,100% 61%,100% 100%)}
-
 .firefly-panorama-village{position:absolute;bottom:34%;display:flex;align-items:flex-end;gap:1.2rem;height:11%;opacity:.78}
 .firefly-panorama-village--west{left:8%}.firefly-panorama-village--east{right:9%}
 .firefly-panorama-house{position:relative;display:block;width:clamp(2.8rem,3.5vw,4.8rem);height:clamp(2.6rem,3.5vw,4.4rem)}
@@ -27,15 +21,15 @@
 .firefly-panorama-house img{inset:auto 0 0;width:100%;height:auto;filter:brightness(.56) saturate(.8) hue-rotate(4deg) contrast(1.06) drop-shadow(0 .35rem .5rem rgb(2 12 23/.42))}
 .firefly-panorama-house i{position:absolute;z-index:-1;left:50%;bottom:15%;width:74%;height:42%;border-radius:50%;background:rgb(255 197 95/.28);filter:blur(.5rem);transform:translateX(-50%)}
 
-.firefly-panorama-forestline{position:absolute;bottom:24%;display:flex;align-items:flex-end;height:34%;opacity:.46}
+.firefly-panorama-forestline{position:absolute;z-index:1;bottom:24%;display:flex;align-items:flex-end;height:34%;opacity:.46}
 .firefly-panorama-forestline--west{left:-3%;width:38%}.firefly-panorama-forestline--east{right:-2%;width:39%;transform:scaleX(-1)}
 .firefly-panorama-forestline img{position:relative;width:38%;height:auto;margin-right:-9%;filter:brightness(.37) saturate(.88) hue-rotate(13deg) contrast(1.08)}
 .firefly-panorama-forestline img:nth-child(2){width:44%;transform:translateY(-6%) scale(1.08)}
-.firefly-panorama-ground{position:absolute;bottom:-14%;height:54%;border-radius:48% 52% 0 0}
+.firefly-panorama-ground{position:absolute;z-index:0;bottom:-14%;height:54%;border-radius:48% 52% 0 0}
 .firefly-panorama-ground--west{left:-5%;width:39%;background:linear-gradient(180deg,#1b755b,#125844 38%,#0b3c32);transform:rotate(-1deg)}
 .firefly-panorama-ground--center{left:27%;width:47%;background:linear-gradient(180deg,#237a55,#12573f 42%,#0b3b31)}
 .firefly-panorama-ground--east{right:-5%;width:39%;background:linear-gradient(180deg,#1e7156,#11503e 40%,#0a392f);transform:rotate(1deg)}
-.firefly-panorama-meadow{left:31%;bottom:-2%;width:39%;height:100%;object-fit:cover;object-position:center 54%;opacity:.94;filter:brightness(.48) saturate(1.08) hue-rotate(13deg) contrast(1.04);mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent)}
+.firefly-panorama-meadow{z-index:1;left:31%;bottom:-2%;width:39%;height:100%;object-fit:cover;object-position:center 54%;opacity:.94;filter:brightness(.48) saturate(1.08) hue-rotate(13deg) contrast(1.04);mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent)}
 
 .firefly-panorama-landmark{position:absolute;display:grid;place-items:end center}
 .firefly-panorama-landmark img{position:relative;z-index:2;width:100%;height:auto;filter:brightness(.7) saturate(.95) hue-rotate(2deg) contrast(1.04) drop-shadow(0 .75rem .9rem rgb(1 11 20/.45))}
@@ -44,18 +38,6 @@
 .firefly-panorama-landmark--cottage{left:6%;bottom:3%;width:clamp(10rem,13vw,15rem)}
 .firefly-panorama-landmark--rustic{left:72%;bottom:18%;width:clamp(7rem,8.2vw,9.2rem)}
 .firefly-panorama-landmark--treehouse{right:4%;bottom:5%;width:clamp(9rem,11vw,13rem)}
-
-.firefly-panorama-stream{position:absolute;left:59%;bottom:-5%;width:21%;height:37%;opacity:.72;clip-path:polygon(38% 0,55% 0,64% 15%,56% 29%,68% 44%,59% 59%,72% 78%,87% 100%,16% 100%,30% 80%,22% 62%,35% 45%,27% 29%);background:linear-gradient(95deg,#0c5663,#4b9ca6 37%,#b7edf0 49%,#39838e 61%,#0d5968);box-shadow:inset .65rem 0 0 rgb(12 69 51/.52),inset -.65rem 0 0 rgb(12 69 51/.48);transform:rotate(4deg)}
-.firefly-panorama-stream span{position:absolute;inset:0;opacity:.32;background:repeating-linear-gradient(172deg,transparent 0 13%,rgb(240 255 255/.38) 14% 16%,transparent 17% 30%);animation:firefly-panorama-water 7s linear infinite}
-.firefly-panorama-stream i{position:absolute;left:41%;top:24%;width:29%;height:.18rem;border-radius:999px;background:rgb(232 255 250/.42);box-shadow:-.2rem 4.1rem 0 rgb(225 251 248/.26),.4rem 8rem 0 rgb(225 251 248/.18)}
-
-.firefly-panorama-flowerpatch{position:absolute;height:9%;opacity:.92;background:radial-gradient(circle at 8% 63%,#ffd979 0 .13rem,transparent .17rem),radial-gradient(circle at 24% 31%,#bf9eff 0 .12rem,transparent .16rem),radial-gradient(circle at 40% 71%,#7ee4c2 0 .13rem,transparent .17rem),radial-gradient(circle at 59% 27%,#ffadd9 0 .12rem,transparent .16rem),radial-gradient(circle at 76% 62%,#ffe58b 0 .13rem,transparent .17rem),radial-gradient(circle at 91% 38%,#9bb7ff 0 .11rem,transparent .15rem)}
-.firefly-panorama-flowerpatch--cottage{left:-8%;bottom:-7%;width:118%}.firefly-panorama-flowerpatch--glade{left:43%;bottom:14%;width:16%}.firefly-panorama-flowerpatch--village{right:10%;bottom:15%;width:15%}
-
-.firefly-panorama-bridge{position:absolute;z-index:5;left:68%;bottom:17%;width:clamp(5rem,7vw,8.5rem);height:clamp(1.8rem,2.5vw,3rem);display:flex;align-items:flex-start;gap:.08rem;padding:.25rem .3rem 0;border-radius:50% 50% 20% 20%;background:linear-gradient(180deg,#9f744b,#65462f 72%);box-shadow:0 .35rem .5rem rgb(5 18 18/.35);transform:rotate(-4deg)}
-.firefly-panorama-bridge span{flex:1 1 0;height:68%;border-radius:.2rem;background:linear-gradient(180deg,#bd8a55,#795335);box-shadow:inset 0 -.12rem 0 rgb(55 34 20/.24)}
-.firefly-panorama-bridge i,.firefly-panorama-bridge b{position:absolute;bottom:-44%;width:.28rem;height:80%;border-radius:999px;background:#573d2d}.firefly-panorama-bridge i{left:12%}.firefly-panorama-bridge b{right:12%}
-.firefly-panorama-lanterns{position:absolute;left:77%;bottom:29%;width:.24rem;height:.24rem;border-radius:50%;background:#ffe399;box-shadow:4.8rem 1.1rem 0 #ffd378,9.5rem -.5rem 0 #ffe6a5,14.2rem 1.4rem 0 #ffd478,19rem -.2rem 0 #ffe8a8;filter:drop-shadow(0 0 .45rem rgb(255 196 86/.9));animation:firefly-panorama-lantern 4.8s ease-in-out infinite alternate}
 
 .firefly-panorama-foliage{bottom:-10%;width:clamp(14rem,18vw,22rem);opacity:.72;filter:brightness(.52) saturate(1.02) hue-rotate(12deg) drop-shadow(0 -.35rem .8rem rgb(0 8 13/.42))}
 .firefly-panorama-foliage--a{left:-3%;transform:rotate(-7deg) scale(1.1)}.firefly-panorama-foliage--b{left:30%;bottom:-15%;transform:scaleX(-1) rotate(-4deg) scale(.92)}.firefly-panorama-foliage--c{left:63%;bottom:-14%;transform:rotate(4deg) scale(.88)}.firefly-panorama-foliage--d{right:-3%;transform:scaleX(-1) rotate(-6deg) scale(1.08)}
@@ -68,8 +50,5 @@
 
 @keyframes firefly-panorama-aurora{from{opacity:.24;transform:translate3d(-1%,0,0) scale(.98)}to{opacity:.42;transform:translate3d(1%,.5%,0) scale(1.04)}}
 @keyframes firefly-panorama-house-glow{from{opacity:.65;transform:scale(.94)}to{opacity:1;transform:scale(1.08)}}
-@keyframes firefly-panorama-water{from{transform:translateY(-5%)}to{transform:translateY(6%)}}
-@keyframes firefly-panorama-lantern{from{opacity:.62}to{opacity:1}}
-
 @media(max-width:48rem){.firefly-panorama-meadow{left:28%;width:44%}.firefly-panorama-landmark--cottage{width:clamp(9rem,18vw,13rem)}.firefly-panorama-landmark--rustic{width:clamp(6.5rem,11vw,8.4rem)}.firefly-panorama-landmark--treehouse{width:clamp(8rem,15vw,11.5rem)}.firefly-panorama-foliage{width:clamp(13rem,24vw,20rem)}}
 @media(prefers-reduced-motion:reduce){.firefly-illustrated *{animation:none!important;transition:none!important}}
