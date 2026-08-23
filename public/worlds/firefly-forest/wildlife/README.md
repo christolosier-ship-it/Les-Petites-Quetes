@@ -1,17 +1,9 @@
 # Bestiaire local de la Forêt des Lucioles
 
-Ces fichiers sont embarqués localement afin que la scène reste autonome hors ligne.
+Les animaux et la petite fille sont embarqués localement afin que la scène reste autonome hors ligne.
 
-## Références libres
+Les versions actuelles ont été redessinées après observation de références libres Openclipart / CC0 : Red Fox, Cartoon Owl de Lemmling, Badger, silhouettes de lapins et autres animaux. La petite fille s’appuie sur des références CC0 de GDQuest, Cute Girl Free Sprites et Little Girl In Pajamas.
 
-- Noto Emoji, Google Fonts : https://github.com/googlefonts/noto-emoji
-  - ressources image sous licence Apache 2.0 ;
-  - glyphes animaux consultés comme référence de proportions et de palette : renard U+1F98A, hibou U+1F989, blaireau U+1F9A1, lapin U+1F407, cerf U+1F98C, chauve-souris U+1F987, hérisson U+1F994 ;
-  - licence des SVG : https://github.com/googlefonts/noto-emoji/blob/main/svg/LICENSE
-- Openclipart / FreeSVG, domaine public : références complémentaires pour le hibou Lemmling et le concept « Little Girl In Pajamas ».
+Le résultat local n’est pas un collage des sources : les silhouettes ont été simplifiées, recolorées et harmonisées pour la nuit de la Forêt. Les animaux privilégient le profil ou le trois-quarts et évitent les grands visages façon emoji.
 
-## Fichiers du projet
-
-Les SVG présents dans ce dossier sont des adaptations vectorielles simplifiées dessinées pour Les Petites Quêtes afin d’unifier la famille graphique du panorama nocturne. Ils ne chargent aucune ressource distante à l’exécution.
-
-La petite fille en pyjama est un dessin local dédié à la Forêt des Lucioles. Son pyjama violet, son doudou et ses proportions sont spécifiques au projet.
+Règle de mise en scène : fille et hibou peuvent rester visibles ; hérisson discret près du cottage ; renard, lapin, blaireau et faon doivent surtout émerger pendant les moments de vie. Aucun fichier de ce dossier ne charge de ressource distante.
