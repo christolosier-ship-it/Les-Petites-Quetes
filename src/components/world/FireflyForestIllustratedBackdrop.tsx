@@ -13,81 +13,119 @@ const DIORAMA_ASSETS = {
   foliage: 'world.firefly-forest.diorama-foliage',
 } as const;
 
+function DistantHouse({ variant }: { readonly variant: 'cottage' | 'rustic' }) {
+  const asset = variant === 'cottage' ? DIORAMA_ASSETS.cottage : DIORAMA_ASSETS.rusticHouse;
+  return (
+    <span className={`firefly-panorama-house firefly-panorama-house--${variant}`}>
+      <i />
+      <img src={getAssetUrl(asset)} alt="" decoding="async" />
+    </span>
+  );
+}
+
 export function FireflyForestIllustratedBackdrop({ stage, reducedMotion }: FireflyForestIllustratedBackdropProps) {
   return (
     <div
       className={`firefly-illustrated firefly-illustrated--stage-${stage}${reducedMotion ? ' firefly-illustrated--still' : ''}`}
       aria-hidden="true"
     >
-      <div className="firefly-illustrated__sky" />
-      <div className="firefly-illustrated__aurora" />
-      <div className="firefly-illustrated__ridge firefly-illustrated__ridge--far" />
-      <div className="firefly-illustrated__ridge firefly-illustrated__ridge--mid" />
+      <div className="firefly-panorama-layer firefly-panorama-layer--sky">
+        <div className="firefly-panorama-sky" />
+        <div className="firefly-panorama-aurora firefly-panorama-aurora--violet" />
+        <div className="firefly-panorama-aurora firefly-panorama-aurora--mint" />
+      </div>
 
-      {stage >= 3 && (
-        <>
-          <div className="firefly-illustrated__village firefly-illustrated__village--left">
-            <img className="firefly-illustrated__village-house firefly-illustrated__village-house--one" src={getAssetUrl(DIORAMA_ASSETS.rusticHouse)} alt="" decoding="async" />
-            <img className="firefly-illustrated__village-house firefly-illustrated__village-house--two" src={getAssetUrl(DIORAMA_ASSETS.cottage)} alt="" decoding="async" />
+      <div className="firefly-panorama-layer firefly-panorama-layer--far">
+        <div className="firefly-panorama-ridge firefly-panorama-ridge--one" />
+        <div className="firefly-panorama-ridge firefly-panorama-ridge--two" />
+        <div className="firefly-panorama-ridge firefly-panorama-ridge--three" />
+        <div className="firefly-panorama-ridge firefly-panorama-ridge--four" />
+
+        {stage >= 3 && (
+          <>
+            <div className="firefly-panorama-village firefly-panorama-village--west">
+              <DistantHouse variant="rustic" />
+              <DistantHouse variant="cottage" />
+              <DistantHouse variant="rustic" />
+            </div>
+            <div className="firefly-panorama-village firefly-panorama-village--east">
+              <DistantHouse variant="cottage" />
+              <DistantHouse variant="rustic" />
+              <DistantHouse variant="cottage" />
+              <DistantHouse variant="rustic" />
+            </div>
+          </>
+        )}
+      </div>
+
+      <div className="firefly-panorama-layer firefly-panorama-layer--middle">
+        <div className="firefly-panorama-forestline firefly-panorama-forestline--west">
+          <img src={getAssetUrl(DIORAMA_ASSETS.foliage)} alt="" decoding="async" />
+          <img src={getAssetUrl(DIORAMA_ASSETS.foliage)} alt="" decoding="async" />
+          <img src={getAssetUrl(DIORAMA_ASSETS.foliage)} alt="" decoding="async" />
+        </div>
+        <div className="firefly-panorama-forestline firefly-panorama-forestline--east">
+          <img src={getAssetUrl(DIORAMA_ASSETS.foliage)} alt="" decoding="async" />
+          <img src={getAssetUrl(DIORAMA_ASSETS.foliage)} alt="" decoding="async" />
+          <img src={getAssetUrl(DIORAMA_ASSETS.foliage)} alt="" decoding="async" />
+        </div>
+
+        <div className="firefly-panorama-ground firefly-panorama-ground--west" />
+        <div className="firefly-panorama-ground firefly-panorama-ground--center" />
+        <div className="firefly-panorama-ground firefly-panorama-ground--east" />
+
+        <img
+          className="firefly-panorama-meadow"
+          src={getAssetUrl(DIORAMA_ASSETS.meadow)}
+          alt=""
+          decoding="async"
+        />
+      </div>
+
+      <div className="firefly-panorama-layer firefly-panorama-layer--near">
+        {stage >= 1 && (
+          <div className="firefly-panorama-landmark firefly-panorama-landmark--cottage">
+            <span className="firefly-panorama-landmark__ground" />
+            <span className="firefly-panorama-landmark__glow" />
+            <img src={getAssetUrl(DIORAMA_ASSETS.cottage)} alt="" decoding="async" />
+            <div className="firefly-panorama-flowerpatch firefly-panorama-flowerpatch--cottage" />
           </div>
-          <div className="firefly-illustrated__village firefly-illustrated__village--right">
-            <img className="firefly-illustrated__village-house firefly-illustrated__village-house--three" src={getAssetUrl(DIORAMA_ASSETS.rusticHouse)} alt="" decoding="async" />
-            <img className="firefly-illustrated__village-house firefly-illustrated__village-house--four" src={getAssetUrl(DIORAMA_ASSETS.cottage)} alt="" decoding="async" />
-          </div>
-        </>
-      )}
+        )}
 
-      <div className="firefly-illustrated__ridge firefly-illustrated__ridge--near" />
-      <img className="firefly-illustrated__meadow" src={getAssetUrl(DIORAMA_ASSETS.meadow)} alt="" decoding="async" />
-      <div className="firefly-illustrated__horizon-haze" />
+        {stage >= 2 && (
+          <>
+            <div className="firefly-panorama-landmark firefly-panorama-landmark--rustic">
+              <span className="firefly-panorama-landmark__ground" />
+              <span className="firefly-panorama-landmark__glow" />
+              <img src={getAssetUrl(DIORAMA_ASSETS.rusticHouse)} alt="" decoding="async" />
+            </div>
+            <div className="firefly-panorama-stream"><span /><i /></div>
+            <div className="firefly-panorama-flowerpatch firefly-panorama-flowerpatch--glade" />
+          </>
+        )}
 
-      {stage >= 2 && (
-        <>
-          <img className="firefly-illustrated__grove firefly-illustrated__grove--left" src={getAssetUrl(DIORAMA_ASSETS.foliage)} alt="" decoding="async" />
-          <img className="firefly-illustrated__grove firefly-illustrated__grove--right" src={getAssetUrl(DIORAMA_ASSETS.foliage)} alt="" decoding="async" />
-        </>
-      )}
+        {stage >= 3 && (
+          <>
+            <div className="firefly-panorama-landmark firefly-panorama-landmark--treehouse">
+              <span className="firefly-panorama-landmark__ground" />
+              <span className="firefly-panorama-landmark__glow" />
+              <img src={getAssetUrl(DIORAMA_ASSETS.treeHouse)} alt="" decoding="async" />
+            </div>
+            <div className="firefly-panorama-bridge"><span /><span /><span /><span /><i /><b /></div>
+            <div className="firefly-panorama-flowerpatch firefly-panorama-flowerpatch--village" />
+            <div className="firefly-panorama-lanterns" />
+          </>
+        )}
+      </div>
 
-      {stage >= 2 && <div className="firefly-illustrated__stream"><span /></div>}
-      {stage >= 2 && <div className="firefly-illustrated__wildflowers firefly-illustrated__wildflowers--left" />}
-      {stage >= 2 && <div className="firefly-illustrated__wildflowers firefly-illustrated__wildflowers--right" />}
-      {stage >= 3 && <div className="firefly-illustrated__bushes" />}
-      {stage >= 3 && <div className="firefly-illustrated__ground-lights" />}
+      <div className="firefly-panorama-layer firefly-panorama-layer--foreground">
+        <img className="firefly-panorama-foliage firefly-panorama-foliage--a" src={getAssetUrl(DIORAMA_ASSETS.foliage)} alt="" decoding="async" />
+        <img className="firefly-panorama-foliage firefly-panorama-foliage--b" src={getAssetUrl(DIORAMA_ASSETS.foliage)} alt="" decoding="async" />
+        <img className="firefly-panorama-foliage firefly-panorama-foliage--c" src={getAssetUrl(DIORAMA_ASSETS.foliage)} alt="" decoding="async" />
+        <img className="firefly-panorama-foliage firefly-panorama-foliage--d" src={getAssetUrl(DIORAMA_ASSETS.foliage)} alt="" decoding="async" />
+      </div>
 
-      {stage >= 1 && (
-        <div className="firefly-illustrated__house firefly-illustrated__house--cottage">
-          <span className="firefly-illustrated__house-glow" />
-          <img src={getAssetUrl(DIORAMA_ASSETS.cottage)} alt="" decoding="async" />
-        </div>
-      )}
-
-      {stage >= 2 && (
-        <div className="firefly-illustrated__house firefly-illustrated__house--rustic">
-          <span className="firefly-illustrated__house-glow" />
-          <img src={getAssetUrl(DIORAMA_ASSETS.rusticHouse)} alt="" decoding="async" />
-        </div>
-      )}
-
-      {stage >= 3 && (
-        <div className="firefly-illustrated__house firefly-illustrated__house--tree">
-          <span className="firefly-illustrated__house-glow" />
-          <img src={getAssetUrl(DIORAMA_ASSETS.treeHouse)} alt="" decoding="async" />
-        </div>
-      )}
-
-      {stage >= 3 && (
-        <div className="firefly-illustrated__bridge">
-          <span />
-          <span />
-          <span />
-          <span />
-        </div>
-      )}
-
-      <img className="firefly-illustrated__foliage firefly-illustrated__foliage--left" src={getAssetUrl(DIORAMA_ASSETS.foliage)} alt="" decoding="async" />
-      <img className="firefly-illustrated__foliage firefly-illustrated__foliage--right" src={getAssetUrl(DIORAMA_ASSETS.foliage)} alt="" decoding="async" />
-      <div className="firefly-illustrated__mist firefly-illustrated__mist--far" />
-      <div className="firefly-illustrated__grade" />
+      <div className="firefly-panorama-color-grade" />
     </div>
   );
 }
