@@ -64,11 +64,12 @@ Tous les fichiers de cette section proviennent également du [pack Groddle](http
 | `alakol_water_rock_2.svg` | Tiny Speck / Glitch | Pack Groddle, CC0 | `terrain/water-rock-b.webp` | Petit rocher dans le ruisseau | Rasterisation WebP transparente 700 px, rognage, compression |
 | `evenground_patch_1.svg` | Tiny Speck / Glitch | Pack Groddle, CC0 | `terrain/ground-patch-a.webp` | Irrégularités du sol et masque de rive | Rasterisation WebP transparente 800 px, rognage, compression, miroir CSS possible |
 | `evenground_patch_3.svg` | Tiny Speck / Glitch | Pack Groddle, CC0 | `terrain/ground-patch-b.webp` | Irrégularités du sol et masque de rive | Rasterisation WebP transparente 800 px, rognage, compression, miroir CSS possible |
+| `penaltybox_water_reflection.svg` | Tiny Speck / Glitch | Pack Groddle, CC0 | `terrain/water-reflection.svg` | Ruban continu et bords ondulés du ruisseau | SVG original inchangé ; deux instances pivotées en CSS, filtre nocturne modéré |
 | `wave1.svg` | Tiny Speck / Glitch | Pack Groddle, CC0 | `terrain/wave-1.webp` | Reflet supérieur du ruisseau | Rasterisation WebP transparente 600 px, suppression d’espace vide, compression |
 | `wave2.svg` | Tiny Speck / Glitch | Pack Groddle, CC0 | `terrain/wave-2.webp` | Reflet médian du ruisseau | Rasterisation WebP transparente 600 px, suppression d’espace vide, compression |
 | `wave3.svg` | Tiny Speck / Glitch | Pack Groddle, CC0 | `terrain/wave-3.webp` | Reflet inférieur du ruisseau | Rasterisation WebP transparente 600 px, suppression d’espace vide, compression |
 
-Le lit sinueux n’est pas une illustration locale : il est formé par trois champs d’eau CSS servant uniquement de masque structurel, puis rendu crédible par les véritables plaques de terrain, vaguelettes, rochers et roseaux Glitch listés ci-dessus. Aucune rivière SVG maison n’est conservée.
+Le lit du ruisseau est formé par deux instances jointives du véritable reflet d’eau Glitch, dont les bords ondulés encadrent un ruban continu. Les plaques de terrain, vaguelettes, rochers et roseaux Glitch masquent sa jonction avec le sol. Aucun champ d’eau dessiné localement ni aucune rivière SVG maison n’est conservé.
 
 ## Pont
 

@@ -32,6 +32,7 @@ export const FIREFLY_ILLUSTRATION_ASSETS = {
   waterRockB: 'world.firefly-forest.terrain-water-rock-b',
   groundPatchA: 'world.firefly-forest.terrain-ground-patch-a',
   groundPatchB: 'world.firefly-forest.terrain-ground-patch-b',
+  waterReflection: 'world.firefly-forest.terrain-water-reflection',
   wave1: 'world.firefly-forest.terrain-wave-1',
   wave2: 'world.firefly-forest.terrain-wave-2',
   wave3: 'world.firefly-forest.terrain-wave-3',
