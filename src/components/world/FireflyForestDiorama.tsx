@@ -19,9 +19,9 @@ function syncPanoramaVariables(viewport: HTMLDivElement) {
   const scroll = viewport.scrollLeft;
 
   viewport.style.setProperty('--forest-scroll-progress', ratio.toFixed(4));
-  viewport.style.setProperty('--forest-scroll-far', `${scroll * 0.7}px`);
-  viewport.style.setProperty('--forest-scroll-mid', `${scroll * 0.38}px`);
-  viewport.style.setProperty('--forest-scroll-near', `${scroll * 0.12}px`);
+  viewport.style.setProperty('--forest-scroll-far', `${scroll * 0.12}px`);
+  viewport.style.setProperty('--forest-scroll-mid', `${scroll * 0.06}px`);
+  viewport.style.setProperty('--forest-scroll-near', `${scroll * 0.02}px`);
 
   return ratio;
 }
