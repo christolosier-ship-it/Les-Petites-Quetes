@@ -1,0 +1,29 @@
+/* Harmonisation des habitants avec le panorama : moins de stickers, plus de présence dans le décor. */
+.firefly-wildlife__girl-glow{left:47.6%;bottom:5.5%;width:clamp(7rem,9vw,10rem);height:clamp(4rem,5vw,5.5rem);opacity:.16;filter:blur(.65rem)}
+.firefly-wildlife__girl{left:48%;bottom:5.5%;width:clamp(7.3rem,8.6vw,9.8rem);filter:brightness(.88) saturate(.78) hue-rotate(3deg) drop-shadow(0 .55rem .6rem rgb(0 10 18/.4))}
+.firefly-wildlife__hedgehog{left:10.5%;bottom:6.5%;width:clamp(2.4rem,2.8vw,3.2rem);opacity:.65;filter:brightness(.7) saturate(.75) drop-shadow(0 .25rem .3rem rgb(0 10 18/.3));clip-path:inset(0 0 18%)}
+.firefly-wildlife__owl{left:44.5%;bottom:42%;width:clamp(4rem,4.8vw,5.6rem);opacity:.88;filter:brightness(.77) saturate(.75) hue-rotate(4deg) drop-shadow(0 .35rem .38rem rgb(0 8 16/.36))}
+.firefly-wildlife__fox{left:26%;bottom:7.5%;width:clamp(6rem,7.2vw,8.3rem);opacity:.05;filter:brightness(.72) saturate(.78) drop-shadow(0 .35rem .42rem rgb(0 10 18/.34));clip-path:inset(0 0 12%)}
+.firefly-wildlife__rabbit{left:56%;bottom:6.5%;width:clamp(3.5rem,4.2vw,5rem);opacity:.08;filter:brightness(.72) saturate(.7) hue-rotate(3deg) drop-shadow(0 .25rem .3rem rgb(0 10 18/.3));clip-path:inset(0 0 25%)}
+.firefly-wildlife__badger{left:73.5%;bottom:10.5%;width:clamp(5rem,6vw,7rem);opacity:.04;filter:brightness(.69) saturate(.66) hue-rotate(5deg) drop-shadow(0 .3rem .35rem rgb(0 10 18/.32));clip-path:inset(0 0 14%)}
+.firefly-wildlife__deer{left:88.5%;bottom:22%;width:clamp(4.8rem,5.6vw,6.5rem);opacity:.2;filter:brightness(.62) saturate(.58) hue-rotate(6deg) drop-shadow(0 .28rem .34rem rgb(0 9 16/.26))}
+.firefly-wildlife__bats{opacity:.06}
+
+.firefly-wildlife--fox .firefly-wildlife__fox{opacity:.86;clip-path:inset(0)}
+.firefly-wildlife--rabbit .firefly-wildlife__rabbit{opacity:.84;clip-path:inset(0)}
+.firefly-wildlife--badger .firefly-wildlife__badger{opacity:.78;clip-path:inset(0)}
+.firefly-wildlife--deer .firefly-wildlife__deer{opacity:.72}
+.firefly-wildlife--owl .firefly-wildlife__owl{opacity:1}
+.firefly-wildlife--bats .firefly-wildlife__bats{opacity:.78}
+
+/* Les animaux sont absorbés par le terrain au repos plutôt que posés comme des pictogrammes. */
+.firefly-wildlife::after{content:'';position:absolute;z-index:4;left:23%;right:5%;bottom:0;height:8%;pointer-events:none;background:linear-gradient(180deg,transparent,rgb(8 65 47/.48) 58%,rgb(5 47 39/.7));mask-image:linear-gradient(90deg,transparent 0,#000 8%,#000 94%,transparent 100%)}
+.firefly-wildlife__girl,.firefly-wildlife__owl{z-index:6}
+
+@media(max-width:48rem){
+  .firefly-wildlife__girl{width:7rem;left:47.5%}
+  .firefly-wildlife__owl{bottom:40%;width:4rem}
+  .firefly-wildlife__fox{width:5.7rem}
+  .firefly-wildlife__badger{bottom:10%;width:5rem}
+  .firefly-wildlife__deer{opacity:.16}
+}
