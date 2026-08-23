@@ -1,8 +1,9 @@
-import { lazy, Suspense, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react';
+import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import { FireflyForestIllustratedBackdrop } from './FireflyForestIllustratedBackdrop';
 import type { WorldSceneRendererProps } from './WorldSceneProps';
 
 const FireflyForestScene = lazy(() => import('./FireflyForestScene').then((module) => ({ default: module.FireflyForestScene })));
+const DEFAULT_PANORAMA_RATIO = 0.34;
 
 function FireflySceneFallback() {
   return (
@@ -12,43 +13,78 @@ function FireflySceneFallback() {
   );
 }
 
-function setIllustratedParallax(container: HTMLDivElement, x: number, y: number) {
-  container.style.setProperty('--forest-x-far', `${x * -4}px`);
-  container.style.setProperty('--forest-y-far', `${y * -2}px`);
-  container.style.setProperty('--forest-x-mid', `${x * -9}px`);
-  container.style.setProperty('--forest-y-mid', `${y * -4}px`);
-  container.style.setProperty('--forest-x-near', `${x * -16}px`);
-  container.style.setProperty('--forest-y-near', `${y * -7}px`);
+function syncPanoramaVariables(viewport: HTMLDivElement) {
+  const maxScroll = Math.max(viewport.scrollWidth - viewport.clientWidth, 1);
+  const ratio = Math.min(Math.max(viewport.scrollLeft / maxScroll, 0), 1);
+  const scroll = viewport.scrollLeft;
+
+  viewport.style.setProperty('--forest-scroll-progress', ratio.toFixed(4));
+  viewport.style.setProperty('--forest-scroll-far', `${scroll * 0.7}px`);
+  viewport.style.setProperty('--forest-scroll-mid', `${scroll * 0.38}px`);
+  viewport.style.setProperty('--forest-scroll-near', `${scroll * 0.12}px`);
+
+  return ratio;
 }
 
 export function FireflyForestDiorama({ world, stage, reducedMotion, compact = false }: WorldSceneRendererProps) {
   const [expanded, setExpanded] = useState(false);
-  const dioramaRef = useRef<HTMLDivElement>(null);
+  const panoramaRef = useRef<HTMLDivElement>(null);
+  const scrollRatioRef = useRef(DEFAULT_PANORAMA_RATIO);
+  const didPositionRef = useRef(false);
   const className = compact ? 'parallax-scene parallax-scene--compact' : 'parallax-scene';
   const sceneClassName = `${className} parallax-scene--three${expanded ? ' parallax-scene--expanded' : ''}`;
 
-  function moveIllustration(event: ReactPointerEvent<HTMLDivElement>) {
-    if (reducedMotion || !dioramaRef.current) return;
-    const bounds = event.currentTarget.getBoundingClientRect();
-    const x = ((event.clientX - bounds.left) / Math.max(bounds.width, 1) - 0.5) * 2;
-    const y = ((event.clientY - bounds.top) / Math.max(bounds.height, 1) - 0.5) * 2;
-    setIllustratedParallax(dioramaRef.current, x, y);
+  useEffect(() => {
+    const viewport = panoramaRef.current;
+    if (!viewport) return;
+
+    const positionPanorama = () => {
+      const maxScroll = Math.max(viewport.scrollWidth - viewport.clientWidth, 0);
+      const ratio = didPositionRef.current ? scrollRatioRef.current : DEFAULT_PANORAMA_RATIO;
+      viewport.scrollLeft = maxScroll * ratio;
+      scrollRatioRef.current = syncPanoramaVariables(viewport);
+      didPositionRef.current = true;
+    };
+
+    const frame = window.requestAnimationFrame(positionPanorama);
+    const observer = new ResizeObserver(positionPanorama);
+    observer.observe(viewport);
+
+    return () => {
+      window.cancelAnimationFrame(frame);
+      observer.disconnect();
+    };
+  }, [expanded]);
+
+  function handlePanoramaScroll() {
+    const viewport = panoramaRef.current;
+    if (!viewport) return;
+    scrollRatioRef.current = syncPanoramaVariables(viewport);
   }
 
-  function resetIllustration() {
-    if (dioramaRef.current) setIllustratedParallax(dioramaRef.current, 0, 0);
+  function scrollPanorama(direction: -1 | 1) {
+    const viewport = panoramaRef.current;
+    if (!viewport) return;
+    viewport.scrollBy({
+      left: viewport.clientWidth * 0.72 * direction,
+      behavior: reducedMotion ? 'auto' : 'smooth',
+    });
   }
 
   const content = (
     <>
-      <div
-        ref={dioramaRef}
-        className={`firefly-forest-three firefly-forest-three--stage-${stage}`}
-        onPointerMove={moveIllustration}
-        onPointerLeave={resetIllustration}
-        aria-hidden="true"
-      >
-        <FireflyForestIllustratedBackdrop stage={stage} reducedMotion={reducedMotion} />
+      <div className={`firefly-forest-three firefly-forest-three--stage-${stage}`}>
+        <div
+          ref={panoramaRef}
+          className={`firefly-panorama${expanded ? ' firefly-panorama--explorable' : ''}`}
+          onScroll={handlePanoramaScroll}
+          data-firefly-panorama="true"
+          aria-hidden="true"
+        >
+          <div className="firefly-panorama__track">
+            <FireflyForestIllustratedBackdrop stage={stage} reducedMotion={reducedMotion} />
+          </div>
+        </div>
         <Suspense fallback={<FireflySceneFallback />}>
           <FireflyForestScene stage={stage} reducedMotion={reducedMotion} />
         </Suspense>
@@ -74,14 +110,16 @@ export function FireflyForestDiorama({ world, stage, reducedMotion, compact = fa
       className={sceneClassName}
       data-world-id={world.id}
       data-world-stage={stage}
-      role="button"
-      tabIndex={0}
-      aria-label={expanded ? 'Réduire le tableau de la Forêt des Lucioles' : 'Agrandir le tableau de la Forêt des Lucioles'}
-      onClick={() => setExpanded((value) => !value)}
+      role={expanded ? undefined : 'button'}
+      tabIndex={expanded ? -1 : 0}
+      aria-label={expanded ? undefined : 'Agrandir le panorama de la Forêt des Lucioles'}
+      onClick={() => {
+        if (!expanded) setExpanded(true);
+      }}
       onKeyDown={(event) => {
-        if (event.key === 'Enter' || event.key === ' ') {
+        if (!expanded && (event.key === 'Enter' || event.key === ' ')) {
           event.preventDefault();
-          setExpanded((value) => !value);
+          setExpanded(true);
         }
         if (event.key === 'Escape') setExpanded(false);
       }}
@@ -90,7 +128,7 @@ export function FireflyForestDiorama({ world, stage, reducedMotion, compact = fa
       <button
         type="button"
         className="parallax-scene__expand"
-        aria-label={expanded ? 'Quitter le plein écran du tableau' : 'Mettre le tableau en grand écran'}
+        aria-label={expanded ? 'Quitter le plein écran du panorama' : 'Mettre le panorama en grand écran'}
         onClick={(event) => {
           event.stopPropagation();
           setExpanded((value) => !value);
@@ -99,7 +137,23 @@ export function FireflyForestDiorama({ world, stage, reducedMotion, compact = fa
         <span aria-hidden="true">{expanded ? '✕' : '⛶'}</span>
         <span>{expanded ? 'Réduire' : 'Grand écran'}</span>
       </button>
-      {!expanded && <div className="parallax-scene__hint">Touchez le tableau pour entrer dans la forêt</div>}
+
+      {expanded && (
+        <div className="firefly-panorama__controls" onClick={(event) => event.stopPropagation()}>
+          <button type="button" onClick={() => scrollPanorama(-1)} aria-label="Explorer la forêt vers la gauche">
+            ←
+          </button>
+          <div className="firefly-panorama__guide">
+            <span>Glisse pour explorer la forêt</span>
+            <span className="firefly-panorama__progress"><i /></span>
+          </div>
+          <button type="button" onClick={() => scrollPanorama(1)} aria-label="Explorer la forêt vers la droite">
+            →
+          </button>
+        </div>
+      )}
+
+      {!expanded && <div className="parallax-scene__hint">Touchez le tableau pour explorer le panorama</div>}
     </div>
   );
 }

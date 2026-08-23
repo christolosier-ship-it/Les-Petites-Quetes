@@ -1,0 +1,142 @@
+/* Panorama horizontal de la Forêt des Lucioles.
+   Le diorama illustré défile sous la couche vivante Three.js. */
+
+.firefly-panorama {
+  --forest-scroll-progress: 0.34;
+  --forest-scroll-far: 0px;
+  --forest-scroll-mid: 0px;
+  --forest-scroll-near: 0px;
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  overflow: hidden;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+}
+
+.firefly-panorama::-webkit-scrollbar {
+  display: none;
+}
+
+.firefly-panorama--explorable {
+  overflow-x: auto;
+  overflow-y: hidden;
+  touch-action: pan-x;
+  cursor: grab;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+}
+
+.firefly-panorama--explorable:active {
+  cursor: grabbing;
+}
+
+.firefly-panorama__track {
+  position: relative;
+  width: clamp(1800px, 280vw, 3800px);
+  height: 100%;
+  min-height: 100%;
+  overflow: hidden;
+}
+
+.firefly-forest-three__actors {
+  z-index: 6;
+  pointer-events: none;
+}
+
+.firefly-forest-three__canvas {
+  pointer-events: none;
+}
+
+.firefly-panorama__controls {
+  position: absolute;
+  z-index: 12;
+  left: 50%;
+  bottom: max(1rem, env(safe-area-inset-bottom));
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  width: min(28rem, calc(100% - 2rem));
+  transform: translateX(-50%);
+}
+
+.firefly-panorama__controls > button {
+  flex: 0 0 auto;
+  width: 2.85rem;
+  height: 2.85rem;
+  border: 1px solid rgb(255 255 255 / 0.42);
+  border-radius: 999px;
+  background: rgb(5 22 36 / 0.72);
+  color: #fff7d1;
+  font: inherit;
+  font-size: 1.35rem;
+  font-weight: 900;
+  backdrop-filter: blur(0.45rem);
+  box-shadow: 0 0.35rem 1rem rgb(1 8 20 / 0.3);
+  cursor: pointer;
+}
+
+.firefly-panorama__controls > button:focus-visible {
+  outline: 2px solid rgb(239 255 190 / 0.88);
+  outline-offset: 3px;
+}
+
+.firefly-panorama__guide {
+  flex: 1 1 auto;
+  display: grid;
+  gap: 0.35rem;
+  min-width: 0;
+  padding: 0.5rem 0.8rem 0.58rem;
+  border: 1px solid rgb(255 255 255 / 0.24);
+  border-radius: 999px;
+  background: rgb(5 22 36 / 0.66);
+  color: rgb(247 250 239 / 0.9);
+  font-size: 0.76rem;
+  font-weight: 800;
+  text-align: center;
+  backdrop-filter: blur(0.45rem);
+  box-shadow: 0 0.35rem 1rem rgb(1 8 20 / 0.24);
+}
+
+.firefly-panorama__progress {
+  position: relative;
+  display: block;
+  height: 0.24rem;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgb(255 255 255 / 0.14);
+}
+
+.firefly-panorama__progress i {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #ffe49a, #9ff5d8, #b8a8ff);
+  transform: scaleX(var(--forest-scroll-progress));
+  transform-origin: left center;
+  transition: transform 100ms linear;
+}
+
+@media (max-width: 36rem) {
+  .firefly-panorama__track {
+    width: clamp(1600px, 390vw, 2400px);
+  }
+
+  .firefly-panorama__controls {
+    width: calc(100% - 1.25rem);
+  }
+
+  .firefly-panorama__guide {
+    font-size: 0.68rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .firefly-panorama--explorable {
+    scroll-behavior: auto;
+  }
+
+  .firefly-panorama__progress i {
+    transition: none;
+  }
+}
