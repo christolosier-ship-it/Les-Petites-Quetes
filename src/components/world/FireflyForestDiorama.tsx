@@ -1,5 +1,6 @@
 import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import { FireflyForestIllustratedBackdrop } from './FireflyForestIllustratedBackdrop';
+import { FireflyForestWildlife } from './FireflyForestWildlife';
 import type { WorldSceneRendererProps } from './WorldSceneProps';
 
 const FireflyForestScene = lazy(() => import('./FireflyForestScene').then((module) => ({ default: module.FireflyForestScene })));
@@ -83,6 +84,7 @@ export function FireflyForestDiorama({ world, stage, reducedMotion, compact = fa
         >
           <div className="firefly-panorama__track">
             <FireflyForestIllustratedBackdrop stage={stage} reducedMotion={reducedMotion} />
+            <FireflyForestWildlife stage={stage} reducedMotion={reducedMotion} />
           </div>
         </div>
         <Suspense fallback={<FireflySceneFallback />}>

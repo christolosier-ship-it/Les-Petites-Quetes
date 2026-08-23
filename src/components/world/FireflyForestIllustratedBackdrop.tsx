@@ -23,6 +23,15 @@ function DistantHouse({ variant }: { readonly variant: 'cottage' | 'rustic' }) {
   );
 }
 
+function PanoramaTree({ name, depth = 'middle' }: { readonly name: string; readonly depth?: 'far' | 'middle' | 'near' }) {
+  return (
+    <span className={`firefly-panorama-tree firefly-panorama-tree--${depth} firefly-panorama-tree--${name}`}>
+      <i />
+      <img src={getAssetUrl(DIORAMA_ASSETS.foliage)} alt="" decoding="async" />
+    </span>
+  );
+}
+
 export function FireflyForestIllustratedBackdrop({ stage, reducedMotion }: FireflyForestIllustratedBackdropProps) {
   return (
     <div
@@ -40,6 +49,17 @@ export function FireflyForestIllustratedBackdrop({ stage, reducedMotion }: Firef
         <div className="firefly-panorama-ridge firefly-panorama-ridge--two" />
         <div className="firefly-panorama-ridge firefly-panorama-ridge--three" />
         <div className="firefly-panorama-ridge firefly-panorama-ridge--four" />
+
+        <div className="firefly-panorama-distant-woods">
+          <PanoramaTree name="far-a" depth="far" />
+          <PanoramaTree name="far-b" depth="far" />
+          <PanoramaTree name="far-c" depth="far" />
+          <PanoramaTree name="far-d" depth="far" />
+          <PanoramaTree name="far-e" depth="far" />
+          <PanoramaTree name="far-f" depth="far" />
+          <PanoramaTree name="far-g" depth="far" />
+          <PanoramaTree name="far-h" depth="far" />
+        </div>
 
         {stage >= 3 && (
           <>
@@ -70,6 +90,19 @@ export function FireflyForestIllustratedBackdrop({ stage, reducedMotion }: Firef
           <img src={getAssetUrl(DIORAMA_ASSETS.foliage)} alt="" decoding="async" />
         </div>
 
+        <div className="firefly-panorama-tree-grove firefly-panorama-tree-grove--middle">
+          <PanoramaTree name="west-a" />
+          <PanoramaTree name="west-b" />
+          <PanoramaTree name="west-c" />
+          <PanoramaTree name="west-d" />
+          <PanoramaTree name="center-a" />
+          <PanoramaTree name="center-b" />
+          <PanoramaTree name="east-a" />
+          <PanoramaTree name="east-b" />
+          <PanoramaTree name="east-c" />
+          <PanoramaTree name="east-d" />
+        </div>
+
         <div className="firefly-panorama-ground firefly-panorama-ground--west" />
         <div className="firefly-panorama-ground firefly-panorama-ground--center" />
         <div className="firefly-panorama-ground firefly-panorama-ground--east" />
@@ -83,6 +116,15 @@ export function FireflyForestIllustratedBackdrop({ stage, reducedMotion }: Firef
       </div>
 
       <div className="firefly-panorama-layer firefly-panorama-layer--near">
+        <div className="firefly-panorama-tree-grove firefly-panorama-tree-grove--near">
+          <PanoramaTree name="near-west-a" depth="near" />
+          <PanoramaTree name="near-west-b" depth="near" />
+          <PanoramaTree name="near-center-a" depth="near" />
+          <PanoramaTree name="near-east-a" depth="near" />
+          <PanoramaTree name="near-east-b" depth="near" />
+          <PanoramaTree name="near-east-c" depth="near" />
+        </div>
+
         {stage >= 1 && (
           <div className="firefly-panorama-landmark firefly-panorama-landmark--cottage">
             <span className="firefly-panorama-landmark__ground" />
@@ -123,6 +165,8 @@ export function FireflyForestIllustratedBackdrop({ stage, reducedMotion }: Firef
         <img className="firefly-panorama-foliage firefly-panorama-foliage--b" src={getAssetUrl(DIORAMA_ASSETS.foliage)} alt="" decoding="async" />
         <img className="firefly-panorama-foliage firefly-panorama-foliage--c" src={getAssetUrl(DIORAMA_ASSETS.foliage)} alt="" decoding="async" />
         <img className="firefly-panorama-foliage firefly-panorama-foliage--d" src={getAssetUrl(DIORAMA_ASSETS.foliage)} alt="" decoding="async" />
+        <PanoramaTree name="foreground-west" depth="near" />
+        <PanoramaTree name="foreground-east" depth="near" />
       </div>
 
       <div className="firefly-panorama-color-grade" />

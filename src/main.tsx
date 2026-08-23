@@ -10,6 +10,7 @@ import './styles/world.css';
 import './styles/firefly-world.css';
 import './styles/firefly-diorama.css';
 import './styles/firefly-panorama.css';
+import './styles/firefly-life.css';
 import './styles/finalization.css';
 
 const root = document.getElementById('root');
