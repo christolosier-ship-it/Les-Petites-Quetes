@@ -48,6 +48,7 @@
   filter: brightness(.34) saturate(.62) hue-rotate(17deg);
 }
 .firefly-scenery-tree--middle {
+  z-index: 2;
   bottom: 14%;
   width: clamp(6.2rem, 7.6vw, 9.8rem);
   opacity: .68;
@@ -96,6 +97,7 @@
 
 .firefly-terrain-patch {
   position: absolute !important;
+  z-index: 1;
   bottom: 8%;
   height: auto;
   opacity: .54;
@@ -152,14 +154,14 @@
 .firefly-panorama-river__water {
   position: absolute;
   display: block;
-  border-radius: 46% 54% 50% 50%;
+  border-radius: 48% 52% 46% 54% / 14% 16% 14% 16%;
   background: linear-gradient(104deg, #0a4d5d 0%, #287885 32%, #76b4b3 48%, #266e7c 64%, #083f52 100%);
   box-shadow: inset .4rem 0 rgb(6 56 51 / .35), inset -.4rem 0 rgb(6 51 48 / .35), 0 .2rem .55rem rgb(2 25 34 / .24);
-  opacity: .8;
+  opacity: .74;
 }
-.firefly-panorama-river__water--upper { left: 38%; top: -2%; width: 17%; height: 36%; transform: rotate(11deg); }
-.firefly-panorama-river__water--middle { left: 33%; top: 25%; width: 24%; height: 43%; transform: rotate(-12deg); }
-.firefly-panorama-river__water--lower { left: 40%; top: 58%; width: 34%; height: 49%; transform: rotate(15deg); }
+.firefly-panorama-river__water--upper { left: 42%; top: -8%; width: 11%; height: 48%; transform: rotate(14deg); }
+.firefly-panorama-river__water--middle { left: 36%; top: 25%; width: 14%; height: 51%; transform: rotate(-12deg); }
+.firefly-panorama-river__water--lower { left: 39%; top: 57%; width: 19%; height: 55%; transform: rotate(12deg); }
 
 .firefly-river-wave,
 .firefly-river-bank,
@@ -176,11 +178,11 @@
 .firefly-river-bank--upper { left: 2%; top: 4%; width: 54%; transform: rotate(2deg); }
 .firefly-river-bank--lower { right: -2%; bottom: -3%; width: 62%; transform: rotate(-4deg) scaleX(-1); }
 .firefly-river-rock { z-index: 4; filter: brightness(.56) saturate(.68) hue-rotate(9deg) drop-shadow(0 .28rem .35rem rgb(0 12 18 / .34)); }
-.firefly-river-rock--one { left: 13%; top: 37%; width: 24%; transform: scaleX(-1); }
-.firefly-river-rock--two { right: 3%; top: 55%; width: 22%; }
-.firefly-river-reeds { z-index: 5; width: 15%; filter: brightness(.58) saturate(.74) hue-rotate(8deg) drop-shadow(0 .25rem .3rem rgb(0 12 18 / .3)); }
-.firefly-river-reeds--one { left: 23%; top: 13%; transform: rotate(-7deg); }
-.firefly-river-reeds--two { right: 9%; bottom: 6%; transform: rotate(6deg) scaleX(-1); }
+.firefly-river-rock--one { left: 22%; top: 39%; width: 18%; transform: scaleX(-1); }
+.firefly-river-rock--two { right: 20%; top: 58%; width: 16%; }
+.firefly-river-reeds { z-index: 5; width: 11%; filter: brightness(.58) saturate(.74) hue-rotate(8deg) drop-shadow(0 .25rem .3rem rgb(0 12 18 / .3)); }
+.firefly-river-reeds--one { left: 31%; top: 13%; transform: rotate(-7deg); }
+.firefly-river-reeds--two { right: 25%; bottom: 5%; transform: rotate(6deg) scaleX(-1); }
 
 .firefly-panorama-bridge-asset {
   position: absolute !important;

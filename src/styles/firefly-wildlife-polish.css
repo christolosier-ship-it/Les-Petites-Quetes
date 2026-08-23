@@ -11,7 +11,7 @@
   left: 48.3%;
   bottom: 5.3%;
   width: clamp(5rem, 6vw, 7rem);
-  filter: brightness(.97) saturate(.82) hue-rotate(2deg) drop-shadow(0 .55rem .65rem rgb(0 10 18 / .4));
+  filter: brightness(.76) saturate(.72) sepia(.05) hue-rotate(3deg) drop-shadow(0 .55rem .65rem rgb(0 10 18 / .4));
 }
 .firefly-wildlife__hedgehog {
   left: 10.2%;
@@ -22,10 +22,10 @@
 }
 .firefly-wildlife__owl {
   left: 44%;
-  bottom: 42.5%;
+  bottom: 24%;
   width: clamp(3.3rem, 4vw, 4.7rem);
-  opacity: .82;
-  filter: brightness(.72) saturate(.68) hue-rotate(5deg) drop-shadow(0 .35rem .38rem rgb(0 8 16 / .36));
+  opacity: .62;
+  filter: brightness(.66) saturate(.62) hue-rotate(5deg) drop-shadow(0 .35rem .38rem rgb(0 8 16 / .36));
 }
 .firefly-wildlife__fox {
   left: 26%;
@@ -61,7 +61,7 @@
 .firefly-wildlife--rabbit .firefly-wildlife__rabbit { opacity: .8; }
 .firefly-wildlife--badger .firefly-wildlife__badger { opacity: .74; }
 .firefly-wildlife--deer .firefly-wildlife__deer { opacity: .68; }
-.firefly-wildlife--owl .firefly-wildlife__owl { opacity: .94; }
+.firefly-wildlife--owl .firefly-wildlife__owl { opacity: .88; }
 .firefly-wildlife--bats .firefly-wildlife__bats { opacity: .7; }
 
 .firefly-wildlife::after {
@@ -81,7 +81,7 @@
 
 @media (max-width: 48rem) {
   .firefly-wildlife__girl { width: 5.2rem; left: 48%; }
-  .firefly-wildlife__owl { bottom: 40%; width: 3.5rem; }
+  .firefly-wildlife__owl { bottom: 23%; width: 3.5rem; }
   .firefly-wildlife__fox { width: 4.8rem; }
   .firefly-wildlife__badger { bottom: 8%; width: 3.3rem; }
   .firefly-wildlife__deer { opacity: .14; }
