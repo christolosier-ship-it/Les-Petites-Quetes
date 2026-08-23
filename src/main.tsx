@@ -8,6 +8,7 @@ import './styles/app.css';
 import './styles/forms.css';
 import './styles/world.css';
 import './styles/firefly-world.css';
+import './styles/firefly-diorama.css';
 import './styles/finalization.css';
 
 const root = document.getElementById('root');

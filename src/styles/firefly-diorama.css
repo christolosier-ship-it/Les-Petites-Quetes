@@ -1,0 +1,140 @@
+/* Direction artistique du diorama illustré Firefly.
+   Les règles de renderer restent dans firefly-world.css. */
+
+/* Passe 1 · Réparer la lecture de la scène */
+.firefly-illustrated__house--rustic {
+  right: 12%;
+  bottom: 22%;
+  width: clamp(4.2rem, 8vw, 7rem);
+  opacity: 0.78;
+  transform: translate3d(var(--forest-x-far), var(--forest-y-far), 0);
+}
+
+.firefly-illustrated__house--rustic::before {
+  content: '';
+  position: absolute;
+  z-index: -2;
+  left: 50%;
+  bottom: -22%;
+  width: 190%;
+  height: 58%;
+  border-radius: 52% 48% 42% 58% / 72% 68% 32% 28%;
+  background:
+    radial-gradient(circle at 62% 30%, rgb(96 144 91 / 0.35), transparent 24%),
+    linear-gradient(180deg, rgb(44 101 64 / 0.92), rgb(14 56 43 / 0.98));
+  box-shadow: 0 0.9rem 1.2rem rgb(1 12 19 / 0.38);
+  transform: translateX(-50%) rotate(-3deg);
+}
+
+.firefly-illustrated__house--rustic::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  left: 46%;
+  bottom: -32%;
+  width: 24%;
+  height: 42%;
+  border-radius: 55% 45% 70% 30%;
+  background: linear-gradient(180deg, rgb(151 126 89 / 0.4), rgb(89 83 68 / 0.12));
+  filter: blur(0.08rem);
+  transform: rotate(18deg);
+}
+
+.firefly-illustrated__house--tree {
+  right: 3%;
+  bottom: 7%;
+  width: clamp(6rem, 12vw, 10rem);
+  opacity: 0.88;
+}
+
+.firefly-illustrated__house--tree::before {
+  content: '';
+  position: absolute;
+  z-index: -2;
+  left: 48%;
+  bottom: -9%;
+  width: 145%;
+  height: 38%;
+  border-radius: 50%;
+  background: radial-gradient(ellipse, rgb(23 70 49 / 0.88), rgb(5 36 32 / 0.08) 72%);
+  transform: translateX(-50%);
+}
+
+.firefly-illustrated__stream {
+  right: 2%;
+  bottom: -13%;
+  width: 20%;
+  height: 55%;
+  opacity: 0.28;
+  border-radius: 58% 42% 18% 82% / 30% 48% 52% 70%;
+  background:
+    linear-gradient(102deg, rgb(7 43 63 / 0.16), rgb(66 137 161 / 0.45) 38%, rgb(181 226 230 / 0.25) 49%, rgb(27 88 110 / 0.4));
+  clip-path: polygon(42% 0, 64% 0, 74% 11%, 65% 24%, 77% 38%, 61% 52%, 73% 69%, 91% 100%, 10% 100%, 31% 72%, 22% 56%, 37% 39%, 29% 24%, 39% 11%);
+  filter: blur(0.08rem) drop-shadow(0 0 0.55rem rgb(80 172 201 / 0.11));
+  transform: translate3d(var(--forest-x-mid), var(--forest-y-mid), 0) rotate(8deg);
+}
+
+.firefly-illustrated__stream::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0.7;
+  background:
+    linear-gradient(90deg, rgb(7 44 35 / 0.62) 0 16%, transparent 24% 76%, rgb(7 44 35 / 0.58) 84% 100%);
+}
+
+.firefly-illustrated__stream span {
+  opacity: 0.38;
+}
+
+.firefly-illustrated__stream span::after {
+  content: '';
+  position: absolute;
+  left: 34%;
+  top: 45%;
+  width: 46%;
+  height: 0.18rem;
+  border-radius: 999px;
+  background: rgb(226 248 244 / 0.3);
+  box-shadow:
+    -0.6rem 1.6rem 0 rgb(222 244 240 / 0.17),
+    0.35rem 3.1rem 0 rgb(222 244 240 / 0.13);
+  transform: rotate(-8deg);
+}
+
+.parallax-scene--expanded .firefly-illustrated__house--rustic {
+  right: 12%;
+  bottom: 23%;
+  width: min(8vw, 7.2rem);
+}
+
+.parallax-scene--expanded .firefly-illustrated__house--tree {
+  right: 3%;
+  bottom: 6%;
+  width: min(12vw, 10.5rem);
+}
+
+.parallax-scene--expanded .firefly-illustrated__stream {
+  right: 3%;
+  width: 19%;
+  opacity: 0.26;
+}
+
+@media (max-width: 36rem) {
+  .firefly-illustrated__house--rustic {
+    right: 10%;
+    bottom: 25%;
+    width: 15vw;
+  }
+
+  .firefly-illustrated__house--tree {
+    right: -1%;
+    width: 22vw;
+  }
+
+  .firefly-illustrated__stream {
+    right: -5%;
+    width: 28%;
+    opacity: 0.25;
+  }
+}
