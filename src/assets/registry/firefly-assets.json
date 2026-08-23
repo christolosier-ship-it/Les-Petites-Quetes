@@ -53,5 +53,93 @@
     "maxBytes": 250000,
     "ageBands": ["3-5", "6-8", "9-10"],
     "states": ["diorama", "foreground"]
+  },
+  {
+    "id": "world.firefly-forest.wildlife-fox",
+    "type": "illustration",
+    "path": "worlds/firefly-forest/wildlife/fox.svg",
+    "width": 128,
+    "height": 128,
+    "alt": "Renard de la Forêt des Lucioles.",
+    "maxBytes": 12000,
+    "ageBands": ["3-5", "6-8", "9-10"],
+    "states": ["wildlife", "stage-2"]
+  },
+  {
+    "id": "world.firefly-forest.wildlife-owl",
+    "type": "illustration",
+    "path": "worlds/firefly-forest/wildlife/owl.svg",
+    "width": 128,
+    "height": 128,
+    "alt": "Hibou de la Forêt des Lucioles.",
+    "maxBytes": 12000,
+    "ageBands": ["3-5", "6-8", "9-10"],
+    "states": ["wildlife", "stage-2"]
+  },
+  {
+    "id": "world.firefly-forest.wildlife-badger",
+    "type": "illustration",
+    "path": "worlds/firefly-forest/wildlife/badger.svg",
+    "width": 128,
+    "height": 128,
+    "alt": "Blaireau de la Forêt des Lucioles.",
+    "maxBytes": 12000,
+    "ageBands": ["3-5", "6-8", "9-10"],
+    "states": ["wildlife", "stage-3"]
+  },
+  {
+    "id": "world.firefly-forest.wildlife-rabbit",
+    "type": "illustration",
+    "path": "worlds/firefly-forest/wildlife/rabbit.svg",
+    "width": 128,
+    "height": 128,
+    "alt": "Lapin de la Forêt des Lucioles.",
+    "maxBytes": 12000,
+    "ageBands": ["3-5", "6-8", "9-10"],
+    "states": ["wildlife", "stage-2"]
+  },
+  {
+    "id": "world.firefly-forest.wildlife-deer",
+    "type": "illustration",
+    "path": "worlds/firefly-forest/wildlife/deer.svg",
+    "width": 128,
+    "height": 128,
+    "alt": "Faon de la Forêt des Lucioles.",
+    "maxBytes": 12000,
+    "ageBands": ["3-5", "6-8", "9-10"],
+    "states": ["wildlife", "stage-3", "distant"]
+  },
+  {
+    "id": "world.firefly-forest.wildlife-bat",
+    "type": "illustration",
+    "path": "worlds/firefly-forest/wildlife/bat.svg",
+    "width": 128,
+    "height": 128,
+    "alt": "Chauve-souris de la Forêt des Lucioles.",
+    "maxBytes": 12000,
+    "ageBands": ["3-5", "6-8", "9-10"],
+    "states": ["wildlife", "stage-3", "sky"]
+  },
+  {
+    "id": "world.firefly-forest.wildlife-hedgehog",
+    "type": "illustration",
+    "path": "worlds/firefly-forest/wildlife/hedgehog.svg",
+    "width": 128,
+    "height": 128,
+    "alt": "Hérisson de la Forêt des Lucioles.",
+    "maxBytes": 12000,
+    "ageBands": ["3-5", "6-8", "9-10"],
+    "states": ["wildlife", "stage-1"]
+  },
+  {
+    "id": "world.firefly-forest.girl-pajamas",
+    "type": "illustration",
+    "path": "worlds/firefly-forest/wildlife/girl-pajamas.svg",
+    "width": 128,
+    "height": 128,
+    "alt": "Petite fille en pyjama avec son doudou dans la Forêt des Lucioles.",
+    "maxBytes": 12000,
+    "ageBands": ["3-5", "6-8", "9-10"],
+    "states": ["character", "stage-1"]
   }
 ]
