@@ -1,0 +1,28 @@
+/* Micro-scènes espacées du panorama Firefly. Une seule activité forte à la fois. */
+.firefly-wildlife__girl-glow{position:absolute;z-index:4;left:47.2%;bottom:7%;width:clamp(6rem,8vw,9rem);height:clamp(4rem,5vw,6rem);border-radius:50%;opacity:.26;background:radial-gradient(ellipse,rgb(255 225 146/.42),rgb(158 126 247/.12) 45%,transparent 73%);filter:blur(.5rem)}
+.firefly-wildlife__girl,.firefly-wildlife__fox,.firefly-wildlife__owl,.firefly-wildlife__badger,.firefly-wildlife__rabbit,.firefly-wildlife__deer,.firefly-wildlife__hedgehog,.firefly-wildlife__bats{transition:transform .45s ease,opacity .45s ease,filter .45s ease}
+.firefly-wildlife__bats{opacity:.1}
+.firefly-wildlife--fox .firefly-wildlife__fox{animation:firefly-fox-wander 6.2s ease-in-out both;filter:brightness(1.08) saturate(1.08) drop-shadow(0 .4rem .48rem rgb(0 10 18/.34))}
+.firefly-wildlife--owl .firefly-wildlife__owl{animation:firefly-owl-watch 4.8s ease-in-out both;filter:brightness(1.12) saturate(1.05) drop-shadow(0 0 .5rem rgb(255 220 135/.2))}
+.firefly-wildlife--badger .firefly-wildlife__badger{animation:firefly-badger-sniff 5.6s ease-in-out both}
+.firefly-wildlife--rabbit .firefly-wildlife__rabbit{animation:firefly-rabbit-hop 3.6s ease-in-out both}
+.firefly-wildlife--deer .firefly-wildlife__deer{animation:firefly-deer-listen 4.4s ease-in-out both;opacity:.92;filter:brightness(.92) saturate(.9) drop-shadow(0 .3rem .45rem rgb(0 9 16/.3))}
+.firefly-wildlife--bats .firefly-wildlife__bats{opacity:.88;animation:firefly-bats-cross 6.5s ease-in-out both}
+.firefly-wildlife--girl-look .firefly-wildlife__girl{animation:firefly-girl-look 5.2s ease-in-out both}
+.firefly-wildlife--girl-look .firefly-wildlife__girl-glow{opacity:.48;animation:firefly-girl-glow 5.2s ease-in-out both}
+.firefly-wildlife--girl-crouch .firefly-wildlife__girl{animation:firefly-girl-crouch 4.2s ease-in-out both}
+.firefly-wildlife__starfall{position:absolute;z-index:8;left:57%;top:13%;width:clamp(5rem,8vw,9rem);height:.16rem;border-radius:999px;opacity:0;background:linear-gradient(90deg,transparent,rgb(197 226 255/.28) 28%,#fff6c9 72%,#fff 100%);box-shadow:0 0 .55rem rgb(211 229 255/.72);transform:rotate(-18deg) translate3d(0,0,0);transform-origin:right center}
+.firefly-wildlife__starfall::after{content:'';position:absolute;right:-.1rem;top:50%;width:.35rem;height:.35rem;border-radius:50%;background:#fffdf1;box-shadow:0 0 .6rem #fff0a7,0 0 1.2rem rgb(183 211 255/.7);transform:translateY(-50%)}
+.firefly-wildlife--starfall .firefly-wildlife__starfall{animation:firefly-starfall 1.8s ease-out both}
+@keyframes firefly-fox-wander{0%,12%{transform:translate3d(0,0,0) rotate(2deg)}38%{transform:translate3d(1.6rem,-.12rem,0) rotate(-2deg)}52%{transform:translate3d(2.2rem,0,0) rotate(2deg)}76%{transform:translate3d(3.4rem,-.08rem,0) rotate(-1deg)}100%{transform:translate3d(0,0,0) rotate(2deg)}}
+@keyframes firefly-owl-watch{0%,18%,100%{transform:rotate(-2deg) translateY(0)}35%{transform:rotate(6deg) translateY(-.12rem)}52%{transform:rotate(6deg) scaleY(.96)}72%{transform:rotate(-7deg) translateY(-.08rem)}}
+@keyframes firefly-badger-sniff{0%,100%{transform:translateX(0) rotate(-2deg)}28%{transform:translateX(-.8rem) rotate(-5deg)}48%{transform:translateX(-1.15rem) translateY(.15rem) rotate(2deg)}68%{transform:translateX(.35rem) rotate(3deg)}}
+@keyframes firefly-rabbit-hop{0%,16%,100%{transform:translate3d(0,0,0) rotate(3deg)}34%{transform:translate3d(.65rem,-1.2rem,0) rotate(-3deg)}48%{transform:translate3d(1.25rem,0,0) rotate(4deg)}66%{transform:translate3d(1.8rem,-.75rem,0) rotate(-2deg)}80%{transform:translate3d(2.3rem,0,0) rotate(3deg)}}
+@keyframes firefly-deer-listen{0%,100%{transform:rotate(0) translateY(0)}28%{transform:rotate(-4deg) translateY(-.12rem)}52%{transform:rotate(4deg) translateY(-.18rem)}74%{transform:rotate(-2deg) translateY(0)}}
+@keyframes firefly-bats-cross{0%{transform:translate3d(5rem,1rem,0) scale(.7);opacity:0}18%{opacity:.9}50%{transform:translate3d(-3rem,-1.4rem,0) scale(1);opacity:1}82%{opacity:.78}100%{transform:translate3d(-12rem,.7rem,0) scale(.78);opacity:0}}
+@keyframes firefly-girl-look{0%,100%{transform:rotate(0) translateY(0)}24%{transform:rotate(-3deg) translateY(-.08rem)}45%,66%{transform:rotate(-5deg) translateY(-.18rem)}82%{transform:rotate(2deg) translateY(-.06rem)}}
+@keyframes firefly-girl-crouch{0%,100%{transform:translateY(0) scaleY(1)}28%,65%{transform:translateY(.65rem) scaleY(.9) rotate(2deg)}78%{transform:translateY(.2rem) scaleY(.98) rotate(-1deg)}}
+@keyframes firefly-girl-glow{0%,100%{transform:scale(.9);opacity:.26}44%,68%{transform:scale(1.12);opacity:.52}}
+@keyframes firefly-starfall{0%{opacity:0;transform:rotate(-18deg) translate3d(7rem,-1rem,0) scaleX(.45)}15%{opacity:1}62%{opacity:.95}100%{opacity:0;transform:rotate(-18deg) translate3d(-18rem,6rem,0) scaleX(1.15)}}
+.firefly-wildlife--still .firefly-wildlife__starfall,.firefly-wildlife--still .firefly-wildlife__girl-glow,.firefly-wildlife--still img,.firefly-wildlife--still .firefly-wildlife__bats{animation:none!important;transition:none!important}
+@media(prefers-reduced-motion:reduce){.firefly-wildlife__starfall{display:none}}

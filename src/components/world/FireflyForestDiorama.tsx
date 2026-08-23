@@ -84,7 +84,7 @@ export function FireflyForestDiorama({ world, stage, reducedMotion, compact = fa
         >
           <div className="firefly-panorama__track">
             <FireflyForestIllustratedBackdrop stage={stage} reducedMotion={reducedMotion} />
-            <FireflyForestWildlife stage={stage} reducedMotion={reducedMotion} />
+            <FireflyForestWildlife stage={stage} reducedMotion={reducedMotion} active={expanded && !compact} />
           </div>
         </div>
         <Suspense fallback={<FireflySceneFallback />}>
