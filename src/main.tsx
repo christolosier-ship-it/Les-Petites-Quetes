@@ -13,6 +13,7 @@ import './styles/firefly-panorama.css';
 import './styles/firefly-life.css';
 import './styles/firefly-life-motion.css';
 import './styles/firefly-asset-pass.css';
+import './styles/firefly-wildlife-polish.css';
 import './styles/finalization.css';
 
 const root = document.getElementById('root');
