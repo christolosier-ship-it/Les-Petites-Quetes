@@ -23,6 +23,22 @@ export function FireflyForestIllustratedBackdrop({ stage, reducedMotion }: Firef
       <img className="firefly-illustrated__meadow" src={getAssetUrl(DIORAMA_ASSETS.meadow)} alt="" decoding="async" />
       <div className="firefly-illustrated__horizon-haze" />
 
+      {stage >= 3 && (
+        <div className="firefly-illustrated__village">
+          <img className="firefly-illustrated__village-house firefly-illustrated__village-house--one" src={getAssetUrl(DIORAMA_ASSETS.rusticHouse)} alt="" decoding="async" />
+          <img className="firefly-illustrated__village-house firefly-illustrated__village-house--two" src={getAssetUrl(DIORAMA_ASSETS.cottage)} alt="" decoding="async" />
+          <img className="firefly-illustrated__village-house firefly-illustrated__village-house--three" src={getAssetUrl(DIORAMA_ASSETS.rusticHouse)} alt="" decoding="async" />
+        </div>
+      )}
+
+      {stage >= 2 && (
+        <>
+          <img className="firefly-illustrated__grove firefly-illustrated__grove--left" src={getAssetUrl(DIORAMA_ASSETS.foliage)} alt="" decoding="async" />
+          <img className="firefly-illustrated__grove firefly-illustrated__grove--right" src={getAssetUrl(DIORAMA_ASSETS.foliage)} alt="" decoding="async" />
+        </>
+      )}
+
+      {stage >= 1 && <div className="firefly-illustrated__path" />}
       {stage >= 2 && <div className="firefly-illustrated__stream"><span /></div>}
 
       {stage >= 1 && (
@@ -43,6 +59,15 @@ export function FireflyForestIllustratedBackdrop({ stage, reducedMotion }: Firef
         <div className="firefly-illustrated__house firefly-illustrated__house--tree">
           <span className="firefly-illustrated__house-glow" />
           <img src={getAssetUrl(DIORAMA_ASSETS.treeHouse)} alt="" decoding="async" />
+        </div>
+      )}
+
+      {stage >= 3 && (
+        <div className="firefly-illustrated__bridge">
+          <span />
+          <span />
+          <span />
+          <span />
         </div>
       )}
 
