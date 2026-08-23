@@ -232,6 +232,140 @@
   background: rgb(140 224 204 / 0.27);
 }
 
+/* Passe 3 · Richesse et profondeur */
+.firefly-illustrated__village {
+  position: absolute;
+  z-index: 3;
+  inset: 32% 13% auto 38%;
+  height: 18%;
+  opacity: 0.54;
+  transform: translate3d(var(--forest-x-far), var(--forest-y-far), 0);
+  filter: saturate(0.78) brightness(0.62) drop-shadow(0 0.45rem 0.8rem rgb(2 10 20 / 0.36));
+}
+
+.firefly-illustrated__village::before {
+  content: '';
+  position: absolute;
+  inset: 52% -8% -25%;
+  border-radius: 50%;
+  background: radial-gradient(ellipse, rgb(42 82 71 / 0.78), rgb(10 43 43 / 0.08) 72%);
+}
+
+.firefly-illustrated__village-house {
+  bottom: 0;
+  width: clamp(2.5rem, 4.6vw, 4.6rem);
+  height: auto;
+}
+
+.firefly-illustrated__village-house--one {
+  left: 2%;
+  transform: scale(0.78) rotate(-2deg);
+}
+
+.firefly-illustrated__village-house--two {
+  left: 39%;
+  bottom: 7%;
+  transform: scale(0.62);
+}
+
+.firefly-illustrated__village-house--three {
+  right: 3%;
+  transform: scale(0.72) rotate(2deg);
+}
+
+.firefly-illustrated__grove {
+  z-index: 4;
+  bottom: 11%;
+  width: clamp(8rem, 18vw, 16rem);
+  opacity: 0.44;
+  filter: brightness(0.34) saturate(0.92) hue-rotate(10deg) drop-shadow(0 0.5rem 0.8rem rgb(0 9 15 / 0.45));
+  transition: transform 240ms ease-out;
+}
+
+.firefly-illustrated__grove--left {
+  left: 16%;
+  transform: translate3d(var(--forest-x-mid), var(--forest-y-mid), 0) scale(0.72) rotate(-5deg);
+}
+
+.firefly-illustrated__grove--right {
+  right: 17%;
+  bottom: 15%;
+  transform: translate3d(var(--forest-x-mid), var(--forest-y-mid), 0) scaleX(-1) scale(0.62) rotate(-3deg);
+}
+
+.firefly-illustrated__path {
+  position: absolute;
+  z-index: 4;
+  left: 13%;
+  bottom: -8%;
+  width: 31%;
+  height: 37%;
+  opacity: 0.42;
+  clip-path: polygon(13% 100%, 88% 100%, 69% 74%, 62% 52%, 51% 35%, 47% 18%, 43% 0, 37% 0, 39% 20%, 43% 39%, 49% 56%, 53% 76%);
+  background: linear-gradient(90deg, rgb(78 69 55 / 0.14), rgb(175 142 93 / 0.4) 48%, rgb(76 67 55 / 0.14));
+  filter: blur(0.08rem);
+  transform: translate3d(var(--forest-x-mid), var(--forest-y-mid), 0) rotate(-4deg);
+}
+
+.firefly-illustrated__bridge {
+  position: absolute;
+  z-index: 5;
+  right: 6.5%;
+  bottom: 25%;
+  width: clamp(3.8rem, 8vw, 7rem);
+  height: clamp(1.2rem, 2vw, 1.8rem);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.08rem;
+  padding-inline: 0.22rem;
+  border-radius: 50% 50% 18% 18%;
+  background: linear-gradient(180deg, rgb(89 61 39 / 0.84), rgb(48 38 31 / 0.88));
+  box-shadow: 0 0.35rem 0.5rem rgb(1 12 18 / 0.42), inset 0 0.12rem rgb(206 158 93 / 0.24);
+  transform: translate3d(var(--forest-x-mid), var(--forest-y-mid), 0) rotate(8deg);
+}
+
+.firefly-illustrated__bridge::before,
+.firefly-illustrated__bridge::after {
+  content: '';
+  position: absolute;
+  bottom: -0.7rem;
+  width: 0.18rem;
+  height: 0.9rem;
+  border-radius: 999px;
+  background: rgb(54 40 31 / 0.88);
+}
+
+.firefly-illustrated__bridge::before { left: 13%; }
+.firefly-illustrated__bridge::after { right: 13%; }
+
+.firefly-illustrated__bridge span {
+  flex: 1;
+  height: 72%;
+  border-radius: 0.12rem;
+  background: linear-gradient(90deg, rgb(139 94 55 / 0.78), rgb(102 70 45 / 0.82));
+  border-right: 1px solid rgb(46 34 28 / 0.38);
+}
+
+.firefly-illustrated--stage-3 .firefly-illustrated__grade {
+  box-shadow:
+    inset 0 0 6rem rgb(8 9 38 / 0.26),
+    inset 0 -2rem 5rem rgb(17 88 65 / 0.12);
+}
+
+.firefly-illustrated--stage-3 .firefly-illustrated__foliage {
+  opacity: 0.86;
+  filter: brightness(0.48) saturate(1.08) hue-rotate(13deg) drop-shadow(0 -0.45rem 1.1rem rgb(0 7 12 / 0.52));
+}
+
+.firefly-illustrated--stage-3 .firefly-illustrated__foliage--left {
+  left: -7%;
+}
+
+.firefly-illustrated--stage-3 .firefly-illustrated__foliage--right {
+  right: -7%;
+}
+
 @keyframes firefly-aurora-breathe {
   from { opacity: 0.42; transform: translate3d(-1%, 0, 0) scale(1); }
   to { opacity: 0.68; transform: translate3d(1.5%, 1%, 0) scale(1.035); }
@@ -270,6 +404,16 @@
   opacity: 0.26;
 }
 
+.parallax-scene--expanded .firefly-illustrated__village {
+  inset: 29% 16% auto 42%;
+  height: 20%;
+}
+
+.parallax-scene--expanded .firefly-illustrated__bridge {
+  right: 7.5%;
+  bottom: 24%;
+}
+
 @media (max-width: 36rem) {
   .firefly-illustrated__house--rustic {
     right: 10%;
@@ -286,6 +430,24 @@
     right: -5%;
     width: 28%;
     opacity: 0.25;
+  }
+
+  .firefly-illustrated__village {
+    inset: 34% 9% auto 42%;
+    opacity: 0.42;
+  }
+
+  .firefly-illustrated__grove {
+    width: 24vw;
+  }
+
+  .firefly-illustrated__grove--left { left: 12%; }
+  .firefly-illustrated__grove--right { right: 14%; }
+
+  .firefly-illustrated__bridge {
+    right: 4%;
+    bottom: 26%;
+    width: 12vw;
   }
 }
 
