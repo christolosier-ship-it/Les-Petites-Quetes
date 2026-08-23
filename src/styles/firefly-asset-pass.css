@@ -1,0 +1,25 @@
+/* Passe d'illustration Firefly : vrais assets complets pour arbres, rivière et pont. */
+.firefly-scenery-tree{position:absolute!important;height:auto;transform-origin:center bottom;filter:brightness(.58) saturate(.92) hue-rotate(4deg) contrast(1.04) drop-shadow(0 .45rem .65rem rgb(0 10 16/.32))}
+.firefly-scenery-tree--far{bottom:30%;width:clamp(3.8rem,5vw,6.4rem);opacity:.34;filter:brightness(.38) saturate(.66) hue-rotate(16deg)}
+.firefly-scenery-tree--middle{bottom:15%;width:clamp(6.5rem,8vw,10.5rem);opacity:.72}
+.firefly-scenery-tree--near{bottom:1%;width:clamp(8rem,10vw,13rem);opacity:.94;filter:brightness(.62) saturate(.98) hue-rotate(3deg) contrast(1.06) drop-shadow(0 .6rem .8rem rgb(0 10 16/.36))}
+.firefly-scenery-tree--foreground{bottom:-15%;width:clamp(15rem,20vw,25rem);opacity:.93;filter:brightness(.48) saturate(.9) hue-rotate(7deg) contrast(1.08) drop-shadow(0 .5rem .9rem rgb(0 8 14/.45))}
+.firefly-scenery-tree--far-a{left:0%;transform:scale(.85)}.firefly-scenery-tree--far-b{left:10%;transform:scale(.7) scaleX(-1)}.firefly-scenery-tree--far-c{left:20%;transform:scale(.82)}.firefly-scenery-tree--far-d{left:30%;transform:scale(.68)}.firefly-scenery-tree--far-e{left:57%;transform:scale(.74) scaleX(-1)}.firefly-scenery-tree--far-f{left:68%;transform:scale(.83)}.firefly-scenery-tree--far-g{left:80%;transform:scale(.72)}.firefly-scenery-tree--far-h{left:92%;transform:scale(.84) scaleX(-1)}
+.firefly-scenery-tree--west-a{left:-1%;transform:scale(1.18)}.firefly-scenery-tree--west-b{left:7%;bottom:13%;transform:scale(.88)}.firefly-scenery-tree--west-c{left:14%;bottom:15%;transform:scale(1.05)}.firefly-scenery-tree--west-d{left:23%;bottom:12%;transform:scale(.94) scaleX(-1)}.firefly-scenery-tree--center-a{left:34%;bottom:19%;transform:scale(.68)}.firefly-scenery-tree--center-b{left:58%;bottom:18%;transform:scale(.65)}.firefly-scenery-tree--east-a{left:68%;bottom:14%;transform:scale(.9)}.firefly-scenery-tree--east-b{left:77%;bottom:13%;transform:scale(1.02) scaleX(-1)}.firefly-scenery-tree--east-c{left:86%;bottom:16%;transform:scale(.92)}.firefly-scenery-tree--east-d{left:95%;bottom:12%;transform:scale(1.08)}
+.firefly-scenery-tree--near-west-a{left:2%;bottom:-2%;transform:scale(1.12)}.firefly-scenery-tree--near-west-b{left:18%;bottom:1%;transform:scale(.86)}.firefly-scenery-tree--near-east-a{left:64%;bottom:2%;transform:scale(.92)}.firefly-scenery-tree--near-east-b{left:80%;bottom:0;transform:scale(.9)}.firefly-scenery-tree--near-east-c{left:93%;bottom:-2%;transform:scale(1.12) scaleX(-1)}
+.firefly-scenery-tree--foreground-west{left:-7%;transform:scale(1.08)}.firefly-scenery-tree--foreground-east{right:-7%;transform:scale(1.06) scaleX(-1)}
+
+.firefly-panorama-river-asset{position:absolute!important;z-index:3;left:57%;bottom:-4%;width:31%;height:auto;opacity:.82;filter:brightness(.72) saturate(.88) hue-rotate(4deg) drop-shadow(0 .3rem .4rem rgb(0 24 32/.2));transform:rotate(1deg)}
+.firefly-panorama-bridge-asset{position:absolute!important;z-index:6;left:67.2%;bottom:14%;width:clamp(7rem,9vw,11rem);height:auto;filter:brightness(.72) saturate(.82) hue-rotate(-3deg) drop-shadow(0 .5rem .6rem rgb(4 18 18/.34));transform:rotate(-2deg)}
+.firefly-panorama-landmark--rustic{left:78%;bottom:20%;width:clamp(6rem,7vw,8rem)}
+.firefly-panorama-landmark--treehouse{right:2.5%;bottom:4%;width:clamp(8.5rem,10vw,12rem)}
+
+/* Le décor important n'est plus dessiné par les anciens polygones CSS. */
+.firefly-panorama-stream,.firefly-panorama-bridge{display:none!important}
+
+@media(max-width:48rem){
+  .firefly-scenery-tree--middle{opacity:.64}
+  .firefly-scenery-tree--center-a,.firefly-scenery-tree--center-b{opacity:.5}
+  .firefly-panorama-river-asset{left:56%;width:34%}
+  .firefly-panorama-bridge-asset{left:67%;bottom:13%;width:8rem}
+}
