@@ -125,8 +125,7 @@ export function FireflyForestIllustratedBackdrop({ stage, reducedMotion }: Firef
             <Scenery asset="wildflowers" className="firefly-flora firefly-flora--glade-flowers" />
             <Scenery asset="mushroomAqua" className="firefly-flora firefly-flora--glade-mushroom" />
             <div className="firefly-panorama-river">
-              <Scenery asset="waterReflection" className="firefly-panorama-river__water-art firefly-panorama-river__water-art--left" />
-              <Scenery asset="waterReflection" className="firefly-panorama-river__water-art firefly-panorama-river__water-art--right" />
+              <Scenery asset="riverAbbasid" className="firefly-panorama-river__asset" />
               <Scenery asset="wave1" className="firefly-river-wave firefly-river-wave--one" />
               <Scenery asset="wave2" className="firefly-river-wave firefly-river-wave--two" />
               <Scenery asset="wave3" className="firefly-river-wave firefly-river-wave--three" />

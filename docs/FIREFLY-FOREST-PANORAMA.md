@@ -22,7 +22,7 @@ Les couches sont, de l’arrière vers l’avant :
 3. massifs de pins et arbres Groddle lointains ;
 4. ligne de forêt, plaques de terrain et arbres Groddle ;
 5. clairière centrale illustrée ;
-6. arbres proches et landmarks : cottage, ruisseau composite, pont original, maison-arbre ;
+6. arbres proches et landmarks : cottage, rivière officielle `river_1`, pont original, maison-arbre ;
 7. véritable personnage externe et faune libre ;
 8. fougères, buissons, roseaux et feuillages Glitch de premier plan ;
 9. Three.js au-dessus pour la lune, les étoiles, Luma et les lucioles.
