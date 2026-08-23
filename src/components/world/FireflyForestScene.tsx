@@ -64,7 +64,7 @@ export function FireflyForestScene({ stage, reducedMotion }: FireflyForestSceneP
     const backdrop = addFireflyForestBackdrop(scene, stage);
     const actors = addFireflyForest(scene);
     const livingState = createLivingAnimationState();
-    const fireflyCount = stage === 0 ? 12 : stage === 1 ? 28 : stage === 2 ? 46 : 86;
+    const fireflyCount = stage === 0 ? 10 : stage === 1 ? 22 : stage === 2 ? 36 : 58;
     const fireflies = createFireflies(fireflyCount, stage);
     scene.add(fireflies.points);
 
@@ -118,7 +118,7 @@ export function FireflyForestScene({ stage, reducedMotion }: FireflyForestSceneP
         array[offset + 2] = baseZ + Math.cos(elapsed * 0.48 + phase) * 0.24 * dreamBoost;
       }
       positionAttribute.needsUpdate = true;
-      fireflies.points.material.opacity = 0.72 + Math.sin(elapsed * 2.1) * 0.18;
+      fireflies.points.material.opacity = 0.56 + Math.sin(elapsed * 2.1) * 0.12;
       renderer.render(scene, camera);
       frame = window.requestAnimationFrame(renderFrame);
     };

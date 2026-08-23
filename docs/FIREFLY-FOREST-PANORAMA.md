@@ -9,7 +9,7 @@ Le panorama suit le principe des **HD multi-layer Parallax Background Samples of
 - modèle : quelques grands plans cohérents plutôt qu’une collection d’objets isolés ;
 - principe retenu : déplacer les plans à des vitesses différentes pour créer la profondeur.
 
-Le projet ne redistribue pas le ZIP de référence. Il utilise ses assets Glitch CC0 déjà rapatriés localement et reprend la logique de composition multi-layer.
+Le projet ne redistribue pas les archives complètes. Il extrait uniquement les illustrations effectivement rendues, les convertit si nécessaire et reprend la logique de composition multi-layer.
 
 ## Architecture du panorama Firefly
 
@@ -18,22 +18,22 @@ Le plein écran est une scène horizontale d’environ trois écrans de large, s
 Les couches sont, de l’arrière vers l’avant :
 
 1. ciel nocturne bleu / violet / turquoise ;
-2. reliefs lointains et villages ;
-3. forêt lointaine ;
-4. ligne de forêt et terrain ;
+2. reliefs Alpine Glitch et villages ;
+3. massifs de pins et arbres Groddle lointains ;
+4. ligne de forêt, plaques de terrain et arbres Groddle ;
 5. clairière centrale illustrée ;
-6. arbres proches et landmarks : cottage, rivière, pont, maison-arbre ;
-7. petite fille et faune ;
-8. végétation de premier plan ;
+6. arbres proches et landmarks : cottage, ruisseau composite, pont original, maison-arbre ;
+7. véritable personnage externe et faune libre ;
+8. fougères, buissons, roseaux et feuillages Glitch de premier plan ;
 9. Three.js au-dessus pour la lune, les étoiles, Luma et les lucioles.
 
 Le scroll natif déplace le panorama. Les plans lointains reçoivent une légère compensation afin de défiler moins vite que les plans proches.
 
 ## Trois secteurs narratifs
 
-- **Ouest — près de la maison** : cottage, végétation dense, hérisson et renard.
-- **Centre — clairière de Luma** : zone plus ouverte, petite fille en pyjama, hibou, lapin et lucioles.
-- **Est — forêt sauvage** : rivière, pont, blaireau, faon, chauves-souris, maison-arbre et village lointain.
+- **Ouest — la maison qui veille** : cottage, chemin visuel dégagé, végétation dense, fleurs, champignons, hérisson et renard.
+- **Centre — la clairière de Luma** : zone plus ouverte, fillette, grand arbre Groddle, hibou perché, lapin, fleurs basses et lucioles.
+- **Est — le ruisseau des secrets** : cours d’eau étroit et sinueux, pont original, berges Glitch, rochers, roseaux, blaireau, faon, chauves-souris, maison-arbre et village lointain.
 
 La clairière centrale reste volontairement plus respirante que les deux extrémités du panorama.
 
@@ -57,14 +57,14 @@ Une seule activité forte est jouée à la fois. En mode compact ou avec `prefer
 
 ## Ciel
 
-Le ciel Three.js utilise quatre familles d’étoiles :
+Le ciel Three.js utilise quatre familles d’étoiles volontairement hiérarchisées :
 
-- petites étoiles ivoire très nombreuses ;
-- étoiles menthe intermédiaires ;
-- étoiles lavande plus visibles ;
-- quelques grandes étoiles dorées très brillantes.
+- petites étoiles ivoire majoritaires et discrètes ;
+- étoiles menthe intermédiaires moins nombreuses ;
+- rares étoiles lavande plus visibles ;
+- six grandes étoiles dorées au maximum au stade final.
 
-Au stade final, le ciel contient plus de 400 points étoilés répartis sur plusieurs profondeurs. Les quatre couches scintillent avec des rythmes distincts afin d’éviter un effet synchronisé.
+Au stade final, le ciel contient environ 262 points répartis sur plusieurs profondeurs au lieu d’un tapis uniforme de plus de 400 points. Les quatre couches scintillent avec des rythmes distincts. Les lucioles culminent à 58 individus, majoritairement petites grâce à leur taille réduite et à l’atténuation par profondeur ; seules les plus proches deviennent franchement lumineuses.
 
 ## Direction artistique
 
@@ -78,3 +78,13 @@ La Forêt des Lucioles est une **nuit colorée, visible et féerique**, jamais u
 - contraste par profondeur atmosphérique plutôt que par grands voiles flous.
 
 Les premiers plans restent nets. Les effets flous sont limités aux halos lumineux et à l’atmosphère du ciel.
+
+La hiérarchie lumineuse est : lune et Luma, puis fenêtres des maisons, puis quelques lucioles proches. Un halo DOM discret sous Luma relie visuellement la fillette, le sol et les végétations de la clairière sans modifier le personnage Three.js original.
+
+## Performance
+
+- les SVG Tiny Speck complexes sont rasterisés fidèlement en WebP transparents à 700–1200 px selon leur rôle ;
+- les petits SVG externes restent vectoriels après optimisation multipasse ;
+- une seule frame PNG officielle est extraite pour le renard Glitch, sans embarquer la spritesheet ou les archives sources ;
+- les images secondaires et hors écran sont chargées paresseusement ;
+- le pixel ratio Three.js reste plafonné et le composant lourd conserve son chargement différé existant.

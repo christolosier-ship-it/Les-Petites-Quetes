@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { getAssetUrl } from '../../assets/registry/catalog';
+import { getFireflyAssetUrl } from '../../assets/registry/fireflyCatalog';
 
 interface FireflyForestWildlifeProps {
   readonly stage: 0 | 1 | 2 | 3;
@@ -10,14 +10,14 @@ interface FireflyForestWildlifeProps {
 type WildlifeMoment = 'idle' | 'fox' | 'owl' | 'badger' | 'rabbit' | 'deer' | 'bats' | 'girl-look' | 'girl-crouch' | 'starfall';
 
 const WILDLIFE_ASSETS = {
-  fox: 'world.firefly-forest.wildlife-fox',
-  owl: 'world.firefly-forest.wildlife-owl',
-  badger: 'world.firefly-forest.wildlife-badger',
-  rabbit: 'world.firefly-forest.wildlife-rabbit',
-  deer: 'world.firefly-forest.wildlife-deer',
-  bat: 'world.firefly-forest.wildlife-bat',
-  hedgehog: 'world.firefly-forest.wildlife-hedgehog',
-  girl: 'world.firefly-forest.girl-pajamas',
+  fox: 'world.firefly-forest.wildlife-fox-glitch',
+  owl: 'world.firefly-forest.wildlife-owl-openclipart',
+  badger: 'world.firefly-forest.wildlife-badger-openclipart',
+  rabbit: 'world.firefly-forest.wildlife-rabbit-gdquest',
+  deer: 'world.firefly-forest.wildlife-fawn-openclipart',
+  bat: 'world.firefly-forest.wildlife-bat-openclipart',
+  hedgehog: 'world.firefly-forest.wildlife-hedgehog-openclipart',
+  girl: 'world.firefly-forest.character-girl-openclipart',
 } as const;
 
 const MOMENT_DURATION: Record<Exclude<WildlifeMoment, 'idle'>, number> = {
@@ -40,7 +40,7 @@ function momentsForStage(stage: 0 | 1 | 2 | 3): readonly Exclude<WildlifeMoment,
 }
 
 function Sprite({ asset, className }: { readonly asset: keyof typeof WILDLIFE_ASSETS; readonly className: string }) {
-  return <img className={className} src={getAssetUrl(WILDLIFE_ASSETS[asset])} alt="" decoding="async" />;
+  return <img className={className} src={getFireflyAssetUrl(WILDLIFE_ASSETS[asset])} alt="" decoding="async" loading="lazy" />;
 }
 
 export function FireflyForestWildlife({ stage, reducedMotion, active }: FireflyForestWildlifeProps) {

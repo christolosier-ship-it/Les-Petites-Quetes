@@ -1,95 +1,4 @@
-/* Vie et végétation du panorama Firefly. Aucun voile flou : les silhouettes restent nettes. */
-
-.firefly-panorama-tree-grove,
-.firefly-panorama-distant-woods {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-}
-
-.firefly-panorama-tree {
-  position: absolute;
-  display: block;
-  width: clamp(6rem, 8vw, 10rem);
-  height: clamp(10rem, 15vw, 18rem);
-  transform-origin: center bottom;
-}
-
-.firefly-panorama-tree > i {
-  position: absolute;
-  z-index: 0;
-  left: 50%;
-  bottom: 0;
-  width: 13%;
-  height: 62%;
-  border-radius: 46% 54% 18% 20%;
-  background: linear-gradient(90deg, #3b2d32, #674a3a 44%, #402f32 100%);
-  box-shadow: inset .18rem 0 rgb(255 216 150 / .07), .28rem .3rem .5rem rgb(1 12 18 / .22);
-  transform: translateX(-50%) rotate(1deg);
-}
-
-.firefly-panorama-tree > img {
-  position: absolute;
-  z-index: 1;
-  left: 50%;
-  top: -2%;
-  width: 190%;
-  height: auto;
-  transform: translateX(-50%) rotate(-2deg);
-  transform-origin: center bottom;
-  filter: brightness(.48) saturate(1.06) hue-rotate(9deg) contrast(1.05) drop-shadow(0 .4rem .7rem rgb(0 10 16 / .32));
-}
-
-.firefly-panorama-tree--far {
-  width: clamp(3.4rem, 4.5vw, 5.8rem);
-  height: clamp(6rem, 9vw, 10rem);
-  bottom: 35%;
-  opacity: .32;
-}
-.firefly-panorama-tree--far > i { background: #243d46; }
-.firefly-panorama-tree--far > img { filter: brightness(.34) saturate(.72) hue-rotate(18deg); }
-
-.firefly-panorama-tree--middle { bottom: 20%; opacity: .58; }
-.firefly-panorama-tree--near { bottom: 5%; opacity: .88; }
-.firefly-panorama-tree--near > img { filter: brightness(.55) saturate(1.12) hue-rotate(6deg) contrast(1.06) drop-shadow(0 .5rem .75rem rgb(0 10 16 / .36)); }
-
-.firefly-panorama-tree--far-a{left:2%;transform:scale(.75)}
-.firefly-panorama-tree--far-b{left:13%;transform:scale(1.05) scaleX(-1)}
-.firefly-panorama-tree--far-c{left:25%;transform:scale(.86)}
-.firefly-panorama-tree--far-d{left:37%;transform:scale(1.12) scaleX(-1)}
-.firefly-panorama-tree--far-e{left:57%;transform:scale(.9)}
-.firefly-panorama-tree--far-f{left:68%;transform:scale(1.08) scaleX(-1)}
-.firefly-panorama-tree--far-g{left:80%;transform:scale(.78)}
-.firefly-panorama-tree--far-h{left:94%;transform:scale(1.04) scaleX(-1)}
-
-.firefly-panorama-tree--west-a{left:1%;transform:scale(1.2)}
-.firefly-panorama-tree--west-b{left:9%;bottom:22%;transform:scale(.82) scaleX(-1)}
-.firefly-panorama-tree--west-c{left:18%;transform:scale(1.05)}
-.firefly-panorama-tree--west-d{left:27%;bottom:18%;transform:scale(.78) scaleX(-1)}
-.firefly-panorama-tree--center-a{left:38%;bottom:23%;transform:scale(.72)}
-.firefly-panorama-tree--center-b{left:58%;bottom:22%;transform:scale(.68) scaleX(-1)}
-.firefly-panorama-tree--east-a{left:67%;transform:scale(.92)}
-.firefly-panorama-tree--east-b{left:75%;bottom:18%;transform:scale(1.08) scaleX(-1)}
-.firefly-panorama-tree--east-c{left:84%;bottom:21%;transform:scale(.78)}
-.firefly-panorama-tree--east-d{left:93%;transform:scale(1.18) scaleX(-1)}
-
-.firefly-panorama-tree--near-west-a{left:-1%;transform:scale(1.35)}
-.firefly-panorama-tree--near-west-b{left:21%;bottom:3%;transform:scale(.88) scaleX(-1)}
-.firefly-panorama-tree--near-center-a{left:42%;bottom:7%;transform:scale(.74)}
-.firefly-panorama-tree--near-east-a{left:65%;bottom:4%;transform:scale(.86) scaleX(-1)}
-.firefly-panorama-tree--near-east-b{left:80%;transform:scale(1.05)}
-.firefly-panorama-tree--near-east-c{left:94%;bottom:2%;transform:scale(1.28) scaleX(-1)}
-
-.firefly-panorama-tree--foreground-west,
-.firefly-panorama-tree--foreground-east {
-  z-index: 7;
-  bottom: -15%;
-  width: clamp(12rem, 17vw, 21rem);
-  height: clamp(20rem, 30vw, 34rem);
-  opacity: .9;
-}
-.firefly-panorama-tree--foreground-west{left:-6%;transform:scale(1.2) rotate(-3deg)}
-.firefly-panorama-tree--foreground-east{right:-6%;transform:scale(1.16) scaleX(-1) rotate(-3deg)}
+/* Base de placement des habitants. Le décor est défini dans firefly-asset-pass.css. */
 
 .firefly-wildlife {
   position: absolute;
@@ -142,9 +51,6 @@
 .firefly-wildlife--still img { animation: none !important; transition: none !important; }
 
 @media(max-width:48rem){
-  .firefly-panorama-tree--far{opacity:.25}
-  .firefly-panorama-tree--middle{opacity:.48}
-  .firefly-panorama-tree--near-center-a{display:none}
   .firefly-wildlife__girl{width:5.4rem}
   .firefly-wildlife__owl{bottom:36%}
   .firefly-wildlife__deer{opacity:.58}
