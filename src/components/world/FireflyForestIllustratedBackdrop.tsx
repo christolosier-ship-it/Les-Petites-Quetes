@@ -20,6 +20,7 @@ export function FireflyForestIllustratedBackdrop({ stage, reducedMotion }: Firef
       aria-hidden="true"
     >
       <div className="firefly-illustrated__sky" />
+      <div className="firefly-illustrated__aurora" />
       <div className="firefly-illustrated__ridge firefly-illustrated__ridge--far" />
       <div className="firefly-illustrated__ridge firefly-illustrated__ridge--mid" />
 
@@ -48,6 +49,10 @@ export function FireflyForestIllustratedBackdrop({ stage, reducedMotion }: Firef
       )}
 
       {stage >= 2 && <div className="firefly-illustrated__stream"><span /></div>}
+      {stage >= 2 && <div className="firefly-illustrated__wildflowers firefly-illustrated__wildflowers--left" />}
+      {stage >= 2 && <div className="firefly-illustrated__wildflowers firefly-illustrated__wildflowers--right" />}
+      {stage >= 3 && <div className="firefly-illustrated__bushes" />}
+      {stage >= 3 && <div className="firefly-illustrated__ground-lights" />}
 
       {stage >= 1 && (
         <div className="firefly-illustrated__house firefly-illustrated__house--cottage">

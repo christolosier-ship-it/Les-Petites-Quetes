@@ -1,21 +1,42 @@
 /* Direction artistique du diorama illustré Firefly.
-   Passe 1 : lisibilité. Passe 2 : profondeur réelle derrière l'arbre. */
+   Lisibilité nette, profondeur hiérarchisée et richesse sans voiles lumineux. */
 
 .firefly-illustrated__mist--near,
 .firefly-illustrated__path {
   display: none;
 }
 
+.firefly-illustrated__sky::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 42%;
+  background:
+    radial-gradient(ellipse at 28% 24%, rgb(115 109 214 / 0.14), transparent 34%),
+    radial-gradient(ellipse at 76% 30%, rgb(73 177 181 / 0.12), transparent 32%),
+    linear-gradient(115deg, transparent 20%, rgb(91 103 194 / 0.07) 45%, rgb(64 177 166 / 0.06) 60%, transparent 80%);
+}
+
+.firefly-illustrated__aurora {
+  position: absolute;
+  z-index: 0;
+  inset: 3% 8% 54%;
+  opacity: 0.48;
+  background:
+    radial-gradient(ellipse at 42% 46%, rgb(132 107 231 / 0.14), transparent 42%),
+    radial-gradient(ellipse at 66% 50%, rgb(91 204 185 / 0.1), transparent 38%);
+  filter: blur(0.8rem);
+}
+
 .firefly-illustrated__meadow {
   z-index: 1;
   opacity: 0.92;
-  filter: brightness(0.38) saturate(0.96) hue-rotate(18deg) contrast(1.08);
+  filter: brightness(0.4) saturate(1.02) hue-rotate(16deg) contrast(1.08);
   transform: translate3d(var(--forest-x-mid), var(--forest-y-mid), 0) scale(1.045);
 }
 
 .firefly-illustrated--stage-3 .firefly-illustrated__meadow {
   opacity: 0.95;
-  filter: brightness(0.43) saturate(1.05) hue-rotate(15deg) contrast(1.06);
+  filter: brightness(0.45) saturate(1.14) hue-rotate(13deg) contrast(1.05);
 }
 
 .firefly-illustrated__ridge {
@@ -31,32 +52,32 @@
 .firefly-illustrated__ridge--far {
   bottom: 39%;
   height: 17%;
-  opacity: 0.9;
+  opacity: 0.92;
   background:
-    radial-gradient(ellipse at 14% 78%, rgb(40 72 112 / 0.76) 0 25%, transparent 28%),
-    radial-gradient(ellipse at 43% 82%, rgb(53 84 126 / 0.72) 0 31%, transparent 34%),
-    radial-gradient(ellipse at 74% 78%, rgb(43 78 118 / 0.76) 0 29%, transparent 32%),
-    radial-gradient(ellipse at 96% 82%, rgb(36 68 103 / 0.72) 0 24%, transparent 27%);
+    radial-gradient(ellipse at 14% 78%, rgb(40 72 112 / 0.8) 0 25%, transparent 28%),
+    radial-gradient(ellipse at 43% 82%, rgb(58 91 134 / 0.76) 0 31%, transparent 34%),
+    radial-gradient(ellipse at 74% 78%, rgb(44 83 126 / 0.8) 0 29%, transparent 32%),
+    radial-gradient(ellipse at 96% 82%, rgb(38 72 109 / 0.76) 0 24%, transparent 27%);
 }
 
 .firefly-illustrated__ridge--mid {
   bottom: 33%;
   height: 18%;
-  opacity: 0.88;
+  opacity: 0.9;
   background:
-    radial-gradient(ellipse at 8% 76%, rgb(35 92 96 / 0.86) 0 27%, transparent 30%),
-    radial-gradient(ellipse at 34% 82%, rgb(53 118 94 / 0.84) 0 31%, transparent 34%),
-    radial-gradient(ellipse at 66% 78%, rgb(39 103 91 / 0.84) 0 30%, transparent 33%),
-    radial-gradient(ellipse at 94% 80%, rgb(37 89 89 / 0.82) 0 27%, transparent 30%);
+    radial-gradient(ellipse at 8% 76%, rgb(35 92 96 / 0.88) 0 27%, transparent 30%),
+    radial-gradient(ellipse at 34% 82%, rgb(58 124 97 / 0.87) 0 31%, transparent 34%),
+    radial-gradient(ellipse at 66% 78%, rgb(40 109 94 / 0.86) 0 30%, transparent 33%),
+    radial-gradient(ellipse at 94% 80%, rgb(38 94 92 / 0.84) 0 27%, transparent 30%);
 }
 
 .firefly-illustrated__ridge--near {
   bottom: 28%;
   height: 13%;
-  opacity: 0.62;
+  opacity: 0.64;
   background:
-    radial-gradient(ellipse at 18% 82%, rgb(56 116 83 / 0.62) 0 27%, transparent 30%),
-    radial-gradient(ellipse at 76% 82%, rgb(64 128 91 / 0.56) 0 30%, transparent 33%);
+    radial-gradient(ellipse at 18% 82%, rgb(61 124 87 / 0.66) 0 27%, transparent 30%),
+    radial-gradient(ellipse at 76% 82%, rgb(70 139 97 / 0.6) 0 30%, transparent 33%);
 }
 
 .firefly-illustrated__village {
@@ -88,11 +109,27 @@
   background: radial-gradient(ellipse, rgb(43 93 75 / 0.72), rgb(10 47 44 / 0.05) 74%);
 }
 
+.firefly-illustrated__village::after {
+  content: '';
+  position: absolute;
+  left: 24%;
+  bottom: 24%;
+  width: 0.18rem;
+  height: 0.18rem;
+  border-radius: 50%;
+  background: rgb(255 219 127 / 0.76);
+  box-shadow:
+    2.3rem -0.35rem 0 rgb(255 201 104 / 0.68),
+    4.6rem 0.2rem 0 rgb(255 228 148 / 0.62),
+    6.9rem -0.28rem 0 rgb(255 193 93 / 0.58);
+  filter: drop-shadow(0 0 0.28rem rgb(255 196 92 / 0.78));
+}
+
 .firefly-illustrated__village-house {
   bottom: 0;
   width: clamp(2rem, 3.8vw, 3.8rem);
   height: auto;
-  filter: brightness(0.5) saturate(0.78) hue-rotate(3deg) contrast(1.02) drop-shadow(0 0.4rem 0.5rem rgb(2 12 22 / 0.38));
+  filter: brightness(0.5) saturate(0.8) hue-rotate(3deg) contrast(1.02) drop-shadow(0 0.4rem 0.5rem rgb(2 12 22 / 0.38));
 }
 
 .firefly-illustrated__village-house--one { left: 4%; transform: scale(0.72) rotate(-2deg); }
@@ -102,8 +139,9 @@
 
 .firefly-illustrated__horizon-haze {
   z-index: 2;
-  opacity: 0.28;
-  filter: blur(0.75rem);
+  opacity: 0.24;
+  filter: blur(0.7rem);
+  background: linear-gradient(180deg, transparent, rgb(111 132 191 / 0.12) 44%, rgb(21 69 70 / 0.18));
 }
 
 .firefly-illustrated__mist--far {
@@ -111,9 +149,9 @@
   bottom: 36%;
   width: 52%;
   height: 10%;
-  opacity: 0.07;
-  filter: blur(1.3rem);
-  background: rgb(156 179 222 / 0.22);
+  opacity: 0.06;
+  filter: blur(1.25rem);
+  background: rgb(156 179 222 / 0.2);
 }
 
 .firefly-illustrated__stream {
@@ -121,10 +159,10 @@
   bottom: -2%;
   width: 19%;
   height: 31%;
-  opacity: 0.66;
+  opacity: 0.7;
   border-radius: 48% 52% 42% 58% / 18% 26% 74% 82%;
   clip-path: polygon(44% 0, 62% 0, 69% 14%, 61% 29%, 68% 45%, 58% 61%, 67% 78%, 78% 100%, 20% 100%, 33% 80%, 25% 63%, 37% 46%, 30% 29%, 40% 14%);
-  background: linear-gradient(100deg, rgb(12 62 73 / 0.44), rgb(75 151 164 / 0.58) 39%, rgb(201 239 239 / 0.42) 50%, rgb(40 105 119 / 0.52));
+  background: linear-gradient(100deg, rgb(12 62 73 / 0.44), rgb(75 151 164 / 0.62) 39%, rgb(210 245 242 / 0.48) 50%, rgb(40 105 119 / 0.56));
   filter: drop-shadow(0 0.2rem 0.35rem rgb(10 42 55 / 0.22));
   transform: translate3d(var(--forest-x-mid), var(--forest-y-mid), 0) rotate(7deg);
 }
@@ -142,8 +180,8 @@
   z-index: 3;
   bottom: 10%;
   width: clamp(8rem, 17vw, 15rem);
-  opacity: 0.38;
-  filter: brightness(0.36) saturate(0.9) hue-rotate(10deg) drop-shadow(0 0.4rem 0.6rem rgb(0 9 15 / 0.4));
+  opacity: 0.42;
+  filter: brightness(0.39) saturate(0.96) hue-rotate(8deg) drop-shadow(0 0.4rem 0.6rem rgb(0 9 15 / 0.4));
 }
 
 .firefly-illustrated__grove--left {
@@ -157,11 +195,60 @@
   transform: translate3d(var(--forest-x-mid), var(--forest-y-mid), 0) scaleX(-1) scale(0.62) rotate(-3deg);
 }
 
+.firefly-illustrated__wildflowers {
+  position: absolute;
+  z-index: 4;
+  width: 15%;
+  height: 8%;
+  opacity: 0.78;
+  transform: translate3d(var(--forest-x-mid), var(--forest-y-mid), 0);
+  background:
+    radial-gradient(circle at 10% 64%, rgb(255 214 116 / 0.9) 0 0.12rem, transparent 0.15rem),
+    radial-gradient(circle at 25% 35%, rgb(190 156 255 / 0.88) 0 0.11rem, transparent 0.14rem),
+    radial-gradient(circle at 45% 70%, rgb(137 236 201 / 0.82) 0 0.12rem, transparent 0.15rem),
+    radial-gradient(circle at 64% 28%, rgb(255 182 224 / 0.78) 0 0.1rem, transparent 0.14rem),
+    radial-gradient(circle at 83% 60%, rgb(255 228 141 / 0.82) 0 0.11rem, transparent 0.14rem);
+}
+
+.firefly-illustrated__wildflowers--left { left: 23%; bottom: 13%; }
+.firefly-illustrated__wildflowers--right { right: 18%; bottom: 27%; transform: translate3d(var(--forest-x-mid), var(--forest-y-mid), 0) scale(0.82); }
+
+.firefly-illustrated__bushes {
+  position: absolute;
+  z-index: 4;
+  left: 46%;
+  bottom: 7%;
+  width: 21%;
+  height: 11%;
+  opacity: 0.62;
+  transform: translate3d(var(--forest-x-near), var(--forest-y-near), 0);
+  background:
+    radial-gradient(ellipse at 12% 72%, rgb(38 82 57 / 0.94) 0 24%, transparent 27%),
+    radial-gradient(ellipse at 36% 60%, rgb(59 111 72 / 0.92) 0 26%, transparent 29%),
+    radial-gradient(ellipse at 62% 72%, rgb(38 78 62 / 0.92) 0 25%, transparent 28%),
+    radial-gradient(ellipse at 84% 58%, rgb(53 98 74 / 0.88) 0 23%, transparent 26%);
+}
+
+.firefly-illustrated__ground-lights {
+  position: absolute;
+  z-index: 5;
+  left: 30%;
+  right: 16%;
+  bottom: 10%;
+  height: 12%;
+  background:
+    radial-gradient(circle at 8% 58%, rgb(255 222 123 / 0.74) 0 0.11rem, transparent 0.15rem),
+    radial-gradient(circle at 26% 30%, rgb(160 137 255 / 0.62) 0 0.1rem, transparent 0.14rem),
+    radial-gradient(circle at 47% 68%, rgb(115 227 201 / 0.62) 0 0.11rem, transparent 0.15rem),
+    radial-gradient(circle at 68% 35%, rgb(255 187 224 / 0.58) 0 0.1rem, transparent 0.14rem),
+    radial-gradient(circle at 88% 62%, rgb(255 223 130 / 0.66) 0 0.11rem, transparent 0.15rem);
+}
+
 .firefly-illustrated__house--rustic {
   right: 13%;
   bottom: 22%;
   width: clamp(4.4rem, 8vw, 7rem);
-  opacity: 0.86;
+  opacity: 0.88;
 }
 
 .firefly-illustrated__house--rustic::before,
@@ -174,7 +261,7 @@
   width: 145%;
   height: 34%;
   border-radius: 50%;
-  background: radial-gradient(ellipse, rgb(39 92 67 / 0.76), rgb(10 45 38 / 0.06) 72%);
+  background: radial-gradient(ellipse, rgb(39 92 67 / 0.78), rgb(10 45 38 / 0.06) 72%);
   transform: translateX(-50%);
 }
 
@@ -182,23 +269,53 @@
   right: 2%;
   bottom: 5%;
   width: clamp(6.4rem, 12vw, 10.5rem);
-  opacity: 0.9;
+  opacity: 0.92;
 }
 
 .firefly-illustrated__house img {
-  filter: brightness(0.62) saturate(0.84) hue-rotate(3deg) contrast(1.05) drop-shadow(0 0.8rem 1rem rgb(1 11 20 / 0.48));
+  filter: brightness(0.65) saturate(0.9) hue-rotate(2deg) contrast(1.04) drop-shadow(0 0.8rem 1rem rgb(1 11 20 / 0.46));
+}
+
+.firefly-illustrated__house-glow {
+  background: radial-gradient(circle, rgb(255 221 123 / 0.78), rgb(255 159 67 / 0.24) 38%, transparent 72%);
+  filter: blur(0.5rem);
+}
+
+.firefly-illustrated__bridge {
+  position: absolute;
+  z-index: 5;
+  right: 11%;
+  bottom: 18%;
+  width: clamp(3.6rem, 7vw, 6.6rem);
+  height: clamp(1rem, 1.8vw, 1.6rem);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.07rem;
+  padding-inline: 0.2rem;
+  border-radius: 50% 50% 18% 18%;
+  background: linear-gradient(180deg, rgb(109 72 44 / 0.92), rgb(55 40 30 / 0.94));
+  box-shadow: 0 0.25rem 0.35rem rgb(8 12 10 / 0.26);
+  transform: translate3d(var(--forest-x-near), var(--forest-y-near), 0) rotate(-4deg);
+}
+
+.firefly-illustrated__bridge span {
+  width: 19%;
+  height: 54%;
+  border-radius: 0.16rem;
+  background: linear-gradient(180deg, rgb(178 123 72 / 0.96), rgb(106 70 45 / 0.96));
 }
 
 .firefly-illustrated__foliage {
-  opacity: 0.64;
-  filter: brightness(0.5) saturate(0.9) hue-rotate(14deg) drop-shadow(0 -0.3rem 0.65rem rgb(0 7 12 / 0.42));
+  opacity: 0.68;
+  filter: brightness(0.53) saturate(0.96) hue-rotate(12deg) drop-shadow(0 -0.3rem 0.65rem rgb(0 7 12 / 0.42));
 }
 
 .firefly-illustrated__grade {
   background:
-    radial-gradient(circle at 52% 55%, transparent 0 36%, rgb(1 10 23 / 0.04) 56%, rgb(0 6 15 / 0.38) 100%),
-    linear-gradient(180deg, rgb(42 61 117 / 0.08), transparent 48%, rgb(6 33 29 / 0.1));
-  box-shadow: inset 0 0 5rem rgb(1 8 18 / 0.24);
+    radial-gradient(circle at 52% 55%, transparent 0 38%, rgb(1 10 23 / 0.03) 58%, rgb(0 6 15 / 0.34) 100%),
+    linear-gradient(180deg, rgb(55 71 138 / 0.06), transparent 48%, rgb(8 47 35 / 0.08));
+  box-shadow: inset 0 0 4rem rgb(1 8 18 / 0.2);
 }
 
 .firefly-illustrated__grade::before,
@@ -212,7 +329,8 @@
   .parallax-scene--expanded .firefly-illustrated__village--right { right: 6%; bottom: 42%; }
   .parallax-scene--expanded .firefly-illustrated__house--rustic { right: 13%; bottom: 23%; width: min(8vw, 7.2rem); }
   .parallax-scene--expanded .firefly-illustrated__house--tree { right: 2%; bottom: 5%; width: min(12vw, 10.5rem); }
-  .parallax-scene--expanded .firefly-illustrated__stream { right: 7%; width: 18%; opacity: 0.64; }
+  .parallax-scene--expanded .firefly-illustrated__stream { right: 7%; width: 18%; opacity: 0.68; }
+  .parallax-scene--expanded .firefly-illustrated__bridge { right: 11.5%; }
 }
 
 @media (max-width: 36rem) {
@@ -221,4 +339,6 @@
   .firefly-illustrated__house--rustic { right: 11%; bottom: 24%; width: 14vw; }
   .firefly-illustrated__house--tree { right: -1%; width: 21vw; }
   .firefly-illustrated__stream { right: 4%; width: 27%; height: 29%; }
+  .firefly-illustrated__wildflowers { width: 19%; }
+  .firefly-illustrated__bridge { right: 9%; width: 10vw; }
 }
