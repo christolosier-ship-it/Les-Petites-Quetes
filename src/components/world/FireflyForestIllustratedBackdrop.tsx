@@ -20,16 +20,25 @@ export function FireflyForestIllustratedBackdrop({ stage, reducedMotion }: Firef
       aria-hidden="true"
     >
       <div className="firefly-illustrated__sky" />
-      <img className="firefly-illustrated__meadow" src={getAssetUrl(DIORAMA_ASSETS.meadow)} alt="" decoding="async" />
-      <div className="firefly-illustrated__horizon-haze" />
+      <div className="firefly-illustrated__ridge firefly-illustrated__ridge--far" />
+      <div className="firefly-illustrated__ridge firefly-illustrated__ridge--mid" />
 
       {stage >= 3 && (
-        <div className="firefly-illustrated__village">
-          <img className="firefly-illustrated__village-house firefly-illustrated__village-house--one" src={getAssetUrl(DIORAMA_ASSETS.rusticHouse)} alt="" decoding="async" />
-          <img className="firefly-illustrated__village-house firefly-illustrated__village-house--two" src={getAssetUrl(DIORAMA_ASSETS.cottage)} alt="" decoding="async" />
-          <img className="firefly-illustrated__village-house firefly-illustrated__village-house--three" src={getAssetUrl(DIORAMA_ASSETS.rusticHouse)} alt="" decoding="async" />
-        </div>
+        <>
+          <div className="firefly-illustrated__village firefly-illustrated__village--left">
+            <img className="firefly-illustrated__village-house firefly-illustrated__village-house--one" src={getAssetUrl(DIORAMA_ASSETS.rusticHouse)} alt="" decoding="async" />
+            <img className="firefly-illustrated__village-house firefly-illustrated__village-house--two" src={getAssetUrl(DIORAMA_ASSETS.cottage)} alt="" decoding="async" />
+          </div>
+          <div className="firefly-illustrated__village firefly-illustrated__village--right">
+            <img className="firefly-illustrated__village-house firefly-illustrated__village-house--three" src={getAssetUrl(DIORAMA_ASSETS.rusticHouse)} alt="" decoding="async" />
+            <img className="firefly-illustrated__village-house firefly-illustrated__village-house--four" src={getAssetUrl(DIORAMA_ASSETS.cottage)} alt="" decoding="async" />
+          </div>
+        </>
       )}
+
+      <div className="firefly-illustrated__ridge firefly-illustrated__ridge--near" />
+      <img className="firefly-illustrated__meadow" src={getAssetUrl(DIORAMA_ASSETS.meadow)} alt="" decoding="async" />
+      <div className="firefly-illustrated__horizon-haze" />
 
       {stage >= 2 && (
         <>
