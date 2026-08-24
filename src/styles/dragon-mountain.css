@@ -1,0 +1,51 @@
+.dragon-mountain-scene { min-height: clamp(560px, 72vw, 820px); background: #1d1b2f; }
+.parallax-scene--compact.dragon-mountain-scene { min-height: clamp(420px, 54vw, 620px); }
+.dragon-mountain { position: absolute; inset: 0; overflow: hidden; background: #1d1b2f; }
+.dragon-mountain__viewport { position: absolute; inset: 0; z-index: 1; overflow: hidden; scrollbar-width: none; overscroll-behavior-y: contain; }
+.dragon-mountain__viewport::-webkit-scrollbar { display: none; }
+.dragon-mountain__viewport--explorable { overflow-y: auto; overflow-x: hidden; touch-action: pan-y; -webkit-overflow-scrolling: touch; scroll-behavior: smooth; }
+.dragon-mountain__track { position: relative; width: 100%; min-width: 720px; height: 5600px; overflow: hidden; image-rendering: pixelated; background: linear-gradient(to bottom, #241628 0 12.5%, #483049 12.5% 25%, #b26a36 25% 37.5%, #dbe6ee 37.5% 50%, #83b95b 50% 62.5%, #4f8e9e 62.5% 75%, #315f43 75% 87.5%, #6ea050 87.5% 100%); }
+.dragon-biome { position: absolute; left: 0; width: 100%; height: 700px; overflow: hidden; border-top: 6px solid rgb(0 0 0 / .12); }
+.dragon-biome__label { position: absolute; z-index: 8; top: 24px; left: 28px; padding: 7px 10px; border: 3px solid #261d26; background: #f4e0a3; color: #261d26; font-family: monospace; font-weight: 900; font-size: 16px; box-shadow: 4px 4px 0 #261d26; }
+.dragon-biome--summit { top: 0; background: linear-gradient(#1b1424 0 32%, #332334 32% 100%); }
+.dragon-biome--mountain { top: 700px; background: linear-gradient(#5d4a60, #39394a); }
+.dragon-biome--desert { top: 1400px; background: linear-gradient(#d39b52, #a95935); }
+.dragon-biome--snow { top: 2100px; background: linear-gradient(#cbe6ef, #eaf2ed); }
+.dragon-biome--plain { top: 2800px; background: linear-gradient(#92c85e, #6ba94f); }
+.dragon-biome--river { top: 3500px; background: linear-gradient(#6aa45b, #508f68); }
+.dragon-biome--forest { top: 4200px; background: linear-gradient(#3c7548, #244c3b); }
+.dragon-biome--village { top: 4900px; background: linear-gradient(#84b85c, #6f9d4f); }
+.dragon-mountain__road { position: absolute; z-index: 3; left: 50%; bottom: -60px; width: 150px; height: 5700px; transform: translateX(-50%) rotate(2deg); background: repeating-linear-gradient(to bottom, #c6a16f 0 58px, #b38b5e 58px 64px); clip-path: polygon(40% 100%, 60% 100%, 76% 86%, 42% 73%, 65% 60%, 33% 47%, 68% 34%, 38% 21%, 61% 8%, 46% 0, 58% 0, 82% 8%, 49% 21%, 75% 34%, 40% 47%, 77% 60%, 50% 73%, 84% 86%, 70% 100%); opacity: .92; }
+.dragon-mountain__river { position: absolute; z-index: 2; left: -10%; top: 315px; width: 120%; height: 130px; transform: rotate(-5deg); background: repeating-linear-gradient(90deg, #5cb6c4 0 28px, #76cad3 28px 42px); border-block: 8px solid #3d7f8e; }
+.dragon-mountain__bridge { position: absolute; z-index: 6; left: 47%; top: 290px; width: 72px; height: 190px; transform: rotate(85deg); background: repeating-linear-gradient(#9b6d3f 0 15px, #6e472d 15px 19px); border: 5px solid #4b3529; }
+.dragon-mountain__trees::before, .dragon-mountain__trees::after { content: '▲ ▲ ▲ ▲ ▲ ▲ ▲ ▲'; position: absolute; left: 4%; bottom: 80px; width: 92%; color: #163c2f; font: 88px/1 monospace; letter-spacing: 18px; text-shadow: 30px -80px 0 #1c4a36, 80px -25px 0 #24573d; }
+.dragon-mountain__houses { position: absolute; left: 19%; bottom: 115px; z-index: 7; color: #6d3d2c; font: 110px/1 monospace; letter-spacing: 32px; text-shadow: 8px 8px 0 #d39f58; }
+.dragon-mountain__snowfield::after { content: '◆ ◆ ◆ ◆ ◆'; position: absolute; right: 6%; bottom: 110px; color: #9eb4bd; font: 92px monospace; transform: rotate(-8deg); }
+.dragon-mountain__peaks::after { content: '▲ ▲ ▲ ▲'; position: absolute; left: 8%; bottom: 60px; color: #282b38; font: 200px/1 monospace; letter-spacing: -24px; text-shadow: 60px -90px 0 #424153; }
+.dragon-mountain__ruin { position: absolute; right: 18%; bottom: 95px; color: #74402f; font: 180px/1 monospace; }
+.dragon-mountain__lava { position: absolute; left: 0; right: 0; bottom: 0; height: 90px; background: repeating-linear-gradient(90deg, #d85c31 0 28px, #f3a43c 28px 52px, #9e382b 52px 70px); animation: dragon-lava 1.1s steps(3, end) infinite; }
+.dragon-mountain__dragon { position: absolute; z-index: 10; left: 50%; top: 210px; transform: translateX(-50%); font-size: 180px; filter: drop-shadow(12px 14px 0 rgb(0 0 0 / .28)); animation: dragon-breathe 2.8s steps(4, end) infinite; }
+.dragon-mountain__actor { position: absolute; z-index: 12; width: 64px; height: 64px; transform-origin: center bottom; transition: opacity .3s ease; }
+.dragon-mountain__sprite { display: block; width: 64px; height: 64px; background-repeat: no-repeat; background-size: 512px auto; background-position: 0 0; image-rendering: pixelated; animation: dragon-sprite-walk .7s steps(4) infinite; }
+.dragon-mountain__actor--walk-a { animation: dragon-roam-a 7.5s steps(12,end) infinite; }
+.dragon-mountain__actor--walk-b { animation: dragon-roam-b 8.4s steps(12,end) infinite; }
+.dragon-mountain__actor--walk-c { animation: dragon-roam-c 6.8s steps(10,end) infinite; }
+.dragon-mountain__reveal-hidden { opacity: 0; pointer-events: none; }
+.dragon-mountain__content { background: rgb(24 21 36 / .88); }
+.dragon-mountain__controls { position: absolute; z-index: 45; right: max(1rem, env(safe-area-inset-right)); top: 50%; transform: translateY(-50%); display: grid; gap: .6rem; width: min(280px, 42vw); padding: .7rem; border: 2px solid rgb(255 255 255 / .2); border-radius: 16px; background: rgb(20 18 30 / .88); color: #fff; }
+.dragon-mountain__controls > div { display: grid; gap: .4rem; text-align: center; font-size: .78rem; font-weight: 800; }
+.dragon-mountain__controls button { min-height: 44px; border: 2px solid #ead58d; border-radius: 10px; background: #342a45; color: #fff; font: 900 1.3rem monospace; }
+.dragon-mountain__progress { height: 6px; overflow: hidden; border-radius: 999px; background: rgb(255 255 255 / .18); }
+.dragon-mountain__progress i { display: block; width: 100%; height: 100%; transform: scaleX(var(--dragon-scroll-progress, 1)); transform-origin: left; background: #f1c65f; }
+.parallax-scene--expanded.dragon-mountain-scene { background: #171521; }
+.parallax-scene--expanded .dragon-mountain__track { min-width: 900px; }
+.parallax-scene--compact .dragon-mountain__viewport { pointer-events: none; }
+@keyframes dragon-lava { 50% { background-position-x: 52px; } }
+@keyframes dragon-breathe { 0%,100% { transform: translateX(-50%) translateY(0) scale(1); } 50% { transform: translateX(-50%) translateY(-8px) scale(1.04); } }
+@keyframes dragon-sprite-walk { to { background-position-x: -256px; } }
+@keyframes dragon-roam-a { 0%,100% { translate: -18px 0; } 50% { translate: 42px -12px; } }
+@keyframes dragon-roam-b { 0%,100% { translate: 34px 0; } 50% { translate: -44px 16px; } }
+@keyframes dragon-roam-c { 0%,100% { translate: -8px 0; } 50% { translate: 58px 9px; } }
+.dragon-mountain--reduced-motion *, .dragon-mountain--reduced-motion *::before, .dragon-mountain--reduced-motion *::after { animation: none !important; transition: none !important; }
+@media (max-width: 720px) { .dragon-mountain-scene { min-height: 510px; } .dragon-mountain__track { min-width: 660px; } .dragon-mountain__controls { right: .55rem; width: min(240px, 56vw); } }
+@media (prefers-reduced-motion: reduce) { .dragon-mountain__viewport--explorable { scroll-behavior: auto; } }
