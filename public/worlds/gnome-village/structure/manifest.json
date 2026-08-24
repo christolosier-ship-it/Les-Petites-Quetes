@@ -1,0 +1,84 @@
+{
+  "origin": "Habbo / Sulake",
+  "pipeline": "xabbo nx 0.3.0",
+  "usage": "Les Petites Quêtes — Village des Lutins — lot 1 structure",
+  "items": [
+    {
+      "file": "bench-cafeteria.png",
+      "source": "school_bench",
+      "width": 112,
+      "height": 79,
+      "bytes": 1200
+    },
+    {
+      "file": "corner-railing.png",
+      "source": "vwave_c21_railcrnr",
+      "width": 32,
+      "height": 67,
+      "bytes": 709
+    },
+    {
+      "file": "corner-street.png",
+      "source": "es_fnc_crnr",
+      "width": 66,
+      "height": 105,
+      "bytes": 5444
+    },
+    {
+      "file": "door-classroom.png",
+      "source": "xmas12_door",
+      "width": 104,
+      "height": 248,
+      "bytes": 21831
+    },
+    {
+      "file": "fence-garden.png",
+      "source": "garden_rosefence",
+      "width": 82,
+      "height": 145,
+      "bytes": 4713
+    },
+    {
+      "file": "fence-urban.png",
+      "source": "urban_fence",
+      "width": 73,
+      "height": 134,
+      "bytes": 2698
+    },
+    {
+      "file": "floor-classroom.png",
+      "source": "uni_c23_floor",
+      "width": 132,
+      "height": 67,
+      "bytes": 1400
+    },
+    {
+      "file": "floor-courtyard.png",
+      "source": "bohogarden_c21_floor",
+      "width": 128,
+      "height": 66,
+      "bytes": 3792
+    },
+    {
+      "file": "wall-cabin.png",
+      "source": "xmas11_wall",
+      "width": 74,
+      "height": 159,
+      "bytes": 3353
+    },
+    {
+      "file": "wall-classroom.png",
+      "source": "modern_c17_wall",
+      "width": 100,
+      "height": 172,
+      "bytes": 8808
+    },
+    {
+      "file": "window-square.png",
+      "source": "window_square",
+      "width": 33,
+      "height": 52,
+      "bytes": 500
+    }
+  ]
+}

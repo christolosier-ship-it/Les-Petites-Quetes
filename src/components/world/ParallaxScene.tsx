@@ -4,18 +4,28 @@ import { GenericParallaxScene } from './GenericParallaxScene';
 import type { WorldSceneRendererProps } from './WorldSceneProps';
 
 const FireflyForestDiorama = lazy(() => import('./FireflyForestDiorama').then((module) => ({ default: module.FireflyForestDiorama })));
+const GnomeVillageDiorama = lazy(() => import('./GnomeVillageDiorama').then((module) => ({ default: module.GnomeVillageDiorama })));
 
-function LazyFireflyForestDiorama(props: WorldSceneRendererProps) {
+function LazyScene({ loader: Renderer, ...props }: WorldSceneRendererProps & { readonly loader: ComponentType<WorldSceneRendererProps> }) {
   return (
     <Suspense fallback={<div className="parallax-scene parallax-scene--three" aria-busy="true" />}>
-      <FireflyForestDiorama {...props} />
+      <Renderer {...props} />
     </Suspense>
   );
+}
+
+function LazyFireflyForestDiorama(props: WorldSceneRendererProps) {
+  return <LazyScene loader={FireflyForestDiorama} {...props} />;
+}
+
+function LazyGnomeVillageDiorama(props: WorldSceneRendererProps) {
+  return <LazyScene loader={GnomeVillageDiorama} {...props} />;
 }
 
 const renderers = {
   'generic-parallax': GenericParallaxScene,
   'firefly-diorama': LazyFireflyForestDiorama,
+  'gnome-village-diorama': LazyGnomeVillageDiorama,
 } satisfies Record<SceneRendererId, ComponentType<WorldSceneRendererProps>>;
 
 export function ParallaxScene(props: WorldSceneRendererProps) {
