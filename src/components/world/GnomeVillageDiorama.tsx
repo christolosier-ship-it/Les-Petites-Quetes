@@ -9,17 +9,25 @@ const COURTYARD = `${ROOT}/courtyard`;
 const ACTORS = `${ROOT}/actors`;
 const DEFAULT_PANORAMA_RATIO = 0.5;
 
+type FloorAsset = 'floor-school.png' | 'floor-courtyard.png';
+type WallAsset = 'wall-school.png' | 'wall-academic.png';
+
 interface FloorFieldProps {
-  readonly asset: 'floor-classroom.png' | 'floor-courtyard.png';
+  readonly asset: FloorAsset;
   readonly columns: number;
   readonly rows: number;
+  readonly className: string;
+}
+
+interface WallRunProps {
+  readonly asset: WallAsset;
+  readonly count: number;
   readonly className: string;
 }
 
 interface ActorProps {
   readonly file: string;
   readonly className: string;
-  readonly bubble?: string;
   readonly reveal?: 1 | 2 | 3;
 }
 
@@ -39,33 +47,85 @@ function FloorField({ asset, columns, rows, className }: FloorFieldProps) {
   return <div className={`gnome-floor ${className}`}>{tiles}</div>;
 }
 
-function WallRun({ cabin = false, count = 5 }: { readonly cabin?: boolean; readonly count?: number }) {
-  const asset = cabin ? 'wall-cabin.png' : 'wall-classroom.png';
+function WallRun({ asset, count, className }: WallRunProps) {
   return (
-    <div className={`gnome-wall-run${cabin ? ' gnome-wall-run--cabin' : ''}`}>
-      {Array.from({ length: count }, (_, index) => <img key={index} src={`${STRUCTURE}/${asset}`} alt="" />)}
+    <div className={`gnome-wall-run ${className}`}>
+      {Array.from({ length: count }, (_, index) => (
+        <img key={index} src={`${STRUCTURE}/${asset}`} alt="" />
+      ))}
     </div>
   );
 }
 
-function Actor({ file, className, bubble, reveal }: ActorProps) {
+function Actor({ file, className, reveal }: ActorProps) {
   const revealClass = reveal ? ` gnome-reveal gnome-reveal--${reveal}` : '';
   return (
     <span className={`gnome-actor ${className}${revealClass}`}>
-      <span className="gnome-actor__hat" aria-hidden="true" />
       <img src={`${ACTORS}/${file}`} alt="" />
-      {bubble && <span className="gnome-actor__bubble">{bubble}</span>}
     </span>
+  );
+}
+
+function Desk({
+  className,
+  desk,
+  chair,
+  actor,
+  reveal,
+  books = false,
+  science = false,
+}: {
+  readonly className: string;
+  readonly desk: string;
+  readonly chair: string;
+  readonly actor: string;
+  readonly reveal?: 1 | 2 | 3;
+  readonly books?: boolean;
+  readonly science?: boolean;
+}) {
+  const revealClass = reveal ? ` gnome-reveal gnome-reveal--${reveal}` : '';
+  return (
+    <div className={`gnome-desk-cluster ${className}${revealClass}`}>
+      <img className="gnome-furni gnome-furni--desk" src={`${CLASSROOM}/${desk}`} alt="" />
+      <img className="gnome-furni gnome-furni--chair" src={`${CLASSROOM}/${chair}`} alt="" />
+      {books && <img className="gnome-furni gnome-furni--desk-item" src={`${CLASSROOM}/books.png`} alt="" />}
+      {science && <img className="gnome-furni gnome-furni--desk-item" src={`${CLASSROOM}/chem-set.png`} alt="" />}
+      <Actor file={actor} className="gnome-actor--student" />
+    </div>
+  );
+}
+
+function CanteenTable({
+  className,
+  food,
+  actor,
+  reveal,
+  academic = false,
+}: {
+  readonly className: string;
+  readonly food: string;
+  readonly actor: string;
+  readonly reveal?: 1 | 2 | 3;
+  readonly academic?: boolean;
+}) {
+  const revealClass = reveal ? ` gnome-reveal gnome-reveal--${reveal}` : '';
+  const table = academic ? 'academic-table.png' : 'school-table.png';
+  const bench = academic ? 'academic-bench.png' : 'school-bench.png';
+  return (
+    <div className={`gnome-canteen-table ${className}${revealClass}`}>
+      <img className="gnome-furni gnome-furni--canteen-table" src={`${CAFETERIA}/${table}`} alt="" />
+      <img className="gnome-furni gnome-furni--canteen-bench gnome-furni--canteen-bench-back" src={`${CAFETERIA}/${bench}`} alt="" />
+      <img className="gnome-furni gnome-furni--canteen-bench gnome-furni--canteen-bench-front" src={`${CAFETERIA}/${bench}`} alt="" />
+      <img className="gnome-furni gnome-furni--canteen-food" src={`${CAFETERIA}/${food}`} alt="" />
+      <Actor file={actor} className="gnome-actor--canteen-seat" />
+    </div>
   );
 }
 
 function syncPanorama(viewport: HTMLDivElement) {
   const maxScroll = Math.max(viewport.scrollWidth - viewport.clientWidth, 1);
   const ratio = Math.min(Math.max(viewport.scrollLeft / maxScroll, 0), 1);
-  const scroll = viewport.scrollLeft;
   viewport.style.setProperty('--gnome-scroll-progress', ratio.toFixed(4));
-  viewport.style.setProperty('--gnome-scroll-far', `${scroll * 0.04}px`);
-  viewport.style.setProperty('--gnome-scroll-near', `${scroll * 0.015}px`);
   return ratio;
 }
 
@@ -122,12 +182,14 @@ export function GnomeVillageDiorama({ world, stage, reducedMotion, compact = fal
           aria-hidden="true"
         >
           <div className="gnome-panorama__track">
-            <div className="gnome-campus-path" />
-
             <section className="gnome-zone gnome-zone--courtyard">
-              <span className="gnome-zone__label">Cour des lutins</span>
-              <FloorField asset="floor-courtyard.png" columns={7} rows={5} className="gnome-floor--courtyard" />
+              <FloorField asset="floor-courtyard.png" columns={8} rows={6} className="gnome-floor--courtyard" />
+              <WallRun asset="wall-academic.png" count={7} className="gnome-wall-run--yard" />
 
+              <img className="gnome-prop gnome-prop--yard-door" src={`${STRUCTURE}/door-classroom.png`} alt="" />
+              <img className="gnome-prop gnome-prop--yard-window-one" src={`${STRUCTURE}/window-square.png`} alt="" />
+              <img className="gnome-prop gnome-prop--yard-window-two" src={`${STRUCTURE}/window-square.png`} alt="" />
+              <img className="gnome-prop gnome-prop--school-bus" src={`${COURTYARD}/school-bus.png`} alt="" />
               <img className="gnome-prop gnome-prop--yard-tree" src={`${COURTYARD}/tree.png`} alt="" />
               <img className="gnome-prop gnome-prop--yard-bench" src={`${COURTYARD}/bench.png`} alt="" />
               <img className="gnome-prop gnome-prop--park-bench" src={`${COURTYARD}/park-bench.png`} alt="" />
@@ -135,113 +197,80 @@ export function GnomeVillageDiorama({ world, stage, reducedMotion, compact = fal
               <img className="gnome-prop gnome-prop--yard-fence-two" src={`${COURTYARD}/fence-wood.png`} alt="" />
               <img className="gnome-prop gnome-prop--yard-swing gnome-reveal gnome-reveal--1" src={`${COURTYARD}/swing.png`} alt="" />
               <img className="gnome-prop gnome-prop--yard-slide gnome-reveal gnome-reveal--2" src={`${COURTYARD}/slide.png`} alt="" />
+              <img className="gnome-prop gnome-prop--yard-play gnome-reveal gnome-reveal--2" src={`${COURTYARD}/play-ramp.png`} alt="" />
+              <img className="gnome-prop gnome-prop--yard-sports gnome-reveal gnome-reveal--1" src={`${COURTYARD}/sports-equipment.png`} alt="" />
+              <img className="gnome-prop gnome-prop--yard-bag gnome-reveal gnome-reveal--2" src={`${COURTYARD}/gym-bag.png`} alt="" />
               <img className="gnome-prop gnome-prop--yard-pond gnome-reveal gnome-reveal--2" src={`${COURTYARD}/garden-pond.png`} alt="" />
               <img className="gnome-prop gnome-prop--yard-pot-one gnome-reveal gnome-reveal--1" src={`${COURTYARD}/garden-pot.png`} alt="" />
               <img className="gnome-prop gnome-prop--yard-pot-two gnome-reveal gnome-reveal--1" src={`${COURTYARD}/garden-pot.png`} alt="" />
               <img className="gnome-prop gnome-prop--yard-frog gnome-reveal gnome-reveal--3" src={`${COURTYARD}/garden-frog.png`} alt="" />
-              <img className="gnome-prop gnome-prop--fence-one" src={`${STRUCTURE}/fence-urban.png`} alt="" />
-              <img className="gnome-prop gnome-prop--fence-two" src={`${STRUCTURE}/fence-urban.png`} alt="" />
-              <div className="gnome-hopscotch gnome-reveal gnome-reveal--1"><i>1</i><i>2</i><i>3</i><i>4</i><i>5</i></div>
+              <img className="gnome-prop gnome-prop--yard-fence-three" src={`${STRUCTURE}/fence-garden.png`} alt="" />
+              <img className="gnome-prop gnome-prop--yard-fence-four" src={`${STRUCTURE}/fence-garden.png`} alt="" />
 
               <Actor file="courtyard-run.png" className="gnome-actor--yard-run" reveal={1} />
-              <Actor file="courtyard-wave.png" className="gnome-actor--yard-wave" bubble="Hé !" reveal={2} />
+              <Actor file="courtyard-wave.png" className="gnome-actor--yard-wave" reveal={2} />
               <Actor file="student-walk.png" className="gnome-actor--yard-friend" reveal={3} />
             </section>
 
-            <div className="gnome-connector gnome-connector--left">
-              <span className="gnome-connector__awning" />
-              <img src={`${STRUCTURE}/door-classroom.png`} alt="" />
-            </div>
-
             <section className="gnome-zone gnome-zone--classroom">
-              <span className="gnome-zone__label">Grande classe</span>
-              <FloorField asset="floor-classroom.png" columns={9} rows={6} className="gnome-floor--classroom" />
-              <WallRun count={9} />
+              <FloorField asset="floor-school.png" columns={11} rows={7} className="gnome-floor--classroom" />
+              <WallRun asset="wall-school.png" count={11} className="gnome-wall-run--class-back" />
+              <WallRun asset="wall-school.png" count={6} className="gnome-wall-run--class-side" />
 
               <img className="gnome-prop gnome-prop--class-door" src={`${STRUCTURE}/door-classroom.png`} alt="" />
               <img className="gnome-prop gnome-prop--class-window-one" src={`${STRUCTURE}/window-square.png`} alt="" />
               <img className="gnome-prop gnome-prop--class-window-two" src={`${STRUCTURE}/window-square.png`} alt="" />
               <img className="gnome-prop gnome-prop--class-window-three" src={`${STRUCTURE}/window-square.png`} alt="" />
-
               <img className="gnome-prop gnome-prop--chalkboard" src={`${CLASSROOM}/chalkboard.png`} alt="" />
               <img className="gnome-prop gnome-prop--charts" src={`${CLASSROOM}/charts.png`} alt="" />
               <img className="gnome-prop gnome-prop--bookshelf" src={`${CLASSROOM}/bookshelf.png`} alt="" />
               <img className="gnome-prop gnome-prop--bookcase gnome-reveal gnome-reveal--1" src={`${CLASSROOM}/bookcase.png`} alt="" />
-              <img className="gnome-prop gnome-prop--locker gnome-reveal gnome-reveal--1" src={`${CLASSROOM}/locker.png`} alt="" />
+              <img className="gnome-prop gnome-prop--locker-green" src={`${CLASSROOM}/locker.png`} alt="" />
+              <img className="gnome-prop gnome-prop--locker-blue gnome-reveal gnome-reveal--1" src={`${CLASSROOM}/locker-blue.png`} alt="" />
+              <img className="gnome-prop gnome-prop--locker-red gnome-reveal gnome-reveal--1" src={`${CLASSROOM}/locker-red.png`} alt="" />
+              <img className="gnome-prop gnome-prop--coatrack-green" src={`${CLASSROOM}/coatrack-green.png`} alt="" />
+              <img className="gnome-prop gnome-prop--coatrack-blue gnome-reveal gnome-reveal--2" src={`${CLASSROOM}/coatrack-blue.png`} alt="" />
+              <img className="gnome-prop gnome-prop--coatrack-red gnome-reveal gnome-reveal--3" src={`${CLASSROOM}/coatrack-red.png`} alt="" />
               <img className="gnome-prop gnome-prop--projector gnome-reveal gnome-reveal--2" src={`${CLASSROOM}/projector.png`} alt="" />
-              <span className="gnome-projector-beam gnome-reveal gnome-reveal--2" />
               <img className="gnome-prop gnome-prop--alarm" src={`${CLASSROOM}/alarm.png`} alt="" />
+              <img className="gnome-prop gnome-prop--science gnome-reveal gnome-reveal--2" src={`${CLASSROOM}/science-equipment.png`} alt="" />
 
               <div className="gnome-teacher-station">
                 <img className="gnome-furni gnome-furni--teacher-desk" src={`${CLASSROOM}/teacher-desk.png`} alt="" />
                 <img className="gnome-furni gnome-furni--laptop" src={`${CLASSROOM}/laptop.png`} alt="" />
-                <Actor file="teacher.png" className="gnome-actor--teacher" bubble="À vous !" />
+                <Actor file="teacher.png" className="gnome-actor--teacher" />
               </div>
 
-              <div className="gnome-desk-cluster gnome-desk-cluster--one">
-                <img className="gnome-furni gnome-furni--desk" src={`${CLASSROOM}/desk-green.png`} alt="" />
-                <img className="gnome-furni gnome-furni--chair" src={`${CLASSROOM}/chair-green.png`} alt="" />
-                <img className="gnome-furni gnome-furni--books" src={`${CLASSROOM}/books.png`} alt="" />
-                <Actor file="student-write.png" className="gnome-actor--student-write" />
-              </div>
-
-              <div className="gnome-desk-cluster gnome-desk-cluster--two gnome-reveal gnome-reveal--1">
-                <img className="gnome-furni gnome-furni--desk" src={`${CLASSROOM}/desk-blue.png`} alt="" />
-                <img className="gnome-furni gnome-furni--chair" src={`${CLASSROOM}/chair-blue.png`} alt="" />
-                <Actor file="student-hand.png" className="gnome-actor--student-hand" bubble="Moi !" />
-              </div>
-
-              <div className="gnome-desk-cluster gnome-desk-cluster--three gnome-reveal gnome-reveal--2">
-                <img className="gnome-furni gnome-furni--desk" src={`${CLASSROOM}/desk-green.png`} alt="" />
-                <img className="gnome-furni gnome-furni--chair" src={`${CLASSROOM}/chair-green.png`} alt="" />
-                <Actor file="student-chat.png" className="gnome-actor--student-chat" bubble="Psst…" />
-              </div>
-
-              <div className="gnome-desk-cluster gnome-desk-cluster--four gnome-reveal gnome-reveal--3">
-                <img className="gnome-furni gnome-furni--desk" src={`${CLASSROOM}/desk-blue.png`} alt="" />
-                <img className="gnome-furni gnome-furni--chair" src={`${CLASSROOM}/chair-blue.png`} alt="" />
-                <img className="gnome-furni gnome-furni--books" src={`${CLASSROOM}/books.png`} alt="" />
-                <Actor file="student-write.png" className="gnome-actor--student-second" />
-              </div>
+              <Desk className="gnome-desk-cluster--one" desk="desk-red.png" chair="chair-red.png" actor="student-write.png" books />
+              <Desk className="gnome-desk-cluster--two" desk="desk-green.png" chair="chair-green.png" actor="student-hand.png" reveal={1} />
+              <Desk className="gnome-desk-cluster--three" desk="desk-blue.png" chair="chair-blue.png" actor="student-chat.png" reveal={1} science />
+              <Desk className="gnome-desk-cluster--four" desk="desk-red.png" chair="chair-red.png" actor="student-write.png" reveal={2} books />
+              <Desk className="gnome-desk-cluster--five" desk="desk-green.png" chair="chair-green.png" actor="student-chat.png" reveal={2} />
+              <Desk className="gnome-desk-cluster--six" desk="desk-blue.png" chair="chair-blue.png" actor="student-hand.png" reveal={3} books />
 
               <Actor file="student-walk.png" className="gnome-actor--class-walk" reveal={2} />
-              <span className="gnome-floating-book gnome-floating-book--one gnome-reveal gnome-reveal--2"><img src={`${CLASSROOM}/books.png`} alt="" /></span>
-              <span className="gnome-floating-book gnome-floating-book--two gnome-reveal gnome-reveal--3"><img src={`${CLASSROOM}/books.png`} alt="" /></span>
+              <span className="gnome-floating-asset gnome-floating-asset--book-one gnome-reveal gnome-reveal--2"><img src={`${CLASSROOM}/books.png`} alt="" /></span>
+              <span className="gnome-floating-asset gnome-floating-asset--book-two gnome-reveal gnome-reveal--3"><img src={`${CLASSROOM}/books.png`} alt="" /></span>
             </section>
 
-            <div className="gnome-connector gnome-connector--right">
-              <span className="gnome-connector__awning" />
-              <img src={`${STRUCTURE}/door-classroom.png`} alt="" />
-            </div>
-
             <section className="gnome-zone gnome-zone--cafeteria">
-              <span className="gnome-zone__label">Cantine</span>
-              <FloorField asset="floor-classroom.png" columns={7} rows={5} className="gnome-floor--cafeteria" />
-              <WallRun cabin count={8} />
+              <FloorField asset="floor-school.png" columns={8} rows={6} className="gnome-floor--cafeteria" />
+              <WallRun asset="wall-academic.png" count={8} className="gnome-wall-run--canteen-back" />
+              <WallRun asset="wall-academic.png" count={5} className="gnome-wall-run--canteen-side" />
 
-              <img className="gnome-prop gnome-prop--canteen-window" src={`${STRUCTURE}/window-square.png`} alt="" />
+              <img className="gnome-prop gnome-prop--canteen-door" src={`${STRUCTURE}/door-classroom.png`} alt="" />
+              <img className="gnome-prop gnome-prop--canteen-window-one" src={`${STRUCTURE}/window-square.png`} alt="" />
+              <img className="gnome-prop gnome-prop--canteen-window-two" src={`${STRUCTURE}/window-square.png`} alt="" />
               <img className="gnome-prop gnome-prop--canteen-fridge" src={`${CAFETERIA}/fridge.png`} alt="" />
               <img className="gnome-prop gnome-prop--canteen-counter" src={`${CAFETERIA}/counter.png`} alt="" />
               <img className="gnome-prop gnome-prop--canteen-cart gnome-reveal gnome-reveal--1" src={`${CAFETERIA}/lunch-cart.png`} alt="" />
-              <img className="gnome-prop gnome-prop--canteen-snacks gnome-reveal gnome-reveal--1" src={`${CAFETERIA}/snacks.png`} alt="" />
+              <img className="gnome-prop gnome-prop--canteen-tray gnome-reveal gnome-reveal--1" src={`${CAFETERIA}/red-tray.png`} alt="" />
+              <img className="gnome-prop gnome-prop--canteen-vegetables gnome-reveal gnome-reveal--2" src={`${CAFETERIA}/vegetables.png`} alt="" />
+              <img className="gnome-prop gnome-prop--canteen-pizza gnome-reveal gnome-reveal--3" src={`${CAFETERIA}/pizza.png`} alt="" />
 
-              <div className="gnome-canteen-table gnome-canteen-table--one">
-                <img className="gnome-furni gnome-furni--canteen-table" src={`${CAFETERIA}/table.png`} alt="" />
-                <img className="gnome-furni gnome-furni--canteen-chair gnome-furni--canteen-chair-a" src={`${CAFETERIA}/chair.png`} alt="" />
-                <img className="gnome-furni gnome-furni--canteen-chair gnome-furni--canteen-chair-b" src={`${CAFETERIA}/chair.png`} alt="" />
-                <img className="gnome-furni gnome-furni--pizza" src={`${CAFETERIA}/pizza.png`} alt="" />
-                <span className="gnome-pizza-steam"><i /><i /><i /></span>
-                <Actor file="canteen-drink.png" className="gnome-actor--canteen-drink" />
-              </div>
-
-              <div className="gnome-canteen-table gnome-canteen-table--two gnome-reveal gnome-reveal--2">
-                <img className="gnome-furni gnome-furni--canteen-table" src={`${CAFETERIA}/table.png`} alt="" />
-                <img className="gnome-furni gnome-furni--canteen-chair gnome-furni--canteen-chair-a" src={`${CAFETERIA}/chair.png`} alt="" />
-                <img className="gnome-furni gnome-furni--canteen-chair gnome-furni--canteen-chair-b" src={`${CAFETERIA}/chair.png`} alt="" />
-                <img className="gnome-furni gnome-furni--snack-on-table" src={`${CAFETERIA}/snacks.png`} alt="" />
-                <Actor file="student-chat.png" className="gnome-actor--canteen-chat" bubble="Miam !" />
-              </div>
-
+              <CanteenTable className="gnome-canteen-table--one" food="burger.png" actor="canteen-drink.png" />
+              <CanteenTable className="gnome-canteen-table--two" food="meatballs.png" actor="student-chat.png" reveal={1} academic />
+              <CanteenTable className="gnome-canteen-table--three" food="nuggets.png" actor="student-write.png" reveal={2} />
               <Actor file="student-walk.png" className="gnome-actor--canteen-walk" reveal={3} />
             </section>
           </div>
@@ -302,7 +331,7 @@ export function GnomeVillageDiorama({ world, stage, reducedMotion, compact = fal
         </div>
       )}
 
-      {!expanded && <div className="parallax-scene__hint">Touchez le tableau pour explorer l’école des lutins</div>}
+      {!expanded && <div className="parallax-scene__hint">Touchez le tableau pour explorer l’école</div>}
     </div>
   );
 }
