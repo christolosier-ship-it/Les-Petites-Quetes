@@ -34,7 +34,7 @@ export function ChildWorldSpace({ app, childId, worldId, onBack, onHome }: Child
       </header>
       <TabBar tabs={tabs} active={tab} onChange={setTab} label={`Navigation ${world.name}`} />
       <div className="workspace-content">
-        {tab === 'world' && <WorldView app={app} childId={childId} worldId={worldId} compact />}
+        {tab === 'world' && <WorldView app={app} childId={childId} worldId={worldId} compact interactiveScene />}
         {tab === 'quests' && <ChildQuestList app={app} childId={childId} worldId={worldId} />}
         {tab === 'treasure' && <TreasurePanel app={app} childId={childId} worldId={worldId} />}
       </div>

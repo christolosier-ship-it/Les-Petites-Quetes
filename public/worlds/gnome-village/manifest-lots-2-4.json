@@ -1,0 +1,280 @@
+{
+  "origin": "Habbo / Sulake",
+  "pipeline": "xabbo nx 0.3.0",
+  "usage": "Les Petites Quêtes — Village des Lutins — lots 2 à 4 + acteurs",
+  "items": [
+    {
+      "file": "classroom/chair-green.png",
+      "source": "school_chair_g",
+      "width": 45,
+      "height": 64,
+      "bytes": 1041
+    },
+    {
+      "file": "classroom/chair-blue.png",
+      "source": "school_chair_b",
+      "width": 45,
+      "height": 64,
+      "bytes": 1063
+    },
+    {
+      "file": "classroom/desk-green.png",
+      "source": "school_console_g",
+      "width": 59,
+      "height": 66,
+      "bytes": 1168
+    },
+    {
+      "file": "classroom/desk-blue.png",
+      "source": "school_console_b",
+      "width": 59,
+      "height": 66,
+      "bytes": 1174
+    },
+    {
+      "file": "classroom/teacher-desk.png",
+      "source": "school_c22_teachertable",
+      "width": 99,
+      "height": 84,
+      "bytes": 3694
+    },
+    {
+      "file": "classroom/bookshelf.png",
+      "source": "uni_bookshelf",
+      "width": 86,
+      "height": 132,
+      "bytes": 4712
+    },
+    {
+      "file": "classroom/bookcase.png",
+      "source": "classic9_bookshelf",
+      "width": 98,
+      "height": 215,
+      "bytes": 10726
+    },
+    {
+      "file": "classroom/projector.png",
+      "source": "uni_projector",
+      "width": 119,
+      "height": 176,
+      "bytes": 5565
+    },
+    {
+      "file": "classroom/laptop.png",
+      "source": "computer_laptop",
+      "width": 38,
+      "height": 32,
+      "bytes": 725
+    },
+    {
+      "file": "classroom/alarm.png",
+      "source": "uni_alarm",
+      "width": 46,
+      "height": 32,
+      "bytes": 837
+    },
+    {
+      "file": "classroom/chalkboard.png",
+      "source": "school_chalkboard2",
+      "width": 128,
+      "height": 146,
+      "bytes": 2368
+    },
+    {
+      "file": "classroom/books.png",
+      "source": "school_stuff_01",
+      "width": 46,
+      "height": 23,
+      "bytes": 467
+    },
+    {
+      "file": "classroom/charts.png",
+      "source": "school_charts",
+      "width": 79,
+      "height": 111,
+      "bytes": 1852
+    },
+    {
+      "file": "classroom/locker.png",
+      "source": "school_locker_g_notele",
+      "width": 58,
+      "height": 138,
+      "bytes": 2339
+    },
+    {
+      "file": "cafeteria/table.png",
+      "source": "table_armas",
+      "width": 114,
+      "height": 88,
+      "bytes": 1772
+    },
+    {
+      "file": "cafeteria/chair.png",
+      "source": "ktchn_c15_chair_g",
+      "width": 50,
+      "height": 74,
+      "bytes": 1093
+    },
+    {
+      "file": "cafeteria/fridge.png",
+      "source": "uni_fridge",
+      "width": 40,
+      "height": 56,
+      "bytes": 753
+    },
+    {
+      "file": "cafeteria/snacks.png",
+      "source": "uni_snacks",
+      "width": 55,
+      "height": 29,
+      "bytes": 1298
+    },
+    {
+      "file": "cafeteria/pizza.png",
+      "source": "uni_pizza",
+      "width": 66,
+      "height": 39,
+      "bytes": 1529
+    },
+    {
+      "file": "cafeteria/counter.png",
+      "source": "school_c22_cafe",
+      "width": 98,
+      "height": 104,
+      "bytes": 4062
+    },
+    {
+      "file": "cafeteria/lunch-cart.png",
+      "source": "school_cafe",
+      "width": 98,
+      "height": 104,
+      "bytes": 3850
+    },
+    {
+      "file": "courtyard/bench.png",
+      "source": "autumn_c20_bench",
+      "width": 97,
+      "height": 101,
+      "bytes": 8362
+    },
+    {
+      "file": "courtyard/tree.png",
+      "source": "anc_comfy_tree",
+      "width": 131,
+      "height": 253,
+      "bytes": 12011
+    },
+    {
+      "file": "courtyard/garden-pot.png",
+      "source": "garden_bigpot",
+      "width": 51,
+      "height": 63,
+      "bytes": 2041
+    },
+    {
+      "file": "courtyard/garden-pond.png",
+      "source": "garden_pond",
+      "width": 88,
+      "height": 54,
+      "bytes": 3055
+    },
+    {
+      "file": "courtyard/park-bench.png",
+      "source": "es_bench",
+      "width": 89,
+      "height": 94,
+      "bytes": 2553
+    },
+    {
+      "file": "courtyard/fence-wood.png",
+      "source": "bohogarden_c21_woodenwall",
+      "width": 66,
+      "height": 129,
+      "bytes": 1406
+    },
+    {
+      "file": "courtyard/swing.png",
+      "source": "pcnc_swing",
+      "width": 76,
+      "height": 172,
+      "bytes": 2437
+    },
+    {
+      "file": "courtyard/slide.png",
+      "source": "wf_slider",
+      "width": 60,
+      "height": 35,
+      "bytes": 810
+    },
+    {
+      "file": "courtyard/garden-frog.png",
+      "source": "garden_c23_frog",
+      "width": 32,
+      "height": 35,
+      "bytes": 1009
+    },
+    {
+      "file": "actors/student-write.png",
+      "source": "Habbo avatar FIG_A / sit / dir 4",
+      "width": 44,
+      "height": 79,
+      "bytes": 1503
+    },
+    {
+      "file": "actors/student-hand.png",
+      "source": "Habbo avatar FIG_A / wave / dir 4",
+      "width": 46,
+      "height": 88,
+      "bytes": 1639
+    },
+    {
+      "file": "actors/student-chat.png",
+      "source": "Habbo avatar FIG_B / speak / dir 2",
+      "width": 36,
+      "height": 85,
+      "bytes": 2170
+    },
+    {
+      "file": "actors/student-walk.png",
+      "source": "Habbo avatar FIG_B / walk / dir 2",
+      "width": 37,
+      "height": 82,
+      "bytes": 2153
+    },
+    {
+      "file": "actors/teacher.png",
+      "source": "Habbo avatar FIG_B / stand / dir 6",
+      "width": 36,
+      "height": 82,
+      "bytes": 1909
+    },
+    {
+      "file": "actors/canteen-drink.png",
+      "source": "Habbo avatar FIG_A / drink / dir 4",
+      "width": 39,
+      "height": 88,
+      "bytes": 1514
+    },
+    {
+      "file": "actors/courtyard-run.png",
+      "source": "Habbo avatar FIG_B / walk / dir 6",
+      "width": 36,
+      "height": 80,
+      "bytes": 1889
+    },
+    {
+      "file": "actors/courtyard-wave.png",
+      "source": "Habbo avatar FIG_A / wave / dir 2",
+      "width": 40,
+      "height": 88,
+      "bytes": 1544
+    },
+    {
+      "file": "courtyard/play-ramp.png",
+      "source": "sb_ramp",
+      "width": 112,
+      "height": 89,
+      "bytes": 3137
+    }
+  ]
+}
