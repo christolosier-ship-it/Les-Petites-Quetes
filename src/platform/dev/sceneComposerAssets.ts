@@ -27,15 +27,29 @@ const STRAIGHT_WALLS: SceneAssetDefinition[] = [
   { id: 'derived:wall-academic-straight', file: 'structure/wall-academic.png', label: 'Mur droit académique', category: 'Structure', source: 'school_c22_wall · section centrale droite', width: 84, height: 187, sourceWidth: 111, cropX: 14 },
 ];
 
-const NINJA_ROOT = 'https://raw.githubusercontent.com/pixel-boy/NinjaAdventure/main';
+const NINJA_ROOT = '/worlds/dragon-mountain/ninja-adventure';
+const ninja = (path: string) => `${NINJA_ROOT}/${path}`;
+const source = 'Pixel-Boy / Ninja Adventure CC0';
+
 const DRAGON_ASSETS: SceneAssetDefinition[] = [
-  { id: 'ninja:ninja-blue', file: `${NINJA_ROOT}/content/character/ninja_blue/sprite.png`, label: 'Ninja bleu', category: 'Personnages', source: 'Pixel-Boy / Ninja Adventure CC0', width: 64, height: 64 },
-  { id: 'ninja:samurai-blue', file: `${NINJA_ROOT}/content/character/samurai_blue/sprite.png`, label: 'Samouraï bleu', category: 'Personnages', source: 'Pixel-Boy / Ninja Adventure CC0', width: 64, height: 64 },
-  { id: 'ninja:samurai-green', file: `${NINJA_ROOT}/content/character/samurai_green/samurai_green.png`, label: 'Samouraï vert', category: 'Personnages', source: 'Pixel-Boy / Ninja Adventure CC0', width: 64, height: 64 },
-  { id: 'ninja:pig', file: `${NINJA_ROOT}/content/character/pig/pig.png`, label: 'Cochon', category: 'Personnages', source: 'Pixel-Boy / Ninja Adventure CC0', width: 48, height: 48 },
-  { id: 'ninja:crate', file: `${NINJA_ROOT}/content/destroyable/crate.png`, label: 'Caisse', category: 'Décor', source: 'Pixel-Boy / Ninja Adventure CC0', width: 48, height: 48 },
-  { id: 'ninja:grass', file: `${NINJA_ROOT}/content/destroyable/grass.png`, label: 'Herbe', category: 'Décor', source: 'Pixel-Boy / Ninja Adventure CC0', width: 48, height: 48 },
-  { id: 'ninja:pot', file: `${NINJA_ROOT}/content/destroyable/pot.png`, label: 'Pot', category: 'Décor', source: 'Pixel-Boy / Ninja Adventure CC0', width: 48, height: 48 },
+  { id: 'ninja:ninja-green', file: ninja('Actor/CharacterAnimated/NinjaGreen/SpriteSheet.png'), label: 'Ninja vert animé', category: 'Personnages', source, width: 64, height: 136 },
+  { id: 'ninja:ninja-blue', file: ninja('Actor/Character/NinjaBlue/SpriteSheet.png'), label: 'Ninja bleu', category: 'Personnages', source, width: 64, height: 64 },
+  { id: 'ninja:samurai-blue', file: ninja('Actor/Character/SamuraiBlue/SpriteSheet.png'), label: 'Samouraï bleu', category: 'Personnages', source, width: 64, height: 64 },
+  { id: 'ninja:skeleton', file: ninja('Actor/Character/Skeleton/SpriteSheet.png'), label: 'Squelette', category: 'Monstres', source, width: 64, height: 64 },
+  { id: 'ninja:slime', file: ninja('Actor/Monster/Slime/Slime.png'), label: 'Slime', category: 'Monstres', source, width: 48, height: 48 },
+  { id: 'ninja:lizard', file: ninja('Actor/Monster/Lizard/Lizard.png'), label: 'Lézard', category: 'Monstres', source, width: 48, height: 48 },
+  { id: 'ninja:bat', file: ninja('Actor/Monster/BlueBat/BlueBat.png'), label: 'Chauve-souris', category: 'Monstres', source, width: 48, height: 48 },
+  { id: 'ninja:dragon-green', file: ninja('Actor/Boss/DragonGreen/Preview.png'), label: 'Dragon vert', category: 'Monstres', source, width: 318, height: 145 },
+  { id: 'ninja:dragon-blue', file: ninja('Actor/Boss/DragonBlue/Preview.png'), label: 'Dragon bleu', category: 'Monstres', source, width: 318, height: 145 },
+  { id: 'ninja:animals', file: ninja('Actor/Animal/Preview.gif'), label: 'Animaux', category: 'Personnages', source, width: 128, height: 96 },
+  { id: 'ninja:tiles-nature', file: ninja('Backgrounds/Tilesets/TilesetNature.png'), label: 'Tileset nature', category: 'Terrain', source, width: 192, height: 168 },
+  { id: 'ninja:tiles-water', file: ninja('Backgrounds/Tilesets/TilesetWater.png'), label: 'Tileset eau', category: 'Terrain', source, width: 224, height: 136 },
+  { id: 'ninja:tiles-desert', file: ninja('Backgrounds/Tilesets/TilesetDesert.png'), label: 'Tileset désert', category: 'Terrain', source, width: 160, height: 96 },
+  { id: 'ninja:tiles-relief', file: ninja('Backgrounds/Tilesets/TilesetRelief.png'), label: 'Tileset relief', category: 'Terrain', source, width: 160, height: 96 },
+  { id: 'ninja:tiles-house', file: ninja('Backgrounds/Tilesets/TilesetHouse.png'), label: 'Tileset village', category: 'Structure', source, width: 264, height: 184 },
+  { id: 'ninja:tiles-ruins', file: ninja('Backgrounds/Tilesets/TilesetVillageAbandoned.png'), label: 'Village abandonné', category: 'Décor', source, width: 212, height: 160 },
+  { id: 'ninja:items', file: ninja('Items/AllPreview.png'), label: 'Objets et trésors', category: 'Décor', source, width: 180, height: 120 },
+  { id: 'ninja:fx', file: ninja('FX/AllPreview.png'), label: 'Effets visuels', category: 'Décor', source, width: 180, height: 120 },
 ];
 
 function categoryFor(file: string): SceneAssetCategory {
@@ -51,14 +65,14 @@ function humanize(file: string) {
   return name.replace(/\.(png|svg|webp)$/i, '').replace(/[-_]+/g, ' ');
 }
 
-async function loadManifest(source: ManifestSource) {
-  const response = await fetch(source.url);
-  if (!response.ok) throw new Error(`Manifest indisponible: ${source.url}`);
+async function loadManifest(sourceManifest: ManifestSource) {
+  const response = await fetch(sourceManifest.url);
+  if (!response.ok) throw new Error(`Manifest indisponible: ${sourceManifest.url}`);
   const manifest = await response.json() as Manifest;
   return (manifest.items ?? []).flatMap((item): SceneAssetDefinition[] => {
     if (!item.file || !item.source || !Number.isFinite(item.width) || !Number.isFinite(item.height)) return [];
-    const file = `${source.prefix}${item.file}`;
-    return [{ id: `${source.url}:${file}`, file, label: humanize(file), category: categoryFor(file), source: item.source, width: item.width, height: item.height }];
+    const file = `${sourceManifest.prefix}${item.file}`;
+    return [{ id: `${sourceManifest.url}:${file}`, file, label: humanize(file), category: categoryFor(file), source: item.source, width: item.width, height: item.height }];
   });
 }
 
@@ -74,5 +88,6 @@ export async function loadSceneAssetCatalog(sceneId = 'gnome-village-campus-v1')
 }
 
 export function assetSrc(file: string) {
+  if (file.startsWith('/')) return file;
   return /^https?:\/\//.test(file) ? file : `/worlds/gnome-village/${file}`;
 }
