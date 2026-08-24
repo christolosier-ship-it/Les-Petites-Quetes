@@ -82,7 +82,6 @@ jobs:
             echo "::endgroup::"
           }
 
-          # Lot 2 — classe
           render_furni school_chair_g classroom/chair-green.png 2
           render_furni school_chair_b classroom/chair-blue.png 2
           render_furni school_console_g classroom/desk-green.png 2
@@ -98,7 +97,6 @@ jobs:
           render_furni school_charts classroom/charts.png 2
           render_furni school_locker_g_notele classroom/locker.png 2
 
-          # Lot 3 — cantine
           render_furni table_armas cafeteria/table.png 2
           render_furni ktchn_c15_chair_g cafeteria/chair.png 2
           render_furni uni_fridge cafeteria/fridge.png 2
@@ -107,7 +105,6 @@ jobs:
           render_furni school_c22_cafe cafeteria/counter.png 2
           render_furni school_cafe cafeteria/lunch-cart.png 2
 
-          # Lot 4 — cour
           render_furni autumn_c20_bench courtyard/bench.png 2
           render_furni anc_comfy_tree courtyard/tree.png 2
           render_furni garden_bigpot courtyard/garden-pot.png 2
@@ -118,7 +115,6 @@ jobs:
           render_furni wf_slider courtyard/slide.png 2
           render_furni garden_c23_frog courtyard/garden-frog.png 2
 
-          # Lutins : silhouettes Habbo rendues dans différentes poses puis coiffées/stylées dans l'UI.
           FIG_A='hr-3090-42.hd-180-1.ch-3110-64-1408.lg-275-64.ha-1003-64'
           FIG_B='hr-4090-61.hd-180-1.ch-3934-110-110.lg-3596-110-110.cc-4184-110-110'
           cd "$WORK"
@@ -132,10 +128,10 @@ jobs:
           nx img avatar "$FIG_A" -a wav -d 2 -o "$ROOT/actors/courtyard-wave"
 
           python3 - <<'PY'
-          import json, struct
+          import json, os, struct
           from pathlib import Path
 
-          root = Path('public/worlds/gnome-village')
+          root = Path(os.environ['GITHUB_WORKSPACE']) / 'public/worlds/gnome-village'
           sources = {
               'classroom/chair-green.png': 'school_chair_g',
               'classroom/chair-blue.png': 'school_chair_b',
