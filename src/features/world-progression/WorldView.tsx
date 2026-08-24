@@ -10,11 +10,12 @@ interface WorldViewProps {
   readonly childId?: string;
   readonly worldId?: WorldId;
   readonly compact?: boolean;
+  readonly interactiveScene?: boolean;
 }
 
 const stageLabels = ['Le monde sommeille', 'Les premiers signes', 'Le refuge grandit', 'Le monde rayonne'] as const;
 
-export function WorldView({ app, childId, worldId = 'world.firefly-forest', compact = false }: WorldViewProps) {
+export function WorldView({ app, childId, worldId = 'world.firefly-forest', compact = false, interactiveScene = false }: WorldViewProps) {
   const [devSceneUnlocked, setDevSceneUnlocked] = useState(false);
   const selectedChildId = childId ?? app.state.settings.activeChildId;
   const child = app.state.children.find((candidate) => candidate.id === selectedChildId);
@@ -23,6 +24,7 @@ export function WorldView({ app, childId, worldId = 'world.firefly-forest', comp
   const stage = progress?.stage ?? 0;
   const hasDevSceneTools = worldId === 'world.firefly-forest' || worldId === 'world.gnome-village';
   const sceneStage: 0 | 1 | 2 | 3 = hasDevSceneTools && devSceneUnlocked ? 3 : stage;
+  const sceneCompact = compact && !interactiveScene;
   const rewards = rewardsForWorld(worldId).filter((reward) => progress?.unlockedRewardIds.includes(reward.id));
   const chapters = chaptersForWorld(worldId).filter((chapter) => progress?.unlockedStoryChapterIds.includes(chapter.id));
   if (!child) return <Card><p>Choisis ou crée un profil pour découvrir les univers.</p></Card>;
@@ -31,7 +33,7 @@ export function WorldView({ app, childId, worldId = 'world.firefly-forest', comp
   return (
     <div className={compact ? 'world-layout world-layout--compact' : 'world-layout'}>
       <Card className={`world-scene world-scene--stage-${sceneStage}`}>
-        <ParallaxScene world={world} stage={sceneStage} reducedMotion={reducedMotion} compact={compact} />
+        <ParallaxScene world={world} stage={sceneStage} reducedMotion={reducedMotion} compact={sceneCompact} />
         {hasDevSceneTools && (
           <div className="dev-scene-tools" data-dev-scene-tools="true">
             <span>DEV · scène</span>
