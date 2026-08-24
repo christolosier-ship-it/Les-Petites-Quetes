@@ -1,39 +1,203 @@
-name: Gnome village asset discovery
+name: Gnome village asset extraction
 
 on:
   pull_request:
     branches: [main]
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
-  discovery:
-    name: Découvrir les assets Habbo lots 2 à 4
+  extraction:
+    name: Extraire les lots Habbo 2 à 4
     if: github.head_ref == 'feat/gnome-village-living-school'
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    timeout-minutes: 15
     steps:
+      - name: Récupérer la branche de travail
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ github.head_ref }}
+
+      - name: Vérifier si les lots sont déjà présents
+        id: already
+        run: |
+          if [ -f public/worlds/gnome-village/actors/student-hand.png ] && [ -f public/worlds/gnome-village/courtyard/swing.png ]; then
+            echo "done=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "done=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Installer Go
+        if: steps.already.outputs.done != 'true'
         uses: actions/setup-go@v5
         with:
           go-version: '1.24.x'
 
       - name: Installer nx
+        if: steps.already.outputs.done != 'true'
         run: |
           go install xabbo.io/nx/cmd/nx@latest
           echo "$(go env GOPATH)/bin" >> "$GITHUB_PATH"
 
-      - name: Rechercher les lots classe, cantine, cour et personnages
+      - name: Télécharger, extraire et rendre les lots
+        if: steps.already.outputs.done != 'true'
         env:
           HOTEL: us
         run: |
-          set -e
-          for query in \
-            "playground" "playground slide" "seesaw" "sandbox" "sandpit" \
-            "climbing frame" "jungle gym" "school yard" "schoolyard" "hopscotch" \
-            "merry go round" "roundabout" "play park" "children play"; do
-            echo ""
-            echo "===== QUERY: $query ====="
-            nx furni search "$query" | head -n 30 || true
-          done
+          set -euo pipefail
+          ROOT="$GITHUB_WORKSPACE/public/worlds/gnome-village"
+          WORK="$RUNNER_TEMP/gnome-habbo-living"
+          mkdir -p "$ROOT/classroom" "$ROOT/cafeteria" "$ROOT/courtyard" "$ROOT/actors" "$WORK"
+
+          render_furni() {
+            local source="$1"
+            local target="$2"
+            local preferred="${3:-2}"
+            local asset_dir="$WORK/${source//\*/_}"
+            rm -rf "$asset_dir"
+            mkdir -p "$asset_dir"
+            cd "$asset_dir"
+            echo "::group::Render $source -> $target"
+            nx get furni "$source"
+            nx extract --images "$source.swf" > extracted-files.txt || true
+            local rendered=""
+            for dir in "$preferred" 2 4 0 6; do
+              rm -f ./*.png
+              if nx img furni "$source" -d "$dir" >/tmp/nx-render.log 2>&1; then
+                rendered=$(find . -maxdepth 1 -type f -name '*.png' | sort | head -n 1 || true)
+                if [ -n "$rendered" ]; then break; fi
+              fi
+            done
+            if [ -z "$rendered" ]; then
+              rendered=$(find . -type f -name '*_64_*.png' ! -name '*_icon_*' | sort | head -n 1 || true)
+            fi
+            if [ -z "$rendered" ]; then
+              echo "Aucun rendu PNG trouvé pour $source" >&2
+              cat /tmp/nx-render.log || true
+              exit 1
+            fi
+            cp "$rendered" "$ROOT/$target"
+            echo "source=$source target=$target render=$rendered"
+            echo "::endgroup::"
+          }
+
+          # Lot 2 — classe
+          render_furni school_chair_g classroom/chair-green.png 2
+          render_furni school_chair_b classroom/chair-blue.png 2
+          render_furni school_console_g classroom/desk-green.png 2
+          render_furni school_console_b classroom/desk-blue.png 2
+          render_furni school_c22_teachertable classroom/teacher-desk.png 2
+          render_furni uni_bookshelf classroom/bookshelf.png 2
+          render_furni classic9_bookshelf classroom/bookcase.png 2
+          render_furni uni_projector classroom/projector.png 2
+          render_furni computer_laptop classroom/laptop.png 2
+          render_furni uni_alarm classroom/alarm.png 2
+          render_furni school_chalkboard2 classroom/chalkboard.png 2
+          render_furni school_stuff_01 classroom/books.png 2
+          render_furni school_charts classroom/charts.png 2
+          render_furni school_locker_g_notele classroom/locker.png 2
+
+          # Lot 3 — cantine
+          render_furni table_armas cafeteria/table.png 2
+          render_furni ktchn_c15_chair_g cafeteria/chair.png 2
+          render_furni uni_fridge cafeteria/fridge.png 2
+          render_furni uni_snacks cafeteria/snacks.png 2
+          render_furni uni_pizza cafeteria/pizza.png 2
+          render_furni school_c22_cafe cafeteria/counter.png 2
+          render_furni school_cafe cafeteria/lunch-cart.png 2
+
+          # Lot 4 — cour
+          render_furni autumn_c20_bench courtyard/bench.png 2
+          render_furni anc_comfy_tree courtyard/tree.png 2
+          render_furni garden_bigpot courtyard/garden-pot.png 2
+          render_furni garden_pond courtyard/garden-pond.png 2
+          render_furni es_bench courtyard/park-bench.png 2
+          render_furni bohogarden_c21_woodenwall courtyard/fence-wood.png 2
+          render_furni pcnc_swing courtyard/swing.png 2
+          render_furni wf_slider courtyard/slide.png 2
+          render_furni garden_c23_frog courtyard/garden-frog.png 2
+
+          # Lutins : silhouettes Habbo rendues dans différentes poses puis coiffées/stylées dans l'UI.
+          FIG_A='hr-3090-42.hd-180-1.ch-3110-64-1408.lg-275-64.ha-1003-64'
+          FIG_B='hr-4090-61.hd-180-1.ch-3934-110-110.lg-3596-110-110.cc-4184-110-110'
+          cd "$WORK"
+          nx img avatar "$FIG_A" -a sit -d 4 -o "$ROOT/actors/student-write"
+          nx img avatar "$FIG_A" -a wav -d 4 -o "$ROOT/actors/student-hand"
+          nx img avatar "$FIG_B" -a std -e spk -d 2 -o "$ROOT/actors/student-chat"
+          nx img avatar "$FIG_B" -a wlk -d 2 -o "$ROOT/actors/student-walk"
+          nx img avatar "$FIG_B" -a std -d 6 -o "$ROOT/actors/teacher"
+          nx img avatar "$FIG_A" -a drk -d 4 -o "$ROOT/actors/canteen-drink"
+          nx img avatar "$FIG_B" -a wlk -d 6 -o "$ROOT/actors/courtyard-run"
+          nx img avatar "$FIG_A" -a wav -d 2 -o "$ROOT/actors/courtyard-wave"
+
+          python3 - <<'PY'
+          import json, struct
+          from pathlib import Path
+
+          root = Path('public/worlds/gnome-village')
+          sources = {
+              'classroom/chair-green.png': 'school_chair_g',
+              'classroom/chair-blue.png': 'school_chair_b',
+              'classroom/desk-green.png': 'school_console_g',
+              'classroom/desk-blue.png': 'school_console_b',
+              'classroom/teacher-desk.png': 'school_c22_teachertable',
+              'classroom/bookshelf.png': 'uni_bookshelf',
+              'classroom/bookcase.png': 'classic9_bookshelf',
+              'classroom/projector.png': 'uni_projector',
+              'classroom/laptop.png': 'computer_laptop',
+              'classroom/alarm.png': 'uni_alarm',
+              'classroom/chalkboard.png': 'school_chalkboard2',
+              'classroom/books.png': 'school_stuff_01',
+              'classroom/charts.png': 'school_charts',
+              'classroom/locker.png': 'school_locker_g_notele',
+              'cafeteria/table.png': 'table_armas',
+              'cafeteria/chair.png': 'ktchn_c15_chair_g',
+              'cafeteria/fridge.png': 'uni_fridge',
+              'cafeteria/snacks.png': 'uni_snacks',
+              'cafeteria/pizza.png': 'uni_pizza',
+              'cafeteria/counter.png': 'school_c22_cafe',
+              'cafeteria/lunch-cart.png': 'school_cafe',
+              'courtyard/bench.png': 'autumn_c20_bench',
+              'courtyard/tree.png': 'anc_comfy_tree',
+              'courtyard/garden-pot.png': 'garden_bigpot',
+              'courtyard/garden-pond.png': 'garden_pond',
+              'courtyard/park-bench.png': 'es_bench',
+              'courtyard/fence-wood.png': 'bohogarden_c21_woodenwall',
+              'courtyard/swing.png': 'pcnc_swing',
+              'courtyard/slide.png': 'wf_slider',
+              'courtyard/garden-frog.png': 'garden_c23_frog',
+              'actors/student-write.png': 'Habbo avatar FIG_A / sit / dir 4',
+              'actors/student-hand.png': 'Habbo avatar FIG_A / wave / dir 4',
+              'actors/student-chat.png': 'Habbo avatar FIG_B / speak / dir 2',
+              'actors/student-walk.png': 'Habbo avatar FIG_B / walk / dir 2',
+              'actors/teacher.png': 'Habbo avatar FIG_B / stand / dir 6',
+              'actors/canteen-drink.png': 'Habbo avatar FIG_A / drink / dir 4',
+              'actors/courtyard-run.png': 'Habbo avatar FIG_B / walk / dir 6',
+              'actors/courtyard-wave.png': 'Habbo avatar FIG_A / wave / dir 2',
+          }
+          items = []
+          for rel, source in sources.items():
+              path = root / rel
+              data = path.read_bytes()
+              if data[:8] != b'\x89PNG\r\n\x1a\n':
+                  raise SystemExit(f'{path} is not PNG')
+              width, height = struct.unpack('>II', data[16:24])
+              items.append({'file': rel, 'source': source, 'width': width, 'height': height, 'bytes': len(data)})
+          (root / 'manifest-lots-2-4.json').write_text(json.dumps({
+              'origin': 'Habbo / Sulake',
+              'pipeline': 'xabbo nx 0.3.0',
+              'usage': 'Les Petites Quêtes — Village des Lutins — lots 2 à 4 + acteurs',
+              'items': items,
+          }, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+          print(json.dumps(items, indent=2))
+          PY
+
+      - name: Versionner les lots extraits
+        if: steps.already.outputs.done != 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/worlds/gnome-village/classroom public/worlds/gnome-village/cafeteria public/worlds/gnome-village/courtyard public/worlds/gnome-village/actors public/worlds/gnome-village/manifest-lots-2-4.json
+          git commit -m "assets: extract Habbo lots 2 to 4 for gnome village"
+          git push origin HEAD:${{ github.head_ref }}
