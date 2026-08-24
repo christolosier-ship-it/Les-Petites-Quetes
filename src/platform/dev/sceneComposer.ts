@@ -1,4 +1,10 @@
 import {
+  applyScenePlacement,
+  decorateSceneItems,
+  removeSceneClones,
+  resetScenePlacement,
+} from './sceneComposerDom';
+import {
   DEFAULT_SCENE_PLACEMENT,
   clearSceneSnapshot,
   emptySceneSnapshot,
@@ -10,15 +16,6 @@ import type { SceneComposerSnapshot, SceneDuplicate, ScenePlacement } from './sc
 
 const SCENE_ID = 'gnome-village';
 const PANORAMA_SELECTOR = '.gnome-village-scene:not(.parallax-scene--compact) [data-gnome-panorama="true"]';
-const ITEM_SELECTOR = [
-  '.gnome-zone > .gnome-prop',
-  '.gnome-zone > .gnome-actor',
-  '.gnome-zone > .gnome-desk-cluster',
-  '.gnome-zone > .gnome-teacher-station',
-  '.gnome-zone > .gnome-canteen-table',
-  '.gnome-zone > .gnome-floating-asset',
-].join(',');
-const ID_PREFIXES = ['gnome-prop--', 'gnome-actor--', 'gnome-desk-cluster--', 'gnome-canteen-table--', 'gnome-floating-asset--'];
 
 interface DragState {
   readonly id: string;
@@ -41,46 +38,6 @@ interface ComposerState {
 let started = false;
 let activeCleanup: (() => void) | null = null;
 
-function itemId(element: HTMLElement, index: number) {
-  const semantic = [...element.classList].find((className) => ID_PREFIXES.some((prefix) => className.startsWith(prefix)));
-  if (semantic) return semantic;
-  if (element.classList.contains('gnome-teacher-station')) return 'gnome-teacher-station';
-  return `gnome-item-${index + 1}`;
-}
-
-function decorateOriginals(track: HTMLElement) {
-  const originals = new Map<string, HTMLElement>();
-  const nodes = [...track.querySelectorAll<HTMLElement>(ITEM_SELECTOR)].filter((node) => node.dataset.sceneComposerClone !== 'true');
-  nodes.forEach((node, index) => {
-    const baseId = itemId(node, index);
-    let id = baseId;
-    let suffix = 2;
-    while (originals.has(id)) {
-      id = `${baseId}-${suffix}`;
-      suffix += 1;
-    }
-    node.dataset.sceneComposerId = id;
-    originals.set(id, node);
-  });
-  return originals;
-}
-
-function applyPlacement(element: HTMLElement, placement: ScenePlacement) {
-  element.style.setProperty('translate', `${placement.x}px ${placement.y}px`);
-  element.style.setProperty('rotate', `${placement.rotation}deg`);
-  element.style.setProperty('scale', String(placement.scale));
-  if (placement.zIndex === null) element.style.removeProperty('z-index');
-  else element.style.setProperty('z-index', String(placement.zIndex));
-}
-
-function resetPlacement(element: HTMLElement) {
-  element.style.removeProperty('translate');
-  element.style.removeProperty('rotate');
-  element.style.removeProperty('scale');
-  element.style.removeProperty('z-index');
-  element.removeAttribute('data-scene-composer-selected');
-}
-
 function placementFor(state: ComposerState, id: string): ScenePlacement {
   const duplicate = state.snapshot.duplicates.find((item) => item.id === id);
   return duplicate ?? state.snapshot.items[id] ?? DEFAULT_SCENE_PLACEMENT;
@@ -102,22 +59,22 @@ function patchPlacement(state: ComposerState, id: string, patch: Partial<ScenePl
   };
 }
 
-function removeClones(track: HTMLElement) {
-  track.querySelectorAll<HTMLElement>('[data-scene-composer-clone="true"]').forEach((clone) => clone.remove());
-}
-
 function renderSnapshot(state: ComposerState) {
-  for (const [id, element] of state.originals) applyPlacement(element, state.snapshot.items[id] ?? DEFAULT_SCENE_PLACEMENT);
-  removeClones(state.track);
+  for (const [id, element] of state.originals) {
+    applyScenePlacement(element, state.snapshot.items[id] ?? DEFAULT_SCENE_PLACEMENT);
+  }
+  removeSceneClones(state.track);
   for (const duplicate of state.snapshot.duplicates) {
     const source = state.originals.get(duplicate.sourceId);
     if (!source) continue;
     const clone = source.cloneNode(true) as HTMLElement;
-    clone.querySelectorAll<HTMLElement>('[data-scene-composer-id]').forEach((child) => child.removeAttribute('data-scene-composer-id'));
+    clone.querySelectorAll<HTMLElement>('[data-scene-composer-id]').forEach((child) =>
+      child.removeAttribute('data-scene-composer-id'),
+    );
     clone.dataset.sceneComposerClone = 'true';
     clone.dataset.sceneComposerId = duplicate.id;
     clone.classList.add('scene-composer__clone');
-    applyPlacement(clone, duplicate);
+    applyScenePlacement(clone, duplicate);
     source.after(clone);
   }
 }
@@ -133,7 +90,9 @@ function setStatus(state: ComposerState, text: string) {
 }
 
 function syncPanel(state: ComposerState) {
-  state.track.querySelectorAll<HTMLElement>('[data-scene-composer-selected]').forEach((item) => item.removeAttribute('data-scene-composer-selected'));
+  state.track.querySelectorAll<HTMLElement>('[data-scene-composer-selected]').forEach((item) =>
+    item.removeAttribute('data-scene-composer-selected'),
+  );
   const selected = selectedElement(state);
   if (selected) selected.dataset.sceneComposerSelected = 'true';
   const title = state.shell.querySelector<HTMLElement>('[data-composer-title]');
@@ -145,14 +104,16 @@ function syncPanel(state: ComposerState) {
     input.disabled = !state.selectedId;
     input.value = field === 'zIndex' ? String(placement.zIndex ?? '') : String(placement[field]);
   }
-  state.shell.querySelectorAll<HTMLButtonElement>('[data-composer-selection-action]').forEach((button) => { button.disabled = !state.selectedId; });
+  state.shell.querySelectorAll<HTMLButtonElement>('[data-composer-selection-action]').forEach((button) => {
+    button.disabled = !state.selectedId;
+  });
 }
 
 function updateSelected(state: ComposerState, patch: Partial<ScenePlacement>) {
   if (!state.selectedId) return;
   patchPlacement(state, state.selectedId, patch);
   const element = selectedElement(state);
-  if (element) applyPlacement(element, placementFor(state, state.selectedId));
+  if (element) applyScenePlacement(element, placementFor(state, state.selectedId));
   syncPanel(state);
   setStatus(state, 'Modifications non enregistrées');
 }
@@ -222,7 +183,7 @@ function mountComposer(panorama: HTMLElement) {
   const state: ComposerState = {
     track,
     panorama,
-    originals: decorateOriginals(track),
+    originals: decorateSceneItems(track),
     snapshot: loadSceneSnapshot(SCENE_ID),
     selectedId: null,
     drag: null,
@@ -234,7 +195,9 @@ function mountComposer(panorama: HTMLElement) {
   syncPanel(state);
 
   const onPointerDown = (event: PointerEvent) => {
-    const target = event.target instanceof Element ? event.target.closest<HTMLElement>('[data-scene-composer-id]') : null;
+    const target = event.target instanceof Element
+      ? event.target.closest<HTMLElement>('[data-scene-composer-id]')
+      : null;
     if (!target || !track.contains(target)) return;
     event.preventDefault();
     event.stopPropagation();
@@ -242,7 +205,13 @@ function mountComposer(panorama: HTMLElement) {
     if (!id) return;
     state.selectedId = id;
     const placement = placementFor(state, id);
-    state.drag = { id, startX: event.clientX, startY: event.clientY, originX: placement.x, originY: placement.y };
+    state.drag = {
+      id,
+      startX: event.clientX,
+      startY: event.clientY,
+      originX: placement.x,
+      originY: placement.y,
+    };
     syncPanel(state);
   };
   const onPointerMove = (event: PointerEvent) => {
@@ -252,13 +221,17 @@ function mountComposer(panorama: HTMLElement) {
     const y = Math.round(state.drag.originY + event.clientY - state.drag.startY);
     patchPlacement(state, state.drag.id, { x, y });
     const element = selectedElement(state);
-    if (element) applyPlacement(element, placementFor(state, state.drag.id));
+    if (element) applyScenePlacement(element, placementFor(state, state.drag.id));
     syncPanel(state);
     setStatus(state, 'Modifications non enregistrées');
   };
-  const onPointerUp = () => { state.drag = null; };
+  const onPointerUp = () => {
+    state.drag = null;
+  };
   const onClickCapture = (event: MouseEvent) => {
-    if (event.target instanceof Element && event.target.closest('[data-scene-composer-id]')) event.stopPropagation();
+    if (event.target instanceof Element && event.target.closest('[data-scene-composer-id]')) {
+      event.stopPropagation();
+    }
   };
   track.addEventListener('pointerdown', onPointerDown, true);
   track.addEventListener('click', onClickCapture, true);
@@ -269,16 +242,23 @@ function mountComposer(panorama: HTMLElement) {
     input.addEventListener('input', () => {
       const field = input.dataset.composerField as keyof ScenePlacement | undefined;
       if (!field) return;
-      if (field === 'zIndex') updateSelected(state, { zIndex: input.value === '' ? null : Number(input.value) });
-      else updateSelected(state, { [field]: Number(input.value) });
+      if (field === 'zIndex') {
+        updateSelected(state, { zIndex: input.value === '' ? null : Number(input.value) });
+      } else {
+        updateSelected(state, { [field]: Number(input.value) });
+      }
     });
   });
   shell.querySelector('[data-composer-duplicate]')?.addEventListener('click', () => duplicateSelected(state));
   shell.querySelector('[data-composer-reset-item]')?.addEventListener('click', () => {
     if (!state.selectedId) return;
     const duplicateIndex = state.snapshot.duplicates.findIndex((item) => item.id === state.selectedId);
-    if (duplicateIndex >= 0) state.snapshot = { ...state.snapshot, duplicates: state.snapshot.duplicates.filter((_, index) => index !== duplicateIndex) };
-    else {
+    if (duplicateIndex >= 0) {
+      state.snapshot = {
+        ...state.snapshot,
+        duplicates: state.snapshot.duplicates.filter((_, index) => index !== duplicateIndex),
+      };
+    } else {
       const items = { ...state.snapshot.items };
       delete items[state.selectedId];
       state.snapshot = { ...state.snapshot, items };
@@ -297,8 +277,8 @@ function mountComposer(panorama: HTMLElement) {
     clearSceneSnapshot(SCENE_ID);
     state.snapshot = emptySceneSnapshot(SCENE_ID);
     state.selectedId = null;
-    state.originals.forEach(resetPlacement);
-    removeClones(track);
+    state.originals.forEach(resetScenePlacement);
+    removeSceneClones(track);
     syncPanel(state);
     setStatus(state, 'Scène réinitialisée');
   });
@@ -310,7 +290,9 @@ function mountComposer(panorama: HTMLElement) {
     window.removeEventListener('pointerup', onPointerUp);
     panorama.classList.remove('scene-composer-panorama-active');
     track.classList.remove('scene-composer-track-active');
-    track.querySelectorAll<HTMLElement>('[data-scene-composer-selected]').forEach((item) => item.removeAttribute('data-scene-composer-selected'));
+    track.querySelectorAll<HTMLElement>('[data-scene-composer-selected]').forEach((item) =>
+      item.removeAttribute('data-scene-composer-selected'),
+    );
     shell.remove();
     activeCleanup = null;
   };
@@ -337,7 +319,9 @@ function ensureLauncher() {
     if (scene && !scene.classList.contains('parallax-scene--expanded')) {
       scene.querySelector<HTMLButtonElement>('.parallax-scene__expand')?.click();
       window.setTimeout(() => mountComposer(panorama), 80);
-    } else mountComposer(panorama);
+    } else {
+      mountComposer(panorama);
+    }
   });
   document.body.append(launcher);
 }
