@@ -9,9 +9,9 @@ const HEROES = [
   `${ASSET_ROOT}/Actor/Character/SamuraiBlue/SpriteSheet.png`,
 ] as const;
 const MONSTERS = [
-  `${ASSET_ROOT}/Actor/Monsters/Slime/Slime.png`,
-  `${ASSET_ROOT}/Actor/Monsters/Goblin/Goblin.png`,
-  `${ASSET_ROOT}/Actor/Monsters/Skeleton/Skeleton.png`,
+  `${ASSET_ROOT}/Actor/Monster/Slime/Slime.png`,
+  `${ASSET_ROOT}/Actor/Monster/Lizard/Lizard.png`,
+  `${ASSET_ROOT}/Actor/Character/Skeleton/SpriteSheet.png`,
 ] as const;
 const DRAGON_ROOT = `${ASSET_ROOT}/Actor/Boss/DragonGreen`;
 
@@ -20,7 +20,7 @@ const WORLD_ITEMS = [
   { id: 'forest-hero', src: HEROES[1], x: 62, y: 72, stage: 1, motion: 'walk-b', frameSize: 16 },
   { id: 'forest-slime', src: MONSTERS[0], x: 76, y: 69, stage: 1, motion: 'bob', frameSize: 16 },
   { id: 'river-hero', src: HEROES[2], x: 37, y: 58, stage: 1, motion: 'walk-c', frameSize: 16 },
-  { id: 'plain-goblin', src: MONSTERS[1], x: 64, y: 47, stage: 2, motion: 'bob', frameSize: 16 },
+  { id: 'plain-lizard', src: MONSTERS[1], x: 64, y: 47, stage: 2, motion: 'bob', frameSize: 16 },
   { id: 'plain-hero', src: HEROES[0], x: 70, y: 45, stage: 2, motion: 'walk-a', frameSize: 32 },
   { id: 'snow-hero', src: HEROES[1], x: 32, y: 31, stage: 2, motion: 'walk-b', frameSize: 16 },
   { id: 'snow-skeleton', src: MONSTERS[2], x: 58, y: 29, stage: 2, motion: 'bob', frameSize: 16 },
