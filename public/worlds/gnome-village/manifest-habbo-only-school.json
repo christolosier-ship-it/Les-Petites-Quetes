@@ -1,0 +1,175 @@
+{
+  "origin": "Habbo / Sulake",
+  "pipeline": "xabbo nx 0.3.0",
+  "usage": "Les Petites Quêtes — Village des Lutins — passe Habbo-only",
+  "items": [
+    {
+      "file": "structure/floor-school.png",
+      "source": "school_floor",
+      "width": 132,
+      "height": 67,
+      "bytes": 6469
+    },
+    {
+      "file": "structure/wall-school.png",
+      "source": "school_wall",
+      "width": 111,
+      "height": 186,
+      "bytes": 4595
+    },
+    {
+      "file": "courtyard/school-bus.png",
+      "source": "school_bus",
+      "width": 193,
+      "height": 179,
+      "bytes": 8742
+    },
+    {
+      "file": "classroom/desk-red.png",
+      "source": "school_console",
+      "width": 58,
+      "height": 67,
+      "bytes": 1155
+    },
+    {
+      "file": "classroom/chair-red.png",
+      "source": "school_chair",
+      "width": 45,
+      "height": 64,
+      "bytes": 1054
+    },
+    {
+      "file": "classroom/chem-set.png",
+      "source": "school_stuff_02",
+      "width": 41,
+      "height": 40,
+      "bytes": 1148
+    },
+    {
+      "file": "classroom/coatrack-green.png",
+      "source": "school_coatrack_g",
+      "width": 90,
+      "height": 162,
+      "bytes": 2767
+    },
+    {
+      "file": "classroom/coatrack-blue.png",
+      "source": "school_coatrack_b",
+      "width": 90,
+      "height": 162,
+      "bytes": 2805
+    },
+    {
+      "file": "classroom/coatrack-red.png",
+      "source": "school_coatrack_r",
+      "width": 90,
+      "height": 162,
+      "bytes": 2846
+    },
+    {
+      "file": "classroom/locker-blue.png",
+      "source": "school_locker_b_nosale",
+      "width": 60,
+      "height": 141,
+      "bytes": 2239
+    },
+    {
+      "file": "classroom/locker-red.png",
+      "source": "school_locker_r_nosale",
+      "width": 60,
+      "height": 141,
+      "bytes": 2246
+    },
+    {
+      "file": "cafeteria/school-table.png",
+      "source": "school_table",
+      "width": 144,
+      "height": 103,
+      "bytes": 1578
+    },
+    {
+      "file": "cafeteria/school-bench.png",
+      "source": "school_bench",
+      "width": 112,
+      "height": 79,
+      "bytes": 1200
+    },
+    {
+      "file": "cafeteria/burger.png",
+      "source": "school_stuff_03",
+      "width": 38,
+      "height": 28,
+      "bytes": 1034
+    },
+    {
+      "file": "cafeteria/meatballs.png",
+      "source": "school_stuff_04",
+      "width": 38,
+      "height": 28,
+      "bytes": 937
+    },
+    {
+      "file": "cafeteria/nuggets.png",
+      "source": "school_stuff_05",
+      "width": 38,
+      "height": 28,
+      "bytes": 931
+    },
+    {
+      "file": "cafeteria/vegetables.png",
+      "source": "school_stuff_06",
+      "width": 38,
+      "height": 28,
+      "bytes": 879
+    },
+    {
+      "file": "structure/wall-academic.png",
+      "source": "school_c22_wall",
+      "width": 111,
+      "height": 187,
+      "bytes": 5974
+    },
+    {
+      "file": "cafeteria/academic-table.png",
+      "source": "school_c22_table",
+      "width": 144,
+      "height": 103,
+      "bytes": 3403
+    },
+    {
+      "file": "cafeteria/academic-bench.png",
+      "source": "school_c22_bench",
+      "width": 112,
+      "height": 79,
+      "bytes": 1903
+    },
+    {
+      "file": "classroom/science-equipment.png",
+      "source": "school_c22_stuff_02",
+      "width": 41,
+      "height": 41,
+      "bytes": 1185
+    },
+    {
+      "file": "courtyard/sports-equipment.png",
+      "source": "school_c22_equipment",
+      "width": 85,
+      "height": 116,
+      "bytes": 5730
+    },
+    {
+      "file": "courtyard/gym-bag.png",
+      "source": "school_c22_duffelbag",
+      "width": 56,
+      "height": 42,
+      "bytes": 1855
+    },
+    {
+      "file": "cafeteria/red-tray.png",
+      "source": "school_c22_stuff_05",
+      "width": 46,
+      "height": 32,
+      "bytes": 1045
+    }
+  ]
+}

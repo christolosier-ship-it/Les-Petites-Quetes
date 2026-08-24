@@ -1,40 +1,17 @@
 .gnome-village-scene {
-  min-height: clamp(470px, 64vw, 730px);
+  min-height: clamp(520px, 67vw, 760px);
   background: #78afbc;
 }
 
+.parallax-scene--compact.gnome-village-scene {
+  min-height: clamp(430px, 56vw, 620px);
+}
+
 .gnome-village {
-  --gnome-scroll-far: 0px;
-  --gnome-scroll-near: 0px;
   position: absolute;
   inset: 0;
   overflow: hidden;
-  background:
-    radial-gradient(circle at 50% 13%, rgb(255 244 190 / 0.58), transparent 21%),
-    linear-gradient(180deg, #74b7c8 0 38%, #b8d591 38% 100%);
-}
-
-.gnome-village::before {
-  content: '';
-  position: absolute;
-  z-index: 0;
-  inset: 16% -5% auto;
-  height: 31%;
-  opacity: 0.45;
-  transform: translateX(calc(var(--gnome-scroll-far) * -1));
-  background:
-    linear-gradient(135deg, transparent 0 47%, #6e9b78 48% 54%, transparent 55%) 0 100% / 340px 180px repeat-x,
-    linear-gradient(45deg, transparent 0 47%, #5f8d70 48% 54%, transparent 55%) 170px 100% / 340px 180px repeat-x;
-  pointer-events: none;
-}
-
-.gnome-village::after {
-  content: '';
-  position: absolute;
-  z-index: 30;
-  inset: 0;
-  pointer-events: none;
-  background: linear-gradient(180deg, rgb(255 255 255 / 0.12), transparent 32%, rgb(35 66 49 / 0.13));
+  background: #78afbc;
 }
 
 .gnome-panorama {
@@ -61,98 +38,31 @@
 
 .gnome-panorama__track {
   position: relative;
-  width: clamp(2850px, 330vw, 4300px);
-  height: 100%;
-  min-height: 680px;
   display: grid;
-  grid-template-columns: 30fr 4fr 46fr 4fr 30fr;
+  grid-template-columns: 29fr 42fr 29fr;
   align-items: stretch;
+  width: clamp(3400px, 245vw, 4700px);
+  height: 100%;
+  min-height: 720px;
   overflow: hidden;
-  background:
-    linear-gradient(180deg, transparent 0 39%, rgb(93 126 75 / 0.15) 39% 40%, transparent 40%),
-    repeating-linear-gradient(135deg, rgb(255 255 255 / 0.035) 0 2px, transparent 2px 42px);
-}
-
-.gnome-campus-path {
-  position: absolute;
-  z-index: 1;
-  left: 2%;
-  right: 2%;
-  bottom: 5%;
-  height: 19%;
-  border-radius: 48% 48% 0 0;
-  background:
-    repeating-linear-gradient(90deg, rgb(244 221 162 / 0.56) 0 42px, rgb(215 186 128 / 0.5) 42px 45px),
-    #e8cf9b;
-  box-shadow: inset 0 8px 0 rgb(255 255 255 / 0.16), 0 -8px 24px rgb(53 83 58 / 0.12);
-  transform: translateX(calc(var(--gnome-scroll-near) * -1));
 }
 
 .gnome-zone {
   position: relative;
-  z-index: 2;
   min-width: 0;
-  transition: opacity 420ms ease, filter 420ms ease, transform 420ms ease;
+  transition: opacity 420ms ease, filter 420ms ease;
 }
 
-.gnome-zone--courtyard { grid-column: 1; }
-.gnome-zone--classroom { grid-column: 3; z-index: 5; }
-.gnome-zone--cafeteria { grid-column: 5; }
-
-.gnome-zone::before {
-  content: '';
-  position: absolute;
-  z-index: 0;
-  left: 3%;
-  right: 3%;
-  bottom: 4%;
-  height: 48%;
-  border-radius: 45% 45% 10% 10%;
-  background: rgb(28 60 47 / 0.1);
-  filter: blur(20px);
-}
-
-.gnome-zone--classroom::after,
-.gnome-zone--cafeteria::after {
-  content: '';
-  position: absolute;
-  z-index: 2;
-  left: 7%;
-  right: 7%;
-  top: 21%;
-  height: 47%;
-  border-radius: 22px 22px 5px 5px;
-  border: 2px solid rgb(57 67 63 / 0.18);
-  background: linear-gradient(180deg, rgb(255 247 218 / 0.2), rgb(255 255 255 / 0.05));
-  box-shadow: 0 18px 40px rgb(34 55 48 / 0.08);
-  pointer-events: none;
-}
-
-.gnome-zone__label {
-  position: absolute;
-  z-index: 28;
-  top: 7.5%;
-  left: 50%;
-  transform: translateX(-50%);
-  padding: 0.48rem 0.72rem;
-  border: 3px solid #3b4c53;
-  border-radius: 8px;
-  color: #203238;
-  background: #f7df9c;
-  box-shadow: 4px 5px 0 rgb(49 66 67 / 0.3);
-  font-size: 0.78rem;
-  font-weight: 950;
-  letter-spacing: 0.035em;
-  white-space: nowrap;
-  image-rendering: pixelated;
-}
+.gnome-zone--courtyard { grid-column: 1; z-index: 3; }
+.gnome-zone--classroom { grid-column: 2; z-index: 6; }
+.gnome-zone--cafeteria { grid-column: 3; z-index: 4; }
 
 .gnome-floor {
   position: absolute;
-  z-index: 3;
+  z-index: 2;
   left: 50%;
-  bottom: 5%;
-  height: 390px;
+  bottom: 0;
+  height: 470px;
   transform: translateX(-50%);
 }
 
@@ -161,84 +71,81 @@
   width: 132px;
   height: auto;
   image-rendering: pixelated;
-  filter: drop-shadow(0 5px 3px rgb(29 44 38 / 0.12));
 }
 
-.gnome-floor--courtyard { width: 870px; bottom: 4%; }
+.gnome-floor--courtyard {
+  width: 980px;
+  bottom: -1%;
+}
+
 .gnome-floor--courtyard img { width: 128px; }
-.gnome-floor--classroom { width: 1120px; bottom: 1%; }
-.gnome-floor--cafeteria { width: 870px; bottom: 4%; }
+
+.gnome-floor--classroom {
+  width: 1260px;
+  bottom: -3%;
+}
+
+.gnome-floor--cafeteria {
+  width: 1010px;
+  bottom: -2%;
+}
 
 .gnome-wall-run {
   position: absolute;
   z-index: 5;
-  top: 20%;
-  left: 50%;
   display: flex;
   align-items: flex-end;
-  transform: translateX(-50%);
-}
-
-.gnome-wall-run img {
-  width: 100px;
-  height: auto;
-  margin-left: -17px;
-  image-rendering: pixelated;
-  filter: drop-shadow(5px 9px 4px rgb(24 40 44 / 0.18));
-}
-
-.gnome-wall-run--cabin { top: 22%; }
-.gnome-wall-run--cabin img { width: 92px; margin-left: -22px; }
-
-.gnome-connector {
-  position: relative;
-  z-index: 7;
-  align-self: stretch;
-  min-width: 120px;
   pointer-events: none;
 }
 
-.gnome-connector--left { grid-column: 2; }
-.gnome-connector--right { grid-column: 4; }
-
-.gnome-connector::before {
-  content: '';
-  position: absolute;
-  z-index: 1;
-  left: -56%;
-  right: -56%;
-  bottom: 21%;
-  height: 19%;
-  border: 2px solid rgb(85 85 67 / 0.16);
-  transform: skewY(-8deg);
-  background: linear-gradient(180deg, #e6cf9d, #c6a974);
-  box-shadow: 0 10px 18px rgb(51 66 51 / 0.15);
-}
-
-.gnome-connector > img {
-  position: absolute;
-  z-index: 5;
-  left: 50%;
-  bottom: 28%;
-  width: 78px;
+.gnome-wall-run img {
+  width: 111px;
   height: auto;
-  transform: translateX(-50%) scale(0.8);
-  transform-origin: center bottom;
+  margin-left: -27px;
   image-rendering: pixelated;
-  filter: drop-shadow(4px 7px 3px rgb(24 40 44 / 0.2));
 }
 
-.gnome-connector__awning {
-  position: absolute;
-  z-index: 6;
-  left: 50%;
-  bottom: 50%;
-  width: 112px;
-  height: 24px;
-  transform: translateX(-50%) skewX(-28deg);
-  border: 2px solid #7b6d4a;
-  background: repeating-linear-gradient(90deg, #e7ba63 0 18px, #f8e7b0 18px 36px);
-  box-shadow: 0 5px 0 rgb(79 68 47 / 0.16);
+.gnome-wall-run img:first-child { margin-left: 0; }
+
+.gnome-wall-run--yard {
+  top: 20%;
+  right: 5%;
+}
+
+.gnome-wall-run--class-back {
+  top: 15%;
+  left: 8%;
+}
+
+.gnome-wall-run--class-side {
+  z-index: 4;
+  top: 29%;
+  left: 2%;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.gnome-wall-run--class-side img,
+.gnome-wall-run--canteen-side img {
+  margin-top: -116px;
+  margin-left: 0;
+  transform: scaleX(-1);
+}
+
+.gnome-wall-run--class-side img:first-child,
+.gnome-wall-run--canteen-side img:first-child { margin-top: 0; }
+
+.gnome-wall-run--canteen-back {
+  top: 19%;
+  left: 8%;
+}
+
+.gnome-wall-run--canteen-side {
+  z-index: 4;
+  top: 31%;
+  right: 2%;
+  flex-direction: column;
+  align-items: flex-end;
 }
 
 .gnome-prop,
@@ -247,162 +154,129 @@
   z-index: 10;
   height: auto;
   image-rendering: pixelated;
-  filter: drop-shadow(5px 8px 4px rgb(22 38 35 / 0.2));
 }
 
-/* Cour */
-.gnome-prop--yard-tree { z-index: 6; width: 190px; left: 9%; bottom: 23%; }
-.gnome-prop--yard-bench { width: 142px; left: 36%; bottom: 14%; }
-.gnome-prop--park-bench { width: 130px; right: 14%; bottom: 18%; }
-.gnome-prop--yard-fence-one { width: 96px; left: 6%; bottom: 13%; }
-.gnome-prop--yard-fence-two { width: 96px; right: 5%; bottom: 15%; }
-.gnome-prop--yard-swing { width: 108px; left: 57%; bottom: 30%; transform-origin: center top; }
-.gnome-prop--yard-slide { width: 126px; right: 25%; bottom: 8%; transform: rotate(-4deg); }
-.gnome-prop--yard-pond { width: 130px; left: 16%; bottom: 6%; }
-.gnome-prop--yard-pot-one { width: 72px; left: 26%; bottom: 25%; }
-.gnome-prop--yard-pot-two { width: 66px; right: 9%; bottom: 28%; }
-.gnome-prop--yard-frog { z-index: 14; width: 42px; left: 23%; bottom: 9%; }
-.gnome-prop--fence-one { width: 96px; left: 47%; bottom: 7%; }
-.gnome-prop--fence-two { width: 96px; left: 53%; bottom: 11%; }
+/* Cour de récréation : uniquement des sprites Habbo. */
+.gnome-prop--yard-door { z-index: 8; width: 104px; right: 7%; top: 20%; }
+.gnome-prop--yard-window-one,
+.gnome-prop--yard-window-two { z-index: 8; width: 52px; top: 31%; }
+.gnome-prop--yard-window-one { right: 29%; }
+.gnome-prop--yard-window-two { right: 39%; }
+.gnome-prop--school-bus { z-index: 9; width: 255px; left: 0; bottom: 17%; }
+.gnome-prop--yard-tree { z-index: 8; width: 205px; left: 22%; bottom: 26%; }
+.gnome-prop--yard-bench { width: 142px; left: 30%; bottom: 12%; }
+.gnome-prop--park-bench { width: 132px; right: 14%; bottom: 11%; }
+.gnome-prop--yard-fence-one { width: 98px; left: 8%; bottom: 8%; }
+.gnome-prop--yard-fence-two { width: 98px; right: 4%; bottom: 12%; }
+.gnome-prop--yard-fence-three { width: 104px; left: 47%; bottom: 5%; }
+.gnome-prop--yard-fence-four { width: 104px; left: 54%; bottom: 9%; }
+.gnome-prop--yard-swing { width: 114px; left: 52%; bottom: 29%; transform-origin: center top; }
+.gnome-prop--yard-slide { width: 116px; right: 20%; bottom: 17%; }
+.gnome-prop--yard-play { width: 132px; right: 31%; bottom: 8%; }
+.gnome-prop--yard-sports { width: 100px; left: 40%; bottom: 20%; }
+.gnome-prop--yard-bag { width: 66px; left: 48%; bottom: 12%; }
+.gnome-prop--yard-pond { width: 132px; left: 14%; bottom: 4%; }
+.gnome-prop--yard-pot-one { width: 72px; left: 18%; bottom: 24%; }
+.gnome-prop--yard-pot-two { width: 68px; right: 9%; bottom: 25%; }
+.gnome-prop--yard-frog { z-index: 14; width: 42px; left: 20%; bottom: 7%; }
 
-.gnome-hopscotch {
-  position: absolute;
-  z-index: 8;
-  left: 45%;
-  bottom: 19%;
-  display: grid;
-  grid-template-columns: repeat(2, 34px);
-  gap: 2px;
-  transform: rotate(-27deg) skewY(7deg);
-  opacity: 0.72;
-}
-
-.gnome-hopscotch i {
-  display: grid;
-  width: 34px;
-  height: 28px;
-  place-items: center;
-  border: 3px solid rgb(255 246 214 / 0.88);
-  color: rgb(255 250 225 / 0.9);
-  font-size: 11px;
-  font-style: normal;
-  font-weight: 950;
-  text-shadow: 1px 1px 0 rgb(78 88 73 / 0.45);
-}
-
-.gnome-hopscotch i:first-child,
-.gnome-hopscotch i:last-child { grid-column: 1 / -1; justify-self: center; }
-
-/* Classe */
-.gnome-prop--class-door { width: 96px; left: 12%; top: 20%; z-index: 12; }
+/* Classe centrale inspirée des rooms scolaires Habbo : rangées, bibliothèque, casiers et zone professeur. */
+.gnome-prop--class-door { width: 104px; left: 5%; top: 15%; z-index: 11; }
 .gnome-prop--class-window-one,
 .gnome-prop--class-window-two,
-.gnome-prop--class-window-three { width: 64px; top: 29%; z-index: 12; }
-.gnome-prop--class-window-one { left: 34%; }
-.gnome-prop--class-window-two { left: 44%; }
-.gnome-prop--class-window-three { left: 54%; }
-.gnome-prop--chalkboard { width: 150px; left: 63%; top: 25%; z-index: 13; }
-.gnome-prop--charts { width: 90px; right: 9%; top: 27%; z-index: 13; }
-.gnome-prop--bookshelf { width: 110px; left: 7%; bottom: 24%; z-index: 12; }
-.gnome-prop--bookcase { width: 105px; right: 7%; bottom: 23%; z-index: 12; }
-.gnome-prop--locker { width: 72px; right: 18%; top: 31%; z-index: 12; }
-.gnome-prop--projector { width: 108px; left: 52%; top: 25%; z-index: 15; }
-.gnome-prop--alarm { width: 52px; left: 24%; top: 35%; z-index: 15; }
-
-.gnome-projector-beam {
-  position: absolute;
-  z-index: 7;
-  left: 55%;
-  top: 35%;
-  width: 360px;
-  height: 170px;
-  transform: rotate(14deg);
-  transform-origin: left top;
-  clip-path: polygon(0 42%, 100% 0, 100% 100%, 0 58%);
-  background: linear-gradient(90deg, rgb(255 245 178 / 0.2), transparent 82%);
-  filter: blur(3px);
-  pointer-events: none;
-}
+.gnome-prop--class-window-three { width: 58px; top: 27%; z-index: 11; }
+.gnome-prop--class-window-one { left: 22%; }
+.gnome-prop--class-window-two { left: 30%; }
+.gnome-prop--class-window-three { left: 38%; }
+.gnome-prop--chalkboard { width: 154px; left: 48%; top: 23%; z-index: 12; }
+.gnome-prop--charts { width: 92px; left: 61%; top: 25%; z-index: 12; }
+.gnome-prop--bookshelf { width: 112px; left: 7%; bottom: 24%; z-index: 12; }
+.gnome-prop--bookcase { width: 116px; right: 4%; bottom: 25%; z-index: 12; }
+.gnome-prop--locker-green { width: 70px; right: 17%; top: 31%; z-index: 12; }
+.gnome-prop--locker-blue { width: 70px; right: 12%; top: 32%; z-index: 12; }
+.gnome-prop--locker-red { width: 70px; right: 7%; top: 33%; z-index: 12; }
+.gnome-prop--coatrack-green { width: 90px; left: 15%; top: 27%; z-index: 11; }
+.gnome-prop--coatrack-blue { width: 90px; left: 70%; top: 30%; z-index: 11; }
+.gnome-prop--coatrack-red { width: 90px; left: 76%; top: 31%; z-index: 11; }
+.gnome-prop--projector { width: 110px; left: 67%; top: 20%; z-index: 13; }
+.gnome-prop--alarm { width: 54px; left: 43%; top: 34%; z-index: 13; }
+.gnome-prop--science { width: 56px; left: 59%; bottom: 37%; z-index: 14; }
 
 .gnome-teacher-station {
   position: absolute;
-  z-index: 15;
-  left: 60%;
+  z-index: 18;
+  right: 11%;
   bottom: 14%;
   width: 190px;
-  height: 150px;
+  height: 160px;
 }
 
-.gnome-furni--teacher-desk { z-index: 12; width: 128px; left: 26px; bottom: 4px; }
-.gnome-furni--laptop { z-index: 14; width: 48px; left: 76px; bottom: 63px; }
+.gnome-furni--teacher-desk { z-index: 12; width: 132px; left: 25px; bottom: 4px; }
+.gnome-furni--laptop { z-index: 14; width: 49px; left: 77px; bottom: 65px; }
 
 .gnome-desk-cluster {
   position: absolute;
-  z-index: 15;
-  width: 170px;
-  height: 150px;
+  z-index: 17;
+  width: 145px;
+  height: 145px;
 }
 
-.gnome-desk-cluster--one { left: 21%; bottom: 8%; }
-.gnome-desk-cluster--two { left: 35%; bottom: 17%; }
-.gnome-desk-cluster--three { left: 46%; bottom: 4%; }
-.gnome-desk-cluster--four { right: 12%; bottom: 2%; }
-.gnome-furni--desk { z-index: 13; width: 82px; left: 51px; bottom: 18px; }
-.gnome-furni--chair { z-index: 10; width: 63px; left: 20px; bottom: 9px; }
-.gnome-furni--books { z-index: 15; width: 54px; left: 70px; bottom: 65px; }
+.gnome-desk-cluster--one { left: 20%; bottom: 5%; }
+.gnome-desk-cluster--two { left: 31%; bottom: 14%; }
+.gnome-desk-cluster--three { left: 42%; bottom: 23%; }
+.gnome-desk-cluster--four { left: 39%; bottom: 1%; }
+.gnome-desk-cluster--five { left: 50%; bottom: 10%; }
+.gnome-desk-cluster--six { left: 61%; bottom: 19%; }
+.gnome-furni--desk { z-index: 13; width: 82px; left: 47px; bottom: 17px; }
+.gnome-furni--chair { z-index: 10; width: 63px; left: 15px; bottom: 8px; }
+.gnome-furni--desk-item { z-index: 15; width: 49px; left: 68px; bottom: 63px; }
 
-.gnome-floating-book {
+.gnome-floating-asset {
   position: absolute;
   z-index: 20;
-  width: 62px;
+  width: 58px;
   pointer-events: none;
 }
 
-.gnome-floating-book img { width: 100%; image-rendering: pixelated; filter: drop-shadow(3px 6px 2px rgb(26 40 35 / 0.2)); }
-.gnome-floating-book--one { left: 30%; top: 48%; }
-.gnome-floating-book--two { right: 26%; top: 45%; }
+.gnome-floating-asset img {
+  width: 100%;
+  height: auto;
+  image-rendering: pixelated;
+}
 
-/* Cantine */
-.gnome-prop--canteen-window { width: 68px; left: 48%; top: 31%; z-index: 12; }
-.gnome-prop--canteen-fridge { width: 76px; right: 9%; top: 34%; z-index: 14; }
-.gnome-prop--canteen-counter { width: 146px; left: 12%; bottom: 26%; z-index: 14; }
-.gnome-prop--canteen-cart { width: 132px; right: 21%; bottom: 24%; z-index: 14; }
-.gnome-prop--canteen-snacks { width: 75px; left: 23%; bottom: 42%; z-index: 15; }
+.gnome-floating-asset--book-one { left: 29%; top: 46%; }
+.gnome-floating-asset--book-two { right: 27%; top: 43%; }
+
+/* Cantine : longues tables, bancs et comptoirs Habbo, à la manière des rooms réfectoire. */
+.gnome-prop--canteen-door { width: 104px; left: 5%; top: 20%; z-index: 11; }
+.gnome-prop--canteen-window-one,
+.gnome-prop--canteen-window-two { width: 58px; top: 30%; z-index: 11; }
+.gnome-prop--canteen-window-one { left: 27%; }
+.gnome-prop--canteen-window-two { left: 38%; }
+.gnome-prop--canteen-fridge { width: 82px; right: 5%; top: 34%; z-index: 13; }
+.gnome-prop--canteen-counter { width: 150px; left: 12%; bottom: 28%; z-index: 13; }
+.gnome-prop--canteen-cart { width: 138px; right: 17%; bottom: 27%; z-index: 13; }
+.gnome-prop--canteen-tray { width: 56px; left: 20%; bottom: 43%; z-index: 14; }
+.gnome-prop--canteen-vegetables { width: 50px; left: 28%; bottom: 42%; z-index: 14; }
+.gnome-prop--canteen-pizza { width: 76px; right: 25%; bottom: 39%; z-index: 14; }
 
 .gnome-canteen-table {
   position: absolute;
-  z-index: 16;
-  width: 240px;
-  height: 170px;
+  z-index: 17;
+  width: 250px;
+  height: 180px;
 }
 
-.gnome-canteen-table--one { left: 29%; bottom: 7%; }
-.gnome-canteen-table--two { right: 8%; bottom: 1%; }
-.gnome-furni--canteen-table { z-index: 13; width: 150px; left: 44px; bottom: 20px; }
-.gnome-furni--canteen-chair { z-index: 11; width: 64px; bottom: 4px; }
-.gnome-furni--canteen-chair-a { left: 13px; }
-.gnome-furni--canteen-chair-b { right: 13px; transform: scaleX(-1); }
-.gnome-furni--pizza { z-index: 15; width: 72px; left: 84px; bottom: 86px; }
-.gnome-furni--snack-on-table { z-index: 15; width: 65px; left: 88px; bottom: 90px; }
+.gnome-canteen-table--one { left: 23%; bottom: 3%; }
+.gnome-canteen-table--two { left: 43%; bottom: 14%; }
+.gnome-canteen-table--three { right: 8%; bottom: 2%; }
+.gnome-furni--canteen-table { z-index: 13; width: 155px; left: 45px; bottom: 25px; }
+.gnome-furni--canteen-bench { z-index: 11; width: 122px; }
+.gnome-furni--canteen-bench-back { left: 8px; bottom: 63px; }
+.gnome-furni--canteen-bench-front { right: 2px; bottom: 2px; }
+.gnome-furni--canteen-food { z-index: 15; width: 50px; left: 99px; bottom: 96px; }
 
-.gnome-pizza-steam {
-  position: absolute;
-  z-index: 18;
-  left: 105px;
-  bottom: 120px;
-  display: flex;
-  gap: 7px;
-}
-
-.gnome-pizza-steam i {
-  width: 4px;
-  height: 28px;
-  border-radius: 50%;
-  background: linear-gradient(180deg, transparent, rgb(255 255 255 / 0.7), transparent);
-  filter: blur(1px);
-}
-
-/* Lutins et micro-scènes */
+/* Avatars Habbo : aucune coiffe, bulle ou silhouette dessinée localement. */
 .gnome-actor {
   position: absolute;
   z-index: 22;
@@ -410,12 +284,10 @@
   width: 58px;
   height: 102px;
   transform-origin: center bottom;
-  filter: drop-shadow(4px 7px 3px rgb(25 38 34 / 0.24));
 }
 
 .gnome-actor > img {
   position: absolute;
-  z-index: 2;
   left: 50%;
   bottom: 0;
   width: auto;
@@ -427,52 +299,14 @@
   image-rendering: pixelated;
 }
 
-.gnome-actor__hat {
-  position: absolute;
-  z-index: 3;
-  top: -8px;
-  left: 50%;
-  width: 0;
-  height: 0;
-  transform: translateX(-50%) rotate(3deg);
-  border-right: 18px solid transparent;
-  border-bottom: 42px solid #b9493f;
-  border-left: 18px solid transparent;
-  filter: drop-shadow(1px 2px 0 rgb(66 43 37 / 0.2));
-  pointer-events: none;
-}
-
-.gnome-actor:nth-of-type(even) .gnome-actor__hat { border-bottom-color: #4f7f56; transform: translateX(-50%) rotate(-5deg); }
-
-.gnome-actor__bubble {
-  position: absolute;
-  z-index: 6;
-  left: 42px;
-  top: -22px;
-  min-width: max-content;
-  padding: 4px 7px;
-  border: 2px solid #53605b;
-  border-radius: 8px 8px 8px 2px;
-  background: #fff9df;
-  color: #2f403a;
-  box-shadow: 2px 3px 0 rgb(40 54 48 / 0.16);
-  font-size: 10px;
-  font-weight: 950;
-  white-space: nowrap;
-}
-
-.gnome-actor--teacher { left: 82px; bottom: 54px; }
-.gnome-actor--student-write { left: 26px; bottom: 37px; }
-.gnome-actor--student-hand { left: 26px; bottom: 38px; }
-.gnome-actor--student-chat { left: 24px; bottom: 38px; }
-.gnome-actor--student-second { left: 28px; bottom: 37px; }
-.gnome-actor--class-walk { left: 16%; bottom: 27%; }
-.gnome-actor--yard-run { left: 34%; bottom: 24%; }
-.gnome-actor--yard-wave { right: 29%; bottom: 23%; }
-.gnome-actor--yard-friend { right: 39%; bottom: 11%; }
-.gnome-actor--canteen-drink { left: 15px; bottom: 42px; }
-.gnome-actor--canteen-chat { right: 12px; bottom: 40px; }
-.gnome-actor--canteen-walk { left: 23%; bottom: 17%; }
+.gnome-actor--teacher { left: 83px; bottom: 55px; }
+.gnome-actor--student { left: 21px; bottom: 37px; }
+.gnome-actor--class-walk { left: 13%; bottom: 26%; }
+.gnome-actor--yard-run { left: 37%; bottom: 22%; }
+.gnome-actor--yard-wave { right: 27%; bottom: 25%; }
+.gnome-actor--yard-friend { right: 39%; bottom: 10%; }
+.gnome-actor--canteen-seat { left: 13px; bottom: 46px; }
+.gnome-actor--canteen-walk { left: 17%; bottom: 17%; }
 
 .gnome-reveal {
   transition: opacity 420ms ease, transform 420ms ease, filter 420ms ease;
@@ -485,26 +319,25 @@
 .gnome-village--stage-1 .gnome-reveal--3,
 .gnome-village--stage-2 .gnome-reveal--3 {
   opacity: 0;
-  filter: saturate(0.4) brightness(0.75);
+  filter: saturate(0.45) brightness(0.78);
   pointer-events: none;
 }
 
 .gnome-village--stage-0 .gnome-reveal--1,
 .gnome-village--stage-1 .gnome-reveal--2,
-.gnome-village--stage-2 .gnome-reveal--3 { transform: translateY(10px) scale(0.94); }
+.gnome-village--stage-2 .gnome-reveal--3 { transform: translateY(10px) scale(0.96); }
 
 .gnome-village--stage-0 .gnome-zone--courtyard,
 .gnome-village--stage-0 .gnome-zone--cafeteria {
-  opacity: 0.52;
-  filter: saturate(0.75) brightness(0.9);
+  opacity: 0.58;
+  filter: saturate(0.76) brightness(0.92);
 }
 
 .gnome-village--stage-1 .gnome-zone--cafeteria {
-  opacity: 0.68;
-  filter: saturate(0.84) brightness(0.94);
+  opacity: 0.74;
+  filter: saturate(0.88) brightness(0.96);
 }
 
-.gnome-village--stage-3 .gnome-zone__label { animation: gnome-sign-bob 3.4s steps(2, jump-none) infinite; }
 .gnome-village--stage-3 .gnome-prop--yard-swing { animation: gnome-swing 2.8s ease-in-out infinite; }
 .gnome-village--stage-1 .gnome-actor--yard-run,
 .gnome-village--stage-2 .gnome-actor--yard-run,
@@ -512,34 +345,23 @@
 .gnome-village--stage-2 .gnome-actor--class-walk,
 .gnome-village--stage-3 .gnome-actor--class-walk { animation: gnome-class-walk 8s steps(8, end) infinite; }
 .gnome-village--stage-3 .gnome-actor--canteen-walk { animation: gnome-canteen-walk 6.5s steps(7, end) infinite; }
-.gnome-village--stage-2 .gnome-floating-book--one,
-.gnome-village--stage-3 .gnome-floating-book { animation: gnome-book-float 3.2s ease-in-out infinite; }
-.gnome-village--stage-3 .gnome-floating-book--two { animation-delay: -1.2s; }
-.gnome-village--stage-2 .gnome-projector-beam,
-.gnome-village--stage-3 .gnome-projector-beam { animation: gnome-projector-pulse 4.6s ease-in-out infinite; }
-.gnome-village--stage-1 .gnome-pizza-steam i,
-.gnome-village--stage-2 .gnome-pizza-steam i,
-.gnome-village--stage-3 .gnome-pizza-steam i { animation: gnome-steam 2.2s ease-in-out infinite; }
-.gnome-pizza-steam i:nth-child(2) { animation-delay: -0.7s; }
-.gnome-pizza-steam i:nth-child(3) { animation-delay: -1.3s; }
-.gnome-village--stage-3 .gnome-actor--student-hand { animation: gnome-hand-bob 1.4s steps(2, end) infinite; }
-.gnome-village--stage-3 .gnome-actor__bubble { animation: gnome-bubble-pop 3.5s steps(2, end) infinite; }
+.gnome-village--stage-2 .gnome-floating-asset--book-one,
+.gnome-village--stage-3 .gnome-floating-asset { animation: gnome-book-float 3.2s ease-in-out infinite; }
+.gnome-village--stage-3 .gnome-floating-asset--book-two { animation-delay: -1.2s; }
+.gnome-village--stage-3 .gnome-desk-cluster--two .gnome-actor { animation: gnome-hand-bob 1.4s steps(2, end) infinite; }
 
 .gnome-village--reduced-motion .gnome-zone,
 .gnome-village--reduced-motion .gnome-reveal,
-.gnome-village--reduced-motion .gnome-zone__label,
 .gnome-village--reduced-motion .gnome-actor,
-.gnome-village--reduced-motion .gnome-actor__bubble,
-.gnome-village--reduced-motion .gnome-floating-book,
-.gnome-village--reduced-motion .gnome-projector-beam,
-.gnome-village--reduced-motion .gnome-pizza-steam i,
+.gnome-village--reduced-motion .gnome-floating-asset,
 .gnome-village--reduced-motion .gnome-prop--yard-swing {
   animation: none !important;
   transition: none !important;
 }
 
-.gnome-village__content { background: linear-gradient(transparent, rgb(38 67 57 / 0.9)); }
+.gnome-village__content { background: rgb(28 45 49 / 0.88); }
 
+/* Les contrôles suivants appartiennent à l'interface de navigation, pas au tableau Habbo. */
 .gnome-panorama__controls {
   position: absolute;
   z-index: 40;
@@ -554,9 +376,7 @@
   padding: 0.5rem;
   border: 1px solid rgb(255 255 255 / 0.32);
   border-radius: 999px;
-  background: rgb(33 54 52 / 0.8);
-  box-shadow: 0 12px 32px rgb(0 0 0 / 0.24);
-  backdrop-filter: blur(10px);
+  background: rgb(33 54 52 / 0.88);
 }
 
 .gnome-panorama__controls button {
@@ -602,23 +422,14 @@
   height: 100%;
   transform: scaleX(var(--gnome-scroll-progress, 0.5));
   transform-origin: left;
-  background: linear-gradient(90deg, #e1b96b, #f8dd8b, #91c987);
+  background: #f0cc75;
   transition: transform 100ms linear;
 }
 
-.parallax-scene--expanded.gnome-village-scene { background: #6fa8b8; }
+.parallax-scene--expanded.gnome-village-scene { background: #78afbc; }
 .parallax-scene--expanded .gnome-panorama__track { min-height: 100dvh; }
-.parallax-scene--expanded .gnome-zone__label { top: max(4.5%, 2.2rem); }
-
 .parallax-scene--compact .gnome-panorama { pointer-events: none; overflow: hidden; }
-.parallax-scene--compact .gnome-zone__label { font-size: 0.56rem; padding: 0.28rem 0.4rem; border-width: 2px; }
-.parallax-scene--compact .gnome-actor__bubble { display: none; }
-.parallax-scene--compact .gnome-panorama__track { width: 3000px; }
-
-@keyframes gnome-sign-bob {
-  0%, 100% { transform: translateX(-50%) translateY(0); }
-  50% { transform: translateX(-50%) translateY(-3px); }
-}
+.parallax-scene--compact .gnome-panorama__track { width: 3400px; }
 
 @keyframes gnome-swing {
   0%, 100% { transform: rotate(-2deg); }
@@ -626,25 +437,25 @@
 }
 
 @keyframes gnome-yard-run {
-  0% { transform: translateX(-50px) translateY(0); }
-  46% { transform: translateX(170px) translateY(-8px); }
-  50% { transform: translateX(170px) translateY(-8px) scaleX(-1); }
-  96% { transform: translateX(-50px) translateY(0) scaleX(-1); }
-  100% { transform: translateX(-50px) translateY(0); }
+  0% { transform: translateX(-40px); }
+  46% { transform: translateX(185px) translateY(-8px); }
+  50% { transform: translateX(185px) translateY(-8px) scaleX(-1); }
+  96% { transform: translateX(-40px) scaleX(-1); }
+  100% { transform: translateX(-40px); }
 }
 
 @keyframes gnome-class-walk {
   0% { transform: translateX(0); }
-  48% { transform: translateX(430px); }
-  52% { transform: translateX(430px) scaleX(-1); }
+  48% { transform: translateX(500px); }
+  52% { transform: translateX(500px) scaleX(-1); }
   96% { transform: translateX(0) scaleX(-1); }
   100% { transform: translateX(0); }
 }
 
 @keyframes gnome-canteen-walk {
   0% { transform: translateX(0); }
-  48% { transform: translateX(260px); }
-  52% { transform: translateX(260px) scaleX(-1); }
+  48% { transform: translateX(300px); }
+  52% { transform: translateX(300px) scaleX(-1); }
   96% { transform: translateX(0) scaleX(-1); }
   100% { transform: translateX(0); }
 }
@@ -654,36 +465,18 @@
   50% { transform: translateY(-11px) rotate(5deg); }
 }
 
-@keyframes gnome-projector-pulse {
-  0%, 100% { opacity: 0.34; }
-  50% { opacity: 0.65; }
-}
-
-@keyframes gnome-steam {
-  0% { opacity: 0; transform: translateY(7px) scaleY(0.7); }
-  45% { opacity: 0.8; }
-  100% { opacity: 0; transform: translateY(-12px) scaleY(1.1); }
-}
-
 @keyframes gnome-hand-bob {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-4px); }
 }
 
-@keyframes gnome-bubble-pop {
-  0%, 68%, 100% { transform: translateY(0) scale(1); }
-  76% { transform: translateY(-3px) scale(1.04); }
-}
-
 @media (max-width: 720px) {
-  .gnome-village-scene { min-height: 480px; }
-  .gnome-panorama__track { width: 3200px; }
-  .gnome-zone__label { top: 10%; }
-  .gnome-floor--classroom { bottom: -2%; }
-  .gnome-wall-run { top: 24%; }
+  .gnome-village-scene { min-height: 500px; }
+  .gnome-panorama__track { width: 3500px; }
+  .gnome-floor--classroom { bottom: -5%; }
+  .gnome-wall-run--class-back { top: 18%; }
   .gnome-panorama__controls { grid-template-columns: auto minmax(130px, 1fr) auto; }
   .gnome-panorama__guide span:first-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .gnome-actor__bubble { font-size: 9px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

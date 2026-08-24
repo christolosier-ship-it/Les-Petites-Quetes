@@ -1,8 +1,16 @@
 # Village des Lutins - assets Habbo
 
-Le Village des Lutins utilise des rendus extraits d'assets Habbo / Sulake afin de construire une scène isométrique horizontale cohérente. Les fichiers sont stockés dans `public/worlds/gnome-village/` et les identifiants sources sont conservés dans les manifests.
+Le Village des Lutins utilise exclusivement des rendus d'assets Habbo / Sulake pour les éléments visibles du tableau. Les fichiers sont stockés dans `public/worlds/gnome-village/` et les identifiants sources sont conservés dans les manifests.
 
-## Lot 1 : structure
+## Règle graphique du tableau
+
+La scène elle-même est **Habbo-only** : sols, murs, portes, fenêtres, mobilier, nourriture, végétation, jeux et personnages proviennent tous de sprites Habbo/Sulake rendus en PNG.
+
+Le CSS du tableau ne sert qu'à positionner, superposer, révéler ou déplacer ces vrais sprites. Il ne doit pas dessiner de décor ou d'accessoire. Sont donc interdits dans la scène : chapeaux CSS/SVG, bulles dessinées localement, chemins en gradients, auvents, panneaux géométriques, marelles CSS, faisceaux de projecteur, vapeur artificielle, faux murs ou faux conteneurs décoratifs.
+
+Les contrôles de navigation de l'application, situés au-dessus du tableau, restent des éléments d'interface et ne font pas partie du décor Habbo.
+
+## Lot 1 : structure historique
 
 | Fichier | Identifiant source Habbo |
 | --- | --- |
@@ -19,8 +27,6 @@ Le Village des Lutins utilise des rendus extraits d'assets Habbo / Sulake afin d
 | `structure/fence-garden.png` | `garden_rosefence` |
 
 ## Lot 2 : classe
-
-La classe est la zone principale du panorama. Elle reçoit les éléments demandés `chair`, `desk`, `bookshelf`, `bookcase`, `projector`, `laptop` et `alarm`, complétés par des éléments scolaires afin d'éviter une pièce vide et répétitive.
 
 | Fichier | Identifiant source Habbo |
 | --- | --- |
@@ -53,8 +59,6 @@ La classe est la zone principale du panorama. Elle reçoit les éléments demand
 
 ## Lot 4 : cour
 
-La cour combine bancs, végétation, clôtures et jeux. `sb_ramp` apporte une vraie rampe de jeu de la gamme skatepark. `wf_slider` est conservé comme petit élément de glissade, tandis que la balançoire fournit le jeu vertical principal.
-
 | Fichier | Identifiant source Habbo |
 | --- | --- |
 | `courtyard/bench.png` | `autumn_c20_bench` |
@@ -68,9 +72,42 @@ La cour combine bancs, végétation, clôtures et jeux. `sb_ramp` apporte une vr
 | `courtyard/slide.png` | `wf_slider` |
 | `courtyard/garden-frog.png` | `garden_c23_frog` |
 
-## Lutins et vie de l'école
+## Passe Habbo-only école
 
-Les personnages sont des rendus du système d'avatars Habbo produits avec `xabbo nx`. Deux figures sont rendues dans plusieurs actions natives (`sit`, `wave`, `walk`, `drink`, `speak`, `stand`) afin de créer de vraies micro-scènes plutôt que des silhouettes locales dessinées pour le projet.
+Cette passe ajoute des pièces scolaires directement issues des gammes `school` et `school_c22`, afin de rapprocher la composition des véritables rooms Habbo consacrées à l'école.
+
+| Fichier | Identifiant source Habbo |
+| --- | --- |
+| `structure/floor-school.png` | `school_floor` |
+| `structure/wall-school.png` | `school_wall` |
+| `structure/wall-academic.png` | `school_c22_wall` |
+| `courtyard/school-bus.png` | `school_bus` |
+| `classroom/desk-red.png` | `school_console` |
+| `classroom/chair-red.png` | `school_chair` |
+| `classroom/chem-set.png` | `school_stuff_02` |
+| `classroom/science-equipment.png` | `school_c22_stuff_02` |
+| `classroom/coatrack-green.png` | `school_coatrack_g` |
+| `classroom/coatrack-blue.png` | `school_coatrack_b` |
+| `classroom/coatrack-red.png` | `school_coatrack_r` |
+| `classroom/locker-blue.png` | `school_locker_b_nosale` |
+| `classroom/locker-red.png` | `school_locker_r_nosale` |
+| `cafeteria/school-table.png` | `school_table` |
+| `cafeteria/school-bench.png` | `school_bench` |
+| `cafeteria/burger.png` | `school_stuff_03` |
+| `cafeteria/meatballs.png` | `school_stuff_04` |
+| `cafeteria/nuggets.png` | `school_stuff_05` |
+| `cafeteria/vegetables.png` | `school_stuff_06` |
+| `cafeteria/academic-table.png` | `school_c22_table` |
+| `cafeteria/academic-bench.png` | `school_c22_bench` |
+| `cafeteria/red-tray.png` | `school_c22_stuff_05` |
+| `courtyard/sports-equipment.png` | `school_c22_equipment` |
+| `courtyard/gym-bag.png` | `school_c22_duffelbag` |
+
+Les dimensions et poids exacts de cette passe sont consignés dans `public/worlds/gnome-village/manifest-habbo-only-school.json`.
+
+## Personnages et vie de l'école
+
+Les personnages sont des rendus du système d'avatars Habbo produits avec `xabbo nx`. Les poses natives (`sit`, `wave`, `walk`, `drink`, `speak`, `stand`) servent à composer les micro-scènes. Aucun chapeau ou élément graphique n'est ajouté par-dessus les avatars.
 
 | Fichier | Pose utilisée |
 | --- | --- |
@@ -85,12 +122,14 @@ Les personnages sont des rendus du système d'avatars Habbo produits avec `xabbo
 
 ## Mise en scène
 
-Le panorama est conçu comme un seul campus continu et non comme trois cartes juxtaposées : cour à gauche, classe dominante au centre, cantine à droite. Des passages couverts et un chemin commun relient les trois zones. La progression du monde révèle progressivement mobilier, personnages et micro-animations. Au dernier stage, la classe devient très active : élève qui écrit, main levée, discussions, circulation entre les rangées, livres qui bougent et projecteur allumé. La cour ajoute jeux et déplacements, tandis que la cantine anime repas, vapeur et circulation.
+La composition suit les codes observés dans des rooms Habbo d'école : grandes surfaces isométriques en dalles, murs constitués de vrais éléments Habbo, rangées de pupitres, bibliothèque et casiers dans la classe, longues tables et bancs devant un comptoir de service à la cantine, puis façade d'école, bus, clôtures, arbres, bancs et équipements de jeu dans la cour.
 
-Le tableau conserve le bouton DEV de déblocage complet et utilise le même mécanisme de grand écran navigable que la Forêt des Lucioles. Le mode `prefers-reduced-motion` coupe les déplacements décoratifs.
+La classe reste la zone dominante au centre. Les animations ne créent aucun nouveau graphisme : elles déplacent ou font osciller les sprites Habbo existants. La progression révèle progressivement mobilier, personnages et accessoires.
+
+Le tableau conserve le bouton DEV de déblocage complet et le mode grand écran navigable. `prefers-reduced-motion` coupe les déplacements décoratifs.
 
 ## Extraction et droits
 
-Extraction réalisée avec `xabbo nx 0.3.0` à partir du furnidata US. Les SWF et fichiers intermédiaires ne sont pas conservés dans le dépôt. `structure/manifest.json` décrit le lot 1 et `manifest-lots-2-4.json` décrit les lots suivants et les acteurs.
+Extraction réalisée avec `xabbo nx 0.3.0` à partir du furnidata US. Les SWF et fichiers intermédiaires ne sont pas conservés dans le dépôt. `structure/manifest.json`, `manifest-lots-2-4.json` et `manifest-habbo-only-school.json` conservent la traçabilité des rendus.
 
 Ces ressources ne sont pas des assets libres. Leur présence dans le projet ne concède aucun droit de réutilisation. Leur usage dans Les Petites Quêtes relève de l'autorisation Sulake indiquée par le propriétaire du projet pour son cadre privé et non commercial.
