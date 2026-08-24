@@ -1,9 +1,9 @@
 name: Gnome asset discovery
 
 on:
-  push:
+  pull_request:
     branches:
-      - feat/gnome-village-structure
+      - main
     paths:
       - .github/workflows/gnome-asset-discovery.yml
 
