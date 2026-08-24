@@ -1,0 +1,177 @@
+name: Gnome village Habbo-only asset extraction
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  extraction:
+    name: Extraire les éléments scolaires Habbo officiels
+    if: github.head_ref == 'fix/gnome-village-habbo-only'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Récupérer la branche de travail
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ github.head_ref }}
+
+      - name: Vérifier si le pack est déjà présent
+        id: already
+        run: |
+          if [ -f public/worlds/gnome-village/structure/floor-school.png ] \
+             && [ -f public/worlds/gnome-village/structure/wall-school.png ] \
+             && [ -f public/worlds/gnome-village/courtyard/school-bus.png ] \
+             && [ -f public/worlds/gnome-village/cafeteria/school-table.png ] \
+             && [ -f public/worlds/gnome-village/cafeteria/burger.png ]; then
+            echo "done=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "done=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Installer Go
+        if: steps.already.outputs.done != 'true'
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.24.x'
+
+      - name: Installer nx
+        if: steps.already.outputs.done != 'true'
+        run: |
+          go install xabbo.io/nx/cmd/nx@latest
+          echo "$(go env GOPATH)/bin" >> "$GITHUB_PATH"
+
+      - name: Télécharger et rendre le pack Habbo école
+        if: steps.already.outputs.done != 'true'
+        env:
+          HOTEL: us
+        run: |
+          set -euo pipefail
+          ROOT="$GITHUB_WORKSPACE/public/worlds/gnome-village"
+          WORK="$RUNNER_TEMP/gnome-habbo-only"
+          mkdir -p "$ROOT/structure" "$ROOT/classroom" "$ROOT/cafeteria" "$ROOT/courtyard" "$WORK"
+
+          render_furni() {
+            local source="$1"
+            local target="$2"
+            local preferred="${3:-2}"
+            local asset_dir="$WORK/${source//\*/_}"
+            rm -rf "$asset_dir"
+            mkdir -p "$asset_dir"
+            cd "$asset_dir"
+            echo "::group::Render $source -> $target"
+            nx get furni "$source"
+            nx extract --images "$source.swf" > extracted-files.txt || true
+            local rendered=""
+            for dir in "$preferred" 2 4 0 6; do
+              rm -f ./*.png
+              if nx img furni "$source" -d "$dir" >/tmp/nx-render.log 2>&1; then
+                rendered=$(find . -maxdepth 1 -type f -name '*.png' | sort | head -n 1 || true)
+                if [ -n "$rendered" ]; then break; fi
+              fi
+            done
+            if [ -z "$rendered" ]; then
+              rendered=$(find . -type f -name '*_64_*.png' ! -name '*_icon_*' | sort | head -n 1 || true)
+            fi
+            if [ -z "$rendered" ]; then
+              echo "Aucun rendu PNG trouvé pour $source" >&2
+              cat /tmp/nx-render.log || true
+              exit 1
+            fi
+            cp "$rendered" "$ROOT/$target"
+            echo "source=$source target=$target render=$rendered"
+            echo "::endgroup::"
+          }
+
+          # Structure scolaire cohérente
+          render_furni school_floor structure/floor-school.png 2
+          render_furni school_wall structure/wall-school.png 2
+          render_furni school_bus courtyard/school-bus.png 2
+
+          # Classe classique Habbo
+          render_furni school_console classroom/desk-red.png 2
+          render_furni school_chair classroom/chair-red.png 2
+          render_furni school_stuff_02 classroom/chem-set.png 2
+          render_furni school_coatrack_g classroom/coatrack-green.png 2
+          render_furni school_coatrack_b classroom/coatrack-blue.png 2
+          render_furni school_coatrack_r classroom/coatrack-red.png 2
+          render_furni school_locker_b_nosale classroom/locker-blue.png 2
+          render_furni school_locker_r_nosale classroom/locker-red.png 2
+
+          # Cantine classique Habbo
+          render_furni school_table cafeteria/school-table.png 2
+          render_furni school_bench cafeteria/school-bench.png 2
+          render_furni school_stuff_03 cafeteria/burger.png 2
+          render_furni school_stuff_04 cafeteria/meatballs.png 2
+          render_furni school_stuff_05 cafeteria/nuggets.png 2
+          render_furni school_stuff_06 cafeteria/vegetables.png 2
+
+          # Ligne scolaire académique plus récente, déjà utilisée dans la scène
+          render_furni school_c22_wall structure/wall-academic.png 2
+          render_furni school_c22_table cafeteria/academic-table.png 2
+          render_furni school_c22_bench cafeteria/academic-bench.png 2
+          render_furni school_c22_stuff_02 classroom/science-equipment.png 2
+          render_furni school_c22_equipment courtyard/sports-equipment.png 2
+          render_furni school_c22_duffelbag courtyard/gym-bag.png 2
+          render_furni school_c22_stuff_05 cafeteria/red-tray.png 2
+
+          cd "$GITHUB_WORKSPACE"
+          python3 - <<'PY'
+          import json, struct
+          from pathlib import Path
+
+          root = Path('public/worlds/gnome-village')
+          sources = {
+              'structure/floor-school.png': 'school_floor',
+              'structure/wall-school.png': 'school_wall',
+              'courtyard/school-bus.png': 'school_bus',
+              'classroom/desk-red.png': 'school_console',
+              'classroom/chair-red.png': 'school_chair',
+              'classroom/chem-set.png': 'school_stuff_02',
+              'classroom/coatrack-green.png': 'school_coatrack_g',
+              'classroom/coatrack-blue.png': 'school_coatrack_b',
+              'classroom/coatrack-red.png': 'school_coatrack_r',
+              'classroom/locker-blue.png': 'school_locker_b_nosale',
+              'classroom/locker-red.png': 'school_locker_r_nosale',
+              'cafeteria/school-table.png': 'school_table',
+              'cafeteria/school-bench.png': 'school_bench',
+              'cafeteria/burger.png': 'school_stuff_03',
+              'cafeteria/meatballs.png': 'school_stuff_04',
+              'cafeteria/nuggets.png': 'school_stuff_05',
+              'cafeteria/vegetables.png': 'school_stuff_06',
+              'structure/wall-academic.png': 'school_c22_wall',
+              'cafeteria/academic-table.png': 'school_c22_table',
+              'cafeteria/academic-bench.png': 'school_c22_bench',
+              'classroom/science-equipment.png': 'school_c22_stuff_02',
+              'courtyard/sports-equipment.png': 'school_c22_equipment',
+              'courtyard/gym-bag.png': 'school_c22_duffelbag',
+              'cafeteria/red-tray.png': 'school_c22_stuff_05',
+          }
+          items = []
+          for rel, source in sources.items():
+              path = root / rel
+              data = path.read_bytes()
+              if data[:8] != b'\x89PNG\r\n\x1a\n':
+                  raise SystemExit(f'{path} is not PNG')
+              width, height = struct.unpack('>II', data[16:24])
+              items.append({'file': rel, 'source': source, 'width': width, 'height': height, 'bytes': len(data)})
+          (root / 'manifest-habbo-only-school.json').write_text(json.dumps({
+              'origin': 'Habbo / Sulake',
+              'pipeline': 'xabbo nx 0.3.0',
+              'usage': 'Les Petites Quêtes — Village des Lutins — passe Habbo-only',
+              'items': items,
+          }, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+          print(json.dumps(items, indent=2))
+          PY
+
+      - name: Versionner le pack extrait
+        if: steps.already.outputs.done != 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/worlds/gnome-village/structure public/worlds/gnome-village/classroom public/worlds/gnome-village/cafeteria public/worlds/gnome-village/courtyard public/worlds/gnome-village/manifest-habbo-only-school.json
+          git commit -m "assets: extract Habbo-only school pack for gnome village"
+          git push origin HEAD:${{ github.head_ref }}
