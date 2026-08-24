@@ -24,12 +24,10 @@ createRoot(document.getElementById('root')!).render(
   </StrictMode>,
 );
 
-const sceneComposerRequested = import.meta.env.DEV
-  || new URLSearchParams(window.location.search).get('sceneComposer') === '1';
-if (sceneComposerRequested) {
+window.setTimeout(() => {
   void import('./platform/dev/sceneComposer').then(({ startSceneComposer }) => {
     startSceneComposer();
   });
-}
+}, 0);
 
 void registerServiceWorker();

@@ -4,6 +4,8 @@ export interface ScenePlacement {
   readonly rotation: number;
   readonly scale: number;
   readonly zIndex: number | null;
+  readonly mirrored: boolean;
+  readonly locked: boolean;
 }
 
 export interface SceneDuplicate extends ScenePlacement {
@@ -11,12 +13,22 @@ export interface SceneDuplicate extends ScenePlacement {
   readonly sourceId: string;
 }
 
+export interface SceneAssetInstance extends ScenePlacement {
+  readonly id: string;
+  readonly file: string;
+  readonly label: string;
+  readonly width: number;
+  readonly height: number;
+}
+
 export interface SceneComposerSnapshot {
-  readonly version: 1;
+  readonly version: 2;
   readonly sceneId: string;
   readonly updatedAt: string;
   readonly items: Record<string, ScenePlacement>;
   readonly duplicates: SceneDuplicate[];
+  readonly assets: SceneAssetInstance[];
+  readonly removed: string[];
 }
 
 export const DEFAULT_SCENE_PLACEMENT: ScenePlacement = {
@@ -25,12 +37,14 @@ export const DEFAULT_SCENE_PLACEMENT: ScenePlacement = {
   rotation: 0,
   scale: 1,
   zIndex: null,
+  mirrored: false,
+  locked: false,
 };
 
 const STORAGE_PREFIX = 'les-petites-quetes.scene-composer';
 
-function storageKey(sceneId: string) {
-  return `${STORAGE_PREFIX}.${sceneId}.v1`;
+function storageKey(sceneId: string, version: 1 | 2) {
+  return `${STORAGE_PREFIX}.${sceneId}.v${version}`;
 }
 
 function isFiniteNumber(value: unknown): value is number {
@@ -42,7 +56,7 @@ function parsePlacement(value: unknown): ScenePlacement | null {
   const candidate = value as Partial<ScenePlacement>;
   if (!isFiniteNumber(candidate.x) || !isFiniteNumber(candidate.y)) return null;
   if (!isFiniteNumber(candidate.rotation) || !isFiniteNumber(candidate.scale)) return null;
-  if (candidate.zIndex !== null && !isFiniteNumber(candidate.zIndex)) return null;
+  if (candidate.zIndex !== null && candidate.zIndex !== undefined && !isFiniteNumber(candidate.zIndex)) return null;
 
   return {
     x: candidate.x,
@@ -50,27 +64,28 @@ function parsePlacement(value: unknown): ScenePlacement | null {
     rotation: candidate.rotation,
     scale: Math.max(0.1, candidate.scale),
     zIndex: candidate.zIndex ?? null,
+    mirrored: candidate.mirrored === true,
+    locked: candidate.locked === true,
   };
 }
 
 export function emptySceneSnapshot(sceneId: string): SceneComposerSnapshot {
   return {
-    version: 1,
+    version: 2,
     sceneId,
     updatedAt: new Date().toISOString(),
     items: {},
     duplicates: [],
+    assets: [],
+    removed: [],
   };
 }
 
-export function loadSceneSnapshot(sceneId: string): SceneComposerSnapshot {
+function parseSnapshot(raw: string, sceneId: string): SceneComposerSnapshot | null {
   try {
-    const raw = window.localStorage.getItem(storageKey(sceneId));
-    if (!raw) return emptySceneSnapshot(sceneId);
     const parsed: unknown = JSON.parse(raw);
-    if (!parsed || typeof parsed !== 'object') return emptySceneSnapshot(sceneId);
-
-    const candidate = parsed as Partial<SceneComposerSnapshot>;
+    if (!parsed || typeof parsed !== 'object') return null;
+    const candidate = parsed as Partial<SceneComposerSnapshot> & { removed?: unknown; assets?: unknown };
     const items: Record<string, ScenePlacement> = {};
     if (candidate.items && typeof candidate.items === 'object') {
       for (const [id, placement] of Object.entries(candidate.items)) {
@@ -89,29 +104,57 @@ export function loadSceneSnapshot(sceneId: string): SceneComposerSnapshot {
         })
       : [];
 
+    const assets = Array.isArray(candidate.assets)
+      ? candidate.assets.flatMap((asset) => {
+          if (!asset || typeof asset !== 'object') return [];
+          const source = asset as Partial<SceneAssetInstance>;
+          const placement = parsePlacement(asset);
+          if (!placement || typeof source.id !== 'string' || typeof source.file !== 'string') return [];
+          if (typeof source.label !== 'string' || !isFiniteNumber(source.width) || !isFiniteNumber(source.height)) return [];
+          return [{ ...placement, id: source.id, file: source.file, label: source.label, width: source.width, height: source.height }];
+        })
+      : [];
+
+    const removed = Array.isArray(candidate.removed)
+      ? candidate.removed.filter((id): id is string => typeof id === 'string')
+      : [];
+
     return {
-      version: 1,
+      version: 2,
       sceneId,
       updatedAt: typeof candidate.updatedAt === 'string' ? candidate.updatedAt : new Date().toISOString(),
       items,
       duplicates,
+      assets,
+      removed,
     };
   } catch {
-    return emptySceneSnapshot(sceneId);
+    return null;
   }
+}
+
+export function loadSceneSnapshot(sceneId: string): SceneComposerSnapshot {
+  const current = window.localStorage.getItem(storageKey(sceneId, 2));
+  if (current) return parseSnapshot(current, sceneId) ?? emptySceneSnapshot(sceneId);
+  const legacy = window.localStorage.getItem(storageKey(sceneId, 1));
+  return legacy ? parseSnapshot(legacy, sceneId) ?? emptySceneSnapshot(sceneId) : emptySceneSnapshot(sceneId);
+}
+
+export function cloneSceneSnapshot(snapshot: SceneComposerSnapshot): SceneComposerSnapshot {
+  return JSON.parse(JSON.stringify(snapshot)) as SceneComposerSnapshot;
 }
 
 export function saveSceneSnapshot(snapshot: SceneComposerSnapshot) {
   const dated = { ...snapshot, updatedAt: new Date().toISOString() };
-  window.localStorage.setItem(storageKey(snapshot.sceneId), JSON.stringify(dated));
+  window.localStorage.setItem(storageKey(snapshot.sceneId, 2), JSON.stringify(dated));
   return dated;
 }
 
 export function clearSceneSnapshot(sceneId: string) {
-  window.localStorage.removeItem(storageKey(sceneId));
+  window.localStorage.removeItem(storageKey(sceneId, 2));
+  window.localStorage.removeItem(storageKey(sceneId, 1));
 }
 
 export function isSceneComposerEnabled() {
-  if (import.meta.env.DEV) return true;
-  return new URLSearchParams(window.location.search).get('sceneComposer') === '1';
+  return true;
 }
