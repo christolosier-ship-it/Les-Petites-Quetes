@@ -8,7 +8,7 @@ import { makeSceneComposerShell, renderAssetLibrary } from './sceneComposerPanel
 import { renderComposer, setStatus, syncPanel } from './sceneComposerRuntime';
 import type { ComposerState } from './sceneComposerRuntime';
 
-const SCENE_ID = 'gnome-village';
+const SCENE_ID = 'gnome-village-campus-v1';
 const PANORAMA_SELECTOR = '.gnome-village-scene:not(.parallax-scene--compact) [data-gnome-panorama="true"]';
 
 let started = false;
