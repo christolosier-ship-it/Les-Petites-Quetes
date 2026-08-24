@@ -16,7 +16,6 @@ import './styles/firefly-panorama.css';
 import './styles/gnome-village.css';
 import './styles/scene-composer.css';
 import './styles/finalization.css';
-import { startSceneComposer } from './platform/dev/sceneComposer';
 import { registerServiceWorker } from './platform/pwa/registerServiceWorker';
 
 createRoot(document.getElementById('root')!).render(
@@ -25,5 +24,12 @@ createRoot(document.getElementById('root')!).render(
   </StrictMode>,
 );
 
-startSceneComposer();
+const sceneComposerRequested = import.meta.env.DEV
+  || new URLSearchParams(window.location.search).get('sceneComposer') === '1';
+if (sceneComposerRequested) {
+  void import('./platform/dev/sceneComposer').then(({ startSceneComposer }) => {
+    startSceneComposer();
+  });
+}
+
 void registerServiceWorker();
