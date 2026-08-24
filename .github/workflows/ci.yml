@@ -98,7 +98,7 @@ jobs:
             echo "::group::Extract $source"
             nx get furni "$source"
             nx extract --images "$source.swf" > extracted-files.txt
-            nx img furni "$source" -d "$dir"
+            nx img furni "$source" -d "$dir" || true
             local render
             render=$(find . -maxdepth 1 -type f -name '*.png' | sort | head -n 1 || true)
             if [ -z "$render" ]; then
@@ -117,14 +117,15 @@ jobs:
           render_asset bohogarden_c21_floor floor-courtyard.png 2
           render_asset modern_c17_wall wall-classroom.png 2
           render_asset xmas11_wall wall-cabin.png 2
-          render_asset es_fnc_crnr corner-street.png 2
-          render_asset vwave_c21_railcrnr corner-railing.png 2
+          render_asset es_fnc_crnr corner-street.png 4
+          render_asset vwave_c21_railcrnr corner-railing.png 4
           render_asset xmas12_door door-classroom.png 2
           render_asset window_square window-square.png 2
           render_asset school_bench bench-cafeteria.png 2
           render_asset urban_fence fence-urban.png 2
           render_asset garden_rosefence fence-garden.png 2
 
+          cd "$GITHUB_WORKSPACE"
           python3 - <<'PY'
           import json, struct
           from pathlib import Path
@@ -148,13 +149,7 @@ jobs:
               if data[:8] != b'\x89PNG\r\n\x1a\n':
                   raise SystemExit(f'{path} is not PNG')
               width, height = struct.unpack('>II', data[16:24])
-              items.append({
-                  'file': path.name,
-                  'source': sources[path.name],
-                  'width': width,
-                  'height': height,
-                  'bytes': len(data),
-              })
+              items.append({'file': path.name, 'source': sources[path.name], 'width': width, 'height': height, 'bytes': len(data)})
           (root / 'manifest.json').write_text(json.dumps({
               'origin': 'Habbo / Sulake',
               'pipeline': 'xabbo nx 0.3.0',
