@@ -5,19 +5,26 @@ La scène utilise le pack **Ninja Adventure Asset Pack** de Pixel-Boy / AAA comm
 - Source officielle : https://pixel-boy.itch.io/ninja-adventure-asset-pack
 - Projet GitHub officiel : https://github.com/pixel-boy/NinjaAdventure
 - Licence : Creative Commons Zero 1.0 (CC0)
+- Archive source utilisée : `Ninja Adventure - Asset Pack.zip` fournie par le propriétaire du projet via Google Drive le 24 août 2026.
 
-## État de l'import
+## Import local
 
-Le pack itch.io complet pèse environ 89 Mo et contient davantage de ressources que le projet GitHub officiel, notamment les mises à jour les plus récentes et le kit procédural du Dragon Boss.
+Les ressources nécessaires à la scène sont désormais servies localement depuis :
 
-Le connecteur GitHub utilisé pour cette passe ne permet pas d'importer les fichiers binaires du pack itch.io directement. La première implémentation consomme donc les sprites officiels disponibles publiquement dans le dépôt `pixel-boy/NinjaAdventure` via leurs URLs raw, notamment :
+`public/worlds/dragon-mountain/ninja-adventure/`
 
-- `content/character/ninja_blue/sprite.png`
-- `content/character/samurai_blue/sprite.png`
-- `content/character/samurai_green/samurai_green.png`
-- les tilesets officiels présents dans `content/map/` restent la réserve graphique prévue pour la prochaine passe locale.
+Le lot intégré couvre les briques utiles à La Montagne du Dragon et au Scene Composer :
 
-Aucun sprite RPG local n'a été redessiné pour remplacer Ninja Adventure.
+- tilesets nature, eau, relief, désert, maisons et village abandonné ;
+- personnages et personnages animés ;
+- monstres ;
+- boss DragonGreen et DragonBlue ;
+- animaux utiles ;
+- effets visuels ;
+- objets ;
+- palette, README et licence du pack.
+
+L'audio du ZIP complet n'est volontairement pas embarqué dans le bundle web de cette passe afin d'éviter près de 100 Mo de médias inutilisés dans le dépôt et le cache PWA. Il pourra être intégré séparément si une direction sonore est validée.
 
 ## Scène cible
 
@@ -32,8 +39,8 @@ Le panorama est un monde vertical scrollable du bas vers le haut :
 7. montagne volcanique ;
 8. sommet du dragon.
 
-Des personnages animés jalonnent la route. Le tableau garde la progression en quatre stages, le bouton DEV de déblocage, le mode grand écran vertical et une extension du Scene Composer.
+Des personnages et monstres animés jalonnent la route. Le tableau garde la progression en quatre stages, le bouton DEV de déblocage, le mode grand écran vertical et le Scene Composer.
 
-## Suite recommandée
+## Dragon
 
-Dès qu'une copie locale du ZIP Ninja Adventure complet est disponible, importer les fichiers réellement nécessaires sous `public/worlds/dragon-mountain/ninja-adventure/`, mettre à jour le registre d'assets et remplacer les URLs raw par des chemins locaux. Le kit `Actor/Boss/Dragon Green & Blue` doit alors remplacer le dragon temporaire de la première composition.
+Le sommet utilise maintenant le véritable kit `Actor/Boss/DragonGreen` du pack, assemblé à partir des ailes, du corps et de la tête pour conserver une animation procédurale légère. `DragonBlue` est également conservé dans la bibliothèque du Scene Composer comme variante disponible.
