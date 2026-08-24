@@ -90,7 +90,7 @@ export function updateSingleField(state: ComposerState, field: keyof ScenePlacem
   if (current.locked) return;
   const patch: Partial<ScenePlacement> = field === 'zIndex'
     ? { zIndex: value }
-    : { [field]: value } as Partial<ScenePlacement>;
+    : { [field]: value };
   state.snapshot = patchPlacement(state.snapshot, state.primaryId, patch);
   renderComposer(state);
   syncPanel(state);
