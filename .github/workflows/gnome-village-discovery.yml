@@ -30,12 +30,10 @@ jobs:
         run: |
           set -e
           for query in \
-            "chair" "school chair" "desk" "school desk" "bookshelf" "bookcase" \
-            "projector" "laptop" "alarm" \
-            "table" "dining table" "fridge" "snack" "pizza" "counter" \
-            "bench" "tree" "garden" "park" "fence" "play" "swing" "slide" \
-            "gnome" "elf" "student" "school"; do
+            "playground" "playground slide" "seesaw" "sandbox" "sandpit" \
+            "climbing frame" "jungle gym" "school yard" "schoolyard" "hopscotch" \
+            "merry go round" "roundabout" "play park" "children play"; do
             echo ""
             echo "===== QUERY: $query ====="
-            nx furni search "$query" | head -n 24 || true
+            nx furni search "$query" | head -n 30 || true
           done
