@@ -90,7 +90,9 @@ function patchPlacement(state: ComposerState, id: string, patch: Partial<ScenePl
   const duplicateIndex = state.snapshot.duplicates.findIndex((item) => item.id === id);
   if (duplicateIndex >= 0) {
     const duplicates = [...state.snapshot.duplicates];
-    duplicates[duplicateIndex] = { ...duplicates[duplicateIndex], ...patch };
+    const current = duplicates[duplicateIndex];
+    if (!current) return;
+    duplicates[duplicateIndex] = { ...current, ...patch };
     state.snapshot = { ...state.snapshot, duplicates };
     return;
   }
