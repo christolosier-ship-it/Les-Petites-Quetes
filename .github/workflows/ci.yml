@@ -60,14 +60,14 @@ jobs:
           echo "$(go env GOPATH)/bin" >> "$GITHUB_PATH"
       - name: Rechercher le lot structure
         env:
-          HOTEL: fr
+          HOTEL: com
         run: |
           set -e
           for query in \
-            "school floor" "floor tile" "school wall" "brick wall" "corner" \
-            "school door" "door" "school window" "window" \
-            "school bench" "bench" "school fence" "fence"; do
+            "tile" "floor" "paving" "wall" "brick" "divider" "corner" \
+            "door" "gate" "window" "glass" \
+            "bench" "school bench" "fence" "rail"; do
             echo ""
             echo "===== QUERY: $query ====="
-            nx furni search "$query" | head -n 12 || true
+            nx furni search "$query" | head -n 15 || true
           done
