@@ -60,7 +60,7 @@ jobs:
           echo "$(go env GOPATH)/bin" >> "$GITHUB_PATH"
       - name: Rechercher le lot structure
         env:
-          HOTEL: com
+          HOTEL: us
         run: |
           set -e
           for query in \
