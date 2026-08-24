@@ -14,7 +14,9 @@ import './styles/firefly-wildlife-polish.css';
 import './styles/firefly-life-motion.css';
 import './styles/firefly-panorama.css';
 import './styles/gnome-village.css';
+import './styles/scene-composer.css';
 import './styles/finalization.css';
+import { startSceneComposer } from './platform/dev/sceneComposer';
 import { registerServiceWorker } from './platform/pwa/registerServiceWorker';
 
 createRoot(document.getElementById('root')!).render(
@@ -23,4 +25,5 @@ createRoot(document.getElementById('root')!).render(
   </StrictMode>,
 );
 
+startSceneComposer();
 void registerServiceWorker();
