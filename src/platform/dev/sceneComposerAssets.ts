@@ -1,87 +1,103 @@
-const ROOT = '/worlds/gnome-village';
-
-interface ManifestEntry {
-  readonly file: string;
-  readonly source: string;
-  readonly width: number;
-  readonly height: number;
-}
-
-interface Manifest {
-  readonly items: ManifestEntry[];
-}
+export type SceneAssetCategory = 'Structure' | 'Classe' | 'Cantine' | 'Cour' | 'Personnages';
 
 export interface SceneAssetDefinition {
   readonly id: string;
   readonly file: string;
   readonly label: string;
-  readonly category: string;
+  readonly category: SceneAssetCategory;
   readonly source: string;
   readonly width: number;
   readonly height: number;
+  readonly sourceWidth?: number;
+  readonly cropX?: number;
 }
 
-const MANIFESTS = [
-  { url: `${ROOT}/structure/manifest.json`, prefix: 'structure/' },
-  { url: `${ROOT}/manifest-habbo-only-school.json`, prefix: '' },
-  { url: `${ROOT}/manifest-lots-2-4.json`, prefix: '' },
-] as const;
+type ManifestItem = Readonly<{
+  file: string;
+  source: string;
+  width: number;
+  height: number;
+}>;
 
-const CATEGORY_LABELS: Record<string, string> = {
-  actors: 'Personnages',
-  cafeteria: 'Cantine',
-  classroom: 'Classe',
-  courtyard: 'Cour',
-  structure: 'Structure',
-};
+type Manifest = Readonly<{ items?: ManifestItem[] }>;
 
-function normalizeFile(file: string, prefix: string) {
-  return file.includes('/') ? file : `${prefix}${file}`;
+type ManifestSource = Readonly<{ url: string; prefix: string }>;
+
+const MANIFESTS: ManifestSource[] = [
+  { url: '/worlds/gnome-village/structure/manifest.json', prefix: 'structure/' },
+  { url: '/worlds/gnome-village/manifest-habbo-only-school.json', prefix: '' },
+  { url: '/worlds/gnome-village/manifest-lots-2-4.json', prefix: '' },
+];
+
+const STRAIGHT_WALLS: SceneAssetDefinition[] = [
+  {
+    id: 'derived:wall-school-straight',
+    file: 'structure/wall-school.png',
+    label: 'Mur droit école',
+    category: 'Structure',
+    source: 'school_wall · section centrale droite',
+    width: 84,
+    height: 186,
+    sourceWidth: 111,
+    cropX: 14,
+  },
+  {
+    id: 'derived:wall-academic-straight',
+    file: 'structure/wall-academic.png',
+    label: 'Mur droit académique',
+    category: 'Structure',
+    source: 'school_c22_wall · section centrale droite',
+    width: 84,
+    height: 187,
+    sourceWidth: 111,
+    cropX: 14,
+  },
+];
+
+function categoryFor(file: string): SceneAssetCategory {
+  if (file.startsWith('classroom/')) return 'Classe';
+  if (file.startsWith('cafeteria/')) return 'Cantine';
+  if (file.startsWith('courtyard/')) return 'Cour';
+  if (file.startsWith('actors/')) return 'Personnages';
+  return 'Structure';
 }
 
 function humanize(file: string) {
-  const base = file.split('/').at(-1)?.replace(/\.png$/i, '') ?? file;
-  return base.replace(/[-_]+/g, ' ').replace(/\b\w/g, (letter) => letter.toUpperCase());
+  const name = file.split('/').at(-1) ?? file;
+  return name.replace(/\.(png|svg|webp)$/i, '').replace(/[-_]+/g, ' ');
 }
 
-function categoryFor(file: string) {
-  const key = file.split('/')[0] ?? 'structure';
-  return CATEGORY_LABELS[key] ?? key;
+async function loadManifest(source: ManifestSource) {
+  const response = await fetch(source.url);
+  if (!response.ok) throw new Error(`Manifest indisponible: ${source.url}`);
+  const manifest = await response.json() as Manifest;
+  return (manifest.items ?? []).flatMap((item): SceneAssetDefinition[] => {
+    if (!item.file || !item.source || !Number.isFinite(item.width) || !Number.isFinite(item.height)) return [];
+    const file = `${source.prefix}${item.file}`;
+    return [{
+      id: `${source.url}:${file}`,
+      file,
+      label: humanize(file),
+      category: categoryFor(file),
+      source: item.source,
+      width: item.width,
+      height: item.height,
+    }];
+  });
 }
 
-async function fetchManifest(url: string): Promise<Manifest> {
-  const response = await fetch(url);
-  if (!response.ok) throw new Error(`Manifest indisponible (${response.status})`);
-  return await response.json() as Manifest;
-}
-
-export function assetSrc(file: string) {
-  return `${ROOT}/${file}`;
-}
-
-export async function loadSceneAssetCatalog(): Promise<SceneAssetDefinition[]> {
-  const manifests = await Promise.all(
-    MANIFESTS.map(async ({ url, prefix }) => ({ manifest: await fetchManifest(url), prefix })),
-  );
+export async function loadSceneAssetCatalog() {
+  const groups = await Promise.all(MANIFESTS.map(loadManifest));
   const unique = new Map<string, SceneAssetDefinition>();
-
-  for (const { manifest, prefix } of manifests) {
-    for (const item of manifest.items) {
-      const file = normalizeFile(item.file, prefix);
-      if (unique.has(file)) continue;
-      unique.set(file, {
-        id: file,
-        file,
-        label: humanize(file),
-        category: categoryFor(file),
-        source: item.source,
-        width: item.width,
-        height: item.height,
-      });
-    }
+  for (const asset of [...groups.flat(), ...STRAIGHT_WALLS]) {
+    const key = `${asset.id}:${asset.file}`;
+    if (!unique.has(key)) unique.set(key, asset);
   }
-
   return [...unique.values()].sort((a, b) =>
     a.category.localeCompare(b.category, 'fr') || a.label.localeCompare(b.label, 'fr'),
   );
+}
+
+export function assetSrc(file: string) {
+  return `/worlds/gnome-village/${file}`;
 }
