@@ -1,30 +1,12 @@
-import {
-  applyScenePlacement,
-  decorateSceneItems,
-  removeSceneClones,
-  resetScenePlacement,
-} from './sceneComposerDom';
-import {
-  DEFAULT_SCENE_PLACEMENT,
-  clearSceneSnapshot,
-  emptySceneSnapshot,
-  isSceneComposerEnabled,
-  loadSceneSnapshot,
-  saveSceneSnapshot,
-} from './sceneComposerModel';
+import { applyScenePlacement, decorateSceneItems, removeSceneClones, resetScenePlacement } from './sceneComposerDom';
+import { DEFAULT_SCENE_PLACEMENT, clearSceneSnapshot, emptySceneSnapshot, isSceneComposerEnabled, loadSceneSnapshot, saveSceneSnapshot } from './sceneComposerModel';
 import { makeSceneComposerShell } from './sceneComposerPanel';
 import type { SceneComposerSnapshot, SceneDuplicate, ScenePlacement } from './sceneComposerModel';
 
 const SCENE_ID = 'gnome-village';
 const PANORAMA_SELECTOR = '.gnome-village-scene:not(.parallax-scene--compact) [data-gnome-panorama="true"]';
 
-interface DragState {
-  readonly id: string;
-  readonly startX: number;
-  readonly startY: number;
-  readonly originX: number;
-  readonly originY: number;
-}
+type DragState = Readonly<{ id: string; startX: number; startY: number; originX: number; originY: number }>;
 
 interface ComposerState {
   readonly track: HTMLElement;
