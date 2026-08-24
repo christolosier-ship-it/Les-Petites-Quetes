@@ -1,0 +1,41 @@
+name: Gnome village asset discovery
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  discovery:
+    name: Découvrir les assets Habbo lots 2 à 4
+    if: github.head_ref == 'feat/gnome-village-living-school'
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Installer Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.24.x'
+
+      - name: Installer nx
+        run: |
+          go install xabbo.io/nx/cmd/nx@latest
+          echo "$(go env GOPATH)/bin" >> "$GITHUB_PATH"
+
+      - name: Rechercher les lots classe, cantine, cour et personnages
+        env:
+          HOTEL: us
+        run: |
+          set -e
+          for query in \
+            "chair" "school chair" "desk" "school desk" "bookshelf" "bookcase" \
+            "projector" "laptop" "alarm" \
+            "table" "dining table" "fridge" "snack" "pizza" "counter" \
+            "bench" "tree" "garden" "park" "fence" "play" "swing" "slide" \
+            "gnome" "elf" "student" "school"; do
+            echo ""
+            echo "===== QUERY: $query ====="
+            nx furni search "$query" | head -n 24 || true
+          done
