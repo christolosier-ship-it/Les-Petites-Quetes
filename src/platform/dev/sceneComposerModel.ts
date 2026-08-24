@@ -19,10 +19,12 @@ export interface SceneAssetInstance extends ScenePlacement {
   readonly label: string;
   readonly width: number;
   readonly height: number;
+  readonly sourceWidth?: number;
+  readonly cropX?: number;
 }
 
 export interface SceneComposerSnapshot {
-  readonly version: 2;
+  readonly version: 3;
   readonly sceneId: string;
   readonly updatedAt: string;
   readonly items: Record<string, ScenePlacement>;
@@ -43,7 +45,7 @@ export const DEFAULT_SCENE_PLACEMENT: ScenePlacement = {
 
 const STORAGE_PREFIX = 'les-petites-quetes.scene-composer';
 
-function storageKey(sceneId: string, version: 1 | 2) {
+function storageKey(sceneId: string, version: 1 | 2 | 3) {
   return `${STORAGE_PREFIX}.${sceneId}.v${version}`;
 }
 
@@ -71,7 +73,7 @@ function parsePlacement(value: unknown): ScenePlacement | null {
 
 export function emptySceneSnapshot(sceneId: string): SceneComposerSnapshot {
   return {
-    version: 2,
+    version: 3,
     sceneId,
     updatedAt: new Date().toISOString(),
     items: {},
@@ -81,7 +83,7 @@ export function emptySceneSnapshot(sceneId: string): SceneComposerSnapshot {
   };
 }
 
-function parseSnapshot(raw: string, sceneId: string): SceneComposerSnapshot | null {
+function parseSnapshot(raw: string, sceneId: string, normalizeLegacyAssetScale = false): SceneComposerSnapshot | null {
   try {
     const parsed: unknown = JSON.parse(raw);
     if (!parsed || typeof parsed !== 'object') return null;
@@ -111,7 +113,11 @@ function parseSnapshot(raw: string, sceneId: string): SceneComposerSnapshot | nu
           const placement = parsePlacement(asset);
           if (!placement || typeof source.id !== 'string' || typeof source.file !== 'string') return [];
           if (typeof source.label !== 'string' || !isFiniteNumber(source.width) || !isFiniteNumber(source.height)) return [];
-          return [{ ...placement, id: source.id, file: source.file, label: source.label, width: source.width, height: source.height }];
+          const scale = normalizeLegacyAssetScale && Math.abs(placement.scale - 1.2) < 0.0001 ? 1 : placement.scale;
+          const crop = isFiniteNumber(source.sourceWidth) && isFiniteNumber(source.cropX)
+            ? { sourceWidth: source.sourceWidth, cropX: source.cropX }
+            : {};
+          return [{ ...placement, scale, id: source.id, file: source.file, label: source.label, width: source.width, height: source.height, ...crop }];
         })
       : [];
 
@@ -120,7 +126,7 @@ function parseSnapshot(raw: string, sceneId: string): SceneComposerSnapshot | nu
       : [];
 
     return {
-      version: 2,
+      version: 3,
       sceneId,
       updatedAt: typeof candidate.updatedAt === 'string' ? candidate.updatedAt : new Date().toISOString(),
       items,
@@ -134,8 +140,10 @@ function parseSnapshot(raw: string, sceneId: string): SceneComposerSnapshot | nu
 }
 
 export function loadSceneSnapshot(sceneId: string): SceneComposerSnapshot {
-  const current = window.localStorage.getItem(storageKey(sceneId, 2));
+  const current = window.localStorage.getItem(storageKey(sceneId, 3));
   if (current) return parseSnapshot(current, sceneId) ?? emptySceneSnapshot(sceneId);
+  const previous = window.localStorage.getItem(storageKey(sceneId, 2));
+  if (previous) return parseSnapshot(previous, sceneId, true) ?? emptySceneSnapshot(sceneId);
   const legacy = window.localStorage.getItem(storageKey(sceneId, 1));
   return legacy ? parseSnapshot(legacy, sceneId) ?? emptySceneSnapshot(sceneId) : emptySceneSnapshot(sceneId);
 }
@@ -145,12 +153,13 @@ export function cloneSceneSnapshot(snapshot: SceneComposerSnapshot): SceneCompos
 }
 
 export function saveSceneSnapshot(snapshot: SceneComposerSnapshot) {
-  const dated = { ...snapshot, updatedAt: new Date().toISOString() };
-  window.localStorage.setItem(storageKey(snapshot.sceneId, 2), JSON.stringify(dated));
+  const dated = { ...snapshot, version: 3 as const, updatedAt: new Date().toISOString() };
+  window.localStorage.setItem(storageKey(snapshot.sceneId, 3), JSON.stringify(dated));
   return dated;
 }
 
 export function clearSceneSnapshot(sceneId: string) {
+  window.localStorage.removeItem(storageKey(sceneId, 3));
   window.localStorage.removeItem(storageKey(sceneId, 2));
   window.localStorage.removeItem(storageKey(sceneId, 1));
 }
