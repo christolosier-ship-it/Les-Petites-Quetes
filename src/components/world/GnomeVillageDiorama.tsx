@@ -60,11 +60,11 @@ export function GnomeVillageDiorama({ world, stage, reducedMotion, compact = fal
       didPositionRef.current = true;
     };
     const frame = window.requestAnimationFrame(positionPanorama);
-    const observer = new ResizeObserver(positionPanorama);
-    observer.observe(viewport);
+    const observer = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(positionPanorama);
+    observer?.observe(viewport);
     return () => {
       window.cancelAnimationFrame(frame);
-      observer.disconnect();
+      observer?.disconnect();
     };
   }, [expanded]);
 
