@@ -23,4 +23,4 @@ createRoot(document.getElementById('root')!).render(
   </StrictMode>,
 );
 
-registerServiceWorker();
+void registerServiceWorker();
