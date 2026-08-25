@@ -12,6 +12,15 @@ const pass2Bundle = join(pass2Root, 'derived-assets.json');
 const pass2Manifest = join(pass2Root, 'manifest.json');
 const outputRoot = join(root, 'public/worlds/dragon-mountain/ninja-adventure');
 
+const directPass2Assets = new Set([
+  'Derived/villager-walk.webp',
+  'Derived/dog-walk.webp',
+  'Derived/chicken-walk.webp',
+  'Derived/bat-fly.webp',
+  'Derived/samurai-blue-walk.webp',
+  'Derived/knight-walk.webp',
+]);
+
 function sha256(buffer) {
   return createHash('sha256').update(buffer).digest('hex');
 }
@@ -31,39 +40,23 @@ async function writeVerified(relativePath, data, expected) {
 }
 
 async function readBundle(bundleFile) {
-  const raw = await readFile(bundleFile, 'utf8');
-  return JSON.parse(raw);
+  return JSON.parse(await readFile(bundleFile, 'utf8'));
 }
 
-async function materializeBundle(bundle) {
+async function materializeBundle(bundle, preservedPaths = new Set()) {
   let count = 0;
+  let preserved = 0;
   for (const [relativePath, encoded] of Object.entries(bundle.files ?? {})) {
+    if (preservedPaths.has(relativePath)) {
+      preserved += 1;
+      continue;
+    }
     const outputPath = join(outputRoot, relativePath);
     await mkdir(dirname(outputPath), { recursive: true });
     await writeFile(outputPath, Buffer.from(encoded, 'base64'));
     count += 1;
   }
-  return count;
-}
-
-function auditBundle(bundle, manifest) {
-  const actual = new Map(Object.entries(bundle.files ?? {}).map(([path, encoded]) => {
-    const data = Buffer.from(encoded, 'base64');
-    return [path, { bytes: data.byteLength, sha256: sha256(data) }];
-  }));
-  const mismatches = [];
-  for (const entry of manifest.materialized ?? []) {
-    const found = actual.get(entry.path);
-    if (!found) {
-      mismatches.push(`${entry.path}: MISSING`);
-    } else if (found.bytes !== entry.bytes || found.sha256 !== entry.sha256) {
-      mismatches.push(`${entry.path}: expected ${entry.bytes}/${entry.sha256}, got ${found.bytes}/${found.sha256}`);
-    }
-  }
-  if (mismatches.length > 0) {
-    const inventory = [...actual.entries()].map(([path, meta]) => `${path}: ${meta.bytes}/${meta.sha256}`);
-    throw new Error(`Dragon derived bundle audit failed (${mismatches.length}):\n${mismatches.join('\n')}\nActual bundle inventory:\n${inventory.join('\n')}`);
-  }
+  return { count, preserved };
 }
 
 async function assemblePass2(manifest) {
@@ -77,11 +70,35 @@ async function assemblePass2(manifest) {
   return count;
 }
 
+async function verifyMaterialized(manifest) {
+  const mismatches = [];
+  for (const entry of manifest.materialized ?? []) {
+    try {
+      const data = await readFile(join(outputRoot, entry.path));
+      const mismatch = integrityMismatch(entry.path, data, entry);
+      if (mismatch) mismatches.push(mismatch);
+    } catch (error) {
+      if (error && typeof error === 'object' && 'code' in error && error.code === 'ENOENT') {
+        mismatches.push(`${entry.path}: MISSING`);
+      } else {
+        throw error;
+      }
+    }
+  }
+  if (mismatches.length > 0) {
+    throw new Error(`Dragon pass-2 integrity check failed (${mismatches.length}):\n${mismatches.join('\n')}`);
+  }
+  return manifest.materialized?.length ?? 0;
+}
+
 const manifest = JSON.parse(await readFile(pass2Manifest, 'utf8'));
-const pass2 = await readBundle(pass2Bundle);
-auditBundle(pass2, manifest);
-let count = 0;
-for (const bundleFile of legacyBundles) count += await materializeBundle(await readBundle(join(root, bundleFile)));
-count += await materializeBundle(pass2);
+let materialized = 0;
+for (const bundleFile of legacyBundles) {
+  const result = await materializeBundle(await readBundle(join(root, bundleFile)));
+  materialized += result.count;
+}
+const pass2Result = await materializeBundle(await readBundle(pass2Bundle), directPass2Assets);
+materialized += pass2Result.count;
 const assembled = await assemblePass2(manifest);
-console.log(`Dragon Mountain: ${count} assets materialized, ${assembled} assembled, ${(manifest.materialized?.length ?? 0) + assembled} pass-2 assets verified.`);
+const verified = await verifyMaterialized(manifest);
+console.log(`Dragon Mountain: ${materialized} assets materialized, ${pass2Result.preserved} direct pass-2 assets preserved, ${assembled} assembled, ${verified + assembled} pass-2 assets verified.`);
