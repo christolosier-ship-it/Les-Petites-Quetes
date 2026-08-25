@@ -2,7 +2,7 @@
   "version": 2,
   "source": "Ninja Adventure Asset Pack (Google Drive, CC0)",
   "materialized": [
-    {"path":"Derived/static-atlas.webp","bytes":21306,"sha256":"8305231c8a7d172d07d9c7c0009a1d8362990e925f199732203f7447efcd9f7a"},
+    {"path":"Derived/static-atlas.webp","bytes":14966,"sha256":"2f2002be93eb57863c5d176133e4c1be85c91c8cd7c707ba6ab6badb89328108"},
     {"path":"Derived/villager-walk.webp","bytes":734,"sha256":"2c4a061c6c3a4d127e0b8de354e217a7805d6921d3dc89368698cfef9dd8b58b"},
     {"path":"Derived/dog-walk.webp","bytes":344,"sha256":"581d1264c6ccefd44f1329f8ba2d3b8c318505d59f7ad2ed9966661dd698de49"},
     {"path":"Derived/chicken-walk.webp","bytes":488,"sha256":"851ea0c55e704e872157ec6a4f7b7116ea2f503e8d2a52789ea6d371e55e255f"},
