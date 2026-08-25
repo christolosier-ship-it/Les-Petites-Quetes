@@ -32,20 +32,17 @@ const ninja = (path: string) => `${NINJA_ROOT}/${path}`;
 const source = 'Pixel-Boy / Ninja Adventure CC0';
 
 const DRAGON_ASSETS: SceneAssetDefinition[] = [
-  { id: 'ninja:ninja-green', file: ninja('Actor/CharacterAnimated/NinjaGreen/SpriteSheet.png'), label: 'Ninja vert animé', category: 'Personnages', source, width: 64, height: 136 },
-  { id: 'ninja:ninja-blue', file: ninja('Actor/Character/NinjaBlue/SpriteSheet.png'), label: 'Ninja bleu', category: 'Personnages', source, width: 64, height: 112 },
-  { id: 'ninja:samurai-blue', file: ninja('Actor/Character/SamuraiBlue/SpriteSheet.png'), label: 'Samouraï bleu', category: 'Personnages', source, width: 64, height: 112 },
-  { id: 'ninja:skeleton', file: ninja('Actor/Character/Skeleton/SpriteSheet.png'), label: 'Squelette', category: 'Monstres', source, width: 64, height: 112 },
-  { id: 'ninja:slime', file: ninja('Actor/Monster/Slime/Slime.png'), label: 'Slime', category: 'Monstres', source, width: 64, height: 64 },
-  { id: 'ninja:lizard', file: ninja('Actor/Monster/Lizard/Lizard.png'), label: 'Lézard', category: 'Monstres', source, width: 64, height: 64 },
-  { id: 'ninja:dragon-green-head', file: ninja('Actor/Boss/DragonGreen/Head.png'), label: 'Dragon vert · tête', category: 'Monstres', source, width: 88, height: 92 },
-  { id: 'ninja:dragon-green-wing', file: ninja('Actor/Boss/DragonGreen/Wing.png'), label: 'Dragon vert · aile', category: 'Monstres', source, width: 114, height: 114 },
-  { id: 'ninja:tiles-nature', file: ninja('Backgrounds/Tilesets/TilesetNature.png'), label: 'Tileset nature', category: 'Terrain', source, width: 192, height: 168 },
-  { id: 'ninja:tiles-water', file: ninja('Backgrounds/Tilesets/TilesetWater.png'), label: 'Tileset eau', category: 'Terrain', source, width: 224, height: 136 },
-  { id: 'ninja:tiles-desert', file: ninja('Backgrounds/Tilesets/TilesetDesert.png'), label: 'Tileset désert', category: 'Terrain', source, width: 160, height: 96 },
-  { id: 'ninja:tiles-relief', file: ninja('Backgrounds/Tilesets/TilesetRelief.png'), label: 'Tileset relief', category: 'Terrain', source, width: 160, height: 96 },
-  { id: 'ninja:tiles-house', file: ninja('Backgrounds/Tilesets/TilesetHouse.png'), label: 'Tileset village', category: 'Structure', source, width: 264, height: 184 },
-  { id: 'ninja:tiles-ruins', file: ninja('Backgrounds/Tilesets/TilesetVillageAbandoned.png'), label: 'Village abandonné', category: 'Décor', source, width: 212, height: 160 },
+  { id: 'ninja:ninja-green', file: ninja('Actor/CharacterAnimated/NinjaGreen/SpriteSheet.webp'), label: 'Ninja vert animé', category: 'Personnages', source, width: 64, height: 136 },
+  { id: 'ninja:ninja-blue', file: ninja('Actor/Character/NinjaBlue/SpriteSheet.webp'), label: 'Ninja bleu', category: 'Personnages', source, width: 64, height: 112 },
+  { id: 'ninja:samurai-blue', file: ninja('Actor/Character/SamuraiBlue/SpriteSheet.webp'), label: 'Samouraï bleu', category: 'Personnages', source, width: 64, height: 112 },
+  { id: 'ninja:skeleton', file: ninja('Actor/Character/Skeleton/SpriteSheet.webp'), label: 'Squelette', category: 'Monstres', source, width: 64, height: 112 },
+  { id: 'ninja:slime', file: ninja('Actor/Monster/Slime/Slime.webp'), label: 'Slime', category: 'Monstres', source, width: 64, height: 64 },
+  { id: 'ninja:lizard', file: ninja('Actor/Monster/Lizard/Lizard.webp'), label: 'Lézard', category: 'Monstres', source, width: 64, height: 64 },
+  { id: 'ninja:blue-bat', file: ninja('Actor/Monster/BlueBat/SpriteSheet.webp'), label: 'Chauve-souris bleue', category: 'Monstres', source, width: 64, height: 64 },
+  { id: 'ninja:dragon-green', file: ninja('Actor/Boss/DragonGreen/Preview.webp'), label: 'Dragon vert', category: 'Monstres', source, width: 318, height: 145 },
+  { id: 'ninja:dragon-blue', file: ninja('Actor/Boss/DragonBlue/Preview.webp'), label: 'Dragon bleu', category: 'Monstres', source, width: 318, height: 145 },
+  { id: 'ninja:dragon-green-head', file: ninja('Actor/Boss/DragonGreen/Head.webp'), label: 'Dragon vert · tête', category: 'Monstres', source, width: 88, height: 92 },
+  { id: 'ninja:dragon-green-wing', file: ninja('Actor/Boss/DragonGreen/Wing.webp'), label: 'Dragon vert · aile', category: 'Monstres', source, width: 114, height: 114 },
 ];
 
 function categoryFor(file: string): SceneAssetCategory {
