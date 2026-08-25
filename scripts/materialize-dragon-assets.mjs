@@ -16,15 +16,15 @@ function sha256(buffer) {
   return createHash('sha256').update(buffer).digest('hex');
 }
 
-function assertIntegrity(relativePath, data, expected) {
+function integrityMismatch(relativePath, data, expected) {
   const actualSha = sha256(data);
-  if (data.byteLength !== expected.bytes || actualSha !== expected.sha256) {
-    throw new Error(`Dragon asset integrity mismatch: ${relativePath}; expected ${expected.bytes} bytes / ${expected.sha256}, got ${data.byteLength} bytes / ${actualSha}`);
-  }
+  if (data.byteLength === expected.bytes && actualSha === expected.sha256) return null;
+  return `${relativePath}: expected ${expected.bytes}/${expected.sha256}, got ${data.byteLength}/${actualSha}`;
 }
 
 async function writeVerified(relativePath, data, expected) {
-  assertIntegrity(relativePath, data, expected);
+  const mismatch = integrityMismatch(relativePath, data, expected);
+  if (mismatch) throw new Error(`Dragon asset integrity mismatch: ${mismatch}`);
   const outputPath = join(outputRoot, relativePath);
   await mkdir(dirname(outputPath), { recursive: true });
   await writeFile(outputPath, data);
@@ -55,9 +55,14 @@ async function assemblePass2(manifest) {
 }
 
 async function verifyMaterialized(manifest) {
+  const mismatches = [];
   for (const entry of manifest.materialized ?? []) {
     const data = await readFile(join(outputRoot, entry.path));
-    assertIntegrity(entry.path, data, entry);
+    const mismatch = integrityMismatch(entry.path, data, entry);
+    if (mismatch) mismatches.push(mismatch);
+  }
+  if (mismatches.length > 0) {
+    throw new Error(`Dragon asset integrity mismatches (${mismatches.length}):\n${mismatches.join('\n')}`);
   }
   return manifest.materialized?.length ?? 0;
 }
