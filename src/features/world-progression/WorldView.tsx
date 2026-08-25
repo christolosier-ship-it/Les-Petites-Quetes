@@ -22,7 +22,7 @@ export function WorldView({ app, childId, worldId = 'world.firefly-forest', comp
   const world = findWorldDefinition(worldId);
   const progress = app.state.worldProgress.find((candidate) => candidate.childId === selectedChildId && candidate.worldId === worldId);
   const stage = progress?.stage ?? 0;
-  const hasDevSceneTools = worldId === 'world.firefly-forest' || worldId === 'world.gnome-village';
+  const hasDevSceneTools = worldId === 'world.firefly-forest' || worldId === 'world.gnome-village' || worldId === 'world.dragon-mountain';
   const sceneStage: 0 | 1 | 2 | 3 = hasDevSceneTools && devSceneUnlocked ? 3 : stage;
   const sceneCompact = compact && !interactiveScene;
   const rewards = rewardsForWorld(worldId).filter((reward) => progress?.unlockedRewardIds.includes(reward.id));
