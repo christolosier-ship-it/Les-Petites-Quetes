@@ -38,7 +38,7 @@ const DRAGON_ASSETS: SceneAssetDefinition[] = [
   { id: 'ninja:skeleton', file: ninja('Actor/Character/Skeleton/SpriteSheet.png'), label: 'Squelette', category: 'Monstres', source, width: 64, height: 64 },
   { id: 'ninja:slime', file: ninja('Actor/Monster/Slime/Slime.png'), label: 'Slime', category: 'Monstres', source, width: 48, height: 48 },
   { id: 'ninja:lizard', file: ninja('Actor/Monster/Lizard/Lizard.png'), label: 'Lézard', category: 'Monstres', source, width: 48, height: 48 },
-  { id: 'ninja:bat', file: ninja('Actor/Monster/BlueBat/BlueBat.png'), label: 'Chauve-souris', category: 'Monstres', source, width: 48, height: 48 },
+  { id: 'ninja:bat', file: ninja('Actor/Monster/BlueBat/SpriteSheet.png'), label: 'Chauve-souris', category: 'Monstres', source, width: 48, height: 48 },
   { id: 'ninja:dragon-green', file: ninja('Actor/Boss/DragonGreen/Preview.png'), label: 'Dragon vert', category: 'Monstres', source, width: 318, height: 145 },
   { id: 'ninja:dragon-blue', file: ninja('Actor/Boss/DragonBlue/Preview.png'), label: 'Dragon bleu', category: 'Monstres', source, width: 318, height: 145 },
   { id: 'ninja:animals', file: ninja('Actor/Animal/Preview.gif'), label: 'Animaux', category: 'Personnages', source, width: 128, height: 96 },
