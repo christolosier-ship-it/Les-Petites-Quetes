@@ -33,23 +33,19 @@ const source = 'Pixel-Boy / Ninja Adventure CC0';
 
 const DRAGON_ASSETS: SceneAssetDefinition[] = [
   { id: 'ninja:ninja-green', file: ninja('Actor/CharacterAnimated/NinjaGreen/SpriteSheet.png'), label: 'Ninja vert animé', category: 'Personnages', source, width: 64, height: 136 },
-  { id: 'ninja:ninja-blue', file: ninja('Actor/Character/NinjaBlue/SpriteSheet.png'), label: 'Ninja bleu', category: 'Personnages', source, width: 64, height: 64 },
-  { id: 'ninja:samurai-blue', file: ninja('Actor/Character/SamuraiBlue/SpriteSheet.png'), label: 'Samouraï bleu', category: 'Personnages', source, width: 64, height: 64 },
-  { id: 'ninja:skeleton', file: ninja('Actor/Character/Skeleton/SpriteSheet.png'), label: 'Squelette', category: 'Monstres', source, width: 64, height: 64 },
-  { id: 'ninja:slime', file: ninja('Actor/Monster/Slime/Slime.png'), label: 'Slime', category: 'Monstres', source, width: 48, height: 48 },
-  { id: 'ninja:lizard', file: ninja('Actor/Monster/Lizard/Lizard.png'), label: 'Lézard', category: 'Monstres', source, width: 48, height: 48 },
-  { id: 'ninja:bat', file: ninja('Actor/Monster/BlueBat/SpriteSheet.png'), label: 'Chauve-souris', category: 'Monstres', source, width: 48, height: 48 },
-  { id: 'ninja:dragon-green', file: ninja('Actor/Boss/DragonGreen/Preview.png'), label: 'Dragon vert', category: 'Monstres', source, width: 318, height: 145 },
-  { id: 'ninja:dragon-blue', file: ninja('Actor/Boss/DragonBlue/Preview.png'), label: 'Dragon bleu', category: 'Monstres', source, width: 318, height: 145 },
-  { id: 'ninja:animals', file: ninja('Actor/Animal/Preview.gif'), label: 'Animaux', category: 'Personnages', source, width: 128, height: 96 },
+  { id: 'ninja:ninja-blue', file: ninja('Actor/Character/NinjaBlue/SpriteSheet.png'), label: 'Ninja bleu', category: 'Personnages', source, width: 64, height: 112 },
+  { id: 'ninja:samurai-blue', file: ninja('Actor/Character/SamuraiBlue/SpriteSheet.png'), label: 'Samouraï bleu', category: 'Personnages', source, width: 64, height: 112 },
+  { id: 'ninja:skeleton', file: ninja('Actor/Character/Skeleton/SpriteSheet.png'), label: 'Squelette', category: 'Monstres', source, width: 64, height: 112 },
+  { id: 'ninja:slime', file: ninja('Actor/Monster/Slime/Slime.png'), label: 'Slime', category: 'Monstres', source, width: 64, height: 64 },
+  { id: 'ninja:lizard', file: ninja('Actor/Monster/Lizard/Lizard.png'), label: 'Lézard', category: 'Monstres', source, width: 64, height: 64 },
+  { id: 'ninja:dragon-green-head', file: ninja('Actor/Boss/DragonGreen/Head.png'), label: 'Dragon vert · tête', category: 'Monstres', source, width: 88, height: 92 },
+  { id: 'ninja:dragon-green-wing', file: ninja('Actor/Boss/DragonGreen/Wing.png'), label: 'Dragon vert · aile', category: 'Monstres', source, width: 114, height: 114 },
   { id: 'ninja:tiles-nature', file: ninja('Backgrounds/Tilesets/TilesetNature.png'), label: 'Tileset nature', category: 'Terrain', source, width: 192, height: 168 },
   { id: 'ninja:tiles-water', file: ninja('Backgrounds/Tilesets/TilesetWater.png'), label: 'Tileset eau', category: 'Terrain', source, width: 224, height: 136 },
   { id: 'ninja:tiles-desert', file: ninja('Backgrounds/Tilesets/TilesetDesert.png'), label: 'Tileset désert', category: 'Terrain', source, width: 160, height: 96 },
   { id: 'ninja:tiles-relief', file: ninja('Backgrounds/Tilesets/TilesetRelief.png'), label: 'Tileset relief', category: 'Terrain', source, width: 160, height: 96 },
   { id: 'ninja:tiles-house', file: ninja('Backgrounds/Tilesets/TilesetHouse.png'), label: 'Tileset village', category: 'Structure', source, width: 264, height: 184 },
   { id: 'ninja:tiles-ruins', file: ninja('Backgrounds/Tilesets/TilesetVillageAbandoned.png'), label: 'Village abandonné', category: 'Décor', source, width: 212, height: 160 },
-  { id: 'ninja:items', file: ninja('Items/AllPreview.png'), label: 'Objets et trésors', category: 'Décor', source, width: 180, height: 120 },
-  { id: 'ninja:fx', file: ninja('FX/AllPreview.png'), label: 'Effets visuels', category: 'Décor', source, width: 180, height: 120 },
 ];
 
 function categoryFor(file: string): SceneAssetCategory {
