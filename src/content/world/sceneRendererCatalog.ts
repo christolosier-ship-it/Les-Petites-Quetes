@@ -1,11 +1,11 @@
 import type { WorldId } from '../../domain/world/WorldDefinition';
 
-export type SceneRendererId = 'generic-parallax' | 'firefly-diorama' | 'gnome-village-diorama' | 'dragon-mountain-rpg';
+export type SceneRendererId = 'generic-parallax' | 'firefly-diorama' | 'gnome-village-diorama' | 'dragon-mountain-game';
 
 const sceneRendererOverrides: Partial<Record<WorldId, SceneRendererId>> = {
   'world.firefly-forest': 'firefly-diorama',
   'world.gnome-village': 'gnome-village-diorama',
-  'world.dragon-mountain': 'dragon-mountain-rpg',
+  'world.dragon-mountain': 'dragon-mountain-game',
 };
 
 export function sceneRendererForWorld(worldId: WorldId): SceneRendererId {

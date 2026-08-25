@@ -5,7 +5,7 @@ import type { WorldSceneRendererProps } from './WorldSceneProps';
 
 const FireflyForestDiorama = lazy(() => import('./FireflyForestDiorama').then((module) => ({ default: module.FireflyForestDiorama })));
 const GnomeVillageCampus = lazy(() => import('./GnomeVillageCampus').then((module) => ({ default: module.GnomeVillageCampus })));
-const DragonMountainScene = lazy(() => import('./DragonMountainScene').then((module) => ({ default: module.DragonMountainScene })));
+const DragonMountainGame = lazy(() => import('./DragonMountainGame').then((module) => ({ default: module.DragonMountainGame })));
 
 function LazyScene({ loader: Renderer, ...props }: WorldSceneRendererProps & { readonly loader: ComponentType<WorldSceneRendererProps> }) {
   return (
@@ -15,23 +15,15 @@ function LazyScene({ loader: Renderer, ...props }: WorldSceneRendererProps & { r
   );
 }
 
-function LazyFireflyForestDiorama(props: WorldSceneRendererProps) {
-  return <LazyScene loader={FireflyForestDiorama} {...props} />;
-}
-
-function LazyGnomeVillageCampus(props: WorldSceneRendererProps) {
-  return <LazyScene loader={GnomeVillageCampus} {...props} />;
-}
-
-function LazyDragonMountainScene(props: WorldSceneRendererProps) {
-  return <LazyScene loader={DragonMountainScene} {...props} />;
-}
+function LazyFireflyForestDiorama(props: WorldSceneRendererProps) { return <LazyScene loader={FireflyForestDiorama} {...props} />; }
+function LazyGnomeVillageCampus(props: WorldSceneRendererProps) { return <LazyScene loader={GnomeVillageCampus} {...props} />; }
+function LazyDragonMountainGame(props: WorldSceneRendererProps) { return <LazyScene loader={DragonMountainGame} {...props} />; }
 
 const renderers = {
   'generic-parallax': GenericParallaxScene,
   'firefly-diorama': LazyFireflyForestDiorama,
   'gnome-village-diorama': LazyGnomeVillageCampus,
-  'dragon-mountain-rpg': LazyDragonMountainScene,
+  'dragon-mountain-game': LazyDragonMountainGame,
 } satisfies Record<SceneRendererId, ComponentType<WorldSceneRendererProps>>;
 
 export function ParallaxScene(props: WorldSceneRendererProps) {

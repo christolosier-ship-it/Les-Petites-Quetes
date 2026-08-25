@@ -1,0 +1,84 @@
+.dragon-game {
+  position: relative;
+  min-height: 20rem;
+  background: #0d0b1e;
+  isolation: isolate;
+}
+
+.dragon-game__viewport {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: #0d0b1e;
+}
+
+.dragon-game__frame {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: #0d0b1e;
+}
+
+.dragon-game__expand {
+  position: absolute;
+  z-index: 8;
+  top: 0.75rem;
+  right: 0.75rem;
+  min-height: 2.6rem;
+  padding: 0.55rem 0.9rem;
+  border: 1px solid rgb(232 200 122 / 0.55);
+  border-radius: 999px;
+  background: rgb(13 11 30 / 0.88);
+  color: #f4dfaa;
+  font: inherit;
+  font-weight: 900;
+  box-shadow: 0 0.35rem 1rem rgb(0 0 0 / 0.38);
+  cursor: pointer;
+  backdrop-filter: blur(0.35rem);
+}
+
+.dragon-game__expand:focus-visible { outline: 3px solid #f4dfaa; outline-offset: 3px; }
+.dragon-game--compact { min-height: 13rem; }
+.dragon-game--compact .dragon-game__frame { pointer-events: none; }
+
+.dragon-game__compact-cover {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  align-content: end;
+  gap: 0.25rem;
+  padding: 1rem;
+  background: linear-gradient(transparent 38%, rgb(13 11 30 / 0.82));
+  color: white;
+}
+
+.dragon-game__compact-cover span { color: #e8c87a; font-size: 0.75rem; font-weight: 900; letter-spacing: 0.1em; text-transform: uppercase; }
+.dragon-game__compact-cover strong { font-size: clamp(1rem, 4vw, 1.35rem); }
+
+.dragon-game--expanded {
+  position: fixed;
+  z-index: 1000;
+  inset: 0;
+  display: grid;
+  min-height: 100dvh;
+  place-items: center;
+  padding: max(0.5rem, env(safe-area-inset-top)) max(0.5rem, env(safe-area-inset-right)) max(0.5rem, env(safe-area-inset-bottom)) max(0.5rem, env(safe-area-inset-left));
+  background: #05040d;
+}
+
+.dragon-game--expanded .dragon-game__viewport {
+  width: min(100%, calc(100dvh * 16 / 9));
+  max-height: 100dvh;
+  box-shadow: 0 1.5rem 5rem rgb(0 0 0 / 0.65);
+}
+
+.dragon-game--expanded .dragon-game__expand { top: max(0.8rem, env(safe-area-inset-top)); right: max(0.8rem, env(safe-area-inset-right)); }
+
+@media (max-width: 45rem) and (orientation: portrait) {
+  .dragon-game:not(.dragon-game--expanded) .dragon-game__viewport { min-height: 18rem; }
+  .dragon-game__expand { min-height: 2.4rem; padding-inline: 0.75rem; font-size: 0.82rem; }
+}
+
+@media (prefers-reduced-motion: reduce) { .dragon-game__expand { transition: none; } }
