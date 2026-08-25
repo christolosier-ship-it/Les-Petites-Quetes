@@ -20,7 +20,7 @@ export interface SceneAssetInstance extends ScenePlacement {
   readonly width: number;
   readonly height: number;
   readonly sourceWidth?: number;
-  readonly sourceHeight?: number;
+  readonly sourceHeight?: number | undefined;
   readonly cropX?: number;
   readonly cropY?: number;
 }
