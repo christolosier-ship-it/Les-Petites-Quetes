@@ -2,6 +2,7 @@ import { createHash } from 'node:crypto';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { finalizeOriginFrench } from './origin-fr-finalize.mjs';
 import { translateOriginToFrench } from './origin-fr-translations.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -70,6 +71,7 @@ if (actualSha !== ORIGIN_BLOB_SHA) throw new Error(`Origin: empreinte source ina
 
 let localized = translateOriginToFrench(upstream);
 for (const [from, to] of [...EXTRA_REPLACEMENTS].sort((a, b) => b[0].length - a[0].length)) localized = localized.replaceAll(from, to);
+localized = finalizeOriginFrench(localized);
 
 const bridge = `
 /* Les Petites Quêtes : persistance locale pour le mini-jeu embarqué. */
