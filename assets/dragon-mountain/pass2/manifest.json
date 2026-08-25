@@ -1,81 +1,126 @@
 {
-  "binary": [
+  "version": 2,
+  "source": "Ninja Adventure Asset Pack (Google Drive, CC0)",
+  "direct": [
     {
-      "output": "Derived/world-01.webp",
-      "parts": [
-        "world-01.webp.part01.b64",
-        "world-01.webp.part02.b64"
-      ]
-    },
-    {
-      "output": "Derived/world-02.webp",
-      "parts": [
-        "world-02.webp.part01.b64",
-        "world-02.webp.part02.b64",
-        "world-02.webp.part03.b64"
-      ]
-    },
-    {
-      "output": "Derived/world-03.webp",
-      "parts": [
-        "world-03.webp.part01.b64",
-        "world-03.webp.part02.b64"
-      ]
-    },
-    {
-      "output": "Derived/world-04.webp",
-      "parts": [
-        "world-04.webp.part01.b64",
-        "world-04.webp.part02.b64"
-      ]
-    },
-    {
-      "output": "Derived/world-05.webp",
-      "parts": [
-        "world-05.webp.part01.b64",
-        "world-05.webp.part02.b64"
-      ]
-    },
-    {
-      "output": "Derived/world-06.webp",
-      "parts": [
-        "world-06.webp.part01.b64",
-        "world-06.webp.part02.b64"
-      ]
-    },
-    {
-      "output": "Derived/world-07.webp",
-      "parts": [
-        "world-07.webp.part01.b64",
-        "world-07.webp.part02.b64",
-        "world-07.webp.part03.b64"
-      ]
-    },
-    {
-      "output": "Derived/world-08.webp",
-      "parts": [
-        "world-08.webp.part01.b64",
-        "world-08.webp.part02.b64"
-      ]
-    },
-    {
-      "output": "Derived/static-atlas.webp",
-      "parts": [
-        "static-atlas.webp.part01.b64",
-        "static-atlas.webp.part02.b64",
-        "static-atlas.webp.part03.b64",
-        "static-atlas.webp.part04.b64",
-        "static-atlas.webp.part05.b64"
-      ]
+      "path": "Derived/dragon-world.webp",
+      "bytes": 64904,
+      "sha256": "9d6ab0398288b7bda8c300c68750bc059480c4d633c1969ebfac8363de53cb39"
     }
   ],
-  "bundles": [
+  "materialized": [
     {
-      "parts": [
-        "animations.part01.txt",
-        "animations.part02.txt",
-        "animations.part03.txt"
-      ]
+      "path": "Derived/static-atlas.webp",
+      "bytes": 21306,
+      "sha256": "8305231c8a7d172d07d9c7c0009a1d8362990e925f199732203f7447efcd9f7a"
+    },
+    {
+      "path": "Derived/villager-walk.webp",
+      "bytes": 734,
+      "sha256": "2c4a061c6c3a4d127e0b8de354e217a7805d6921d3dc89368698cfef9dd8b58b"
+    },
+    {
+      "path": "Derived/dog-walk.webp",
+      "bytes": 344,
+      "sha256": "581d1264c6ccefd44f1329f8ba2d3b8c318505d59f7ad2ed9966661dd698de49"
+    },
+    {
+      "path": "Derived/chicken-walk.webp",
+      "bytes": 488,
+      "sha256": "851ea0c55e704e872157ec6a4f7b7116ea2f503e8d2a52789ea6d371e55e255f"
+    },
+    {
+      "path": "Derived/ninja-blue-walk.webp",
+      "bytes": 918,
+      "sha256": "75289b1e3097b60f1935a3a6daff893dd733f38238fcdf2cb1be4e054081fc97"
+    },
+    {
+      "path": "Derived/slime-idle.webp",
+      "bytes": 518,
+      "sha256": "ed21112d1c9dea01943367529eeeb476fc51256be3bea5473556aee07956b388"
+    },
+    {
+      "path": "Derived/bat-fly.webp",
+      "bytes": 774,
+      "sha256": "5a095ccbfca91cbda6371a0b6c63492936ac4cce65adca0ee3369294cf1ecab6"
+    },
+    {
+      "path": "Derived/samurai-blue-walk.webp",
+      "bytes": 994,
+      "sha256": "3d9122255fd55b12ff292423c4b7e07b76bdaf1fa8c82b81d3c994e3ad435622"
+    },
+    {
+      "path": "Derived/knight-walk.webp",
+      "bytes": 786,
+      "sha256": "f442ac347a4baf05c2f3fa85e10ac92bbb7b6125a8c5ea47f7d555e59641f30a"
+    },
+    {
+      "path": "Derived/lizard-idle.webp",
+      "bytes": 772,
+      "sha256": "1db73a89d969c3f8ca4eae580e67d645be2e077cbdffafeba5214ca60b5bf9bb"
+    },
+    {
+      "path": "Derived/eskimo-walk.webp",
+      "bytes": 878,
+      "sha256": "85030c6df624697fd70365ac1aa9c5cdd9fa22ab5be0db421f13ef33eed5cdca"
+    },
+    {
+      "path": "Derived/ninja-fire-walk.webp",
+      "bytes": 900,
+      "sha256": "8324b952b05cdf3c158aa29463391bd31980fb33547d1f6f1f77215388b0a577"
+    },
+    {
+      "path": "Derived/skeleton-walk.webp",
+      "bytes": 692,
+      "sha256": "3270c76aa5d14b9e1a82f7455b80f4f955d986bcc58a63c199c5622db1059467"
+    },
+    {
+      "path": "Derived/flag-red.webp",
+      "bytes": 532,
+      "sha256": "776004e512c4cf429806268c64a57553ee605ef09e5c1a9c2675e68287d08183"
+    },
+    {
+      "path": "Derived/plant-sway.webp",
+      "bytes": 926,
+      "sha256": "dbf82b9c43fd05e6f3632b0c8b63ac30ce6f5bc69994adb32b51e650678d6404"
+    },
+    {
+      "path": "Derived/water-ripple.webp",
+      "bytes": 470,
+      "sha256": "3b5384ec23eb9693781d26617b437a80cc7dae8d463b66f2bdb02939236f318e"
+    },
+    {
+      "path": "Derived/snow-particle.webp",
+      "bytes": 454,
+      "sha256": "c56f4abf2329de61196032c0b203ac6759f07465cf750a764d170ca66ae1ea6d"
+    },
+    {
+      "path": "Derived/smoke.webp",
+      "bytes": 944,
+      "sha256": "0824e6766278b64aa2d7e8c85f06b38bfa25e7407c4a1fe5de8c7467682385a0"
     }
-  ]
+  ],
+  "atlas": {
+    "file": "Derived/static-atlas.webp",
+    "width": 768,
+    "height": 426,
+    "items": [
+      { "key": "tree-round-green", "label": "Arbre rond vert", "category": "Terrain", "width": 64, "height": 58, "cropX": 8, "cropY": 8 },
+      { "key": "tree-pine-green", "label": "Pin vert", "category": "Terrain", "width": 64, "height": 94, "cropX": 84, "cropY": 8 },
+      { "key": "tree-snow", "label": "Arbre enneigé", "category": "Terrain", "width": 64, "height": 96, "cropX": 160, "cropY": 8 },
+      { "key": "rocks-orange", "label": "Rochers ocre", "category": "Terrain", "width": 160, "height": 92, "cropX": 236, "cropY": 8 },
+      { "key": "rocks-gray", "label": "Rochers gris", "category": "Terrain", "width": 160, "height": 92, "cropX": 408, "cropY": 8 },
+      { "key": "house-orange", "label": "Maison orange", "category": "Structure", "width": 128, "height": 96, "cropX": 580, "cropY": 8 },
+      { "key": "dojo", "label": "Dojo", "category": "Structure", "width": 96, "height": 96, "cropX": 8, "cropY": 116 },
+      { "key": "torii", "label": "Torii", "category": "Structure", "width": 96, "height": 64, "cropX": 116, "cropY": 116 },
+      { "key": "prop-barrel", "label": "Tonneau", "category": "Décor", "width": 28, "height": 30, "cropX": 224, "cropY": 116 },
+      { "key": "prop-chest", "label": "Coffre", "category": "Décor", "width": 60, "height": 32, "cropX": 264, "cropY": 116 },
+      { "key": "prop-cart", "label": "Chariot", "category": "Décor", "width": 92, "height": 54, "cropX": 336, "cropY": 116 },
+      { "key": "desert-house", "label": "Maison du désert", "category": "Structure", "width": 128, "height": 96, "cropX": 440, "cropY": 116 },
+      { "key": "palm", "label": "Palmier", "category": "Terrain", "width": 96, "height": 126, "cropX": 580, "cropY": 116 },
+      { "key": "abandoned-ruins", "label": "Ruines envahies", "category": "Décor", "width": 240, "height": 144, "cropX": 8, "cropY": 254 },
+      { "key": "camp-tents", "label": "Campement", "category": "Structure", "width": 216, "height": 92, "cropX": 260, "cropY": 254 },
+      { "key": "campfire", "label": "Feu de camp", "category": "Décor", "width": 60, "height": 64, "cropX": 488, "cropY": 254 }
+    ]
+  }
 }
