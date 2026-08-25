@@ -16,9 +16,15 @@ function sha256(buffer) {
   return createHash('sha256').update(buffer).digest('hex');
 }
 
+function assertIntegrity(relativePath, data, expected) {
+  const actualSha = sha256(data);
+  if (data.byteLength !== expected.bytes || actualSha !== expected.sha256) {
+    throw new Error(`Dragon asset integrity mismatch: ${relativePath}; expected ${expected.bytes} bytes / ${expected.sha256}, got ${data.byteLength} bytes / ${actualSha}`);
+  }
+}
+
 async function writeVerified(relativePath, data, expected) {
-  if (data.byteLength !== expected.bytes) throw new Error(`Dragon asset size mismatch: ${relativePath}`);
-  if (sha256(data) !== expected.sha256) throw new Error(`Dragon asset checksum mismatch: ${relativePath}`);
+  assertIntegrity(relativePath, data, expected);
   const outputPath = join(outputRoot, relativePath);
   await mkdir(dirname(outputPath), { recursive: true });
   await writeFile(outputPath, data);
@@ -51,8 +57,7 @@ async function assemblePass2(manifest) {
 async function verifyMaterialized(manifest) {
   for (const entry of manifest.materialized ?? []) {
     const data = await readFile(join(outputRoot, entry.path));
-    if (data.byteLength !== entry.bytes) throw new Error(`Dragon asset size mismatch: ${entry.path}`);
-    if (sha256(data) !== entry.sha256) throw new Error(`Dragon asset checksum mismatch: ${entry.path}`);
+    assertIntegrity(entry.path, data, entry);
   }
   return manifest.materialized?.length ?? 0;
 }
