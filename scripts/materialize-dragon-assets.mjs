@@ -30,9 +30,12 @@ async function writeVerified(relativePath, data, expected) {
   await writeFile(outputPath, data);
 }
 
-async function materializeBundle(bundleFile) {
+async function readBundle(bundleFile) {
   const raw = await readFile(bundleFile, 'utf8');
-  const bundle = JSON.parse(raw);
+  return JSON.parse(raw);
+}
+
+async function materializeBundle(bundle) {
   let count = 0;
   for (const [relativePath, encoded] of Object.entries(bundle.files ?? {})) {
     const outputPath = join(outputRoot, relativePath);
@@ -41,6 +44,26 @@ async function materializeBundle(bundleFile) {
     count += 1;
   }
   return count;
+}
+
+function auditBundle(bundle, manifest) {
+  const actual = new Map(Object.entries(bundle.files ?? {}).map(([path, encoded]) => {
+    const data = Buffer.from(encoded, 'base64');
+    return [path, { bytes: data.byteLength, sha256: sha256(data) }];
+  }));
+  const mismatches = [];
+  for (const entry of manifest.materialized ?? []) {
+    const found = actual.get(entry.path);
+    if (!found) {
+      mismatches.push(`${entry.path}: MISSING`);
+    } else if (found.bytes !== entry.bytes || found.sha256 !== entry.sha256) {
+      mismatches.push(`${entry.path}: expected ${entry.bytes}/${entry.sha256}, got ${found.bytes}/${found.sha256}`);
+    }
+  }
+  if (mismatches.length > 0) {
+    const inventory = [...actual.entries()].map(([path, meta]) => `${path}: ${meta.bytes}/${meta.sha256}`);
+    throw new Error(`Dragon derived bundle audit failed (${mismatches.length}):\n${mismatches.join('\n')}\nActual bundle inventory:\n${inventory.join('\n')}`);
+  }
 }
 
 async function assemblePass2(manifest) {
@@ -54,23 +77,11 @@ async function assemblePass2(manifest) {
   return count;
 }
 
-async function verifyMaterialized(manifest) {
-  const mismatches = [];
-  for (const entry of manifest.materialized ?? []) {
-    const data = await readFile(join(outputRoot, entry.path));
-    const mismatch = integrityMismatch(entry.path, data, entry);
-    if (mismatch) mismatches.push(mismatch);
-  }
-  if (mismatches.length > 0) {
-    throw new Error(`Dragon asset integrity mismatches (${mismatches.length}):\n${mismatches.join('\n')}`);
-  }
-  return manifest.materialized?.length ?? 0;
-}
-
 const manifest = JSON.parse(await readFile(pass2Manifest, 'utf8'));
+const pass2 = await readBundle(pass2Bundle);
+auditBundle(pass2, manifest);
 let count = 0;
-for (const bundle of legacyBundles) count += await materializeBundle(join(root, bundle));
-count += await materializeBundle(pass2Bundle);
+for (const bundleFile of legacyBundles) count += await materializeBundle(await readBundle(join(root, bundleFile)));
+count += await materializeBundle(pass2);
 const assembled = await assemblePass2(manifest);
-const verified = await verifyMaterialized(manifest);
-console.log(`Dragon Mountain: ${count} assets materialized, ${assembled} assembled, ${verified + assembled} pass-2 assets verified.`);
+console.log(`Dragon Mountain: ${count} assets materialized, ${assembled} assembled, ${(manifest.materialized?.length ?? 0) + assembled} pass-2 assets verified.`);
