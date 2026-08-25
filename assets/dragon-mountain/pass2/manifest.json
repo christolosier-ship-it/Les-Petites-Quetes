@@ -1,0 +1,50 @@
+{
+  "version": 2,
+  "source": "Ninja Adventure Asset Pack (Google Drive, CC0)",
+  "materialized": [
+    {"path":"Derived/static-atlas.webp","bytes":14966,"sha256":"2f2002be93eb57863c5d176133e4c1be85c91c8cd7c707ba6ab6badb89328108"},
+    {"path":"Derived/villager-walk.webp","bytes":734,"sha256":"2c4a061c6c3a4d127e0b8de354e217a7805d6921d3dc89368698cfef9dd8b58b"},
+    {"path":"Derived/dog-walk.webp","bytes":344,"sha256":"581d1264c6ccefd44f1329f8ba2d3b8c318505d59f7ad2ed9966661dd698de49"},
+    {"path":"Derived/chicken-walk.webp","bytes":488,"sha256":"851ea0c55e704e872157ec6a4f7b7116ea2f503e8d2a52789ea6d371e55e255f"},
+    {"path":"Derived/ninja-blue-walk.webp","bytes":900,"sha256":"e183b3c57f637ed2a23e4c9a8da33d235808018dba92acb7c6b4453eeecbe594"},
+    {"path":"Derived/slime-idle.webp","bytes":2785,"sha256":"4d174df629bece682dad7ca13908e66931db94ded82187a6c2950b706a2635b7"},
+    {"path":"Derived/bat-fly.webp","bytes":774,"sha256":"5a095ccbfca91cbda6371a0b6c63492936ac4cce65adca0ee3369294cf1ecab6"},
+    {"path":"Derived/samurai-blue-walk.webp","bytes":994,"sha256":"77515826b545c0a1d5f77c00c2a1cbc62963e23ccab84051c34481861edb2b02"},
+    {"path":"Derived/knight-walk.webp","bytes":992,"sha256":"ea36eadff738576308caa02c59a9c217d3df8a8333150776d694c4e63e51e3f5"},
+    {"path":"Derived/lizard-idle.webp","bytes":532,"sha256":"55f0ad32d155a0ae2747588e6034edc4ca9e215fc4809e02c7658557a09fc62a"},
+    {"path":"Derived/eskimo-walk.webp","bytes":656,"sha256":"77a32eb9d3ed3611a208d960c742a6d71e78d967ce2ce3247d59e37a7185dc2b"},
+    {"path":"Derived/ninja-fire-walk.webp","bytes":900,"sha256":"8324b952b05cdf3c158aa29463391bd31980fb33547d1f6f1f77215388b0a577"},
+    {"path":"Derived/skeleton-walk.webp","bytes":691,"sha256":"31006a556a72b3969398ff845b25cfb1adb5c8068762a3009270b51e65c1d1a3"},
+    {"path":"Derived/flag-red.webp","bytes":532,"sha256":"776004e512c4cf429806268c64a57553ee605ef09e5c1a9c2675e68287d08183"},
+    {"path":"Derived/plant-sway.webp","bytes":926,"sha256":"dbf82b9c43fd05e6f3632b0c8b63ac30ce6f5bc69994adb32b51e650678d6404"},
+    {"path":"Derived/water-ripple.webp","bytes":470,"sha256":"3b5384ec23eb9693781d26617b437a80cc7dae8d463b66f2bdb02939236f318e"},
+    {"path":"Derived/snow-particle.webp","bytes":454,"sha256":"c56f4abf2329de61196032c0b203ac6759f07465cf750a764d170ca66ae1ea6d"},
+    {"path":"Derived/smoke.webp","bytes":943,"sha256":"d3714591020a02d246fe489b2f630a0c3d8db36545e0ead2c39d61a6cf02976d"}
+  ],
+  "atlas": {
+    "file":"Derived/static-atlas.webp","width":768,"height":426,
+    "items":[
+      {"key":"tree-round-green","label":"Arbre rond vert","category":"Terrain","width":64,"height":58,"cropX":8,"cropY":8},
+      {"key":"tree-pine-green","label":"Pin vert","category":"Terrain","width":64,"height":94,"cropX":84,"cropY":8},
+      {"key":"tree-snow","label":"Arbre enneigé","category":"Terrain","width":64,"height":96,"cropX":160,"cropY":8},
+      {"key":"rocks-orange","label":"Rochers ocre","category":"Terrain","width":160,"height":92,"cropX":236,"cropY":8},
+      {"key":"rocks-gray","label":"Rochers gris","category":"Terrain","width":160,"height":92,"cropX":408,"cropY":8},
+      {"key":"house-orange","label":"Maison orange","category":"Structure","width":128,"height":96,"cropX":580,"cropY":8},
+      {"key":"dojo","label":"Dojo","category":"Structure","width":96,"height":96,"cropX":8,"cropY":116},
+      {"key":"torii","label":"Torii","category":"Structure","width":96,"height":64,"cropX":116,"cropY":116},
+      {"key":"prop-barrel","label":"Tonneau","category":"Décor","width":28,"height":30,"cropX":224,"cropY":116},
+      {"key":"prop-chest","label":"Coffre","category":"Décor","width":60,"height":32,"cropX":264,"cropY":116},
+      {"key":"prop-cart","label":"Chariot","category":"Décor","width":92,"height":54,"cropX":336,"cropY":116},
+      {"key":"desert-house","label":"Maison du désert","category":"Structure","width":128,"height":96,"cropX":440,"cropY":116},
+      {"key":"palm","label":"Palmier","category":"Terrain","width":96,"height":126,"cropX":580,"cropY":116},
+      {"key":"abandoned-ruins","label":"Ruines envahies","category":"Décor","width":240,"height":144,"cropX":8,"cropY":254},
+      {"key":"camp-tents","label":"Campement","category":"Structure","width":216,"height":92,"cropX":260,"cropY":254},
+      {"key":"campfire","label":"Feu de camp","category":"Décor","width":60,"height":64,"cropX":488,"cropY":254}
+    ]
+  },
+  "assembled":[{
+    "path":"Derived/dragon-world.webp","encoding":"base64",
+    "parts":["map/map.part01.txt","map/map.part02.txt","map/map.part03.txt","map/map.part04.txt","map/map.part05.txt","map/map.part06.txt","map/map.part07.txt","map/map.part08.txt","map/map.part09.txt","map/map.part10.txt","map/map.part11a.txt","map/map.part11b.txt","map/map.part12a.txt","map/map.part12b.txt","map/map.part13.txt"],
+    "bytes":64904,"sha256":"9d6ab0398288b7bda8c300c68750bc059480c4d633c1969ebfac8363de53cb39"
+  }]
+}

@@ -20,7 +20,9 @@ export interface SceneAssetInstance extends ScenePlacement {
   readonly width: number;
   readonly height: number;
   readonly sourceWidth?: number;
+  readonly sourceHeight?: number | undefined;
   readonly cropX?: number;
+  readonly cropY?: number;
 }
 
 export interface SceneComposerSnapshot {
@@ -115,7 +117,12 @@ function parseSnapshot(raw: string, sceneId: string, normalizeLegacyAssetScale =
           if (typeof source.label !== 'string' || !isFiniteNumber(source.width) || !isFiniteNumber(source.height)) return [];
           const scale = normalizeLegacyAssetScale && Math.abs(placement.scale - 1.2) < 0.0001 ? 1 : placement.scale;
           const crop = isFiniteNumber(source.sourceWidth) && isFiniteNumber(source.cropX)
-            ? { sourceWidth: source.sourceWidth, cropX: source.cropX }
+            ? {
+                sourceWidth: source.sourceWidth,
+                sourceHeight: isFiniteNumber(source.sourceHeight) ? source.sourceHeight : undefined,
+                cropX: source.cropX,
+                cropY: isFiniteNumber(source.cropY) ? source.cropY : 0,
+              }
             : {};
           return [{ ...placement, scale, id: source.id, file: source.file, label: source.label, width: source.width, height: source.height, ...crop }];
         })

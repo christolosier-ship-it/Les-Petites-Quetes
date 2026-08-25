@@ -100,7 +100,12 @@ export function addAsset(
   zIndex: number,
 ) {
   const crop = asset.sourceWidth !== undefined && asset.cropX !== undefined
-    ? { sourceWidth: asset.sourceWidth, cropX: asset.cropX }
+    ? {
+        sourceWidth: asset.sourceWidth,
+        sourceHeight: asset.sourceHeight,
+        cropX: asset.cropX,
+        cropY: asset.cropY ?? 0,
+      }
     : {};
   const instance: SceneAssetInstance = {
     id: makeId('asset'),
