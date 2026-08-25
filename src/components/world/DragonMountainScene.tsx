@@ -4,14 +4,14 @@ import type { WorldSceneRendererProps } from './WorldSceneProps';
 
 const ASSET_ROOT = '/worlds/dragon-mountain/ninja-adventure';
 const HEROES = [
-  `${ASSET_ROOT}/Actor/CharacterAnimated/NinjaGreen/SpriteSheet.png`,
-  `${ASSET_ROOT}/Actor/Character/NinjaBlue/SpriteSheet.png`,
-  `${ASSET_ROOT}/Actor/Character/SamuraiBlue/SpriteSheet.png`,
+  `${ASSET_ROOT}/Actor/CharacterAnimated/NinjaGreen/SpriteSheet.webp`,
+  `${ASSET_ROOT}/Actor/Character/NinjaBlue/SpriteSheet.webp`,
+  `${ASSET_ROOT}/Actor/Character/SamuraiBlue/SpriteSheet.webp`,
 ] as const;
 const MONSTERS = [
-  `${ASSET_ROOT}/Actor/Monster/Slime/Slime.png`,
-  `${ASSET_ROOT}/Actor/Monster/Lizard/Lizard.png`,
-  `${ASSET_ROOT}/Actor/Character/Skeleton/SpriteSheet.png`,
+  `${ASSET_ROOT}/Actor/Monster/Slime/Slime.webp`,
+  `${ASSET_ROOT}/Actor/Monster/Lizard/Lizard.webp`,
+  `${ASSET_ROOT}/Actor/Character/Skeleton/SpriteSheet.webp`,
 ] as const;
 const DRAGON_ROOT = `${ASSET_ROOT}/Actor/Boss/DragonGreen`;
 
@@ -47,10 +47,10 @@ function PixelActor({ id, src, x, y, stage, sceneStage, motion, frameSize }: typ
 function DragonBoss({ hidden }: { readonly hidden: boolean }) {
   return (
     <div className={`dragon-mountain__dragon${hidden ? ' dragon-mountain__reveal-hidden' : ''}`} data-dragon-scene-item="dragon-boss" aria-hidden="true">
-      <img className="dragon-mountain__dragon-wing dragon-mountain__dragon-wing--left" src={`${DRAGON_ROOT}/Wing.png`} alt="" />
-      <img className="dragon-mountain__dragon-wing dragon-mountain__dragon-wing--right" src={`${DRAGON_ROOT}/Wing.png`} alt="" />
-      <img className="dragon-mountain__dragon-body" src={`${DRAGON_ROOT}/Body1.png`} alt="" />
-      <img className="dragon-mountain__dragon-head" src={`${DRAGON_ROOT}/Head.png`} alt="" />
+      <img className="dragon-mountain__dragon-wing dragon-mountain__dragon-wing--left" src={`${DRAGON_ROOT}/Wing.webp`} alt="" />
+      <img className="dragon-mountain__dragon-wing dragon-mountain__dragon-wing--right" src={`${DRAGON_ROOT}/Wing.webp`} alt="" />
+      <img className="dragon-mountain__dragon-body" src={`${DRAGON_ROOT}/Body1.webp`} alt="" />
+      <img className="dragon-mountain__dragon-head" src={`${DRAGON_ROOT}/Head.webp`} alt="" />
     </div>
   );
 }
