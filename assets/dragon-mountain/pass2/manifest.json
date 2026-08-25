@@ -1,0 +1,81 @@
+{
+  "binary": [
+    {
+      "output": "Derived/world-01.webp",
+      "parts": [
+        "world-01.webp.part01.b64",
+        "world-01.webp.part02.b64"
+      ]
+    },
+    {
+      "output": "Derived/world-02.webp",
+      "parts": [
+        "world-02.webp.part01.b64",
+        "world-02.webp.part02.b64",
+        "world-02.webp.part03.b64"
+      ]
+    },
+    {
+      "output": "Derived/world-03.webp",
+      "parts": [
+        "world-03.webp.part01.b64",
+        "world-03.webp.part02.b64"
+      ]
+    },
+    {
+      "output": "Derived/world-04.webp",
+      "parts": [
+        "world-04.webp.part01.b64",
+        "world-04.webp.part02.b64"
+      ]
+    },
+    {
+      "output": "Derived/world-05.webp",
+      "parts": [
+        "world-05.webp.part01.b64",
+        "world-05.webp.part02.b64"
+      ]
+    },
+    {
+      "output": "Derived/world-06.webp",
+      "parts": [
+        "world-06.webp.part01.b64",
+        "world-06.webp.part02.b64"
+      ]
+    },
+    {
+      "output": "Derived/world-07.webp",
+      "parts": [
+        "world-07.webp.part01.b64",
+        "world-07.webp.part02.b64",
+        "world-07.webp.part03.b64"
+      ]
+    },
+    {
+      "output": "Derived/world-08.webp",
+      "parts": [
+        "world-08.webp.part01.b64",
+        "world-08.webp.part02.b64"
+      ]
+    },
+    {
+      "output": "Derived/static-atlas.webp",
+      "parts": [
+        "static-atlas.webp.part01.b64",
+        "static-atlas.webp.part02.b64",
+        "static-atlas.webp.part03.b64",
+        "static-atlas.webp.part04.b64",
+        "static-atlas.webp.part05.b64"
+      ]
+    }
+  ],
+  "bundles": [
+    {
+      "parts": [
+        "animations.part01.txt",
+        "animations.part02.txt",
+        "animations.part03.txt"
+      ]
+    }
+  ]
+}
