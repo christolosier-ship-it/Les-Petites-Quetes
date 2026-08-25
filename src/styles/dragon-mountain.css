@@ -5,7 +5,8 @@
 .dragon-mountain__viewport::-webkit-scrollbar { display: none; }
 .dragon-mountain__viewport--explorable { overflow-y: auto; overflow-x: hidden; touch-action: pan-y; -webkit-overflow-scrolling: touch; scroll-behavior: smooth; }
 .dragon-mountain__track { position: relative; width: max(100%, 960px); height: 5600px; margin-left: 50%; transform: translateX(-50%); overflow: hidden; image-rendering: pixelated; background: #211b29; }
-.dragon-mountain__map { position: absolute; inset: 0; z-index: 0; width: 100%; height: 100%; object-fit: fill; image-rendering: pixelated; user-select: none; }
+.dragon-mountain__map { position: absolute; inset: 0; z-index: 0; width: 100%; height: 100%; image-rendering: pixelated; user-select: none; pointer-events: none; }
+.dragon-mountain__map img { position: absolute; left: 0; width: 100%; height: 12.5%; object-fit: fill; image-rendering: pixelated; display: block; }
 .dragon-biome__label { position: absolute; z-index: 20; padding: 7px 10px; border: 3px solid #261d26; background: rgb(244 224 163 / .92); color: #261d26; font-family: monospace; font-weight: 900; font-size: 15px; box-shadow: 4px 4px 0 #261d26; pointer-events: none; }
 .dragon-biome__label--left { left: max(26px, calc(50% - 420px)); }
 .dragon-biome__label--right { right: max(26px, calc(50% - 420px)); }
