@@ -4,7 +4,7 @@ import type { WorldSceneRendererProps } from './WorldSceneProps';
 
 const ASSET_ROOT = '/worlds/dragon-mountain/ninja-adventure/Derived';
 const asset = (name: string) => `${ASSET_ROOT}/${name}.webp`;
-const MAP_SLICES = Array.from({ length: 8 }, (_, index) => asset(`world-${String(index + 1).padStart(2, '0')}`));
+const MAP = asset('dragon-world');
 
 type ActorItem = Readonly<{
   id: string;
@@ -136,7 +136,7 @@ export function DragonMountainScene({ world, stage, reducedMotion, compact = fal
         <div ref={viewportRef} className={`dragon-mountain__viewport${expanded ? ' dragon-mountain__viewport--explorable' : ''}`} data-dragon-panorama="true" onScroll={() => { if (viewportRef.current) scrollRatioRef.current = syncVerticalProgress(viewportRef.current); }} aria-hidden="true">
           <div className="dragon-mountain__track">
             <div className="dragon-mountain__map" aria-hidden="true">
-              {MAP_SLICES.map((src, index) => <img key={src} src={src} alt="" draggable="false" style={{ top: `${index * 12.5}%` }} />)}
+              <img src={MAP} alt="" draggable="false" style={{ top: 0, height: '100%' }} />
             </div>
             {BIOME_LABELS.map((biome) => <span key={biome.label} className={`dragon-biome__label dragon-biome__label--${biome.side}`} style={{ top: `${biome.top}%` }}>{biome.label}</span>)}
             <DragonBoss hidden={stage < 3} />
