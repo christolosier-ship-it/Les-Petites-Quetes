@@ -7,7 +7,9 @@
     "node": ">=24 <25"
   },
   "scripts": {
+    "predev": "node scripts/materialize-dragon-assets.mjs",
     "dev": "vite --host 0.0.0.0",
+    "prebuild": "node scripts/materialize-dragon-assets.mjs",
     "build": "tsc -b && vite build && node scripts/generate-service-worker.mjs && npm run check:bundle",
     "preview": "vite preview --host 0.0.0.0",
     "lint": "eslint . --max-warnings=0",
@@ -41,7 +43,7 @@
     "@vitejs/plugin-react": "6.0.3",
     "@vitest/coverage-v8": "4.1.10",
     "eslint": "10.7.0",
-    "eslint-plugin-react-hooks": "7.1.1",
+    "eslint-plugin-react-hooks": "6.6.3",
     "eslint-plugin-react-refresh": "0.5.3",
     "globals": "17.7.0",
     "jsdom": "26.1.0",
