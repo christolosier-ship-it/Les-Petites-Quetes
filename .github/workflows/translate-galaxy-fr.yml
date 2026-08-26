@@ -44,7 +44,7 @@ jobs:
               re.compile(r'"(?:\\.|[^"\\])*"'),
               re.compile(r'`(?:\\.|[^`\\])*`'),
           ]
-          PLACEHOLDER = re.compile(r'(\$\{[^}]+\}|\{[^{}]+\}|\\n|\\t)')
+          PLACEHOLDER = re.compile(r'(\$\{[^}]+\}|\{[^{}]+\}|<[^>]+>|\\n|\\t)')
 
           OVERRIDES = {
               # Interface / navigation
@@ -159,6 +159,8 @@ jobs:
               'сид':'sid','лей':'ley','наш':'nash','рим':'rim','сол':'sol','дан':'dan','тис':'tis','вал':'val','тор':'tor','мис':'mis',
               'Прайм':'Prime','Майнор':'Minor','Секунда':'Secunda','Нова':'Nova','Веста':'Vesta','Ультима':'Ultima','Терра':'Terra','Бис':'Bis',
               'Кеплер':'Kepler','Глизе':'Gliese','Тейя':'Theia','Вега':'Vega','Орн':'Orn','Лиэн':'Lien','Каэр':'Kaer','Тихо':'Tycho',
+              'аэ':'ae','со':'so','кри':'kri','ве':'ve','се':'se','ли':'li','тха':'tha','му':'mu','не':'ne','зи':'zi','фа':'fa','вэ':'vae','то':'to','ри':'ri','ша':'sha',
+              'лли':'lli','вани':'vani','ши':'shi','лани':'lani','теш':'tesh','нави':'navi','сти':'sti','элы':'ely','нтар':'ntar','оши':'oshi','эни':'eni','исса':'issa','ора':'ora','эми':'emi','аны':'ani',
           }
 
           tokenizer = AutoTokenizer.from_pretrained('Helsinki-NLP/opus-mt-ru-fr')
@@ -179,7 +181,6 @@ jobs:
                           if CYR.search(value):
                               originals.setdefault(value, None)
 
-          # Traduire des fragments sans placeholders, puis les réassembler.
           segments = set()
           split_cache = {}
           for value in originals:
@@ -246,7 +247,6 @@ jobs:
 
           def escape_for_quote(value, quote):
               value = value.replace('\\', '\\\\')
-              # Rétablir les séquences JS déjà présentes après l'échappement du backslash.
               value = value.replace('\\\\n', '\\n').replace('\\\\t', '\\t')
               if quote == "'":
                   value = value.replace("'", "\\'")
@@ -277,7 +277,6 @@ jobs:
                   out.append(line)
               path.write_text(''.join(out), encoding='utf-8')
 
-          # Textes HTML hors attributs + métadonnées de langue.
           html = (ROOT / 'index.html').read_text(encoding='utf-8')
           html = html.replace('<html lang="ru">', '<html lang="fr">')
           html = html.replace('<title>Galaxy Explorer</title>', '<title>Explorateur Galactique</title>')
@@ -289,7 +288,6 @@ jobs:
           html = html.replace('<span class="codex-tab-label">Кодекс</span>', '<span class="codex-tab-label">Codex</span>')
           (ROOT / 'index.html').write_text(html, encoding='utf-8')
 
-          # Les rares identifiants / fragments HTML non quotés recensés par l’audit.
           patches = {
               ROOT / 'src/codex/codexUI.js': [
                   ("const SPECIAL_GROUP_ICON = { Системы: 'system', Объекты: 'phenomenon', Планеты: 'planet' };",
@@ -345,11 +343,11 @@ jobs:
         run: |
           from pathlib import Path
           import subprocess
+          import re
           p = Path('scripts/materialize-galaxy-explorer.mjs')
           text = p.read_text(encoding='utf-8')
           for rel in ['index.html', 'src/main.js']:
               sha = subprocess.check_output(['git', 'hash-object', f'vendor/galaxy-explorer/{rel}'], text=True).strip()
-              import re
               text, n = re.subn(rf"\['{re.escape(rel)}', '[0-9a-f]{{40}}'\]", f"['{rel}', '{sha}']", text, count=1)
               if n != 1:
                   raise SystemExit(f'Empreinte introuvable pour {rel}')
