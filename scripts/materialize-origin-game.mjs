@@ -48,17 +48,15 @@ const EXTRA_REPLACEMENTS = [
   ['法力不足', 'Mana insuffisant'], ['获得装备', 'Équipement obtenu'], ['总Victoires', 'Victoires'], ['难度提升', 'Difficulté augmentée'],
 ];
 
-const FRENCH_APOSTROPHE_PREFIXES = ['l', 'L', 'd', 'D', 'n', 'N', 's', 'S', 'c', 'C', 'j', 'J', 't', 'T', 'm', 'M'];
-
 function gitBlobSha(content) {
   const bytes = Buffer.from(content, 'utf8');
   return createHash('sha1').update(`blob ${bytes.length}\0`).update(bytes).digest('hex');
 }
 
 function normalizeFrenchApostrophes(source) {
-  let output = source.replaceAll("qu'", 'qu’').replaceAll("Qu'", 'Qu’');
-  for (const prefix of FRENCH_APOSTROPHE_PREFIXES) output = output.replaceAll(`${prefix}'`, `${prefix}’`);
-  return output;
+  return source
+    .replace(/\b([lLdDnNsScCjJtTmM])'(?=[A-Za-zÀ-ÖØ-öø-ÿ])/g, '$1’')
+    .replace(/\b([qQ]u)'(?=[A-Za-zÀ-ÖØ-öø-ÿ])/g, '$1’');
 }
 
 function extractExecutableScript(source) {
