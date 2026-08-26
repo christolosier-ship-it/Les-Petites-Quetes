@@ -1,0 +1,42 @@
+name: Corriger le traducteur Galaxy FR
+
+on:
+  push:
+    branches: [feat/galaxy-explorer-fr]
+    paths:
+      - .github/workflows/fix-galaxy-translator.yml
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: feat/galaxy-explorer-fr
+      - name: Protéger le HTML et translittérer les syllabes
+        shell: python
+        run: |
+          from pathlib import Path
+          p = Path('.github/workflows/translate-galaxy-fr.yml')
+          text = p.read_text(encoding='utf-8')
+          before = "          PLACEHOLDER = re.compile(r'(\\$\\{[^}]+\\}|\\{[^{}]+\\}|\\\\n|\\\\t)')"
+          after = "          PLACEHOLDER = re.compile(r'(\\$\\{[^}]+\\}|\\{[^{}]+\\}|<[^>]+>|\\\\n|\\\\t)')"
+          if before not in text:
+              raise SystemExit('Ligne PLACEHOLDER introuvable')
+          text = text.replace(before, after, 1)
+          anchor = "              'Кеплер':'Kepler','Глизе':'Gliese','Тейя':'Theia','Вега':'Vega','Орн':'Orn','Лиэн':'Lien','Каэр':'Kaer','Тихо':'Tycho',\n"
+          addition = anchor + "              'аэ':'ae','со':'so','кри':'kri','ве':'ve','се':'se','ли':'li','тха':'tha','му':'mu','не':'ne','зи':'zi','фа':'fa','вэ':'vae','то':'to','ри':'ri','ша':'sha',\n" + "              'лли':'lli','вани':'vani','ши':'shi','лани':'lani','теш':'tesh','нави':'navi','сти':'sti','элы':'ely','нтар':'ntar','оши':'oshi','эни':'eni','исса':'issa','ора':'ora','эми':'emi','аны':'ani',\n"
+          if anchor not in text:
+              raise SystemExit('Ancre des syllabes introuvable')
+          text = text.replace(anchor, addition, 1)
+          p.write_text(text, encoding='utf-8')
+      - name: Enregistrer le correctif
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .github/workflows/translate-galaxy-fr.yml
+          git commit -m "chore(galaxy-fr): protéger les templates pendant la traduction"
+          git push origin HEAD:feat/galaxy-explorer-fr
