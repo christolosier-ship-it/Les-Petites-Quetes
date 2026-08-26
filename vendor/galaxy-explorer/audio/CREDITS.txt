@@ -1,0 +1,35 @@
+Background music — credits & licenses
+=====================================
+
+"Echoes of Time v2"  by Kevin MacLeod (incompetech.com)
+    Licensed under Creative Commons: By Attribution 4.0 (CC BY 4.0)
+    https://creativecommons.org/licenses/by/4.0/
+
+"Frozen Star"  by Kevin MacLeod (incompetech.com)
+    Licensed under Creative Commons: By Attribution 4.0 (CC BY 4.0)
+    https://creativecommons.org/licenses/by/4.0/
+
+"Out There"  by yd (opengameart.org)
+    CC0 1.0 Universal (Public Domain) — no attribution required.
+    https://opengameart.org/content/space-music-out-there
+
+The CC-BY credit is also shown on-screen in the music track label.
+
+
+UI sound effects (audio/sfx/) — credits & licenses
+==================================================
+
+All interface sounds are recordings from freesound.org, licensed
+CC0 1.0 Universal (Public Domain) — no attribution required, credited
+with gratitude anyway. Each was peak-normalized to about -3 dB and
+converted offline.
+
+hover.wav        synthesized in-house (an enveloped sine tick) — public domain
+warp-in.m4a      "Sound Design Elements Whoosh SFX 049"  by AudioPapkin
+    https://freesound.org/s/812686/  (also voices the planet glide, quieter)
+warp-out.m4a     "Sound Design Elements Whoosh SFX 048"  by AudioPapkin
+    https://freesound.org/s/812685/
+codex-open.wav   "Page Turn, Big Book"  by supaluci
+    https://freesound.org/s/726518/
+codex-close.wav  "Book_Page_Close_09"  by Valenspire
+    https://freesound.org/s/699324/
