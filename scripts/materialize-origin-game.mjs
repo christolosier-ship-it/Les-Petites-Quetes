@@ -70,7 +70,7 @@ function assertValidJavaScript(source) {
     new Function(script);
   } catch (error) {
     const detail = error instanceof Error ? `${error.name}: ${error.message}` : String(error);
-    throw new Error(`Origin : JavaScript généré invalide après traduction (${detail})`);
+    throw new Error(`Origin : JavaScript généré invalide après traduction (${detail})`, { cause: error });
   }
 }
 
