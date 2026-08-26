@@ -11,12 +11,15 @@ const required = [
   'vendor/origin/LICENSE',
   'vendor/origin/index.html',
   'vendor/vroom-scadoodles/UPSTREAM.md',
-  'scripts/materialize-vroom-scadoodles.mjs',
+  'vendor/vroom-scadoodles/web/index.html',
+  'vendor/vroom-scadoodles/web/index.js',
+  'vendor/vroom-scadoodles/web/index.pck',
+  'vendor/vroom-scadoodles/web/index.wasm',
 ];
 
 const missing = required.filter((path) => !existsSync(resolve(root, path)));
 if (missing.length) {
-  console.error('Sources ou scripts de jeux manquants :\n' + missing.map((path) => ' - ' + path).join('\n'));
+  console.error('Sources de jeux vendored manquantes :\n' + missing.map((path) => ' - ' + path).join('\n'));
   process.exit(1);
 }
 if (existsSync(resolve(root, '.gitmodules'))) {
@@ -36,19 +39,13 @@ if (origin.includes('raw.githubusercontent.com') || origin.includes('ORIGIN_URL'
   process.exit(1);
 }
 const vroom = readFileSync(resolve(root, 'scripts/materialize-vroom-scadoodles.mjs'), 'utf8');
-for (const marker of [
-  '85860cc6286f3c6ab55b7d448fb4e52ee11c4d09',
-  '0bae6b388bc3402d5119338bbe3d558defbb97be',
-  'af0c84d084ca092155e4747028ded881b84d2492',
-]) {
-  if (!vroom.includes(marker)) {
-    console.error(`Le runtime Vroom n’est plus figé sur le marqueur attendu : ${marker}`);
-    process.exit(1);
-  }
+if (vroom.includes('raw.githubusercontent.com') || vroom.includes('github.com/pstupka')) {
+  console.error('Vroom Scadoodles dépend encore d’un téléchargement GitHub externe à l’exécution.');
+  process.exit(1);
 }
 const ci = readFileSync(resolve(root, '.github/workflows/ci.yml'), 'utf8');
 if (/submodules\s*:\s*recursive/.test(ci)) {
   console.error('La CI initialise encore des sous-modules Git.');
   process.exit(1);
 }
-console.log('Sources de jeux contrôlées : Beyond Fable et Origin sont vendored ; Vroom est matérialisé depuis le vendor local quand présent, sinon depuis un commit upstream figé et vérifié par empreinte.');
+console.log('Sources de jeux autonomes : Beyond Fable, Origin et Vroom Scadoodles sont vendored localement.');
