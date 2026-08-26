@@ -17,7 +17,7 @@ jobs:
       - uses: actions/checkout@v5
         with:
           ref: feat/galaxy-explorer-fr
-      - name: Extraire les lignes cyrilliques du runtime
+      - name: Extraire les chaînes cyrilliques uniques du runtime
         shell: python
         run: |
           from pathlib import Path
@@ -26,7 +26,13 @@ jobs:
           root = Path('vendor/galaxy-explorer')
           targets = [root / 'index.html'] + sorted((root / 'src').rglob('*.js'))
           cyr = re.compile(r'[\u0400-\u04FF]')
-          records = []
+          patterns = [
+              re.compile(r"'(?:\\.|[^'\\])*'"),
+              re.compile(r'"(?:\\.|[^"\\])*"'),
+              re.compile(r'`(?:\\.|[^`\\])*`'),
+          ]
+          found = {}
+          unresolved = []
           for path in targets:
               for n, raw in enumerate(path.read_text(encoding='utf-8').splitlines(), 1):
                   if not cyr.search(raw):
@@ -34,16 +40,34 @@ jobs:
                   stripped = raw.strip()
                   if stripped.startswith('//') or stripped.startswith('*') or stripped.startswith('/*'):
                       continue
-                  records.append((str(path), n, stripped))
-          Path('GALAXY_FR_AUDIT.txt').write_text(
-              '\n'.join(f'{p}\t{line}\t{s}' for p, line, s in records) + '\n',
+                  matched = False
+                  for pattern in patterns:
+                      for m in pattern.finditer(raw):
+                          token = m.group(0)
+                          value = token[1:-1]
+                          if cyr.search(value):
+                              matched = True
+                              found.setdefault(value, (str(path), n))
+                  if path.name == 'index.html':
+                      visible = re.sub(r'<[^>]+>', ' ', raw)
+                      visible = re.sub(r'\s+', ' ', visible).strip()
+                      if visible and cyr.search(visible):
+                          matched = True
+                          found.setdefault(visible, (str(path), n))
+                  if not matched:
+                      unresolved.append((str(path), n, stripped))
+
+          rows = [f'{path}\t{line}\t{value}' for value, (path, line) in found.items()]
+          Path('GALAXY_FR_STRINGS.tsv').write_text('\n'.join(rows) + '\n', encoding='utf-8')
+          Path('GALAXY_FR_UNRESOLVED.txt').write_text(
+              '\n'.join(f'{p}\t{line}\t{s}' for p, line, s in unresolved) + ('\n' if unresolved else ''),
               encoding='utf-8',
           )
-          print(f'{len(records)} lignes runtime contenant du cyrillique recensées.')
-      - name: Committer le rapport temporaire
+          print(f'{len(found)} chaînes cyrilliques uniques ; {len(unresolved)} lignes non capturées.')
+      - name: Committer les rapports temporaires
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add GALAXY_FR_AUDIT.txt
-          git commit -m "chore(galaxy-fr): actualiser l’inventaire russe" || exit 0
+          git add GALAXY_FR_STRINGS.tsv GALAXY_FR_UNRESOLVED.txt
+          git commit -m "chore(galaxy-fr): inventorier les chaînes uniques" || exit 0
           git push origin HEAD:feat/galaxy-explorer-fr
