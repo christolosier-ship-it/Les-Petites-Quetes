@@ -3,7 +3,7 @@ import { sceneRendererForWorld, type SceneRendererId } from '../../content/world
 import { GenericParallaxScene } from './GenericParallaxScene';
 import type { WorldSceneRendererProps } from './WorldSceneProps';
 
-const FireflyForestDiorama = lazy(() => import('./FireflyForestDiorama').then((module) => ({ default: module.FireflyForestDiorama })));
+const BeyondFableForest = lazy(() => import('./BeyondFableForest').then((module) => ({ default: module.BeyondFableForest })));
 const GnomeVillageCampus = lazy(() => import('./GnomeVillageCampus').then((module) => ({ default: module.GnomeVillageCampus })));
 const DragonMountainScene = lazy(() => import('./DragonMountainScene').then((module) => ({ default: module.DragonMountainScene })));
 
@@ -15,8 +15,8 @@ function LazyScene({ loader: Renderer, ...props }: WorldSceneRendererProps & { r
   );
 }
 
-function LazyFireflyForestDiorama(props: WorldSceneRendererProps) {
-  return <LazyScene loader={FireflyForestDiorama} {...props} />;
+function LazyBeyondFableForest(props: WorldSceneRendererProps) {
+  return <LazyScene loader={BeyondFableForest} {...props} />;
 }
 
 function LazyGnomeVillageCampus(props: WorldSceneRendererProps) {
@@ -29,7 +29,7 @@ function LazyDragonMountainScene(props: WorldSceneRendererProps) {
 
 const renderers = {
   'generic-parallax': GenericParallaxScene,
-  'firefly-diorama': LazyFireflyForestDiorama,
+  'firefly-diorama': LazyBeyondFableForest,
   'gnome-village-diorama': LazyGnomeVillageCampus,
   'dragon-mountain-rpg': LazyDragonMountainScene,
 } satisfies Record<SceneRendererId, ComponentType<WorldSceneRendererProps>>;
