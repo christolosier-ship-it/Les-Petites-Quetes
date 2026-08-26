@@ -1,3 +1,4 @@
+import { execFileSync } from 'node:child_process';
 import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 
@@ -18,6 +19,11 @@ if (missing.length) {
 }
 if (existsSync(resolve(root, '.gitmodules'))) {
   console.error('.gitmodules ne doit plus exister : les mini-jeux doivent être copiés localement.');
+  process.exit(1);
+}
+const beyondIndex = execFileSync('git', ['ls-files', '--stage', 'vendor/beyond-fable'], { cwd: root, encoding: 'utf8' });
+if (beyondIndex.split('\n').some((line) => line.startsWith('160000 '))) {
+  console.error('vendor/beyond-fable est encore un gitlink/submodule au lieu de vrais fichiers.');
   process.exit(1);
 }
 const origin = readFileSync(resolve(root, 'scripts/materialize-origin-game.mjs'), 'utf8');
