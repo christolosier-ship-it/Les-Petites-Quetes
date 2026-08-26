@@ -35,7 +35,7 @@ function run(command, args, cwd) {
 }
 
 if (!existsSync(join(upstream, 'package.json'))) {
-  fail('Le sous-module vendor/beyond-fable est absent. Initialisez les sous-modules Git avant le build.');
+  fail('La copie locale vendor/beyond-fable est absente ou incomplète.');
 }
 
 rmSync(workspace, { recursive: true, force: true });

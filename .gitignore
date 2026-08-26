@@ -4,6 +4,7 @@ coverage/
 .vite/
 .generated/
 public/games/beyond-fable/
+public/games/origin/index.html
 *.tsbuildinfo
 *.log
 .DS_Store

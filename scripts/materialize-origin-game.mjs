@@ -1,5 +1,5 @@
 import { createHash } from 'node:crypto';
-import { mkdir, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { finalizeOriginFrench } from './origin-fr-finalize.mjs';
@@ -7,11 +7,11 @@ import { translateOriginToFrench } from './origin-fr-translations.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(HERE, '..');
+const SOURCE = resolve(ROOT, 'vendor/origin/index.html');
 const OUTPUT = resolve(ROOT, 'public/games/origin/index.html');
 
 const ORIGIN_COMMIT = '1e11bd3faee664160faa6b2e6bd440fa7304b603';
 const ORIGIN_BLOB_SHA = '3d4fa219a225b048136d47d9a977c96aaf15d4e1';
-const ORIGIN_URL = `https://raw.githubusercontent.com/DFarm6/origin-16bit-arpg/${ORIGIN_COMMIT}/index.html`;
 const HAN = /[\u3400-\u9fff]/;
 
 const EXTRA_REPLACEMENTS = [
@@ -84,11 +84,9 @@ function remainingFrenchGaps(source) {
     .map(({ line, text }) => `L${line}: ${text.slice(0, 260)}`);
 }
 
-const response = await fetch(ORIGIN_URL, { headers: { 'user-agent': 'les-petites-quetes-build' } });
-if (!response.ok) throw new Error(`Impossible de récupérer Origin (${response.status} ${response.statusText})`);
-const upstream = await response.text();
+const upstream = await readFile(SOURCE, 'utf8');
 const actualSha = gitBlobSha(upstream);
-if (actualSha !== ORIGIN_BLOB_SHA) throw new Error(`Origin: empreinte source inattendue (${actualSha}, attendu ${ORIGIN_BLOB_SHA})`);
+if (actualSha !== ORIGIN_BLOB_SHA) throw new Error(`Origin (${ORIGIN_COMMIT}) : empreinte source vendored inattendue (${actualSha}, attendu ${ORIGIN_BLOB_SHA})`);
 
 let localized = translateOriginToFrench(upstream);
 for (const [from, to] of [...EXTRA_REPLACEMENTS].sort((a, b) => b[0].length - a[0].length)) localized = localized.replaceAll(from, to);
