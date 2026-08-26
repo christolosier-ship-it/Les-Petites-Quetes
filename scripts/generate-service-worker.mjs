@@ -81,7 +81,9 @@ self.addEventListener('fetch', (event) => {
   if (request.mode === 'navigate') {
     const fallback = url.pathname.startsWith('/games/beyond-fable/')
       ? './games/beyond-fable/index.html'
-      : './index.html';
+      : url.pathname.startsWith('/games/origin/')
+        ? './games/origin/index.html'
+        : './index.html';
     event.respondWith(
       fetch(request)
         .then((response) => {

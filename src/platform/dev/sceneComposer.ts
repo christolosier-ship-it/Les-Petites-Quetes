@@ -10,7 +10,6 @@ import type { ComposerState } from './sceneComposerRuntime';
 
 const SCENES = [
   { id: 'gnome-village-campus-v1', panorama: '[data-gnome-panorama="true"]', track: '.gnome-panorama__track', scene: '.gnome-village-scene' },
-  { id: 'dragon-mountain-v1', panorama: '[data-dragon-panorama="true"]', track: '.dragon-mountain__track', scene: '.dragon-mountain-scene' },
 ] as const;
 
 type SceneConfig = typeof SCENES[number];
@@ -24,44 +23,106 @@ function mountComposer(panorama: HTMLElement, config: SceneConfig) {
   const shell = makeSceneComposerShell();
   const originals = decorateSceneItems(track);
   const state: ComposerState = { track, panorama, originals, originalIds: new Set(originals.keys()), shell, history: emptySceneHistory(), catalog: new Map(), snapshot: loadSceneSnapshot(config.id), selectedIds: new Set(), primaryId: null, drag: null, multiMode: false, editingField: null };
-  panorama.classList.add('scene-composer-panorama-active'); track.classList.add('scene-composer-track-active'); renderComposer(state); syncPanel(state);
+  panorama.classList.add('scene-composer-panorama-active');
+  track.classList.add('scene-composer-track-active');
+  renderComposer(state);
+  syncPanel(state);
   const modifier = (event: PointerEvent) => event.shiftKey || event.ctrlKey || event.metaKey || state.multiMode;
   const onPointerDown = (event: PointerEvent) => {
     const target = event.target instanceof Element ? event.target.closest<HTMLElement>('[data-scene-composer-id]') : null;
-    if (!target || !track.contains(target)) { if (!modifier(event)) { state.selectedIds.clear(); state.primaryId = null; syncPanel(state); } return; }
-    event.preventDefault(); event.stopPropagation(); const id = target.dataset.sceneComposerId; if (!id) return;
-    if (modifier(event)) state.selectedIds.add(id); else if (!state.selectedIds.has(id) || state.selectedIds.size === 1) state.selectedIds = new Set([id]); state.primaryId = id;
+    if (!target || !track.contains(target)) {
+      if (!modifier(event)) { state.selectedIds.clear(); state.primaryId = null; syncPanel(state); }
+      return;
+    }
+    event.preventDefault();
+    event.stopPropagation();
+    const id = target.dataset.sceneComposerId;
+    if (!id) return;
+    if (modifier(event)) state.selectedIds.add(id);
+    else if (!state.selectedIds.has(id) || state.selectedIds.size === 1) state.selectedIds = new Set([id]);
+    state.primaryId = id;
     const movable = [...state.selectedIds].filter((itemId) => !placementFor(state.snapshot, itemId).locked);
-    if (movable.length > 0) { checkpointScene(state.history, state.snapshot); state.drag = { ids: movable, startX: event.clientX, startY: event.clientY, origins: new Map(movable.map((itemId) => [itemId, { x: placementFor(state.snapshot, itemId).x, y: placementFor(state.snapshot, itemId).y }])) }; }
+    if (movable.length > 0) {
+      checkpointScene(state.history, state.snapshot);
+      state.drag = { ids: movable, startX: event.clientX, startY: event.clientY, origins: new Map(movable.map((itemId) => [itemId, { x: placementFor(state.snapshot, itemId).x, y: placementFor(state.snapshot, itemId).y }])) };
+    }
     syncPanel(state);
   };
-  const onPointerMove = (event: PointerEvent) => { if (!state.drag) return; event.preventDefault(); for (const id of state.drag.ids) { const origin = state.drag.origins.get(id); if (!origin) continue; state.snapshot = patchPlacement(state.snapshot, id, { x: Math.round(origin.x + event.clientX - state.drag.startX), y: Math.round(origin.y + event.clientY - state.drag.startY) }); } renderComposer(state); syncPanel(state); setStatus(state, 'Modifications non enregistrées'); };
+  const onPointerMove = (event: PointerEvent) => {
+    if (!state.drag) return;
+    event.preventDefault();
+    for (const id of state.drag.ids) {
+      const origin = state.drag.origins.get(id);
+      if (!origin) continue;
+      state.snapshot = patchPlacement(state.snapshot, id, { x: Math.round(origin.x + event.clientX - state.drag.startX), y: Math.round(origin.y + event.clientY - state.drag.startY) });
+    }
+    renderComposer(state);
+    syncPanel(state);
+    setStatus(state, 'Modifications non enregistrées');
+  };
   const onPointerUp = () => { state.drag = null; };
   const onClickCapture = (event: MouseEvent) => { if (event.target instanceof Element && event.target.closest('[data-scene-composer-id]')) event.stopPropagation(); };
-  track.addEventListener('pointerdown', onPointerDown, true); track.addEventListener('click', onClickCapture, true); window.addEventListener('pointermove', onPointerMove, { passive: false }); window.addEventListener('pointerup', onPointerUp);
+  track.addEventListener('pointerdown', onPointerDown, true);
+  track.addEventListener('click', onClickCapture, true);
+  window.addEventListener('pointermove', onPointerMove, { passive: false });
+  window.addEventListener('pointerup', onPointerUp);
   const cleanupControls = wireComposerControls(state, config.id);
-  void loadSceneAssetCatalog(config.id).then((assets) => { assets.forEach((asset) => state.catalog.set(asset.id, asset)); renderAssetLibrary(shell, assets); }).catch(() => setStatus(state, 'Bibliothèque de scène indisponible'));
-  const cleanup = () => { cleanupControls(); track.removeEventListener('pointerdown', onPointerDown, true); track.removeEventListener('click', onClickCapture, true); window.removeEventListener('pointermove', onPointerMove); window.removeEventListener('pointerup', onPointerUp); panorama.classList.remove('scene-composer-panorama-active'); track.classList.remove('scene-composer-track-active'); track.querySelectorAll<HTMLElement>('[data-scene-composer-selected]').forEach((item) => item.removeAttribute('data-scene-composer-selected')); shell.remove(); activeCleanup = null; };
-  shell.querySelector('[data-composer-close]')?.addEventListener('click', cleanup); activeCleanup = cleanup;
+  void loadSceneAssetCatalog(config.id).then((assets) => {
+    assets.forEach((asset) => state.catalog.set(asset.id, asset));
+    renderAssetLibrary(shell, assets);
+  }).catch(() => setStatus(state, 'Bibliothèque de scène indisponible'));
+  const cleanup = () => {
+    cleanupControls();
+    track.removeEventListener('pointerdown', onPointerDown, true);
+    track.removeEventListener('click', onClickCapture, true);
+    window.removeEventListener('pointermove', onPointerMove);
+    window.removeEventListener('pointerup', onPointerUp);
+    panorama.classList.remove('scene-composer-panorama-active');
+    track.classList.remove('scene-composer-track-active');
+    track.querySelectorAll<HTMLElement>('[data-scene-composer-selected]').forEach((item) => item.removeAttribute('data-scene-composer-selected'));
+    shell.remove();
+    activeCleanup = null;
+  };
+  shell.querySelector('[data-composer-close]')?.addEventListener('click', cleanup);
+  activeCleanup = cleanup;
 }
 
 function activeScene() {
-  for (const config of SCENES) { const panorama = document.querySelector<HTMLElement>(config.panorama); if (panorama) return { config, panorama }; }
+  for (const config of SCENES) {
+    const panorama = document.querySelector<HTMLElement>(config.panorama);
+    if (panorama) return { config, panorama };
+  }
   return null;
 }
 
 function ensureLauncher() {
-  const active = activeScene(); const existing = document.querySelector<HTMLButtonElement>('[data-scene-composer-launcher]');
+  const active = activeScene();
+  const existing = document.querySelector<HTMLButtonElement>('[data-scene-composer-launcher]');
   if (!active) { existing?.remove(); activeCleanup?.(); return; }
   if (existing?.dataset.sceneComposerScene === active.config.id) return;
   existing?.remove();
-  const launcher = document.createElement('button'); launcher.type = 'button'; launcher.className = 'scene-composer-launcher'; launcher.dataset.sceneComposerLauncher = 'true'; launcher.dataset.sceneComposerScene = active.config.id; launcher.textContent = '🎛 Composer';
-  launcher.addEventListener('click', () => { const scene = active.panorama.closest<HTMLElement>(active.config.scene); if (scene && !scene.classList.contains('parallax-scene--expanded')) { scene.querySelector<HTMLButtonElement>('.parallax-scene__expand')?.click(); window.setTimeout(() => mountComposer(active.panorama, active.config), 80); } else mountComposer(active.panorama, active.config); });
+  const launcher = document.createElement('button');
+  launcher.type = 'button';
+  launcher.className = 'scene-composer-launcher';
+  launcher.dataset.sceneComposerLauncher = 'true';
+  launcher.dataset.sceneComposerScene = active.config.id;
+  launcher.textContent = '🎛 Composer';
+  launcher.addEventListener('click', () => {
+    const scene = active.panorama.closest<HTMLElement>(active.config.scene);
+    if (scene && !scene.classList.contains('parallax-scene--expanded')) {
+      scene.querySelector<HTMLButtonElement>('.parallax-scene__expand')?.click();
+      window.setTimeout(() => mountComposer(active.panorama, active.config), 80);
+    } else mountComposer(active.panorama, active.config);
+  });
   document.body.append(launcher);
 }
 
 export function startSceneComposer() {
-  if (started || !isSceneComposerEnabled()) return; started = true; let frame = 0;
+  if (started || !isSceneComposerEnabled()) return;
+  started = true;
+  let frame = 0;
   const schedule = () => { window.cancelAnimationFrame(frame); frame = window.requestAnimationFrame(ensureLauncher); };
-  const observer = new MutationObserver(schedule); observer.observe(document.body, { childList: true, subtree: true }); ensureLauncher();
+  const observer = new MutationObserver(schedule);
+  observer.observe(document.body, { childList: true, subtree: true });
+  ensureLauncher();
 }
