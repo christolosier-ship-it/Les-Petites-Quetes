@@ -1,0 +1,780 @@
+vendor/galaxy-explorer/index.html	40	Настройки галактики
+vendor/galaxy-explorer/index.html	40	Настройки
+vendor/galaxy-explorer/index.html	42	Кодекс — коллекция находок
+vendor/galaxy-explorer/index.html	42	Кодекс
+vendor/galaxy-explorer/index.html	44	Режим отображения: подписи / сцена / кино
+vendor/galaxy-explorer/index.html	44	Режим отображения
+vendor/galaxy-explorer/index.html	27	[HTML] Составление звёздной описи…
+vendor/galaxy-explorer/index.html	31	[HTML] Колесо мыши — приблизиться к курсору
+vendor/galaxy-explorer/index.html	33	[HTML] Зажать ЛКМ — повернуть галактику
+vendor/galaxy-explorer/index.html	35	[HTML] Стрелки / WASD — обзор, Q/E — зум
+vendor/galaxy-explorer/index.html	37	[HTML] Сверху справа — настройки
+vendor/galaxy-explorer/index.html	42	[HTML] Кодекс
+vendor/galaxy-explorer/styles.css	978	t be selected. */\n  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.95), 0 2px 9px rgba(0, 0, 0, 0.92), 0 0 26px rgba(0, 0, 0, 0.82);\n  opacity: 0;\n  transform: translateY(16px);\n  pointer-events: none;\n  user-select: none;\n  -webkit-user-select: none;\n  transition: opacity 0.45s ease, transform 0.45s ease;\n}\n#system-panel.visible {\n  opacity: 1;\n  transform: none;\n}\n\n/* small-caps eyebrow above the status chip — cartographer "ledger sheet" header */\n.sp-eyebrow {\n  font-family: var(--font-mono);\n  font-size: 10px;\n  letter-spacing: 0.3em;\n  text-transform: uppercase;\n  color: var(--parchment);\n  margin-bottom: 14px;\n}\n\n/* #4 — standalone «Назад» control, fixed top-left, always crisp. */\n#nav-back {\n  position: fixed;\n  top: 22px;\n  left: 22px;\n  z-index: 18;\n  appearance: none;\n  background: linear-gradient(180deg, rgba(11, 14, 30, 0.7), rgba(8, 10, 22, 0.7));\n  backdrop-filter: blur(8px);\n  border: 1px solid var(--vellum);\n  color: var(--ivory-dim);\n  font-family: var(--font-mono);\n  font-size: 11px;\n  letter-spacing: 0.14em;\n  text-transform: uppercase;\n  padding: 10px 16px;\n  border-radius: 2px;\n  cursor: pointer;\n  opacity: 0;\n  transform: translateY(-6px);\n  pointer-events: none;\n  transition: opacity 0.3s ease, transform 0.3s ease, background 0.2s ease, border-color 0.2s ease;\n}\n#nav-back.visible {\n  opacity: 1;\n  transform: none;\n  pointer-events: auto;\n}\n#nav-back:hover {\n  background: linear-gradient(180deg, rgba(20, 24, 44, 0.82), rgba(14, 17, 33, 0.82));\n  border-color: var(--vellum-strong);\n}\n#nav-back:active {\n  transform: scale(0.96);\n}\n\n/* #10 — «Заметка на полях» (did-you-know) card, fixed top-right. */\n#fact-box {\n  position: fixed;\n  top: 20px;\n  right: 20px;\n  z-index: 16;\n  width: min(330px, 42vw);\n  padding: 14px 16px;\n  border-radius: 2px;\n  background: linear-gradient(180deg, rgba(11, 14, 30, 0.72), rgba(8, 10, 22, 0.72));\n  backdrop-filter: blur(10px);\n  border: 1px solid var(--vellum);\n  color: var(--ivory-dim);\n  font-family: var(--font-serif);\n  font-size: 15px;\n  line-height: 1.45;\n  text-wrap: pretty;\n  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.45);\n  opacity: 0;\n  transform: translateY(-6px);\n  pointer-events: none;\n  transition: opacity 0.4s ease, transform 0.4s ease;\n}\n#fact-box.visible {\n  opacity: 1;\n  transform: none;\n}\n.fact-head {\n  font-family: var(--font-mono);\n  font-size: 10px;\n  letter-spacing: 0.26em;\n  text-transform: uppercase;\n  color: var(--brass);\n  margin-bottom: 8px;\n}\n#fact-box p {\n  margin: 0;\n}\n/* Selected-object portrait (ship / station): the hand-painted hero card parked\n   to the LEFT of the big title. Hidden for systems / planets, where .sp-head\n   collapses to the single titles column. */\n.sp-head {\n  display: flex;\n  align-items: flex-start;\n  gap: 24px;\n}\n.sp-portrait {\n  display: none; /* JS reveals it for a selected ship / station */\n  flex: none;\n  width: 188px;\n}\n.sp-hero {\n  display: none; /* JS sets display:block once the image decodes */\n  width: 188px;\n  aspect-ratio: 3 / 4;\n  border-radius: 3px;\n  border: 1px solid var(--vellum);\n  background-color: rgba(10, 13, 26, 0.5);\n  background-position: center;\n  background-size: cover;\n  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.55);\n}\n.sp-titles {\n  flex: 1;\n  min-width: 0;\n}\n.sp-status {\n  display: inline-block;\n  font-family: var(--font-mono);\n  font-size: 10.5px;\n  text-transform: uppercase;\n  letter-spacing: 0.2em;\n  padding: 4px 10px 3px;\n  border: 1px solid currentColor;\n  border-radius: 2px;\n  margin-bottom: 14px;\n}\n.sp-name {\n  font-size: 70px;\n  font-weight: 500;\n  line-height: 0.95;\n  margin-bottom: 8px;\n  letter-spacing: 0.004em;\n  color: var(--ivory);\n  text-wrap: balance;\n  width: fit-content; /* shrink to the text so the ✦ divider can match its width */\n  max-width: 100%;\n}\n.sp-star {\n  font-size: 17px;\n  font-style: italic;\n  color: var(--ivory-dim);\n  margin-bottom: 16px;\n}\n/* brass crest ornament under the subtitle — a symmetric divider with the ✦\n   centred and equal hairlines fading out to both sides (atlas vibe) */\n.sp-flourish {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  gap: 14px;\n  width: 250px;\n  color: var(--brass);\n  font-size: 13px;\n  margin: 2px 0 20px;\n}\n.sp-flourish::before,\n.sp-flourish::after {\n  content: 
+vendor/galaxy-explorer/styles.css	1574	s label + description, parked\n   beside the reticle (moved out of the left dossier panel) --- */\n#focus-callout {\n  position: fixed;\n  left: 0;\n  top: 0;\n  z-index: 7;\n  transform: translateY(-50%);\n  width: max-content;\n  max-width: 280px;\n  padding: 13px 15px;\n  border: 1px solid var(--vellum);\n  border-radius: 2px;\n  background: linear-gradient(180deg, rgba(11, 14, 30, 0.86), rgba(8, 10, 22, 0.86));\n  backdrop-filter: blur(8px);\n  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.5), inset 0 0 0 3px rgba(214, 205, 178, 0.04);\n  pointer-events: none;\n  opacity: 0;\n  max-height: calc(100vh - 120px);\n  overflow: hidden;\n  transition: opacity 0.25s ease;\n}\n#focus-callout.visible {\n  opacity: 1;\n}\n.fc-name {\n  font-family: var(--font-serif);\n  font-size: 22px;\n  font-weight: 500;\n  line-height: 1.04;\n  color: var(--ivory);\n  text-wrap: balance;\n}\n.fc-sub {\n  font-family: var(--font-mono);\n  font-size: 9.5px;\n  letter-spacing: 0.2em;\n  text-transform: uppercase;\n  color: var(--parchment);\n  margin: 6px 0 10px;\n}\n.fc-desc {\n  font-family: var(--font-serif);\n  font-size: 14.5px;\n  line-height: 1.45;\n  color: var(--ivory-dim);\n  text-wrap: pretty;\n}\n.fc-meta-title,\n.fc-res-title {\n  font-family: var(--font-mono);\n  font-size: 9px;\n  letter-spacing: 0.24em;\n  text-transform: uppercase;\n  color: var(--parchment);\n  margin: 12px 0 7px;\n  padding-top: 11px;\n  border-top: 1px solid var(--vellum-soft);\n}\n.fc-meta {\n  display: flex;\n  flex-direction: column;\n  gap: 5px;\n  font-family: var(--font-mono);\n  font-size: 12px;\n  color: var(--ivory);\n  font-variant-numeric: tabular-nums;\n}\n.fc-meta b {\n  color: var(--parchment);\n  font-weight: 400;\n}\n.fc-res {\n  display: flex;\n  flex-wrap: wrap;\n  gap: 5px;\n}\n\n/* --- codex: permanent, cross-party discovery log (#codex) -----------------\n   A full-screen modal — dim backdrop + a centred card — reusing the exact\n   panel chrome every other overlay uses (ink gradient, vellum border, brass\n   accents), toggled the same opacity+transform+pointer-events way as\n   #help-panel (never a display:none swap). z-index stays below #warp-overlay\n   (30) for the same reason #genversion-banner does. The card is a FIXED size\n   (not sized-to-content) so switching tabs never resizes the panel. */\n#codex-panel {\n  position: fixed;\n  inset: 0;\n  z-index: 24;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  opacity: 0;\n  pointer-events: none;\n  transition: opacity 0.25s ease;\n}\n#codex-panel.open {\n  opacity: 1;\n  pointer-events: auto;\n}\n.codex-backdrop {\n  position: absolute;\n  inset: 0;\n  background: rgba(8, 10, 22, 0.7);\n  backdrop-filter: blur(8px);\n}\n.codex-card {\n  position: relative;\n  z-index: 1;\n  display: flex;\n  flex-direction: column;\n  width: min(1060px, 94vw);\n  height: min(760px, 90vh); /* FIXED height — the shelf scrolls inside, panel never jumps */\n  padding: 24px 30px 20px;\n  border-radius: 12px;\n  border: 1px solid var(--vellum);\n  background: linear-gradient(180deg, rgba(12, 15, 31, 0.96), rgba(8, 10, 22, 0.96));\n  backdrop-filter: blur(10px);\n  box-shadow: 0 16px 44px rgba(0, 0, 0, 0.55);\n  color: var(--ivory-dim);\n  font-family: var(--font-mono);\n  opacity: 0;\n  transform: translateY(10px) scale(0.98);\n  transition: opacity 0.25s ease, transform 0.25s ease;\n}\n#codex-panel.open .codex-card {\n  opacity: 1;\n  transform: none;\n}\n.codex-close {\n  position: absolute;\n  top: 16px;\n  right: 18px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  width: 32px;\n  height: 32px;\n  border-radius: 50%;\n  border: 1px solid var(--vellum);\n  background: linear-gradient(180deg, rgba(11, 14, 30, 0.6), rgba(8, 10, 22, 0.6));\n  color: var(--ivory-dim);\n  font-size: 18px;\n  line-height: 1;\n  cursor: pointer;\n  transition: border-color 0.2s ease, color 0.2s ease, transform 0.2s ease;\n}\n.codex-close:hover {\n  border-color: var(--vellum-strong);\n  color: var(--ivory);\n  transform: scale(1.06);\n}\n.codex-title {\n  font-family: var(--font-serif);\n  font-size: 26px;\n  font-weight: 500;\n  color: var(--ivory);\n  margin-bottom: 12px;\n  padding-right: 40px; /* clear the ✕ button */\n}\n.codex-tabs {\n  display: flex;\n  flex-wrap: wrap;\n  gap: 6px;\n  margin-bottom: 12px;\n}\n.codex-tab {\n  appearance: none;\n  padding: 7px 13px;\n  border-radius: 2px;\n  border: 1px solid var(--vellum-soft);\n  background: transparent;\n  color: var(--ivory-dim);\n  font-family: var(--font-mono);\n  font-size: 11px;\n  letter-spacing: 0.1em;\n  text-transform: uppercase;\n  cursor: pointer;\n  transition: border-color 0.2s ease, color 0.2s ease;\n}\n.codex-tab:hover {\n  border-color: var(--vellum-strong);\n  color: var(--ivory);\n}\n.codex-tab.on {\n  border-color: var(--brass);\n  color: var(--brass-bright);\n}\n/* progress: a label + a thin brass fill bar, pinned above the scroll area. */\n.codex-prog {\n  display: flex;\n  align-items: center;\n  gap: 14px;\n  margin-bottom: 14px;\n}\n.codex-prog-label {\n  flex: none;\n  white-space: nowrap;\n}\n.codex-prog-bar {\n  flex: 1;\n  height: 3px;\n  border-radius: 2px;\n  background: var(--vellum-soft);\n  overflow: hidden;\n}\n.codex-prog-bar > i {\n  display: block;\n  height: 100%;\n  width: 0;\n  background: linear-gradient(90deg, var(--brass), var(--brass-bright));\n  transition: width 0.35s ease;\n}\n/* the scrolling body: shelf + curiosities showcase, so the title/tabs/progress\n   above stay pinned while a long shelf (54 ships) scrolls. */\n.codex-scroll {\n  flex: 1;\n  min-height: 0;\n  overflow-y: auto;\n  padding-right: 4px;\n}\n.codex-empty {\n  grid-column: 1 / -1; /* the empty note lives in the shelf grid — span all tracks */\n  color: var(--parchment);\n  font-size: 12px;\n  line-height: 1.5;\n  padding: 24px 2px;\n}\n.codex-shelf {\n  display: grid;\n  grid-template-columns: repeat(auto-fill, minmax(148px, 1fr));\n  gap: 12px;\n}\n/* a section header inside the grid (ships/stations by faction, «Особое» by\n   sub-group) — spans the full width, sits above the row it introduces. */\n.codex-section {\n  grid-column: 1 / -1;\n  margin: 8px 0 0;\n  padding-bottom: 6px;\n  border-bottom: 1px solid var(--vellum-soft);\n  font-family: var(--font-mono);\n  font-size: 10px;\n  letter-spacing: 0.24em;\n  text-transform: uppercase;\n  color: var(--brass);\n}\n.codex-section:first-child {\n  margin-top: 0;\n}\n\n/* «Фракции»: a faction section header — the fleet
+vendor/galaxy-explorer/styles.css	1826	s FACTION_TINT). */\n.codex-faction-head {\n  grid-column: 1 / -1;\n  margin: 18px 0 0;\n  padding: 10px 12px 9px;\n  border-left: 3px solid var(--fac, var(--brass));\n  border-bottom: 1px solid var(--vellum-soft);\n  background: linear-gradient(90deg, rgba(222, 213, 186, 0.06), transparent 70%);\n}\n.codex-faction-head:first-child {\n  margin-top: 0;\n}\n.codex-faction-name {\n  font-family: var(--font-serif);\n  font-size: 19px;\n  color: var(--ivory);\n}\n.codex-faction-tagline {\n  margin-top: 3px;\n  font-size: 12.5px;\n  line-height: 1.45;\n  color: var(--ivory-dim);\n}\n.codex-faction-meta {\n  margin-top: 6px;\n  font-family: var(--font-mono);\n  font-size: 10px;\n  letter-spacing: 0.08em;\n  color: var(--fac, var(--brass));\n}\n/* a sub-section rule inside a faction block (Флот / Строения / История) */\n.codex-subsection {\n  grid-column: 1 / -1;\n  margin: 8px 0 -4px;\n  font-family: var(--font-mono);\n  font-size: 9.5px;\n  letter-spacing: 0.24em;\n  text-transform: uppercase;\n  color: var(--parchment);\n}\n/* the faction switcher inside «Фракции» — one tinted button per fleet */\n.codex-fac-tabs {\n  grid-column: 1 / -1;\n  display: flex;\n  flex-wrap: wrap;\n  gap: 8px;\n}\n.codex-fac-tab {\n  appearance: none;\n  background: none;\n  border: 1px solid var(--vellum-soft);\n  border-radius: 2px;\n  padding: 6px 12px;\n  font-family: var(--font-mono);\n  font-size: 10.5px;\n  letter-spacing: 0.1em;\n  color: var(--ivory-dim);\n  cursor: pointer;\n  border-bottom: 2px solid var(--vellum-soft);\n  transition: color 0.15s ease, border-color 0.15s ease;\n}\n.codex-fac-tab:hover {\n  color: var(--ivory);\n  border-color: var(--vellum);\n}\n.codex-fac-tab.on {\n  color: var(--ivory);\n  border-bottom-color: var(--fac, var(--brass));\n}\n.codex-fac-tab:focus-visible {\n  outline: 2px solid var(--brass);\n  outline-offset: 2px;\n}\n\n/* the faction chronicle card — unlocks by visiting the capital */\n.codex-lore {\n  grid-column: 1 / -1;\n  padding: 12px 14px;\n  border: 1px solid var(--vellum-soft);\n  border-radius: 2px;\n  background: rgba(10, 12, 24, 0.5);\n  font-size: 13px;\n  line-height: 1.55;\n  color: var(--ivory-dim);\n}\n.codex-lore p {\n  margin: 0;\n}\n.codex-lore p + p {\n  margin-top: 8px;\n}\n.codex-lore-essence {\n  font-family: var(--font-serif);\n  font-size: 15px;\n  color: var(--ivory);\n}\n.codex-lore-chapter {\n  margin: 14px 0 6px;\n  font-family: var(--font-mono);\n  font-size: 10px;\n  font-weight: 400;\n  letter-spacing: 0.22em;\n  text-transform: uppercase;\n  color: var(--brass);\n}\n\n/* ship characteristics in the detail dialog: label · bar · value rows */\n.codex-detail-stats {\n  display: grid;\n  gap: 5px;\n  margin: 10px 0 2px;\n}\n.codex-detail-stats:empty {\n  display: none;\n}\n.codex-stat-row {\n  display: grid;\n  grid-template-columns: 118px 1fr 20px;\n  align-items: center;\n  gap: 10px;\n}\n.codex-stat-name {\n  font-family: var(--font-mono);\n  font-size: 10px;\n  letter-spacing: 0.08em;\n  color: var(--parchment);\n}\n.codex-stat-track {\n  height: 6px;\n  border: 1px solid var(--vellum-soft);\n  border-radius: 1px;\n  background: rgba(10, 12, 24, 0.6);\n}\n.codex-stat-track > i {\n  display: block;\n  height: 100%;\n  background: linear-gradient(90deg, var(--brass), var(--brass-bright));\n}\n.codex-stat-track.unknown {\n  border-style: dashed;\n}\n.codex-stat-val {\n  font-family: var(--font-mono);\n  font-size: 10.5px;\n  font-variant-numeric: tabular-nums;\n  text-align: right;\n  color: var(--ivory-dim);\n}\n.codex-lore.locked {\n  border-style: dashed;\n  font-style: italic;\n  color: var(--parchment);\n}\n\n/* one gallery tile: a square thumbnail over a name strip. Its own class (NOT\n   .codex-card — that
+vendor/galaxy-explorer/src/audio/ambient.js	28	 ? saved.volume : DEFAULT_VOLUME;\n    // the ♪ toggle is the ONE master audio switch: main.js hooks this to also\n    // mute/unmute the UI sounds, so «музыка выключена» means «всё звук выключен».\n    this.onStateChange = null;\n\n    this.audio = new Audio();\n    this.audio.loop = true;\n    this.audio.preload = 
+vendor/galaxy-explorer/src/audio/sfxEvents.js	8	s fades carry no sound (owner\n// decision, 2026-07-03), and the show never voices warp/chart at all — the\n// auto-tour drives the same code paths a player does, so SFX playback is\n// gated on `!_cineActive()` at the call sites, same rule as the codex funnel.\n\n// Format note: crisp one-shots (click/hover/codex) ship as WAV — AAC pads\n// ~23 ms of priming silence onto the front of every m4a, which reads as input\n// lag on a transient. The warp whooshes SWELL in, so m4a stays fine there.\nexport const SFX_EVENTS = {\n  // levels halved across the board 2026-07-03 — owner: «слишком громкие».\n  // No 
+vendor/galaxy-explorer/src/codex/codexData.js	75	,\n};\nconst RUIN_CATALOG = RUIN_TYPES.map((t) => ({\n  archetypeKey: t,\n  label: RUIN_TYPE_LABELS[t] || t,\n  ruinType: t,\n}));\n\n// --- races: NAMED species (not the generic biome×civ inhabitants) -----------\n// Real ones live on a hand-crafted planet and are discovered by visiting it —\n// each carries a planetRef so «Перейти к объекту» warps to its homeworld.\n// `future: true` races are announced but not yet in the game: they show as\n// named-but-locked "coming" cards (grouped under Скоро), never discoverable.\nconst RACE_CATALOG = [\n  { archetypeKey: 
+vendor/galaxy-explorer/src/codex/codexData.js	105	, future: true },\n];\nconst RACE_BY_KEY = Object.fromEntries(RACE_CATALOG.map((r) => [r.archetypeKey, r]));\n\n// --- special: hand-crafted content, grouped системы / объекты / планеты -----\n// `seed` — the system to warp to. `view` — a special-object builder key (see\n// codexViewer) for «Рассмотреть», where one exists. `planetLabel` — a signature\n// planet inside `seed`. `race` — the named race that lives on this planet.\nconst SPECIAL_CATALOG = [\n  // --- системы ---\n  { archetypeKey: 
+vendor/galaxy-explorer/src/codex/codexData.js	123	 },\n  // --- столицы фракций (#stage6) ---\n  { archetypeKey: 
+vendor/galaxy-explorer/src/codex/codexData.js	130	 },\n  // --- объекты ---\n  { archetypeKey: 
+vendor/galaxy-explorer/src/codex/codexData.js	135	 },\n  // --- планеты ---\n  { archetypeKey: 
+vendor/galaxy-explorer/src/codex/codexData.js	145	 },\n  // --- миры столиц фракций (#stage6) ---\n  { archetypeKey: 
+vendor/galaxy-explorer/src/codex/codexData.js	185	t one of\n *  the hand-crafted systems. Called when the player warps into a system. */\nexport function specialSystemKey(seed) {\n  return SPECIAL_SYSTEM_BY_SEED[seed] || null;\n}\n\n// --- the «Фракции» shelf (#stage6) ------------------------------------------\n// One section per fleet faction: its chronicle, its capital/race/flagship refs\n// and its slice of the ship + station catalogs. Which codex keys belong to\n// which faction is enumerated here (there
+vendor/galaxy-explorer/src/codex/codexData.js	217	смешанный состав
+vendor/galaxy-explorer/src/codex/codexData.js	249	Планеты
+vendor/galaxy-explorer/src/codex/codexData.js	291	 && HERO_SPECIALS.has(key)) {\n    return `media/hero/special/${key}.webp`;\n  }\n  return null;\n}\n\n/** The Особое sub-group (
+vendor/galaxy-explorer/src/codex/codexData.js	308	Система
+vendor/galaxy-explorer/src/codex/codexData.js	309	Планета
+vendor/galaxy-explorer/src/codex/codexData.js	310	Раса
+vendor/galaxy-explorer/src/codex/codexData.js	311	Руины
+vendor/galaxy-explorer/src/codex/codexData.js	312	Корабль
+vendor/galaxy-explorer/src/codex/codexData.js	313	Станция
+vendor/galaxy-explorer/src/codex/codexData.js	314	Особое
+vendor/galaxy-explorer/src/codex/codexData.js	321	Раскалённый мир вулканов и лавовых морей — слишком близко к звезде для жизни. Образуется у самой звезды или разогревается приливами соседних гигантов.
+vendor/galaxy-explorer/src/codex/codexData.js	322	Расплавленная кора, сотни градусов
+vendor/galaxy-explorer/src/codex/codexData.js	323	Тяжёлые металлы, сера, редкие изотопы
+vendor/galaxy-explorer/src/codex/codexData.js	326	Каменистый безводный мир с изрытой кратерами корой. Малое тело, не удержавшее атмосферу и воду — выжженное близостью звезды или промороженное далью.
+vendor/galaxy-explorer/src/codex/codexData.js	327	Безводно, резкие перепады день/ночь
+vendor/galaxy-explorer/src/codex/codexData.js	328	Руды, силикаты, строительный камень
+vendor/galaxy-explorer/src/codex/codexData.js	331	Сухая планета песков и растрескавшихся равнин под жёстким солнцем. Обычно это мир умеренного пояса, потерявший почти всю воду.
+vendor/galaxy-explorer/src/codex/codexData.js	332	Жарко и сухо, пыльные бури
+vendor/galaxy-explorer/src/codex/codexData.js	333	Кремний, соли, лёд у полюсов
+vendor/galaxy-explorer/src/codex/codexData.js	336	Мир земного типа: вода, атмосфера, умеренный пояс — колыбель жизни. Возникает в обитаемом поясе звезды, где вода держится жидкой, а атмосфера — стабильной.
+vendor/galaxy-explorer/src/codex/codexData.js	337	Умеренный, жидкая вода и воздух
+vendor/galaxy-explorer/src/codex/codexData.js	338	Вода, органика, плодородные почвы
+vendor/galaxy-explorer/src/codex/codexData.js	341	Планета сплошного океана с редкими архипелагами. Тёплый мир обитаемого пояса, где воды набралось больше, чем суши.
+vendor/galaxy-explorer/src/codex/codexData.js	342	Влажный, глобальный океан
+vendor/galaxy-explorer/src/codex/codexData.js	343	Вода, биомасса, растворённые соли
+vendor/galaxy-explorer/src/codex/codexData.js	346	Промёрзший мир на дальней орбите — ледяные щиты и азотный иней. Формируется за снеговой линией, где до звезды слишком далеко для тепла.
+vendor/galaxy-explorer/src/codex/codexData.js	347	Мороз, азотный и водяной лёд
+vendor/galaxy-explorer/src/codex/codexData.js	348	Лёд, летучие соединения, чистая вода
+vendor/galaxy-explorer/src/codex/codexData.js	351	Огромный газовый гигант с полосами облаков и системой колец. Массивное ядро набрало толстую водородно-гелиевую оболочку в холодной внешней части системы.
+vendor/galaxy-explorer/src/codex/codexData.js	352	Нет твёрдой поверхности, вечные штормы
+vendor/galaxy-explorer/src/codex/codexData.js	353	Водород, гелий — топливо для скиммеров
+vendor/galaxy-explorer/src/codex/codexData.js	361	Молчаливые руины давно вымершей цивилизации — ни тел, ни ответа почему. Жизнь угасла тихо: болезнь, климат или медленный упадок.
+vendor/galaxy-explorer/src/codex/codexData.js	362	Вымерли без катастрофы
+vendor/galaxy-explorer/src/codex/codexData.js	365	Мир, где остались одни машины: заводы и депо всё ещё работают на давно мёртвых хозяев, гоняя грузы по пустым орбитам.
+vendor/galaxy-explorer/src/codex/codexData.js	366	Люди исчезли, автоматика жива
+vendor/galaxy-explorer/src/codex/codexData.js	369	Разрушенный войной или катастрофой мир — расплавленные города, шрам на коре, орбита в обломках. Кто-то уцелел и бежал на соседний мир.
+vendor/galaxy-explorer/src/codex/codexData.js	370	Катастрофа, часть спаслась
+vendor/galaxy-explorer/src/codex/codexData.js	373	Уничтоженный мир: от целой цивилизации не осталось почти ничего, планета расколота на облако щебня чужим оружием.
+vendor/galaxy-explorer/src/codex/codexData.js	374	Планету раскололи извне
+vendor/galaxy-explorer/src/codex/codexData.js	380	Любопытный вид, едва вышедший за пределы родной планеты, но уже мечтающий о звёздах.
+vendor/galaxy-explorer/src/codex/codexData.js	381	Суровый народ пустынь, живущий по воде и оседлавший песчаных исполинов родного мира.
+vendor/galaxy-explorer/src/codex/codexData.js	382	Рослый народ, вросший в живую сеть своей луны-джунглей и защищающий её всем племенем.
+vendor/galaxy-explorer/src/codex/codexData.js	383	Давно исчезнувшая раса зодчих, оставившая на промёрзшем мире загадочные Знаки.
+vendor/galaxy-explorer/src/codex/codexData.js	384	Негромкий народ верфей — лучшие сварщики и навигаторы Альянса, одна из рас-основательниц Договора.
+vendor/galaxy-explorer/src/codex/codexData.js	385	Народ расколотого мира, превративший траур в дисциплину, а клятву — в государство.
+vendor/galaxy-explorer/src/codex/codexData.js	386	Монораса-коллектив Роя; выводок исполинских выращенных тварей, кочующих между звёзд. Имя дали чужие картографы.
+vendor/galaxy-explorer/src/codex/codexData.js	387	Высокие тихие силуэты старшей расы; их видят редко, издалека и всегда за работой.
+vendor/galaxy-explorer/src/codex/codexData.js	392	Сверхмассивная чёрная дыра в самом сердце галактики; вокруг искривлён сам свет.
+vendor/galaxy-explorer/src/codex/codexData.js	392	Тип
+vendor/galaxy-explorer/src/codex/codexData.js	392	сверхмассивная ЧД
+vendor/galaxy-explorer/src/codex/codexData.js	392	Масса
+vendor/galaxy-explorer/src/codex/codexData.js	392	≈ 4 млн солнц
+vendor/galaxy-explorer/src/codex/codexData.js	393	Гигантская вращающаяся чёрная дыра с ярким тонким диском — та самая Гаргантюа из «Интерстеллара».
+vendor/galaxy-explorer/src/codex/codexData.js	393	вращающаяся ЧД
+vendor/galaxy-explorer/src/codex/codexData.js	393	Рядом
+vendor/galaxy-explorer/src/codex/codexData.js	393	«Эндюранс»
+vendor/galaxy-explorer/src/codex/codexData.js	394	Наша родная система: восемь планет вокруг жёлтого карлика, колыбель Человечества.
+vendor/galaxy-explorer/src/codex/codexData.js	394	Звезда
+vendor/galaxy-explorer/src/codex/codexData.js	394	жёлтый карлик
+vendor/galaxy-explorer/src/codex/codexData.js	394	Планет
+vendor/galaxy-explorer/src/codex/codexData.js	395	Мёртвая система под карантином: над Эгидой VII завис корабль-трещинник, команда мертва.
+vendor/galaxy-explorer/src/codex/codexData.js	395	Статус
+vendor/galaxy-explorer/src/codex/codexData.js	395	карантин
+vendor/galaxy-explorer/src/codex/codexData.js	395	Угроза
+vendor/galaxy-explorer/src/codex/codexData.js	395	некроморфы
+vendor/galaxy-explorer/src/codex/codexData.js	396	Сектор, где боевая станция расколола целый мир одним залпом — на память осталось облако щебня.
+vendor/galaxy-explorer/src/codex/codexData.js	396	Событие
+vendor/galaxy-explorer/src/codex/codexData.js	396	уничтожение Альдераана
+vendor/galaxy-explorer/src/codex/codexData.js	397	Мир двух солнц: под сдвоенным светом лежит пустынный Татуин.
+vendor/galaxy-explorer/src/codex/codexData.js	397	Звёзд
+vendor/galaxy-explorer/src/codex/codexData.js	398	Пустынный предел, где добывают драгоценную пряность, а под песком ходят исполины.
+vendor/galaxy-explorer/src/codex/codexData.js	398	Ресурс
+vendor/galaxy-explorer/src/codex/codexData.js	398	пряность
+vendor/galaxy-explorer/src/codex/codexData.js	399	Спутник газового гиганта, заросший живыми джунглями, — дом народа На’ви.
+vendor/galaxy-explorer/src/codex/codexData.js	399	луна-джунгли
+vendor/galaxy-explorer/src/codex/codexData.js	400	Промёрзшая планета вечных снегов и ледяных бурь.
+vendor/galaxy-explorer/src/codex/codexData.js	400	Климат
+vendor/galaxy-explorer/src/codex/codexData.js	400	вечная мерзлота
+vendor/galaxy-explorer/src/codex/codexData.js	401	Кольцевая исследовательская станция, вращающаяся ради искусственной гравитации, — «Эндюранс» у Гаргантюа.
+vendor/galaxy-explorer/src/codex/codexData.js	401	кольцевая станция
+vendor/galaxy-explorer/src/codex/codexData.js	402	Корабль-трещинник, разламывающий планеты ради руды. Команда погибла — на борту некроморфы. (Dead Space)
+vendor/galaxy-explorer/src/codex/codexData.js	402	Класс
+vendor/galaxy-explorer/src/codex/codexData.js	402	Длина
+vendor/galaxy-explorer/src/codex/codexData.js	402	~1,6 км
+vendor/galaxy-explorer/src/codex/codexData.js	403	Бронированная боевая станция размером с малую луну; суперлазер раскалывает планету одним залпом.
+vendor/galaxy-explorer/src/codex/codexData.js	403	боевая станция
+vendor/galaxy-explorer/src/codex/codexData.js	403	Размер
+vendor/galaxy-explorer/src/codex/codexData.js	403	~160 км
+vendor/galaxy-explorer/src/codex/codexData.js	404	Частный многоразовый корабль с экипажем на пути к Марсу — капсула-«капля» на разгонном модуле.
+vendor/galaxy-explorer/src/codex/codexData.js	404	Экипаж
+vendor/galaxy-explorer/src/codex/codexData.js	404	до 4
+vendor/galaxy-explorer/src/codex/codexData.js	404	Курс
+vendor/galaxy-explorer/src/codex/codexData.js	404	Земля → Марс
+vendor/galaxy-explorer/src/codex/codexData.js	405	Голубой мир воды и воздуха — единственный известный дом жизни и разума.
+vendor/galaxy-explorer/src/codex/codexData.js	405	Биом
+vendor/galaxy-explorer/src/codex/codexData.js	405	земной
+vendor/galaxy-explorer/src/codex/codexData.js	405	Человечество
+vendor/galaxy-explorer/src/codex/codexData.js	406	Ржавая пустынная планета, ближайшая цель первой межпланетной экспедиции Человечества.
+vendor/galaxy-explorer/src/codex/codexData.js	406	пустыня
+vendor/galaxy-explorer/src/codex/codexData.js	406	Спутников
+vendor/galaxy-explorer/src/codex/codexData.js	407	Мирная планета, уничтоженная боевой станцией одним залпом, — теперь поле обломков.
+vendor/galaxy-explorer/src/codex/codexData.js	407	уничтожена
+vendor/galaxy-explorer/src/codex/codexData.js	408	Мёртвый шахтёрский мир: из его недр подняли Красный Обелиск, после чего колония сошла с ума.
+vendor/galaxy-explorer/src/codex/codexData.js	408	мёртв
+vendor/galaxy-explorer/src/codex/codexData.js	408	Над ним
+vendor/galaxy-explorer/src/codex/codexData.js	409	Промёрзший мир, хранящий Знаки исчезнувшей расы зодчих.
+vendor/galaxy-explorer/src/codex/codexData.js	409	лёд
+vendor/galaxy-explorer/src/codex/codexData.js	409	Строители Знаков
+vendor/galaxy-explorer/src/codex/codexData.js	410	Пустынная планета под двумя солнцами — родина не одного героя.
+vendor/galaxy-explorer/src/codex/codexData.js	411	Пустынный мир пряности и песчаных исполинов, дом Фрименов.
+vendor/galaxy-explorer/src/codex/codexData.js	411	Фримены
+vendor/galaxy-explorer/src/codex/codexData.js	412	Живая луна-джунгли газового гиганта, дом народа На’ви.
+vendor/galaxy-explorer/src/codex/codexData.js	412	джунгли
+vendor/galaxy-explorer/src/codex/codexData.js	412	На’ви
+vendor/galaxy-explorer/src/codex/codexData.js	413	Планета вечных снегов и ледяных бурь.
+vendor/galaxy-explorer/src/codex/codexData.js	415	Первая общая верфь галактики над родным миром аэларов: здесь сваркой подписали Договор.
+vendor/galaxy-explorer/src/codex/codexData.js	415	Фракция
+vendor/galaxy-explorer/src/codex/codexData.js	415	Альянс
+vendor/galaxy-explorer/src/codex/codexData.js	415	Флагман
+vendor/galaxy-explorer/src/codex/codexData.js	415	«Тихая Гавань»
+vendor/galaxy-explorer/src/codex/codexData.js	416	Поле обломков расколотого Хешта и тронная Наковальня — рана, вокруг которой построена Империя.
+vendor/galaxy-explorer/src/codex/codexData.js	416	Империя Пепла
+vendor/galaxy-explorer/src/codex/codexData.js	416	«Тризна»
+vendor/galaxy-explorer/src/codex/codexData.js	417	Прародина-сад, океан-питомник и пастбища полипов; все имена здесь дали чужие картографы.
+vendor/galaxy-explorer/src/codex/codexData.js	417	Рой
+vendor/galaxy-explorer/src/codex/codexData.js	417	«Исполин»
+vendor/galaxy-explorer/src/codex/codexData.js	418	Нулевой меридиан всех маршрутов галактики: эталонные часы Прайма заверяют сделки половины флотов.
+vendor/galaxy-explorer/src/codex/codexData.js	418	Синдикат
+vendor/galaxy-explorer/src/codex/codexData.js	418	«Контрольный пакет»
+vendor/galaxy-explorer/src/codex/codexData.js	419	Старейший вольный порт галактики: толчея бортов у Толстяка и доки, где плиты не гаснут.
+vendor/galaxy-explorer/src/codex/codexData.js	419	Картель
+vendor/galaxy-explorer/src/codex/codexData.js	419	«Мамаша»
+vendor/galaxy-explorer/src/codex/codexData.js	420	Система, которую все карты помечают одинаково: не мешать. Города выметены, сад поливают — хозяев не видно.
+vendor/galaxy-explorer/src/codex/codexData.js	420	Предтечи
+vendor/galaxy-explorer/src/codex/codexData.js	420	«Тот, Кто Остался»
+vendor/galaxy-explorer/src/codex/codexData.js	421	Родной мир аэларов: города вдоль побережий, кольцевой хаб-верфь над экватором и старые песни в ритме работы.
+vendor/galaxy-explorer/src/codex/codexData.js	421	Аэлары
+vendor/galaxy-explorer/src/codex/codexData.js	422	Расколотый родной мир хештов — святыня и рана; сюда приходят молчать, заглушив двигатель.
+vendor/galaxy-explorer/src/codex/codexData.js	422	уничтожен
+vendor/galaxy-explorer/src/codex/codexData.js	422	Память
+vendor/galaxy-explorer/src/codex/codexData.js	422	осколки в килях кораблей
+vendor/galaxy-explorer/src/codex/codexData.js	423	Тронный мир Империи: чёрные города-арсеналы и небо, в котором всегда виден расколотый Хешт.
+vendor/galaxy-explorer/src/codex/codexData.js	423	скальный
+vendor/galaxy-explorer/src/codex/codexData.js	423	Хешты
+vendor/galaxy-explorer/src/codex/codexData.js	424	Мир-сад без единого огня городов: города здесь не строят, здесь растут.
+vendor/galaxy-explorer/src/codex/codexData.js	424	Приплод
+vendor/galaxy-explorer/src/codex/codexData.js	425	Мир-штаб под стеклом: от его нулевого меридиана отсчитываются маршруты и время половины галактики.
+vendor/galaxy-explorer/src/codex/codexData.js	425	город
+vendor/galaxy-explorer/src/codex/codexData.js	425	Владелец
+vendor/galaxy-explorer/src/codex/codexData.js	425	Синдикат «Меридиан»
+vendor/galaxy-explorer/src/codex/codexData.js	426	Полосатый гигант, кормящий половину Картеля: газосборщики, доки и очередь, которую уважают больше законов.
+vendor/galaxy-explorer/src/codex/codexData.js	426	газовый гигант
+vendor/galaxy-explorer/src/codex/codexData.js	426	Роль
+vendor/galaxy-explorer/src/codex/codexData.js	426	главный порт
+vendor/galaxy-explorer/src/codex/codexData.js	427	Древний мир, чьи города с орбиты читаются как строки текста; единственный сад поливают до сих пор.
+vendor/galaxy-explorer/src/codex/codexData.js	457	Нагрузка
+vendor/galaxy-explorer/src/codex/codexData.js	457	Вооружение
+vendor/galaxy-explorer/src/codex/codexData.js	458	Назначение
+vendor/galaxy-explorer/src/codex/codexData.js	458	${role.lengthM} м
+vendor/galaxy-explorer/src/codex/codexData.js	461	Флот
+vendor/galaxy-explorer/src/codex/codexData.js	469	Имя
+vendor/galaxy-explorer/src/codex/codexData.js	473	Особенность
+vendor/galaxy-explorer/src/codex/codexData.js	482	Кольцевой хаб над родным миром цивилизации — её орбитальная столица.
+vendor/galaxy-explorer/src/codex/codexData.js	483	Колониальный аванпост: скромная орбитальная станция над колонией.
+vendor/galaxy-explorer/src/codex/codexData.js	484	Газосборщик — скиммер, черпающий топливо из атмосферы газового гиганта.
+vendor/galaxy-explorer/src/codex/codexData.js	494	Ресурсы
+vendor/galaxy-explorer/src/codex/codexData.js	502	Судьба
+vendor/galaxy-explorer/src/codex/codexData.js	509	Этот вид ещё не появился в игре — карточка-заглушка. Позже он получит свою историю и родную планету.
+vendor/galaxy-explorer/src/codex/codexData.js	510	в разработке
+vendor/galaxy-explorer/src/codex/codexData.js	513	Родной мир
+vendor/galaxy-explorer/src/codex/codexData.js	526	Звёздная система, нанесённая на карту в этой галактике.
+vendor/galaxy-explorer/src/codex/codexUI.js	26	 is a VIEW, not a category: it lays the ship + station catalogs out\n// as one section per fleet faction (chronicle, fleet, structures) — the old\n// «Корабли»/«Станции» tabs live inside it now.\nconst TABS = [\n  { id: 
+vendor/galaxy-explorer/src/codex/codexUI.js	35	 },\n];\n\n// Faction signature tints for the «Фракции» section headers — keep in sync\n// with CAPITAL_COLOR in markers.js / hud.js.\nconst FACTION_TINT = {\n  alliance: 
+vendor/galaxy-explorer/src/codex/codexUI.js	46	,\n};\n\n// Which placeholder glyph a special find uses, by its Особое sub-group.\nconst SPECIAL_GROUP_ICON = { Системы: 
+vendor/galaxy-explorer/src/codex/codexUI.js	50	, Объекты: 
+vendor/galaxy-explorer/src/codex/codexUI.js	50	, Планеты: 
+vendor/galaxy-explorer/src/codex/codexUI.js	62	).ObjectViewer} deps.objectViewer the\n   *   isolated-canvas viewer «Рассмотреть» opens a find in.\n   * @param {() => import(
+vendor/galaxy-explorer/src/codex/codexUI.js	88	; // the faction sub-tab the «Фракции» shelf shows\n    this._open = false;\n    this._detailEntry = null;\n    this._thumbGen = 0; // bumps each render → invalidates in-flight thumbnail jobs\n    this._thumbQueue = [];\n    this._thumbRaf = 0;\n    this._build();\n  }\n\n  /** True while the panel itself is open (the detail dialog only lives inside\n   *  an open panel). */\n  get isOpen() {\n    return this._open;\n  }\n\n  get isDetailOpen() {\n    return !!this._detailEntry;\n  }\n\n  /** @param {string} [tab] optional category tab to land on — the onboarding\n   *   opens straight at «Планеты», where the tour
+vendor/galaxy-explorer/src/codex/codexUI.js	153	Кодекс
+vendor/galaxy-explorer/src/codex/codexUI.js	154	Закрыть
+vendor/galaxy-explorer/src/codex/codexUI.js	204	Находка
+vendor/galaxy-explorer/src/codex/codexUI.js	232	s systems.\n      const partyId = this._getPartyId();\n      found = list(cat).filter((e) => e.batchId === partyId).length;\n      total = this._getSystemTotal();\n      this._r.progLabel.innerHTML = `В этой галактике: <b>${found}</b> / ${total}`;\n    } else if (cat === 
+vendor/galaxy-explorer/src/codex/codexUI.js	240	).found;\n      this._r.progLabel.innerHTML = `Найдено <b>${found}</b> / ${total}`;\n    } else {\n      // count against DISCOVERABLE archetypes only — future placeholder races\n      // (never obtainable yet) don
+vendor/galaxy-explorer/src/codex/codexUI.js	247	Найдено <b>${found}</b> / ${total}
+vendor/galaxy-explorer/src/codex/codexUI.js	278	Пока ничего не найдено. Заходите в системы, чтобы наносить их на карту.
+vendor/galaxy-explorer/src/codex/codexUI.js	330	★ ${f.capitalName} · раса: ${f.raceName} · флагман: «${f.flagshipName}»
+vendor/galaxy-explorer/src/codex/codexUI.js	334	Флот
+vendor/galaxy-explorer/src/codex/codexUI.js	340	Строения
+vendor/galaxy-explorer/src/codex/codexUI.js	346	Хроника
+vendor/galaxy-explorer/src/codex/codexUI.js	372	Посетите столицу — ★ ${f.capitalName} — чтобы открыть хронику фракции.
+vendor/galaxy-explorer/src/codex/codexUI.js	401	, () => this._openDetail(entry));\n    // queue the real thumbnail (entries with no 3D form keep the glyph)\n    if (isRebuildable(entry)) this._thumbQueue.push({ entry, thumb, gen: this._thumbGen });\n    return el;\n  }\n\n  /** An unreached catalog slot: the placeholder glyph, dimmed. Anonymous ("?")\n   *  for a normal undiscovered find; an announced-but-future entry (a race not\n   *  in the game yet) shows its name and a «скоро» tag instead. */\n  _lockedCard(c, category) {\n    const el = document.createElement(
+vendor/galaxy-explorer/src/codex/fleetLore.js	8	Тихая Гавань
+vendor/galaxy-explorer/src/codex/fleetLore.js	9	Двухкорпусный авианосец, головной корабль класса «Гавань»: два корпуса, соединённые доковым пролётом, куда помещается и звено истребителей, и повреждённый корвет целиком.
+vendor/galaxy-explorer/src/codex/fleetLore.js	11	«Тихую Гавань» собрали из двух недостроенных корпусов, брошенных войной на разбитых стапелях, — и доковый пролёт между ними стал общим цехом уцелевших ещё до того, как корабль научился летать. Вражеских флагманов на её счету нет; зато на переборке пролёта выбиты имена экипажей, снятых с обречённых кораблей на рубежах Империи и Роя, — список давно перевалил за шесть тысяч. У навигаторов Альянса есть поговорка: не знаешь, куда идти, — иди к «Гавани».
+vendor/galaxy-explorer/src/codex/fleetLore.js	14	Тризна
+vendor/galaxy-explorer/src/codex/fleetLore.js	15	Чёрный четырёхсотметровый дредноут с алыми клинками маркировки — флагманский класс Империи Пепла: боевой корабль и поминальный зал под одной бронёй.
+vendor/galaxy-explorer/src/codex/fleetLore.js	17	Головная «Тризна» собрана из брони кораблей, погибших при расколе Хешта, а её киль отлит вокруг самого крупного осколка, какой когда-либо поднимали с поля обломков. Вдоль главного коридора выбиты имена — две тысячи человек экипажа каждый день проходят мимо них на вахту. Класс не участвует в парадах: «Тризна» покидает док только тогда, когда Империя уже решила стрелять. За всю её службу это случалось трижды, и все три раза о выходе узнавали раньше, чем об ультиматуме.
+vendor/galaxy-explorer/src/codex/fleetLore.js	20	Исполин
+vendor/galaxy-explorer/src/codex/fleetLore.js	21	Старейший из выращенных левиафанов Роя: четыреста метров живого хитина, борозды сросшихся рёбер и медленный фиолетовый свет в глубине панциря. Экипажа нет — тварь живёт сама.
+vendor/galaxy-explorer/src/codex/fleetLore.js	23	Имя дали скауты Альянса: издали, когда он ведёт стаю вдоль рубежа, его горбатый силуэт заслоняет полнеба, будто с места снялся остров. Слои панциря считают, как годовые кольца, — возраст выходит старше первого контакта. Однажды он прошёл сквозь имперскую блокаду, не сменив курса и не дав ни одного залпа; линия сомкнулась за его кормой, и обе стороны до сих пор спорят, что это было. Единственное, перед чем он свернул, — маршрут Предтеч.
+vendor/galaxy-explorer/src/codex/fleetLore.js	26	Контрольный пакет
+vendor/galaxy-explorer/src/codex/fleetLore.js	27	Четырёхсотметровый графитовый дредноут-штаб: хищный гранёный корпус, циановые линии от носа до дюз, дремлющие батареи вдоль хребта. Не переговорщик — головной офис, который приходит к вам сам.
+vendor/galaxy-explorer/src/codex/fleetLore.js	29	Заложен сразу после Войны Ста Флагов на стапелях верфи, выкупленной у погибшего флота, — Синдикат зовёт это рачительностью. На его борту подписан устав послевоенной монополии маршрутов, и с тех пор каждый пункт того устава исполняется. Выстрелов за кораблём не записано ни одного; тем не менее в дюжине систем его появление на орбите вошло в хроники словом «поглощение».
+vendor/galaxy-explorer/src/codex/fleetLore.js	32	Мамаша
+vendor/galaxy-explorer/src/codex/fleetLore.js	33	Флагман-матка Вольного Картеля: четыреста метров сшитых воедино чужих корпусов, сорок шлюзов, доки, рынок и две тысячи экипажа. Не столько боевой корабль, сколько летающий порт, который приходит туда, где своего порта нет.
+vendor/galaxy-explorer/src/codex/fleetLore.js	35	Её начали варить в последний год Войны Ста Флагов — из кораблей тех, кто ушёл из своих флотов и не мог вернуться. В корпусе различимы плиты шести разных верфей, и ни одну не стали перекрашивать: пусть видно, из чего сделан дом. За века «Мамаша» приняла на борт больше беглецов, чем иные миры — колонистов. Когда в порту говорят «мамка пришла», это значит: всё, теперь есть куда отступать.
+vendor/galaxy-explorer/src/codex/fleetLore.js	38	Тот, Кто Остался
+vendor/galaxy-explorer/src/codex/fleetLore.js	39	Золотой корабль-руна: монолит-обелиск в кольце парящих осколков, самый большой из кораблей Предтеч. Имя — перевод руны на его борту, сделанный чужими картографами; сами Предтечи не называют его никак — или называют так тихо, что никто не слышал.
+vendor/galaxy-explorer/src/codex/fleetLore.js	41	Единственный корабль Предтеч с кольцевым маршрутом: он никуда не идёт — он обходит. В Войну Ста Флагов его линия трижды пересекала фронты, и трижды он прошёл сквозь строй, не открывая огня; строй не восстановился ни разу. Аэларские навигаторы переводят руну на его борту тремя словами, а о четвёртом спорят третье столетие. Раз в сорок один год он приходит к газосборщику у гиганта — хотя его дюзы, насколько помнят наблюдатели, не гасли никогда.
+vendor/galaxy-explorer/src/codex/fleetLore.js	53	Альянс Свободных Верфей — договор уцелевших после Флагопада: десятки непохожих народов без трона, но с общими верфями, общим флотом и одним обещанием на сотне языков — больше никого не потерять.
+vendor/galaxy-explorer/src/codex/fleetLore.js	56	Перекличка мертвецов
+vendor/galaxy-explorer/src/codex/fleetLore.js	58	Старики на стапелях не говорят «Война Ста Флагов». Говорят — Флагопад. До неё каждый народ летал под собственным знаменем; хроники тех лет читаются как перекличка мертвецов. Победителя не назвал никто. Когда пепел осел, знамён осталось шесть, и одно из них было скорее соглашением, чем знаменем. Разбитые эскадры разных рас, слишком слабые поодиночке, состыковали искалеченные доки в одну станцию и договорились: друг с другом — никогда больше.\n\nНа переборке старейшего дока висят сто выцветших полотнищ — флаги народов, которых не стало. Мимо этой стены ходят медленно, даже если опаздывают на вахту.
+vendor/galaxy-explorer/src/codex/fleetLore.js	61	Подпись сваркой
+vendor/galaxy-explorer/src/codex/fleetLore.js	63	Договор выварили сваркой на переборке старого дока; этот шов не красят уже которое поколение. Совет Стапелей и теперь заседает прямо в доке, а решение считается принятым, когда под ним ложится шов, а не подпись. Общих дел у членов Договора три — верфи, флот и оборона; остальное каждый мир решает дома по своим законам, и ни одна раса не имеет большинства.\n\nСистема оранжевого карлика зовётся Первой Верфью. Её синий маяк виден раньше самой станции; ниже по орбитам лежат родной мир аэларов Аэла, мир-доки Стапель и топливный гигант Балласт с тремя лунами. Здесь же несёт вахту флагман — авианосец «Тихая Гавань». Столицей Первую Верфь никто не объявлял, но любой маршрут Альянса рано или поздно приводит сюда на ремонт.
+vendor/galaxy-explorer/src/codex/fleetLore.js	66	Спайка
+vendor/galaxy-explorer/src/codex/fleetLore.js	68	Верфь Альянса — город: доки размером с каньон, рынки в рёбрах шпангоутов, кварталы с разным воздухом и разной тяжестью. Общий язык зовут спайкой — палубный говор из обрезков сотни наречий, где «домой» и «в док» — одно слово. Коридоры нарочно разной высоты: экипаж не бывает одного роста.\n\nОбычаи стары и просты. Первый шов нового корабля варит самый молодой в экипаже; кривой, дрожащий, он остаётся навсегда. Имена погибших выбивают на несущих балках — мёртвые продолжают держать корпус. По вечерам на рыночном ярусе поют аэларскую колыбельную о саде; последний её куплет аэлары не переводят никому, а в их звёздных атласах есть сектор без единой пометки. На краю дальнего рукава шумит радиоэфиром молодой мир с синими океанами, чьи жители похожи на аэларов. О нём аэлары молчат, и на верфях привыкли не спрашивать.
+vendor/galaxy-explorer/src/codex/fleetLore.js	71	Соседи по рукаву
+vendor/galaxy-explorer/src/codex/fleetLore.js	73	С Империей Пепла Альянс держит заслоны на всех маршрутах: её «больше никогда» здесь понимают лучше, чем сама Империя думает, и дальше её не пропустят. Рой не переспоришь; скауты выучивают, куда идёт прилив, и Альянс не строит у него на пути. Синдикату платят за маршруты, проверяют каждую накладную и помнят, что монополия — тоже осада. На Картель смотрят сквозь пальцы: контрабандисты знают тихие тропы лучше скаутов, и лучшие из них однажды оказываются на палубе уже в форме. К руинам Предтеч подходят с непокрытой головой и никогда не разбирают их на металл.\n\nЧужаку на верфи нальют, найдут койку и подберут воздух по вкусу. Одного здесь не прощают — брошенного экипажа.
+vendor/galaxy-explorer/src/codex/fleetLore.js	76	Кривой шов «Ласточки»
+vendor/galaxy-explorer/src/codex/fleetLore.js	78	На Первой Верфи любят историю корвета «Ласточка». Её первый шов варила аэларка шестнадцати лет; вышел кривым, как положено. Двадцать лет спустя «Ласточка» поймала обломок в скулу у границы Роя и треснула по трём швам — кривой выдержал, и по нему экипаж загерметизировал отсек. Корвет давно списан, а кусок той переборки вделан в пол зала Совета Стапелей; новички наступают на него на удачу.\n\nДругой случай рассказывают тише. В год большого роста Роя грузовой караван Империи потерял ход в спорном секторе. Заслон Альянса снял с него четыреста хештов и довёз до имперского поста. Благодарности не последовало, зато имперские капитаны в том секторе с тех пор первыми глушат орудия.
+vendor/galaxy-explorer/src/codex/fleetLore.js	84	Хешты — народ, потерявший родную планету в последние годы Войны Ста Флагов и оставшийся жить среди её обломков. Их государство собрано вокруг одной клятвы — больше никогда не быть уязвимыми: чёрный флот в государственном трауре, гражданство через службу, память как устав.
+vendor/galaxy-explorer/src/codex/fleetLore.js	87	Пустая страница
+vendor/galaxy-explorer/src/codex/fleetLore.js	89	В имперских хрониках Войне Ста Флагов отведено немного места, и одна страница оставлена пустой. День, когда раскололи Хешт, не описан: вместо рассказа там список имён, и архивисты пополняют его до сих пор.\n\nДо войны хешты строили по общим чертежам, торговали, спорили о маршрутах. Во Флагопад выбирали сторону, потом другую, потом дрались за себя; к концу стреляли все и по всем. Кто ударил по планете, хроники не называют: Империя отказалась назначать виновного задним числом. Вывод она сделала страшнее любой мести: слабых добивают, под любым флагом.\n\nУцелевшие уходили на грузовиках, танкерах, недостроенных корпусах со стапелей. Осесть на чужих мирах предлагали многие; они остались в своей системе, среди обломков, и начали строить. «Пеплом» их прозвали в насмешку; хешты имя не сменили.
+vendor/galaxy-explorer/src/codex/fleetLore.js	92	Пепел в перчатке
+vendor/galaxy-explorer/src/codex/fleetLore.js	94	Новобранцу перед присягой насыпают в перчатку щепоть пепла с Хешта. Слова каждый выбирает сам; сжатый кулак обязателен. О троне в присяге ни слова.\n\nГражданство даёт только служба, и стоять на боевой палубе может только хешт. Народы присоединённых миров — подданные: налоги объявлены заранее, законы исполняются, имперский гарнизон умирает за их города так же, как за свои. Империя зовёт это честностью. Голоса в делах флота у подданного нет и у его детей не будет.\n\nЧёрный здесь — цвет службы, траур — государственный. Поминальный зал есть на каждом корабле крупнее корвета. Императора коронуют без короны: на плечи кладут мантию из вымпелов кораблей, погибших при расколе. В День Раскола не взлетает ничего, кроме дежурных патрулей.
+vendor/galaxy-explorer/src/codex/fleetLore.js	97	Небо, в котором всегда виден Хешт
+vendor/galaxy-explorer/src/codex/fleetLore.js	99	Свет Зольного Престола — белой звезды класса A — холодный, без тёплых теней, как в операционной.\n\nХешт, родной мир, теперь — медленное поле обломков. На обломки не садятся: паломнический корабль глушит двигатель на границе поля и дрейфует, сколько выдержит экипаж. С Хешта берут только осколки для килей; их вваривают первыми, до всякой стали.\n\nНаковальня — тронный мир: чёрные города-арсеналы, вкопанные в скальные хребты, и небо, где всегда виден Хешт. Первый урок астрономии идёт в темноте: учитель открывает купол и молчит, пока каждый сам не найдёт обломки. На ледяном рубеже системы несёт вахту Бдение: смену там сдают двумя словами — «Хешт помнит» — и принимают одним: «И я».
+vendor/galaxy-explorer/src/codex/fleetLore.js	102	Пять соседей и одна уступленная дорога
+vendor/galaxy-explorer/src/codex/fleetLore.js	104	Граница с Альянсом Свободных Верфей — самая тихая и самая укреплённая: в их клятве «не потеряем» Империя видит зеркало собственной и не верит их договору. Роя боится вслух, единственного из всех, и против него держит отдельный флот. Синдикату «Меридиан» она помнит, кто финансировал обе стороны Флагопада: торгует по выверенным до буквы контрактам и в долг не берёт. Вольный Картель в уставах значится дезертирами, хотя интенданты покупают в его портах то, о чём не пишут в отчётах. Кораблям Предтеч устав предписывает уступать маршрут — единственный случай, когда Империя уступает дорогу первой.\n\nС чужаками Империя честна на свой лад: слово держит буквально и того же требует. Она не хочет галактику — она хочет, чтобы до неё больше никогда не дотянулись.
+vendor/galaxy-explorer/src/codex/fleetLore.js	107	Имя, которое перестали произносить
+vendor/galaxy-explorer/src/codex/fleetLore.js	109	Про капитана, бросившего лайнер с колонистами, ни в одном архиве нет приговора. Его имя перестали произносить — во флоте, в списках, в собственной семье. Хешты считают это самой тяжёлой из своих казней: лайнер на четыре тысячи спальных мест для них священный корабль, память об эвакуации на всём, что держало воздух.\n\nВторую историю рассказывают интенданты. Квартирмейстер на Бдении взял у Синдиката короткий заём — торопился достроить склад. Когда это вскрылось, Империя погасила долг за один день, а склад разобрала и собрала заново, из своего металла. Квартирмейстера не разжаловали; он прослужил на Бдении ещё двадцать лет.
+vendor/galaxy-explorer/src/codex/fleetLore.js	115	Рой — стая исполинских выращенных тварей, кочующая между звёзд: живые левиафаны без экипажей и капитанов, стая без королевы и границ. Для остальных пяти флотов он скорее прилив, чем противник.
+vendor/galaxy-explorer/src/codex/fleetLore.js	118	Записано как погода
+vendor/galaxy-explorer/src/codex/fleetLore.js	120	В первых атласах Рой значится погодным явлением. В годы Войны Ста Флагов метеослужбы пограничных миров вносили в журналы слово «прилив» — им было не до ксенологии, сотни флотов жгли друг друга по всему рукаву. Поправку в атласы потом так и не внесли: отчасти из суеверия, отчасти потому, что она была бы неточной.\n\nВ самой войне Рой не участвовал. Никто не трогал его лёжбища, а флагов он не различает. Когда шесть уцелевших флотов пересчитали мертвецов, край рукава уже светился лиловым. Обломки сражений стали ему рифом: над старыми полями боёв сегодня снова ходят твари, чьи имена — из перекличек погибших: обросшие наростом, с тёплыми боками. Хроникёры Альянса до сих пор спорят, осквернение это или воскрешение.
+vendor/galaxy-explorer/src/codex/fleetLore.js	123	Как зреет решение
+vendor/galaxy-explorer/src/codex/fleetLore.js	125	Королеву искали полвека. Ксенологи шести флотов вскрывали мёртвые панцири и вели переписи стай — и в конце концов признали, что искали то, что привыкли находить у себя. Трона в Рое нет, совета тоже; даже «Исполин», старший левиафан стаи, никому ничего не приказывает. Решение вызревает: химический сговор неделями расходится по стае спорами и волнами фиолетового света, долго ничего не происходит, а потом происходит всё сразу и уже необратимо.\n\nРаненую тварь стягивают, как рану на боку большого зверя: через неделю под коркой новый хитин, через месяц новый борт, чуть темнее прежнего; возраст здесь считают по оттенкам шрамов. Малёк, нашедший важное, распадается спорами прямо на месте находки — через год в том секторе уже поднимается прилив.
+vendor/galaxy-explorer/src/codex/fleetLore.js	128	Три мира у жёлтого карлика
+vendor/galaxy-explorer/src/codex/fleetLore.js	130	«Первый Сад» — имя чужое, сам Рой не называет ничего. Картографы нашли систему через десятилетия после первого контакта: шли по течениям спор против потока, как ищут исток реки. Тёплый жёлтый карлик и три мира при деле — прародина под джунглями от полюса до полюса, с выращенным кольцом-ульем на орбите; океанский Питомник, где в тёплых отмелях зреют молодые кили и по ночам светится вода; газовый гигант, в верхних облаках которого пасутся стада полипов.\n\nСтарые твари уходят умирать в океан Питомника. Панцирь ложится на дно рифом, на рифе поднимаются новые кили. Старейшие панцири кольца-улья старше Флагопада; что было до них, никто не знает.
+vendor/galaxy-explorer/src/codex/fleetLore.js	133	Рубеж и соседство
+vendor/galaxy-explorer/src/codex/fleetLore.js	135	Альянс держит против прилива рубеж. Рой не знает, что рубеж существует; потери несут обе стороны, считает их одна. Империя Пепла жжёт лёжбища — на Хелте после выжигания оставили патруль, и через семь лет наросты вернулись, начав с корпусов самих патрульных кораблей. Синдикат трижды присылал переговорщиков; все вернулись невредимыми и неуслышанными, а в отчёте «Меридиана» осталась строка: «Контрагент не обнаружен. Контрагент повсюду». С тех пор Синдикат торгует картами фронтов прилива — лучшим товаром на краю рукава.\n\nБлиже всех Картель. Его семьи поколениями живут в складках панцирей больших тварей, знают ритмы стаи и ходят сквозь прилив там, где чужие теряют эскадры. Разрешения никто не давал — разрешение здесь вообще не понятие; кит не спрашивает птиц, зачем те садятся ему на спину. И только маршруты Предтеч прилив обходит: доходит до их линий и поворачивает, как вода у стекла. Почему — неизвестно, и все делают из этого выводы.
+vendor/galaxy-explorer/src/codex/fleetLore.js	138	Чашки на столах
+vendor/galaxy-explorer/src/codex/fleetLore.js	140	Колонисты, бежавшие с Веглы перед приливом, вернулись через десять лет. Дома стояли целые, под коркой наростов; чашки так и остались на столах. Рой оплёл всё и ничего не сломал. Вернувшиеся говорили, что тяжелее всего было привыкнуть к мысли: Рой их попросту не заметил.\n\nБуксир «Стриж», брошенный при той же эвакуации, годы спустя видели в стае: заросший, тёплый, с работающими дюзами. А пограничный маяк Альянса на рубеже цел и поныне — он честно мигает «граница здесь» изнутри улья, обросший наростами. Границу никто не пересекал. Её нанесло приливом.
+vendor/galaxy-explorer/src/codex/fleetLore.js	146	Синдикат «Меридиан» — корпорация старше многих государств: гражданство здесь оформляется пакетом акций, армию заменяет юридический отдел, а власть держится на монополии на маршруты, по которым летает всё, что летает.
+vendor/galaxy-explorer/src/codex/fleetLore.js	149	Отчёт о сделках за период
+vendor/galaxy-explorer/src/codex/fleetLore.js	151	В архиве Прайма Война Ста Флагов занимает один документ — «Отчёт о сделках за период». Кредиты обеим сторонам сведены в две колонки, итог подсвечен циановым. На ту войну Меридиан отправил только счета: страховал оба конвоя одного сражения, кредитовал всех, у кого хватало залога, а когда флоты сгорали, скупал долги, верфи и маршруты по цене металлолома.\n\nИз сотен флагов уцелело шесть, и победителя война не назвала — так записано во всех хрониках. В хронике Синдиката к этой строке есть примечание мелким шрифтом: победителя не было среди воевавших. Кто-то должен был свести баланс мёртвых; Синдикат свёл, взял комиссию, и с той поры монополия на маршруты входит в само его определение.
+vendor/galaxy-explorer/src/codex/fleetLore.js	154	Цена одной акции
+vendor/galaxy-explorer/src/codex/fleetLore.js	156	Гражданство здесь продаётся пакетами — от гостевого опциона на год до голосующего. Ребёнок, рождённый на Прайме, получает от корпорации одну акцию; к совершеннолетию сам решает, докупать ли остальное. Большинство докупает. За соседними столами сидят аэлар, потомок имперских беженцев и существо, чьё имя не берёт переводчик: обычаи рас проходят по бумагам как «корпоративная культура подразделения».\n\nАрмии в привычном смысле корпорация не держит. Строка расходов юридического отдела превышает флотскую, и эмбарго Меридиана разоряли миры, не нарушив ни одного подписанного пункта. Единственное преступление, которому здесь нет цены, — нарушить договор, под которым стоит подпись самого Синдиката. Такие дела юротдел ведёт против своих так же аккуратно, как против чужих.
+vendor/galaxy-explorer/src/codex/fleetLore.js	159	Нулевой меридиан
+vendor/galaxy-explorer/src/codex/fleetLore.js	161	Домашняя система — Меридиан-Ноль: белая звезда класса A и три актива на её балансе. Прайм — мир-штаб, сплошной город под стеклом; перевалочное кольцо на его орбите называют нулевым меридианом: отсюда отсчитывают тарифы, расписания и само галактическое время — эталонные часы Прайма заверяют сделки, как нотариус. Актив-2 — добывающий мир, где шахтные города арендуют воздух; над газовым гигантом Резервом висят тёмные газосборщики, и цена дейтерия для полгалактики рождается здесь дважды в сутки.\n\nРаз в год биржа Прайма закрывается на один час. Трауром по войне это никто не называет; в отчётности час проходит как техническое обслуживание. На техническое обслуживание надевают чёрное.
+vendor/galaxy-explorer/src/codex/fleetLore.js	164	Реестр контрагентов
+vendor/galaxy-explorer/src/codex/fleetLore.js	166	В реестре контрагентов значатся все пять. Альянс Свободных Верфей — «партнёр/конкурент»: крупнейший клиент с привычкой раздавать бесплатно то, что можно продавать; договор о ненападении не подписан — не потребовался, Альянс платит вовремя. Империя Пепла — заёмщик первой категории: кредит на восстановление обслуживается безукоризненно, пункт о пересмотре ставок при расширении вписан в самом конце. Рой не подписывает и проходит по страховому разделу, между вспышками звёзд и гравитационными штормами; взносы в секторах его роста пересчитываются ежеквартально и всегда вверх.\n\nС Вольным Картелем официально ведутся иски, неофициально — подряды: куда нельзя послать чистый борт, летит ржавый, и обе строки в отчётность не попадают. Предтечам Синдикат ни разу не выставил счёт: их маршруты старше монополии, и в графе «владелец» стоит «не наше» — слово, которого нет больше нигде в его документах. Чужака встречают одинаково: белый стол, запатентованный запах озона и белого чая, договор на столе.
+vendor/galaxy-explorer/src/codex/fleetLore.js	169	Пункт 14.2
+vendor/galaxy-explorer/src/codex/fleetLore.js	171	Контракты Меридиан возит на бумаге: её не глушат помехами и не взламывают. Сорок лет назад курьерский борт с продлением имперского кредита взяли на абордаж у границы Картеля. Курьер сжёг сумку вместе с собой — случай, предусмотренный пунктом 14.2. Копия ушла второй линией, и кредит продлили в срок. Вольный порт, приютивший абордажную команду, через месяц обнаружил, что ни один танкер не принимает его топливо в зачёт, и рассчитался с корпорацией активами.\n\nИстребители Синдиката летают под инвентарными номерами — имён машинам не дают, зато у каждой лучшая страховка в галактике. На Прайме шутят, что номер оплакивать легче.
+vendor/galaxy-explorer/src/codex/fleetLore.js	177	Вольный Картель — сеть вольных портов, сваренных из чужого хлама: приют для дезертиров, беженцев и должников, которых никто больше не взял. Закон здесь один — не сдавай своих.
+vendor/galaxy-explorer/src/codex/fleetLore.js	180	Развернувшие корабли
+vendor/galaxy-explorer/src/codex/fleetLore.js	182	Когда сотни флотов жгли друг друга за верфи и маршруты, в каждой эскадре находились расчёты, отказавшиеся стрелять по жилым кольцам, и экипажи, чьи дома уже сгорели. Их клеймили дезертирами, а беженцев не брал ни один флот: каждый считал их чужими. Тогда беглецы пошли туда, где не было ничего — к тусклому красному карлику на краю рукава, ненужному ни одному из ста флагов.\n\nПервый док сварили из собственных разбитых бортов. Пришёл второй корабль, десятый, сотый — никого не прогнали; каждому нашлись причал и работа. Война кончилась без них: из сотен флотов осталось шесть, победителя не назвали. В Гавани об этом говорят коротко: мы из той войны ушли.
+vendor/galaxy-explorer/src/codex/fleetLore.js	185	Плита, которая не гаснет
+vendor/galaxy-explorer/src/codex/fleetLore.js	187	В каждом вольном порту горит плита: пришвартовался — ешь, имя спросят потом. Вокруг плиты порт и растёт. К списанному трюму наваривают второй, к ним чей-то мёртвый корвет, переход, рынок — и через двадцать лет уже никто не помнит, где был первый шов.\n\nЗаправляют портом старшие по доку: те, кто дольше всех чинит чужие корабли и меньше всех врёт о ценах. Долг пишут мелом на переборке кают-компании, у всех на виду; стереть запись вправе лишь тот, кому должны. Заплату не красят под цвет корпуса — пусть видно, где корабль болел и кто его лечил. Закон один: не сдавай своих. Выдавшего человека из порта выводят через шлюз, за которым его больше никто не знает. Случается такое редко.
+vendor/galaxy-explorer/src/codex/fleetLore.js	190	Очаг у красного карлика
+vendor/galaxy-explorer/src/codex/fleetLore.js	192	Столицей Вольную Гавань зовут чужаки; для картельщика это просто самый старый порт, где всё началось. Жизнь тут держится на трёх мирах.\n\nТолстяк, полосатый газовый гигант, кормит Гавань: газосборщики, сотни доков, толчея на подходах; диспетчеров не водится — есть очередь, и её уважают больше законов. Куча — каменный шар под корабельным ломом трёх веков, свалка и верфь разом; тамошние дети читают обломки раньше букв: по ребру шпангоута назовут верфь и год, по ожогу на броне — чем убили. Погреб, ледяной мир на дальней орбите, хранит груз, которого не должно существовать, и людей, которых не должны найти. В системы без своего порта заходит «Мамаша».
+vendor/galaxy-explorer/src/codex/fleetLore.js	195	Пять флагов на подходе
+vendor/galaxy-explorer/src/codex/fleetLore.js	197	С Альянсом Верфей у Гавани настороженное родство: обе стороны подобрали уцелевших той войны, только Альянс по договору, а Картель по факту. Империя Пепла — худший враг: картельщики для неё укрыватели беглых, и имперский рейд на вольный порт — единственное, от чего в Гавани гаснут плиты. С Роем держатся подальше, хотя сброшенные панцири стоят дорого и отчаянные старатели ходят за ними к краю лёжбищ; возвращаются не все. Синдикат перекрывает маршруты и вешает эмбарго — Картель живёт в щелях между ними, а половина контрабанды Гавани застрахована, по иронии, в конторах Меридиана. Золотой лом Предтеч в доках не режут: обломок ставят у шлюза и больше не трогают.\n\nЧужак же, под каким бы флагом ни летал раньше, становится своим, едва пришвартовался и не сделал подлости.
+vendor/galaxy-explorer/src/codex/fleetLore.js	200	Две байки с плиты
+vendor/galaxy-explorer/src/codex/fleetLore.js	202	Первую рассказывают о «Рыжей Ласке». Её капитан Мора задолжала механику с Кучи за контур охлаждения, а механик погиб на газосборщике, не успев стереть мел. Снять долг не мог никто, и когда «Ласку» пересобирали после имперской засады, старую переборку с записью вварили в новый корпус целиком. «Ласка» летает с этой записью четвёртый десяток лет.\n\nВторая — о порте Три Ковша, куда Империя пришла за одним пепельным сварщиком. Старший по доку шесть часов торговался с имперским капитаном о пошлинах и праве досмотра, пока танкеры по одному уводили людей через тень газового гиганта. Абордажная партия вошла в пустой порт. Горела только плита: её не гасят даже для Империи.
+vendor/galaxy-explorer/src/codex/fleetLore.js	208	Предтечи — то, что осталось от старшей расы галактики: золотые корабли на маршрутах, проложенных до всех войн, пустые прибранные города и тишина, в которой чужаки сами понижают голос.
+vendor/galaxy-explorer/src/codex/fleetLore.js	211	Ушедшие до первого выстрела
+vendor/galaxy-explorer/src/codex/fleetLore.js	213	Когда грянула Война Ста Флагов, Предтечи уже были воспоминанием. На самых старых картах, какие сохранились у шести уцелевших флотов, их города стоят пустыми, а корабли уже идут по своим линиям. Куда ушёл старший народ и почему оставил свет включённым — не записано нигде.\n\nФлагопад их не задел. Сотни флотов делили галактику, а золотые маршруты за все годы войны не сместились ни на волос; штабы враждующих сторон прокладывали фронты в обход этих линий — молча, без единого договора. Архивы шести флотов расходятся почти во всём. Дословно совпадают полторы строки: «Прошли сквозь строй. Огня не открывали. Строй не восстановился».
+vendor/galaxy-explorer/src/codex/fleetLore.js	216	Расписание без цели
+vendor/galaxy-explorer/src/codex/fleetLore.js	218	У Предтеч нет законов, послов, границ. Единственное, что можно наблюдать со стороны, — маршруты. Золото-бронзовые корабли с ровно горящими рунами ходят по одним и тем же линиям веками; Синдикат вычислил график до секунды и продаёт его как календарь. Часть линий ведёт к мёртвым мирам, часть — к руинам, у которых корабль стоит ровно сутки и уходит. Один маршрут заканчивается в пустой точке пространства: корабль приходит, ждёт три часа, разворачивается. В самой точке ничего не нашли, хотя проверяли её трижды.\n\nТанкер встречает газосборщик раз в сорок один год, хотя дюзы Предтеч, насколько помнят наблюдатели, не гаснут никогда. Лайнер на четыре тысячи мест идёт с освещёнными окнами, и в окнах никого. Курс эти корабли не меняют ни для кого — встречные рассчитывают свой заранее.
+vendor/galaxy-explorer/src/codex/fleetLore.js	221	Дом с невыключенным светом
+vendor/galaxy-explorer/src/codex/fleetLore.js	223	Домашнюю систему на картах подписывают по-разному, чаще всего — Чертог Молчания. Старая жёлто-белая звезда, вокруг которой всё стоит на местах, будто хозяин вышел на минуту. Пустынная Скрижаль — мир, чьи улицы читаются с орбиты как строки текста; аэлары уверяют, что за последний век одна улица стала длиннее. Ледяной Архив прячет под льдом хранилища. Их двери не заперты и теплы на ощупь. Именно поэтому внутрь никто не входит.\n\nСамих хозяев видят редко: высокий силуэт в конце улицы, всегда за работой — выметает, поправляет, поливает единственный сад, хотя дождей на Скрижали не было четыре тысячи лет. На приветствие такой силуэт обернётся, наклонит голову, выслушает — и вернётся к делу. Посадка гостям не запрещена. Улетают они сами, раньше, чем собирались, и объяснить это потом не могут.
+vendor/galaxy-explorer/src/codex/fleetLore.js	226	Правила соседей
+vendor/galaxy-explorer/src/codex/fleetLore.js	228	Каждая из пяти фракций выучила своё правило. В аэларских атласах сектор Предтеч оставлен без единой пометки. На имперских картах экспансии он один подписан «не подлежит», и Пепел не объясняет почему. Прилив Роя обтекает золотые маршруты, как вода обтекает камень. В типовом договоре Синдиката форс-мажор включает «вмешательство Предтеч»; пункт ни разу не применялся, однако юристы отказываются его убирать. Старатели Картеля кормятся с руин на мёртвых мирах и не берут ничего с миров ухоженных — не по закону, а по суеверию, которое в Картеле держится крепче законов.\n\nЧужаков это касается тоже. На вольных портах дети играют: замри, когда мимо идёт золотой корабль. Взрослые их не одёргивают и стоят рядом, пока корабль не пройдёт.
+vendor/galaxy-explorer/src/codex/fleetLore.js	231	Шесть часов у шлюза
+vendor/galaxy-explorer/src/codex/fleetLore.js	233	Один картельный контрабандист клянётся: когда его посудина замерзала с пробитым реактором у мёртвого мира, лайнер Предтеч сошёл с маршрута и открыл перед ним шлюз. Войти он не решился. Лайнер ждал шесть часов, закрыл шлюз и вернулся на линию. Проверить рассказ нельзя, но бортовой журнал контрабандиста показывает шесть часов стоянки борт о борт.\n\nВторой случай записан официально. Империя Пепла однажды отправила к Чертогу Молчания посольство с требованиями. Корабль вернулся в срок, целым, с полными баками. Из всех положенных докладов посол подал один, длиной в строку: «Требований не осталось».
+vendor/galaxy-explorer/src/codex/fleetLore.js	241	Кольцевой хаб Альянса — город, обёрнутый вокруг планеты дугой доков: рынки в рёбрах шпангоутов, школы навигации, кварталы с разным воздухом. Над всем этим — синий маяк, который не гасят даже в бою: пока он горит, кому-то есть куда возвращаться. Затемнить маяк здесь равносильно предательству.
+vendor/galaxy-explorer/src/codex/fleetLore.js	243	Аванпост Альянса начинается с госпиталя и дока — стены подождут. Синий огонёк над шлюзом зажигают в первый же день, до имени и до флага на карте. Половина аванпостов Альянса выросла из чьей-то чужой аварийной посадки.
+vendor/galaxy-explorer/src/codex/fleetLore.js	245	Газосборщик Альянса — честная работяга-платформа: гудит, качает, раз в смену меняет фильтры и раз в год получает свежий слой краски, который тут же темнеет от газа. Экипажи между собой зовут такие платформы «коровами» — и обижаются, если так их назовёт кто-то чужой. Именно с «коров» начинала добрая треть капитанов флота.
+vendor/galaxy-explorer/src/codex/fleetLore.js	248	Кольцевой хаб Империи — крепость, надетая на планету: орудийные ярусы наружу, доки и арсеналы внутрь. В сердце кольца — Стена имён, поминальный зал, куда каждый экипаж заходит перед дальним выходом; список погибших при расколе Хешта всё ещё растёт. Здесь тихо, чисто и нет ни одной вывески — только имена.
+vendor/galaxy-explorer/src/codex/fleetLore.js	250	Имперский аванпост строится в неизменном порядке: сначала орудийные точки, потом поминальный зал, и только потом жильё. Чёрные модули с алой маркировкой врастают в грунт, как будто собираются держать осаду с первого дня — потому что собираются. Гарнизон считает аванпост домом со дня, когда в фундамент кладут плиту с осколком Хешта.
+vendor/galaxy-explorer/src/codex/fleetLore.js	252	Газосборщик для Империи — стратегический запас: она помнит, что войну проигрывают на пустых баках. Чёрные заправочные бастионы с раскалёнными оранжевыми горловинами работают безостановочно, а их резервуары по уставу никогда не опускаются ниже половины. Вторая половина — «на эвакуацию», и трогать её не смеет даже император.
+vendor/galaxy-explorer/src/codex/fleetLore.js	255	Кольцевой хаб Роя — выращенный коралловый обруч вокруг родного мира: изнутри соты, тёплый влажный воздух и запах тёплого ила. Причалов нет — есть живые створы, которые раскрываются навстречу своим и просто не замечают чужих. Корабль, простоявший у кольца слишком долго, начинает обрастать — без злого умысла: улей считает его частью себя.
+vendor/galaxy-explorer/src/codex/fleetLore.js	257	Аванпост Роя — икринка: опущенный в новую систему зачаток-улей, мягкий и полупрозрачный, поначалу меньше корвета. Годами он твердеет, темнеет и растёт, пока не станет узлом нового лёжбища. Картографы наносят их пунктиром: сегодняшний размер устареет к следующей сверке.
+vendor/galaxy-explorer/src/codex/fleetLore.js	259	Газосборщик Роя сам вырос из стада, которое пасёт: гроздь полипов-пузырей в верхних облаках, среди диких. Наевшись, она тяжелеет, тускнеет и всплывает к орбите — отдавать. Картель клянётся, что сборщики узнают его танкеры и подпускают ближе, чем чужих.
+vendor/galaxy-explorer/src/codex/fleetLore.js	262	Кольцевой хаб Синдиката — «нулевой меридиан»: тёмное гранёное колесо стыковочных доков, медленно вращающееся вокруг графитового шпиля с циановой сердцевиной. Внутри — биржа, приёмные и эталонные часы; снаружи — циановые огни причалов, которые прибывший видит раньше, чем таможню. Швартовка бесплатна. Всё после швартовки — нет.
+vendor/galaxy-explorer/src/codex/fleetLore.js	264	Колониальный аванпост Синдиката — тёмный гранёный пост с циановым глазом-сенсором и экватором из циановых огней: представительство до последней детали. Внутри — стойка регистрации, превосходный чай и договор в трёх экземплярах; каждый прибывший колонист получает приветственный опцион. Гарнизона нет — есть страховой инспектор, и его отчётов боятся больше пушек.
+vendor/galaxy-explorer/src/codex/fleetLore.js	266	Газосборщик Синдиката — тёмная воронка жерлом вниз с циановым жерлом, гранёное тело и резервуары сверху: издали похож на хищную люстру над бурей. По сути это топливная биржа: котировки идут по циановым панелям, и даже здесь есть приёмная с живым цветком. Топливо отгружают только после подписи — без исключений, даже если у клиента горят дюзы.
+vendor/galaxy-explorer/src/codex/fleetLore.js	269	Кольцевой хаб Картель варит из того, что приползло само: ожерелье списанных корпусов, сцепленных переходами, с рынком в каждом втором отсеке и плитой, которая не гаснет. Здесь чинят, торгуют, врут о ценах и травят байки до конца смены. Снаружи это выглядит как катастрофа на стапеле; изнутри — как дом.
+vendor/galaxy-explorer/src/codex/fleetLore.js	271	Аванпост Картеля начинается со стола и плиты: сперва место, где накормят, потом всё остальное. Пара сваренных вместе трюмов, кривая антенна, оранжевый фонарь у шлюза — и это уже порт, раз здесь готовы принять чужой борт. Гарнизона нет; есть те, кто сегодня дома.
+vendor/galaxy-explorer/src/codex/fleetLore.js	273	Газосборщик у гиганта здесь зовут кормильцем: его топливо держит на ходу половину вольного флота. Латаная бочка на длинной штанге, вечно обмёрзшая и вечно гудящая, вокруг которой по очереди пасутся танкеры. Смена на кормильце — самая скучная работа Картеля и самая уважаемая.
+vendor/galaxy-explorer/src/codex/fleetLore.js	276	Золотой хаб Предтеч не строился — он стоял здесь на самых старых картах, и ни одна новая не застала его другим. Осколки медленно вращаются вокруг светящегося ядра, удерживаемые тёплым светом; когда приходит чужой корабль, в их строю обнаруживается просвет ровно по его размеру. Доков нет, кранов нет, персонала нет — но уходящие клянутся, что улетели с полными баками.
+vendor/galaxy-explorer/src/codex/fleetLore.js	278	Аванпосты Предтеч стоят на мёртвых мирах у руин: формация осколков вокруг золотого стержня, которая начинает светиться, когда кто-то подходит. Старатели Картеля ночуют под ними — там теплее и, как они говорят, «спокойнее спится». Источник тепла не нашёл ни один прибор.
+vendor/galaxy-explorer/src/codex/fleetLore.js	280	Газосборщик Предтеч пьёт атмосферу без единого видимого механизма: свет уходит в облака и возвращается тяжелее. Синдикат вычислил его график до секунды и продаёт как календарь. Куда девается собранное, не знает никто — отгрузки не видели ни разу, кроме танкера, приходящего раз в сорок один год.
+vendor/galaxy-explorer/src/config.js	9	Низкое (слабый ПК)
+vendor/galaxy-explorer/src/config.js	18	Среднее
+vendor/galaxy-explorer/src/config.js	27	Высокое
+vendor/galaxy-explorer/src/gui.js	14	✦ Галактика
+vendor/galaxy-explorer/src/gui.js	19	Палитра
+vendor/galaxy-explorer/src/gui.js	26	Качество
+vendor/galaxy-explorer/src/gui.js	28	Сид
+vendor/galaxy-explorer/src/gui.js	36	🎲 Новый сид
+vendor/galaxy-explorer/src/gui.js	44	✦ Открыть все системы
+vendor/galaxy-explorer/src/gui.js	47	Форма
+vendor/galaxy-explorer/src/gui.js	48	Звёзды
+vendor/galaxy-explorer/src/gui.js	49	Рукава
+vendor/galaxy-explorer/src/gui.js	50	Закрутка
+vendor/galaxy-explorer/src/gui.js	51	Толщина рукавов
+vendor/galaxy-explorer/src/gui.js	52	Разброс
+vendor/galaxy-explorer/src/gui.js	53	Сжатие рукавов
+vendor/galaxy-explorer/src/gui.js	54	Размер ядра
+vendor/galaxy-explorer/src/gui.js	55	Плотность ядра
+vendor/galaxy-explorer/src/gui.js	56	Толщина диска
+vendor/galaxy-explorer/src/gui.js	60	Солнца
+vendor/galaxy-explorer/src/gui.js	61	Количество
+vendor/galaxy-explorer/src/gui.js	62	Размер
+vendor/galaxy-explorer/src/gui.js	66	Системы
+vendor/galaxy-explorer/src/gui.js	69	Доля реальных
+vendor/galaxy-explorer/src/gui.js	71	Метки
+vendor/galaxy-explorer/src/gui.js	82	🛰 Случайная система
+vendor/galaxy-explorer/src/gui.js	86	Движение
+vendor/galaxy-explorer/src/gui.js	87	Скорость вращения
+vendor/galaxy-explorer/src/gui.js	88	Дифф. вращение
+vendor/galaxy-explorer/src/gui.js	89	Мерцание
+vendor/galaxy-explorer/src/gui.js	90	Вращение камеры
+vendor/galaxy-explorer/src/gui.js	93	Свет и туманность
+vendor/galaxy-explorer/src/gui.js	94	Яркость
+vendor/galaxy-explorer/src/gui.js	95	Размер звёзд
+vendor/galaxy-explorer/src/gui.js	96	Туманность
+vendor/galaxy-explorer/src/gui.js	97	Плотность газа
+vendor/galaxy-explorer/src/gui.js	102	Звук
+vendor/galaxy-explorer/src/gui.js	103	Интерфейс
+vendor/galaxy-explorer/src/gui.js	104	Музыка
+vendor/galaxy-explorer/src/gui.js	111	Бюджет
+vendor/galaxy-explorer/src/gui.js	112	Вызовы отрисовки
+vendor/galaxy-explorer/src/gui.js	113	Треугольники
+vendor/galaxy-explorer/src/main.js	42	Лавовая
+vendor/galaxy-explorer/src/main.js	43	Каменистая
+vendor/galaxy-explorer/src/main.js	44	Пустынная
+vendor/galaxy-explorer/src/main.js	45	Земного типа
+vendor/galaxy-explorer/src/main.js	46	Океаническая
+vendor/galaxy-explorer/src/main.js	47	Ледяная
+vendor/galaxy-explorer/src/main.js	48	Газовый гигант
+vendor/galaxy-explorer/src/main.js	101	s first\n    // run), which drives the one-time notice below. The world overlay itself\n    // MUST exist before _buildSystems() — Systems reads visited-state from it\n    // while placing markers.\n    this._partyStatus = ensureParty(this.config);\n    this.worldOverlay = new WorldOverlay(currentPartyId(this.config));\n\n    this._buildSystems();\n    this.systemView = new SystemView(this.renderer, this.assetLoader);\n    this._initHud();\n    this._initCodex();\n    this.sfx = new SfxManager(); // UI sounds — before _bindEvents (listeners) and buildGUI (its «Звук» folder)\n    // the ♪ toggle is the ONE master audio switch (owner, 2026-07-03):\n    // turning the music off silences the UI sounds too, and vice versa.\n    this.music.onStateChange = (on) => this.sfx.setMuted(!on);\n    this._syncPixelRatio();\n\n    this.clock = new THREE.Clock();\n\n    this._bindEvents();\n    this.gui = buildGUI(this);\n    this.gui.hide(); // minimal galaxy view — the generator panel opens via the ⚙ button\n    this._initSettingsToggle();\n    this._initViewMode();\n    this._initRotateToggle();\n    this._initCinematic();\n    this._initControlsHelp();\n    this._maybeShowGenVersionBanner();\n    // first-flight tutorial — created after every overlay button exists (it\n    // points at them); self-gates on saved state / a veteran codex / the show.\n    this.onboarding = new Onboarding(this);\n    this.onboarding.maybeStart();\n\n    this._loop = this._loop.bind(this);\n    this.renderer.setAnimationLoop(this._loop);\n\n    this._warmUpSystemShaders(); // pre-compile system shaders so the first dive is instant\n  }\n\n  /** One-time notice: the generation rules moved (GEN_VERSION bumped) since\n   *  this browser last played, or this is a returning pre-overlay save seeing\n   *  the new party format for the first time — either way the charted-systems\n   *  map necessarily starts over. Self-dismisses on click or after a timeout,\n   *  same pattern as the #cine-hint / #hint floating notices. */\n  _maybeShowGenVersionBanner() {\n    const { versionChanged, fromVersion } = this._partyStatus;\n    const firstRunOnNewSaveFormat = fromVersion === null && hasLegacyCharted();\n    if (!versionChanged && !firstRunOnNewSaveFormat) return;\n\n    const el = document.createElement(
+vendor/galaxy-explorer/src/main.js	222	Вращение карты
+vendor/galaxy-explorer/src/main.js	485	Станция · экспедиция
+vendor/galaxy-explorer/src/main.js	486	«Эндюранс»
+vendor/galaxy-explorer/src/main.js	487	Вращающаяся станция-кольцо: искусственную тяжесть ей даёт само вращение обода. Горстка людей на ней ищет человечеству новый дом — у самого края чёрной дыры, где время течёт иначе.
+vendor/galaxy-explorer/src/main.js	489	Тип
+vendor/galaxy-explorer/src/main.js	489	кольцевая станция
+vendor/galaxy-explorer/src/main.js	490	Экипаж
+vendor/galaxy-explorer/src/main.js	490	экспедиция
+vendor/galaxy-explorer/src/main.js	491	Тяжесть
+vendor/galaxy-explorer/src/main.js	491	от вращения обода
+vendor/galaxy-explorer/src/main.js	492	Курс
+vendor/galaxy-explorer/src/main.js	492	к мирам за горизонтом событий
+vendor/galaxy-explorer/src/main.js	854	s finds — the default «Системы» tab is empty then\n        this.codexUI.open(this.onboarding.wantsCodexTab());\n      });\n    }\n  }\n\n  /** Stop/resume the main render loop (`_loop` just early-returns on\n   *  `!this._running` — `setAnimationLoop` keeps ticking either way) while the\n   *  codex object viewer owns the frame budget with its own renderer. Mirrors\n   *  the existing visibilitychange pause: resuming also drops the accumulated\n   *  clock gap so the next frame
+vendor/galaxy-explorer/src/main.js	918	); // tutorial: «поверни галактику»\n    });\n    // tutorial: a wheel zoom over the galaxy is the «zoom» step
+vendor/galaxy-explorer/src/main.js	1107	Планета
+vendor/galaxy-explorer/src/main.js	1108	нажмите, чтобы приблизиться →
+vendor/galaxy-explorer/src/main.js	1111	Объект
+vendor/galaxy-explorer/src/main.js	1112	нажмите для информации →
+vendor/galaxy-explorer/src/main.js	1221	, data.seed, { batchId, sourceRef: { seed: data.seed }, label: data.name });\n      } else {\n        // hand-crafted system → its «Особое» systems entry + its named objects\n        const sk = specialSystemKey(data.seed);\n        if (sk) rec(
+vendor/galaxy-explorer/src/main.js	1257	, `${faction}:${role.id}`, { batchId, sourceRef: { role: role.id, faction, seed } });\n      }\n    }\n    codexFlush(); // single serialize + setItem for the whole reveal\n  }\n\n  /** «Перейти к объекту»: warp to a codex find in the live galaxy and focus it.\n   *  Systems/planets/stations carry a seed; a phenomenon maps to its fixed\n   *  special system. A no-op if the target can
+vendor/galaxy-explorer/src/main.js	1343	, planet); // tutorial: «кликни по Земле»\n  }\n\n  /** Codex bookkeeping for a focused planet (#codex) — this HUD card is the\n   *  first look at its inhabitants, so the planet
+vendor/galaxy-explorer/src/main.js	1363	, ruinType, { batchId, sourceRef, ruinType });\n    }\n    // a hand-crafted signature world (Земля, Татуин, …) unlocks its «Особое»\n    // planet entry and, where one lives here, its named race.\n    const sp = specialPlanetFor(seed, p.label);\n    if (sp) {\n      this._codexRecord(
+vendor/galaxy-explorer/src/main.js	1387	, `${this.systemView._faction}:${ref.type.id}`, {\n        batchId: codexBatch,\n        // seed pins the system this fleet type was seen in — lets «Перейти к\n        // объекту» warp back to it (buildShip itself needs only role+faction).\n        sourceRef: { role: ref.type.id, faction: this.systemView._faction, seed: this.systemView.data.seed },\n      });\n    } else if (kind === 
+vendor/galaxy-explorer/src/onboarding/onboarding.js	158	);\n      this._glowEl = null;\n    }\n  }\n\n  // ---- «показать дом»: fly the galaxy camera to the Solar System marker ------\n\n  async showHome() {\n    const app = this.app;\n    if (app._cineActive()) return; // the show owns the camera — don
+vendor/galaxy-explorer/src/onboarding/onboarding.js	198	<button type="button" class="onboard-skip">Пропустить обучение</button>
+vendor/galaxy-explorer/src/onboarding/onboarding.js	219	Первый полёт · шаг ${this.index + 1} из ${this.steps.length}
+vendor/galaxy-explorer/src/onboarding/onboarding.js	227	Показать дом
+vendor/galaxy-explorer/src/onboarding/onboarding.js	231	Дальше
+vendor/galaxy-explorer/src/onboarding/steps.js	17	s finds live under «Планеты», not «Системы»)\n//\n// The tour deliberately runs THROUGH the Solar System: rotate → zoom → fly\n// home → enter → meet Earth → find it in the codex → back out. Every middle\n// step advances on the player
+vendor/galaxy-explorer/src/onboarding/steps.js	26	Добро пожаловать, картограф
+vendor/galaxy-explorer/src/onboarding/steps.js	27	Перед тобой — целая галактика, выращенная из одного зерна. Короткий первый полёт — и она твоя.
+vendor/galaxy-explorer/src/onboarding/steps.js	29	Начать
+vendor/galaxy-explorer/src/onboarding/steps.js	33	Зажми левую кнопку мыши и поверни галактику.
+vendor/galaxy-explorer/src/onboarding/steps.js	38	Колесо мыши приближает к месту под курсором. Клавиши Q и E — тоже зум.
+vendor/galaxy-explorer/src/onboarding/steps.js	43	Среди тысяч звёзд есть наш дом. Нажми «Показать дом», затем кликни по пульсирующему маркеру, чтобы войти.
+vendor/galaxy-explorer/src/onboarding/steps.js	50	Это Солнечная система. Слева — досье: звезда, возраст, история. Планеты подписаны прямо на орбитах.
+vendor/galaxy-explorer/src/onboarding/steps.js	52	Дальше
+vendor/galaxy-explorer/src/onboarding/steps.js	56	Кликни по Земле — рассмотрим её поближе.
+vendor/galaxy-explorer/src/onboarding/steps.js	58	Земля
+vendor/galaxy-explorer/src/onboarding/steps.js	62	Земля записана в твой Кодекс. Теперь вернись к галактике: Esc делает шаг назад — нажми его дважды.
+vendor/galaxy-explorer/src/onboarding/steps.js	67	Кодекс — вкладка у левого края: всё, что ты находишь, остаётся в нём навсегда. Загляни — Земля уже там.
+vendor/galaxy-explorer/src/onboarding/steps.js	74	Первый полёт завершён
+vendor/galaxy-explorer/src/onboarding/steps.js	75	Дальше — свободный полёт: наводись на маркеры, ныряй в системы, собирай кодекс. Настройки — сверху справа.
+vendor/galaxy-explorer/src/onboarding/steps.js	77	В путь
+vendor/galaxy-explorer/src/palettes.js	25	Ember (тёплая)
+vendor/galaxy-explorer/src/palettes.js	34	Emerald (изумруд)
+vendor/galaxy-explorer/src/palettes.js	43	Ice (ледяная)
+vendor/galaxy-explorer/src/palettes.js	52	Rose (розово-пурпурная)
+vendor/galaxy-explorer/src/systems/lore.js	11	Вэй
+vendor/galaxy-explorer/src/systems/lore.js	11	Кор
+vendor/galaxy-explorer/src/systems/lore.js	11	Аэт
+vendor/galaxy-explorer/src/systems/lore.js	11	Зар
+vendor/galaxy-explorer/src/systems/lore.js	11	Тал
+vendor/galaxy-explorer/src/systems/lore.js	11	Мор
+vendor/galaxy-explorer/src/systems/lore.js	11	Аль
+vendor/galaxy-explorer/src/systems/lore.js	11	Ор
+vendor/galaxy-explorer/src/systems/lore.js	11	Вен
+vendor/galaxy-explorer/src/systems/lore.js	11	Сель
+vendor/galaxy-explorer/src/systems/lore.js	12	Дра
+vendor/galaxy-explorer/src/systems/lore.js	12	Эль
+vendor/galaxy-explorer/src/systems/lore.js	12	Кас
+vendor/galaxy-explorer/src/systems/lore.js	12	Тир
+vendor/galaxy-explorer/src/systems/lore.js	12	Ун
+vendor/galaxy-explorer/src/systems/lore.js	12	Фе
+vendor/galaxy-explorer/src/systems/lore.js	12	Лю
+vendor/galaxy-explorer/src/systems/lore.js	12	Сан
+vendor/galaxy-explorer/src/systems/lore.js	12	Хет
+vendor/galaxy-explorer/src/systems/lore.js	12	Нью
+vendor/galaxy-explorer/src/systems/lore.js	13	Кир
+vendor/galaxy-explorer/src/systems/lore.js	13	Овен
+vendor/galaxy-explorer/src/systems/lore.js	13	Тея
+vendor/galaxy-explorer/src/systems/lore.js	13	Изра
+vendor/galaxy-explorer/src/systems/lore.js	13	Кель
+vendor/galaxy-explorer/src/systems/lore.js	16	ла
+vendor/galaxy-explorer/src/systems/lore.js	16	рон
+vendor/galaxy-explorer/src/systems/lore.js	16	вест
+vendor/galaxy-explorer/src/systems/lore.js	16	мир
+vendor/galaxy-explorer/src/systems/lore.js	16	тея
+vendor/galaxy-explorer/src/systems/lore.js	16	дор
+vendor/galaxy-explorer/src/systems/lore.js	16	нис
+vendor/galaxy-explorer/src/systems/lore.js	16	рах
+vendor/galaxy-explorer/src/systems/lore.js	16	лон
+vendor/galaxy-explorer/src/systems/lore.js	16	тар
+vendor/galaxy-explorer/src/systems/lore.js	17	сид
+vendor/galaxy-explorer/src/systems/lore.js	17	лей
+vendor/galaxy-explorer/src/systems/lore.js	17	наш
+vendor/galaxy-explorer/src/systems/lore.js	17	рим
+vendor/galaxy-explorer/src/systems/lore.js	17	сол
+vendor/galaxy-explorer/src/systems/lore.js	17	дан
+vendor/galaxy-explorer/src/systems/lore.js	17	тис
+vendor/galaxy-explorer/src/systems/lore.js	17	вал
+vendor/galaxy-explorer/src/systems/lore.js	17	тор
+vendor/galaxy-explorer/src/systems/lore.js	17	мис
+vendor/galaxy-explorer/src/systems/lore.js	19	Прайм
+vendor/galaxy-explorer/src/systems/lore.js	19	Майнор
+vendor/galaxy-explorer/src/systems/lore.js	19	Секунда
+vendor/galaxy-explorer/src/systems/lore.js	19	Нова
+vendor/galaxy-explorer/src/systems/lore.js	19	Веста
+vendor/galaxy-explorer/src/systems/lore.js	19	Ультима
+vendor/galaxy-explorer/src/systems/lore.js	19	Терра
+vendor/galaxy-explorer/src/systems/lore.js	19	Бис
+vendor/galaxy-explorer/src/systems/lore.js	20	Кеплер
+vendor/galaxy-explorer/src/systems/lore.js	20	Глизе
+vendor/galaxy-explorer/src/systems/lore.js	20	Тейя
+vendor/galaxy-explorer/src/systems/lore.js	20	Вега
+vendor/galaxy-explorer/src/systems/lore.js	20	Орн
+vendor/galaxy-explorer/src/systems/lore.js	20	Лиэн
+vendor/galaxy-explorer/src/systems/lore.js	20	Каэр
+vendor/galaxy-explorer/src/systems/lore.js	20	Тихо
+vendor/galaxy-explorer/src/systems/lore.js	22	аэ
+vendor/galaxy-explorer/src/systems/lore.js	22	со
+vendor/galaxy-explorer/src/systems/lore.js	22	кри
+vendor/galaxy-explorer/src/systems/lore.js	22	ве
+vendor/galaxy-explorer/src/systems/lore.js	22	се
+vendor/galaxy-explorer/src/systems/lore.js	22	ли
+vendor/galaxy-explorer/src/systems/lore.js	22	тха
+vendor/galaxy-explorer/src/systems/lore.js	22	му
+vendor/galaxy-explorer/src/systems/lore.js	22	не
+vendor/galaxy-explorer/src/systems/lore.js	22	зи
+vendor/galaxy-explorer/src/systems/lore.js	22	фа
+vendor/galaxy-explorer/src/systems/lore.js	22	вэ
+vendor/galaxy-explorer/src/systems/lore.js	22	то
+vendor/galaxy-explorer/src/systems/lore.js	22	ри
+vendor/galaxy-explorer/src/systems/lore.js	22	ша
+vendor/galaxy-explorer/src/systems/lore.js	23	лли
+vendor/galaxy-explorer/src/systems/lore.js	23	вани
+vendor/galaxy-explorer/src/systems/lore.js	23	ши
+vendor/galaxy-explorer/src/systems/lore.js	23	лани
+vendor/galaxy-explorer/src/systems/lore.js	23	теш
+vendor/galaxy-explorer/src/systems/lore.js	23	нави
+vendor/galaxy-explorer/src/systems/lore.js	23	сти
+vendor/galaxy-explorer/src/systems/lore.js	23	элы
+vendor/galaxy-explorer/src/systems/lore.js	23	нтар
+vendor/galaxy-explorer/src/systems/lore.js	23	оши
+vendor/galaxy-explorer/src/systems/lore.js	23	эни
+vendor/galaxy-explorer/src/systems/lore.js	23	исса
+vendor/galaxy-explorer/src/systems/lore.js	23	ора
+vendor/galaxy-explorer/src/systems/lore.js	23	эми
+vendor/galaxy-explorer/src/systems/lore.js	23	аны
+vendor/galaxy-explorer/src/systems/lore.js	63	Обитаема
+vendor/galaxy-explorer/src/systems/lore.js	65	Здесь до сих пор горят огни.
+vendor/galaxy-explorer/src/systems/lore.js	66	Этот мир жив и шумен.
+vendor/galaxy-explorer/src/systems/lore.js	67	Система обитаема — и хорошо это знает.
+vendor/galaxy-explorer/src/systems/lore.js	68	Свет городов виден даже с дальней орбиты.
+vendor/galaxy-explorer/src/systems/lore.js	69	Здесь дышат, строят и спорят о звёздах.
+vendor/galaxy-explorer/src/systems/lore.js	70	Радиоэфир здесь густой от чужих голосов.
+vendor/galaxy-explorer/src/systems/lore.js	71	Ночная сторона планеты расчерчена огнями городов.
+vendor/galaxy-explorer/src/systems/lore.js	72	Это не пустошь — это чей-то дом.
+vendor/galaxy-explorer/src/systems/lore.js	73	Орбиты забиты станциями, спутниками и чужим добром.
+vendor/galaxy-explorer/src/systems/lore.js	74	Кто-то здесь смотрит на ту же звезду, что и ты.
+vendor/galaxy-explorer/src/systems/lore.js	77	Их города растут вверх, к самому краю атмосферы, словно стеклянные леса.
+vendor/galaxy-explorer/src/systems/lore.js	78	Они живут в океанах под вечным льдом и говорят щелчками и светом.
+vendor/galaxy-explorer/src/systems/lore.js	79	Целые поколения проводят жизнь на дирижаблях в облаках газового гиганта.
+vendor/galaxy-explorer/src/systems/lore.js	80	Они поклоняются своей звезде и считают каждый рассвет обещанием.
+vendor/galaxy-explorer/src/systems/lore.js	81	Их корабли уходят к соседним огонькам и почти всегда возвращаются.
+vendor/galaxy-explorer/src/systems/lore.js	82	Они научились слушать ядро планеты и строят там, где спокойно.
+vendor/galaxy-explorer/src/systems/lore.js	83	Их песни передают по радио из поколения в поколение.
+vendor/galaxy-explorer/src/systems/lore.js	84	Каждый их город висит на тросах между двумя горами.
+vendor/galaxy-explorer/src/systems/lore.js	85	Они расселились по тёплым лунам и торгуют водой и музыкой.
+vendor/galaxy-explorer/src/systems/lore.js	86	Целые материки они отдали под сады и оставили дикими.
+vendor/galaxy-explorer/src/systems/lore.js	89	Себя они называют — {species}.
+vendor/galaxy-explorer/src/systems/lore.js	90	Имя этого народа — {species}.
+vendor/galaxy-explorer/src/systems/lore.js	91	Соседи зовут их просто: {species}.
+vendor/galaxy-explorer/src/systems/lore.js	92	Сигнал отсюда тёплый и не гаснет.
+vendor/galaxy-explorer/src/systems/lore.js	93	Они ещё не знают, что не одни.
+vendor/galaxy-explorer/src/systems/lore.js	94	На их флагах — силуэт родной звезды.
+vendor/galaxy-explorer/src/systems/lore.js	98	Руины
+vendor/galaxy-explorer/src/systems/lore.js	100	Когда-то здесь была жизнь. Теперь — тишина.
+vendor/galaxy-explorer/src/systems/lore.js	101	Эта система помнит больше, чем рассказывает.
+vendor/galaxy-explorer/src/systems/lore.js	102	Города стоят, но в них никого нет.
+vendor/galaxy-explorer/src/systems/lore.js	103	Свет погас очень давно.
+vendor/galaxy-explorer/src/systems/lore.js	104	Здесь всё цело — и всё мертво.
+vendor/galaxy-explorer/src/systems/lore.js	105	Пыль легла ровным слоем на всё, что они построили.
+vendor/galaxy-explorer/src/systems/lore.js	106	Эхо ещё держится в пустых коридорах.
+vendor/galaxy-explorer/src/systems/lore.js	107	От них остались только тени на стенах.
+vendor/galaxy-explorer/src/systems/lore.js	110	Орбитальные кольца всё ещё крутятся — пустые, как заведённые часы.
+vendor/galaxy-explorer/src/systems/lore.js	111	На поверхности остались дороги, ведущие в никуда.
+vendor/galaxy-explorer/src/systems/lore.js	112	Что их погубило — война, звезда или собственное любопытство — уже не узнать.
+vendor/galaxy-explorer/src/systems/lore.js	113	Последние ушли под землю и не вышли обратно.
+vendor/galaxy-explorer/src/systems/lore.js	114	От великой культуры остались лишь идеально ровные руины и молчание.
+vendor/galaxy-explorer/src/systems/lore.js	115	Их машины до сих пор работают, обслуживая мёртвые улицы.
+vendor/galaxy-explorer/src/systems/lore.js	116	Их библиотеки нетронуты, но читать их больше некому.
+vendor/galaxy-explorer/src/systems/lore.js	117	Они оставили двери открытыми, будто собирались вернуться.
+vendor/galaxy-explorer/src/systems/lore.js	118	Облака газового гиганта до сих пор хранят остовы их станций.
+vendor/galaxy-explorer/src/systems/lore.js	121	Тех, кто здесь жил, звали — {species}.
+vendor/galaxy-explorer/src/systems/lore.js	122	Этот народ называл себя — {species}.
+vendor/galaxy-explorer/src/systems/lore.js	123	Последнее слово в их хрониках — {species}.
+vendor/galaxy-explorer/src/systems/lore.js	124	Сигнал маяка всё ещё идёт. Ответа нет уже тысячи лет.
+vendor/galaxy-explorer/src/systems/lore.js	125	Кто-то ещё ждёт их возвращения. Зря.
+vendor/galaxy-explorer/src/systems/lore.js	129	Дикая
+vendor/galaxy-explorer/src/systems/lore.js	131	Здесь никогда не ступала ничья нога.
+vendor/galaxy-explorer/src/systems/lore.js	132	Дикая система, нетронутая и равнодушная.
+vendor/galaxy-explorer/src/systems/lore.js	133	Тут есть всё для жизни — но жизни нет.
+vendor/galaxy-explorer/src/systems/lore.js	134	Только камень, лёд и свет.
+vendor/galaxy-explorer/src/systems/lore.js	135	Эта система не ждала и не ждёт никого.
+vendor/galaxy-explorer/src/systems/lore.js	136	Здесь правят только гравитация и время.
+vendor/galaxy-explorer/src/systems/lore.js	137	Мир до первого имени.
+vendor/galaxy-explorer/src/systems/lore.js	138	Ни следа, ни тропы, ни дыхания.
+vendor/galaxy-explorer/src/systems/lore.js	141	Бури в атмосфере газового гиганта длятся дольше иных цивилизаций.
+vendor/galaxy-explorer/src/systems/lore.js	142	Океаны кипят и замерзают по кругу, век за веком.
+vendor/galaxy-explorer/src/systems/lore.js	143	Кольца из пыли и льда ловят звёздный свет и рассыпают его радугой.
+vendor/galaxy-explorer/src/systems/lore.js	144	Молнии бьют по пустым равнинам, и некому их увидеть.
+vendor/galaxy-explorer/src/systems/lore.js	145	Где-то в этих тёплых морях, возможно, уже зреет что-то живое.
+vendor/galaxy-explorer/src/systems/lore.js	146	Лавовые реки чертят по коре узоры, которые никто не прочтёт.
+vendor/galaxy-explorer/src/systems/lore.js	147	Ледяные поля трещат и смыкаются в полной тишине.
+vendor/galaxy-explorer/src/systems/lore.js	148	Пыльные смерчи бродят по пустыням тысячелетиями.
+vendor/galaxy-explorer/src/systems/lore.js	149	Камни падают с неба и остаются лежать так, как легли.
+vendor/galaxy-explorer/src/systems/lore.js	152	Идеальное место, чтобы начать с чистого листа.
+vendor/galaxy-explorer/src/systems/lore.js	153	Тишина здесь старше самих планет.
+vendor/galaxy-explorer/src/systems/lore.js	154	Звезда будет светить ещё миллиарды лет — терпеливо и впустую.
+vendor/galaxy-explorer/src/systems/lore.js	155	Однажды кто-то даст ей имя. Но не сегодня.
+vendor/galaxy-explorer/src/systems/lore.js	156	Здесь можно потеряться и не быть найденным.
+vendor/galaxy-explorer/src/systems/lore.js	166	И жизнь здесь не просто теплится — она спорит, строит и мечтает.
+vendor/galaxy-explorer/src/systems/lore.js	167	Этот мир по-настоящему живой: его слышно в эфире за много световых лет.
+vendor/galaxy-explorer/src/systems/lore.js	170	Теперь это мёртвая система: всё, что могло дышать, давно умолкло.
+vendor/galaxy-explorer/src/systems/lore.js	171	Жизнь здесь была — и кончилась; осталась только тишина да остывающие руины.
+vendor/galaxy-explorer/src/systems/lore.js	174	Жизни тут пока нет, но тёплый мир и жидкая вода намекают, что однажды она могла бы зажечься.
+vendor/galaxy-explorer/src/systems/lore.js	175	В этих тёплых морях, возможно, уже зреет что-то живое — просто ещё слишком рано.
+vendor/galaxy-explorer/src/systems/lore.js	176	Условия для жизни почти сложились: не хватает лишь искры и времени.
+vendor/galaxy-explorer/src/systems/lore.js	179	Голый камень, лёд и радиация — едва ли здесь когда-нибудь затеплится жизнь.
+vendor/galaxy-explorer/src/systems/lore.js	180	Для жизни тут слишком сурово: ни воздуха, ни воды, ни покоя.
+vendor/galaxy-explorer/src/systems/lore.js	181	Эта система мертва от рождения и, похоже, мёртвой и останется.
+vendor/galaxy-explorer/src/systems/lore.js	216	Система сформировалась {age} млрд лет назад из коллапса холодного газового облака.
+vendor/galaxy-explorer/src/systems/lore.js	217	Около {age} млрд лет назад здесь вспыхнула звезда, и вокруг неё слиплись планеты.
+vendor/galaxy-explorer/src/systems/lore.js	218	{age} млрд лет назад это был лишь диск пыли вокруг молодого солнца.
+vendor/galaxy-explorer/src/systems/lore.js	219	Ей {age} млрд лет — она помнит времена, когда галактика была моложе.
+vendor/galaxy-explorer/src/systems/lore.js	222	С тех пор здесь успела зародиться и закрепиться жизнь.
+vendor/galaxy-explorer/src/systems/lore.js	222	За это время кто-то открыл здесь глаза и посмотрел на звёзды.
+vendor/galaxy-explorer/src/systems/lore.js	223	Жизнь пришла, расцвела и ушла, а звезда всё горит.
+vendor/galaxy-explorer/src/systems/lore.js	223	Целая история уместилась между двумя вспышками на её солнце.
+vendor/galaxy-explorer/src/systems/lore.js	224	Жизнь так и не появилась — пока.
+vendor/galaxy-explorer/src/systems/lore.js	224	За все эти эпохи её никто не потревожил.
+vendor/galaxy-explorer/src/systems/lore.js	229	Её сердце — ${star.desc}.
+vendor/galaxy-explorer/src/systems/lore.js	239	водород
+vendor/galaxy-explorer/src/systems/lore.js	240	гелий-3
+vendor/galaxy-explorer/src/systems/lore.js	243	водяной лёд
+vendor/galaxy-explorer/src/systems/lore.js	244	летучие соединения
+vendor/galaxy-explorer/src/systems/lore.js	247	редкоземельные металлы
+vendor/galaxy-explorer/src/systems/lore.js	248	тяжёлые изотопы
+vendor/galaxy-explorer/src/systems/lore.js	251	железо и никель
+vendor/galaxy-explorer/src/systems/lore.js	252	силикаты и руды
+vendor/galaxy-explorer/src/systems/lore.js	255	органика
+vendor/galaxy-explorer/src/systems/lore.js	256	пресная вода
+vendor/galaxy-explorer/src/systems/lore.js	258	каменная порода
+vendor/galaxy-explorer/src/systems/lore.js	259	кристаллы-резонаторы
+vendor/galaxy-explorer/src/systems/lore.js	259	следы антиматерии
+vendor/galaxy-explorer/src/systems/lore.js	259	экзотическая материя
+vendor/galaxy-explorer/src/systems/lore.js	271	дом для местной цивилизации
+vendor/galaxy-explorer/src/systems/lore.js	272	археологический объект и склад чужих технологий
+vendor/galaxy-explorer/src/systems/lore.js	273	перспективна для добычи и колонизации
+vendor/galaxy-explorer/src/systems/lore.js	274	кандидат под научную станцию
+vendor/galaxy-explorer/src/systems/lore.js	274	тихий уголок под заповедник
+vendor/galaxy-explorer/src/systems/lore.js	274	точка дозаправки на дальнем маршруте
+vendor/galaxy-explorer/src/systems/lore.js	283	Племена
+vendor/galaxy-explorer/src/systems/lore.js	285	Пока они живут малыми племенами и о звёздах знают лишь то, что те красивы и пугающи; до собственного космоса им ещё тысячи поколений.
+vendor/galaxy-explorer/src/systems/lore.js	286	Их мир размером с долину между гор, а всё, что дальше, для них — край легенд и опасных духов.
+vendor/galaxy-explorer/src/systems/lore.js	287	Они едва приручили металл и огонь, и каждая гроза для них — разговор разгневанных богов.
+vendor/galaxy-explorer/src/systems/lore.js	291	Индустриальная эпоха
+vendor/galaxy-explorer/src/systems/lore.js	293	Они затянули планету сетью дорог и труб, подняли в небо первые ракеты и впервые увидели свой мир со стороны — и притихли.
+vendor/galaxy-explorer/src/systems/lore.js	294	Их радиоэфир уже шепчет в пустоту, но дальше собственной луны они пока не бывали.
+vendor/galaxy-explorer/src/systems/lore.js	295	Они стоят на самом пороге космоса и всё чаще спорят уже не «лететь ли к звёздам», а «когда именно».
+vendor/galaxy-explorer/src/systems/lore.js	299	Космическая цивилизация
+vendor/galaxy-explorer/src/systems/lore.js	301	Они давно перестали быть детьми одной планеты: их корабли снуют между мирами, а орбиты увешаны станциями и верфями.
+vendor/galaxy-explorer/src/systems/lore.js	302	Они расселились по соседним мирам и лунам и теперь поглядывают уже на другие, чужие солнца.
+vendor/galaxy-explorer/src/systems/lore.js	303	Родную звезду они зовут домом — но домом тесным, и взгляд их всё чаще уходит вглубь галактики.
+vendor/galaxy-explorer/src/systems/lore.js	513	Это гордость местного флота: он держит небо родной системы и провожает каждый караван к дальним колониям.
+vendor/galaxy-explorer/src/systems/lore.js	514	Флагман охраняет родные миры и первым выходит навстречу всему, что приходит из тьмы между звёзд.
+vendor/galaxy-explorer/src/systems/lore.js	515	Он редко покидает родную систему — его дело быть щитом над домом и парадным флагом цивилизации.
+vendor/galaxy-explorer/src/systems/lore.js	524	Города ещё освещены, лифты ходят, конвейеры гудят — но людей здесь нет уже тысячи лет.
+vendor/galaxy-explorer/src/systems/lore.js	525	Цивилизация вымерла, а её машины так и не получили приказ остановиться и работают по сей день.
+vendor/galaxy-explorer/src/systems/lore.js	526	Свет в окнах горит исправно. Его зажигают роботы — для тех, кто уже никогда не вернётся.
+vendor/galaxy-explorer/src/systems/lore.js	527	Заводы исправно штампуют детали для кораблей, которые некому собирать и некому вести.
+vendor/galaxy-explorer/src/systems/lore.js	528	Автоматика поддерживает мёртвый мир в идеальном порядке, не зная, что хозяева давно мертвы.
+vendor/galaxy-explorer/src/systems/lore.js	532	На месте столицы — оплавленный кратер: кто-то или что-то стёрло этот мир за один день.
+vendor/galaxy-explorer/src/systems/lore.js	533	Огромный шрам от удара пересекает планету — след катастрофы, оборвавшей здесь всё живое.
+vendor/galaxy-explorer/src/systems/lore.js	534	Кора до сих пор светится в месте взрыва. Что это было — оружие или ошибка — уже не спросить.
+vendor/galaxy-explorer/src/systems/lore.js	535	Они сами расщепили своё ядро. От великой цивилизации остался лишь дымящийся кратер.
+vendor/galaxy-explorer/src/systems/lore.js	541	От планеты остались лишь медленно расходящиеся обломки: чужая раса не пощадила её.
+vendor/galaxy-explorer/src/systems/lore.js	542	Здесь была живая планета — пока пришельцы не разнесли её в пыль и каменное крошево.
+vendor/galaxy-explorer/src/systems/lore.js	543	Пояс обломков на месте мира — всё, что уцелело после удара чужого флота.
+vendor/galaxy-explorer/src/systems/lore.js	544	Кто-то расколол эту планету как орех. Кто и зачем — история уже не помнит, остались только осколки.
+vendor/galaxy-explorer/src/systems/lore.js	560	У горизонта чёрной дыры время для стороннего наблюдателя будто застывает.
+vendor/galaxy-explorer/src/systems/lore.js	561	Свет от края наблюдаемой Вселенной летел к нам около 13,8 миллиарда лет.
+vendor/galaxy-explorer/src/systems/lore.js	562	Напёрсток вещества нейтронной звезды весил бы как целая гора.
+vendor/galaxy-explorer/src/systems/lore.js	563	Красные карлики живут так долго, что ни один из них ещё не успел умереть за всю историю Вселенной.
+vendor/galaxy-explorer/src/systems/lore.js	564	На горячих газовых гигантах бывает дождь из жидкого стекла, а где-то — из железа.
+vendor/galaxy-explorer/src/systems/lore.js	565	Чёрная дыра в центре Млечного Пути, Стрелец A*, весит как четыре миллиона Солнц.
+vendor/galaxy-explorer/src/systems/lore.js	566	Свет Солнца долетает до Земли за 8 минут, а до Нептуна — больше четырёх часов.
+vendor/galaxy-explorer/src/systems/lore.js	567	Многие планеты и луны повёрнуты к звезде всегда одной стороной — это приливный захват.
+vendor/galaxy-explorer/src/systems/lore.js	568	В недрах некоторых планет, возможно, идёт настоящий дождь из алмазов.
+vendor/galaxy-explorer/src/systems/lore.js	569	Один год на Нептуне длится почти 165 земных лет.
+vendor/galaxy-explorer/src/systems/lore.js	570	Если бы Солнце стало чёрной дырой, она была бы всего около 3 км в поперечнике.
+vendor/galaxy-explorer/src/systems/lore.js	571	Млечный Путь тянется на 100 000 световых лет и хранит сотни миллиардов звёзд.
+vendor/galaxy-explorer/src/systems/lore.js	572	Возле чёрной дыры время идёт медленнее — на этом построен сюжет «Интерстеллара».
+vendor/galaxy-explorer/src/systems/lore.js	573	Самые быстрые пульсары успевают обернуться вокруг оси сотни раз в секунду.
+vendor/galaxy-explorer/src/systems/lore.js	574	Космос так пуст, что при столкновении галактик звёзды почти никогда не врезаются друг в друга.
+vendor/galaxy-explorer/src/systems/lore.js	575	В ядре Солнца — около 15 миллионов градусов.
+vendor/galaxy-explorer/src/systems/lore.js	576	Газовый гигант может быть в тысячу раз массивнее Земли, но легче воды по плотности.
+vendor/galaxy-explorer/src/systems/lore.js	577	Свет фотонного кольца вокруг чёрной дыры — это лучи, успевшие облететь её по кругу.
+vendor/galaxy-explorer/src/systems/ships/faction_alliance.js	281	), 0, 0, -0.27, Math.PI / 2); // engine mount\n  nozzle(grp, s, 0, 0, -0.28, 0.026, 0.05);\n  for (const [dx, dy] of [[0.045, 0], [0.0225, 0.039], [-0.0225, 0.039], [-0.045, 0], [-0.0225, -0.039], [0.0225, -0.039]]) {\n    nozzle(grp, s, dx, dy, -0.28, 0.018, 0.045);\n  }\n  for (const x of [-1, 1]) {\n    grp.add(part(box(0.004, 0.01, 0.44), ACC(s), x * 0.053, -0.014, 0.0));\n    panelZ(grp, s, x * 0.052, 0.062, 0.02, 0.24);\n  }\n  runningLights(grp, s, 0.05, 0.0, 0.33);\n  return grp;\n}\n\n// FLAGSHIP "Тихая Гавань" — Alliance twin-hull fleet CARRIER. Two long welded\n// pontoons flank a wide flat FLIGHT DECK (central ACC landing strip, deck lights,\n// parked-craft bumps); a low integrated central command island (blister + big\n// dish + masts); stern engine BANKS per pontoon; radiators; MAC/spinal guns\n// forward; turret rows along the pontoons; hangar mouths; a prominent blue\n// running line. Ref: BSG Galactica / Homeworld mothership / Venator. Nose = +Z.\nfunction makeAllianceFlagship(s) {\n  const grp = group();\n  const PX = 0.16;             // pontoon centre |x|\n  const HW = 0.12, HH = 0.13;  // pontoon cross-section\n  const OUT = PX + HW / 2;     // outer flank x\n  const IN = PX - HW / 2;      // inner flank x\n\n  // twin-barrel turret; `main` gives it a boxy gun-house (heavy dorsal battery)\n  const turret = (x, y, z, r, main = false) => {\n    grp.add(part(cyl(r * 1.15, r * 1.3, r * 0.5, 10), C(s, 
+vendor/galaxy-explorer/src/systems/ships/faction_alliance.js	632	Альянс
+vendor/galaxy-explorer/src/systems/ships/faction_alliance.js	637	Флот оружейной стали: утилитарный, надёжный, авианосцы вместо линкоров.
+vendor/galaxy-explorer/src/systems/ships/faction_cartel.js	21	Картель
+vendor/galaxy-explorer/src/systems/ships/faction_cartel.js	26	Сборный флот картеля из чужого хлама: разномастные корпуса, приваренные баки и ржавые заплаты держатся на честном слове и оранжевом пламени.
+vendor/galaxy-explorer/src/systems/ships/faction_imperial.js	15	Империя
+vendor/galaxy-explorer/src/systems/ships/faction_imperial.js	20	Угрожающий имперский флот: чёрная угловатая броня, красные клинки маркировки и раскалённые до оранжа дюзы.
+vendor/galaxy-explorer/src/systems/ships/faction_imperial.js	724	Длань Императора
+vendor/galaxy-explorer/src/systems/ships/faction_swarm.js	60	t «Грузовик»/«Танкер»\n  // — each role is a grown creature with its own name. Consumed by the codex\n  // catalog + the in-world info panel; other factions fall back to ROLES names.\n  names: {\n    scout: 
+vendor/galaxy-explorer/src/systems/ships/faction_syndicate.js	1128	Синдикат
+vendor/galaxy-explorer/src/systems/ships/faction_syndicate.js	1133	Гладкий преступный синдикат: тёмные графитовые корпуса, хищные силуэты и холодное циановое свечение контрабандного хайтека.
+vendor/galaxy-explorer/src/systems/ships/roles.js	209	Скаут
+vendor/galaxy-explorer/src/systems/ships/roles.js	209	без вооружения
+vendor/galaxy-explorer/src/systems/ships/roles.js	209	разведка и связь
+vendor/galaxy-explorer/src/systems/ships/roles.js	209	Лёгкий быстрый разведчик — глаза и уши флота.
+vendor/galaxy-explorer/src/systems/ships/roles.js	210	Истребитель
+vendor/galaxy-explorer/src/systems/ships/roles.js	210	спаренные пушки
+vendor/galaxy-explorer/src/systems/ships/roles.js	210	лёгкий бой
+vendor/galaxy-explorer/src/systems/ships/roles.js	210	Основной боевой корабль: маневренный, с пушками.
+vendor/galaxy-explorer/src/systems/ships/roles.js	211	Перехватчик
+vendor/galaxy-explorer/src/systems/ships/roles.js	211	скоростные орудия
+vendor/galaxy-explorer/src/systems/ships/roles.js	211	против истребителей
+vendor/galaxy-explorer/src/systems/ships/roles.js	211	Самый быстрый — догоняет и сбивает чужаков.
+vendor/galaxy-explorer/src/systems/ships/roles.js	212	Канонерка
+vendor/galaxy-explorer/src/systems/ships/roles.js	212	тяжёлые орудия + турель
+vendor/galaxy-explorer/src/systems/ships/roles.js	212	штурм
+vendor/galaxy-explorer/src/systems/ships/roles.js	212	Летающая батарея: медленнее, но бьёт больно.
+vendor/galaxy-explorer/src/systems/ships/roles.js	213	Корвет
+vendor/galaxy-explorer/src/systems/ships/roles.js	213	турели
+vendor/galaxy-explorer/src/systems/ships/roles.js	213	эскорт и патруль
+vendor/galaxy-explorer/src/systems/ships/roles.js	213	Малый военный корабль: мостик, турели, эскорт.
+vendor/galaxy-explorer/src/systems/ships/roles.js	214	Грузовик
+vendor/galaxy-explorer/src/systems/ships/roles.js	214	карго 8 000 т
+vendor/galaxy-explorer/src/systems/ships/roles.js	214	перевозка грузов
+vendor/galaxy-explorer/src/systems/ships/roles.js	214	Рабочая лошадка: контейнеры, медленно, надёжно.
+vendor/galaxy-explorer/src/systems/ships/roles.js	215	Танкер
+vendor/galaxy-explorer/src/systems/ships/roles.js	215	танки топлива/газа
+vendor/galaxy-explorer/src/systems/ships/roles.js	215	топливо и газ
+vendor/galaxy-explorer/src/systems/ships/roles.js	215	Возит топливо и сжатый газ в больших баках.
+vendor/galaxy-explorer/src/systems/ships/roles.js	216	Лайнер
+vendor/galaxy-explorer/src/systems/ships/roles.js	216	до 4 000 колонистов
+vendor/galaxy-explorer/src/systems/ships/roles.js	216	пассажиры и колонисты
+vendor/galaxy-explorer/src/systems/ships/roles.js	216	Перевозит людей: ряды окон, обзорные купола.
+vendor/galaxy-explorer/src/systems/ships/roles.js	217	Флагман
+vendor/galaxy-explorer/src/systems/ships/roles.js	217	батареи + ангар
+vendor/galaxy-explorer/src/systems/ships/roles.js	217	командный дредноут
+vendor/galaxy-explorer/src/systems/ships/roles.js	217	Сердце флота: огромный, медленный, ощетинился орудиями.
+vendor/galaxy-explorer/src/systems/ships/shipStats.js	2	s engineering bias.\n// Pure data + one pure function — display-only for now; if gameplay ever\n// consumes these numbers, THIS stays the single source of truth.\n\n// Role baselines on a 1–10 scale. Anchored to the existing ROLES table\n// (speed/lengthM/crew/arm in roles.js) so the numbers never contradict the\n// dossier facts: interceptors are the fastest hulls, flagships the toughest.\nconst ROLE_BASE = {\n  scout: { speed: 9, agility: 8, armor: 2, firepower: 1, range: 9, autonomy: 6 },\n  fighter: { speed: 8, agility: 7, armor: 4, firepower: 5, range: 4, autonomy: 3 },\n  interceptor: { speed: 10, agility: 9, armor: 3, firepower: 4, range: 5, autonomy: 3 },\n  gunship: { speed: 5, agility: 4, armor: 6, firepower: 8, range: 5, autonomy: 4 },\n  corvette: { speed: 6, agility: 5, armor: 6, firepower: 6, range: 6, autonomy: 6 },\n  freighter: { speed: 3, agility: 2, armor: 5, firepower: 1, range: 7, autonomy: 7 },\n  tanker: { speed: 3, agility: 2, armor: 4, firepower: 1, range: 8, autonomy: 8 },\n  liner: { speed: 4, agility: 3, armor: 5, firepower: 1, range: 8, autonomy: 9 },\n  flagship: { speed: 2, agility: 1, armor: 10, firepower: 10, range: 7, autonomy: 10 },\n};\n\n// Faction engineering bias (added to the baseline, clamped to 1–10) + the\n// fleet-wide quirk line the codex shows as «Особенность». Precursor hulls\n// return NO numbers at all — instruments give no readings (unknown: true).\nconst FACTION_PROFILE = {\n  alliance: {\n    mods: { armor: 1, autonomy: 1, agility: -1 },\n    quirk: 
+vendor/galaxy-explorer/src/systems/systemData.js	52	Голубой сверхгигант (O)
+vendor/galaxy-explorer/src/systems/systemData.js	52	горячий, яркий и недолговечный
+vendor/galaxy-explorer/src/systems/systemData.js	53	Бело-голубая звезда (B)
+vendor/galaxy-explorer/src/systems/systemData.js	53	массивная и очень горячая
+vendor/galaxy-explorer/src/systems/systemData.js	54	Белая звезда (A)
+vendor/galaxy-explorer/src/systems/systemData.js	54	главной последовательности, бело-голубая
+vendor/galaxy-explorer/src/systems/systemData.js	55	Жёлто-белая звезда (F)
+vendor/galaxy-explorer/src/systems/systemData.js	55	чуть горячее и ярче Солнца
+vendor/galaxy-explorer/src/systems/systemData.js	56	Жёлтый карлик (G)
+vendor/galaxy-explorer/src/systems/systemData.js	56	спокойная звезда, как наше Солнце
+vendor/galaxy-explorer/src/systems/systemData.js	57	Оранжевый карлик (K)
+vendor/galaxy-explorer/src/systems/systemData.js	57	тёплый, стабильный и долгоживущий
+vendor/galaxy-explorer/src/systems/systemData.js	58	Красный карлик (M)
+vendor/galaxy-explorer/src/systems/systemData.js	58	тусклый, но живёт почти вечно
+vendor/galaxy-explorer/src/systems/systemData.js	472	Руины · роботы
+vendor/galaxy-explorer/src/systems/systemData.js	475	Руины · катастрофа
+vendor/galaxy-explorer/src/systems/systemData.js	478	Руины · уничтожена
+vendor/galaxy-explorer/src/systems/systemData.js	481	 Сквозь систему медленно идёт одинокий флагман-разведчик, высматривающий планету под новую колонию.
+vendor/galaxy-explorer/src/systems/systemData.js	658	 };\n  let def;\n  let biomeVal = 0;\n  let biomeLabel;\n  if (kw.biome) {\n    const b = BIOME_KEYS[kw.biome];\n    def = { ...PLANET_KINDS.terran, c1: b.ocean, c2: b.land, c3: b.land2, biome: b.biome };\n    biomeVal = b.biome;\n    biomeLabel = b.label;\n  } else {\n    def = PLANET_KINDS[kw.type] || PLANET_KINDS.rocky;\n  }\n  if (spec.color) def = { ...def, c2: spec.color };\n  const radius = Math.min(Math.max(spec.radius != null ? spec.radius : (def.rMin + def.rMax) * 0.5, 0.3), 3.4);\n\n  const moons = [];\n  let moonOrbit = radius * 1.8;\n  for (let m = 0; m < (spec.moonCount || 0); m++) {\n    const mr = radius * 0.12;\n    moonOrbit += mr + radius * 0.5 + 0.4;\n    moons.push({ radius: mr, orbit: moonOrbit, angularSpeed: rng.range(0.22, 0.6), phase: rng.range(0, TAU) });\n    moonOrbit += mr;\n  }\n\n  const planet = {\n    type: kw.type,\n    def,\n    radius,\n    orbit: 0, // filled in by makeSpecialSystem once spacing is known\n    angularSpeed: 0,\n    spinSpeed: rng.range(0.05, 0.22),\n    tilt: rng.range(-0.42, 0.42),\n    inclination: rng.range(-0.05, 0.05),\n    phase: rng.range(0, TAU),\n    hasRings: !!spec.hasRings,\n    inhabited: !!spec.inhabited,\n    ruined: !!spec.dead,\n    destroyed: !!spec.destroyed,\n    colony: false,\n    biome: biomeVal,\n    biomeName: kw.biome,\n    biomeLabel,\n    label: spec.label, // shown verbatim in the planet list (e.g. "Меркурий")\n    ref: spec.ref || null, // hand-written reference blurb for the planet card (#2)\n    moons,\n  };\n  if (spec.obliterated) {\n    planet.ruined = true;\n    planet.obliterated = true;\n  }\n  if (spec.ishimura) planet.ishimura = true; // Dead Space planet-cracker over it (#5)\n  if (spec.inhabited) {\n    planet.civLevel = 
+vendor/galaxy-explorer/src/ui/hud.js	39	Лавовая
+vendor/galaxy-explorer/src/ui/hud.js	40	Каменистая
+vendor/galaxy-explorer/src/ui/hud.js	41	Пустынная
+vendor/galaxy-explorer/src/ui/hud.js	42	Земного типа
+vendor/galaxy-explorer/src/ui/hud.js	43	Океаническая
+vendor/galaxy-explorer/src/ui/hud.js	44	Ледяная
+vendor/galaxy-explorer/src/ui/hud.js	45	Газовый гигант
+vendor/galaxy-explorer/src/ui/hud.js	72	дом цивилизации
+vendor/galaxy-explorer/src/ui/hud.js	76	купольная база
+vendor/galaxy-explorer/src/ui/hud.js	77	терраформированная колония
+vendor/galaxy-explorer/src/ui/hud.js	78	колония-поселение
+vendor/galaxy-explorer/src/ui/hud.js	80	обломки мира
+vendor/galaxy-explorer/src/ui/hud.js	81	мёртвый мир, кратер
+vendor/galaxy-explorer/src/ui/hud.js	82	мёртвый мир машин
+vendor/galaxy-explorer/src/ui/hud.js	83	безжизненные руины
+vendor/galaxy-explorer/src/ui/hud.js	130	],\n    ],\n  },\n};\nexport function structureCard(planet) {\n  const base = STRUCTURE_INFO[planet.stationKind] || STRUCTURE_INFO.outpost;\n  const stationName = planet.data && planet.data.stationName;\n  // give it the named title («Заря» — a ring city) when the data has a name\n  return stationName ? { ...base, name: `${stationName} — ${base.name.toLowerCase()}` } : base;\n}\n\n// --- planet detail copy (#6) -----------------------------------------------\nconst TYPE_DESC = {\n  lava: 
+vendor/galaxy-explorer/src/ui/hud.js	218	;\n  if (data.binary && data.binary.star2.solarMass != null) {\n    return `<span><b>Массы звёзд:</b> ≈ ${fmtSolar(m)} + ${fmtSolar(data.binary.star2.solarMass)} ☉</span>`;\n  }\n  return `<span><b>Масса звезды:</b> ≈ ${fmtSolar(m)} ☉ (Солнц)</span>`;\n}\n\nexport class InfoPanel {\n  constructor({ onBack, onBackToSystem }) {\n    this.onBack = onBack;\n    this.onBackToSystem = onBackToSystem;\n    this._mode = 
+vendor/galaxy-explorer/src/ui/hud.js	231	;\n    el.innerHTML = `\n      <div class="sp-head">\n        <div class="sp-portrait">\n          <div class="sp-hero"></div>\n        </div>\n        <div class="sp-titles">\n          <h1 class="sp-name"></h1>\n          <div class="sp-status"></div>\n          <div class="sp-star"></div>\n          <div class="sp-flourish">✦</div>\n          <p class="sp-desc"></p>\n        </div>\n      </div>\n\n      <div class="sp-section sp-about">\n        <div class="sp-about-title sp-sec-title">Об этой системе</div>\n        <div class="sp-meta"></div>\n        <p class="sp-history"></p>\n        <div class="sp-res-block">\n          <div class="sp-res-title sp-sec-title">Ресурсы</div>\n          <div class="sp-res"></div>\n        </div>\n      </div>\n\n      <div class="sp-section sp-civ">\n        <div class="sp-sec-title">Цивилизация</div>\n        <div class="sp-race-head"></div>\n        <p class="sp-race-desc"></p>\n      </div>\n    `;\n    document.body.appendChild(el);\n    this.el = el;\n\n    // #4: the "Back" control lives OUTSIDE the panel, fixed top-left, so it
+vendor/galaxy-explorer/src/ui/hud.js	270	← Назад
+vendor/galaxy-explorer/src/ui/hud.js	382	).trim().length;\n    const size = Math.max(base * 0.42, base - Math.max(0, len - 11) * (base / 29));\n    el.style.fontSize = `${Math.round(size)}px`;\n  }\n\n  /** Show/hide the top-right fact card (#10) — only the system view has one. */\n  _setFact(fact) {\n    if (fact) {\n      this.factEl.innerHTML = `<div class="fact-head">✦ Заметка на полях</div><p></p>`;\n      this.factEl.querySelector(
+vendor/galaxy-explorer/src/ui/hud.js	425	← Назад к галактике
+vendor/galaxy-explorer/src/ui/hud.js	427	Об этой системе
+vendor/galaxy-explorer/src/ui/hud.js	429	✦ СОБЫТИЕ · 
+vendor/galaxy-explorer/src/ui/hud.js	436	Двойная звезда · ${data.star.label} + ${data.binary.star2.label}
+vendor/galaxy-explorer/src/ui/hud.js	445	<span><b>Возраст:</b> ${data.ageGyr} млрд лет</span>
+vendor/galaxy-explorer/src/ui/hud.js	447	<span><b>Назначение:</b> ${data.useFor}</span>
+vendor/galaxy-explorer/src/ui/hud.js	478	;\n    const moonN = p.moons ? p.moons.length : 0;\n    const metaHtml =\n      `<span><b>Диаметр:</b> ≈ ${groupThousands(planetDiameterKm(p))} км</span>` +\n      `<span><b>Масса:</b> ≈ ${fmtEarths(planetMassEarth(p))} ⊕ (Земли)</span>` +\n      (moonN ? `<span><b>Луны:</b> ${moonN}</span>` : 
+vendor/galaxy-explorer/src/ui/hud.js	503	← Назад к системе
+vendor/galaxy-explorer/src/ui/hud.js	505	Характеристики
+vendor/galaxy-explorer/src/ui/hud.js	508	Флагман флота
+vendor/galaxy-explorer/src/ui/hud.js	508	Корабль · ${role.size}
+vendor/galaxy-explorer/src/ui/hud.js	511	s grown beasts); flagship keeps its own legend name\n    const roleName = (faction && faction.names && faction.names[role.id]) || role.name;\n    r.name.textContent = named || roleName;\n    this._fitName();\n    r.star.textContent = faction && faction.name ? `Флот: ${faction.name}` : 
+vendor/galaxy-explorer/src/ui/hud.js	522	;\n    // speed on the shared 1–10 codex scale (shipStats.js — the single source);\n    // raw role.speed is an internal sim unit (2.6–14) that reads as nonsense\n    // next to «Длина: 120 м». Precursor instruments give no readings — no row.\n    const stats = getShipStats(role.id, faction && faction.id);\n    const speedVal = stats && !stats.unknown ? (stats.rows.find((row) => row[0] === 
+vendor/galaxy-explorer/src/ui/hud.js	527	) || [])[1] : null;\n    const metaHtml =\n      `<span><b>Класс:</b> ${roleName}</span>` +\n      `<span><b>Длина:</b> ${role.lengthM} м</span>` +\n      (speedVal ? `<span><b>Скорость:</b> ${speedVal} / 10</span>` : 
+vendor/galaxy-explorer/src/ui/hud.js	531	) +\n      `<span><b>Экипаж:</b> ${role.crew}</span>` +\n      `<span><b>${armLabel}:</b> ${role.arm}</span>`;\n    this._setDossier(heroPath); // hero portrait → left panel, beside the title\n    this._setFocusCallout(\n      named || role.name,\n      faction && faction.name ? `Флот: ${faction.name}` : 
+vendor/galaxy-explorer/src/ui/hud.js	557	;\n    r.status.textContent = info.kindLabel;\n    r.status.style.color = color;\n    r.status.style.borderColor = color;\n    r.name.textContent = info.name;\n    this._fitName();\n    r.star.textContent = faction && faction.name ? `Постройка флота: ${faction.name}` : 
+vendor/galaxy-explorer/src/ui/hud.js	608	;\n      this.el.innerHTML =\n        `<div class="tt-name">${label}</div>` +\n        `<div class="tt-status" style="color:var(--parchment)">не исследована</div>` +\n        `<div class="tt-teaser">Нажмите, чтобы исследовать →</div>`;\n      this.el.style.left = `${x + 16}px`;\n      this.el.style.top = `${y + 14}px`;\n      this.el.classList.add(
+vendor/galaxy-explorer/src/ui/hud.js	676	\n      <div class="lg-title">Звёздная опись</div>\n      <div class="lg-row"><span class="lg-dot" style="color:${STATUS_COLOR.inhabited}"></span>Обитаемые</div>\n      <div class="lg-row"><span class="lg-dot" style="color:${STATUS_COLOR.wild}"></span>Дикие</div>\n      <div class="lg-row"><span class="lg-dot" style="color:${STATUS_COLOR.ruins}"></span>Руины</div>\n      <div class="lg-row"><span class="lg-dot" style="color:${SPECIAL_COLOR}"></span>Особые</div>\n      <div class="lg-prog">Вписано в карту <b>0</b> / 0</div>\n    
+vendor/galaxy-explorer/src/ui/hud.js	690	Вписано в карту <b>${n}</b> / ${total}
+vendor/galaxy-explorer/src/ui/planetLabels.js	11	флагман
+vendor/galaxy-explorer/src/ui/planetLabels.js	11	форпост
+vendor/galaxy-explorer/src/ui/planetLabels.js	11	дом цивилизации
+vendor/galaxy-explorer/src/ui/planetLabels.js	58	Станция · 
+vendor/galaxy-explorer/src/ui/planetLabels.js	63	Звезда Смерти «Длань»
+vendor/galaxy-explorer/src/ui/planetLabels.js	63	боевая станция
+vendor/galaxy-explorer/src/ui/planetLabels.js	67	корабль-трещинник
+vendor/galaxy-explorer/src/ui/planetLabels.js	71	к Марсу
