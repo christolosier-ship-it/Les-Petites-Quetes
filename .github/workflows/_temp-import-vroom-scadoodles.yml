@@ -1,16 +1,16 @@
 name: Temporary Vroom Import
 
 on:
-  pull_request:
+  push:
     branches: [main]
-    types: [opened, reopened, synchronize]
+    paths:
+      - .github/workflows/_temp-import-vroom-scadoodles.yml
 
 permissions:
   contents: write
 
 jobs:
   import-vroom:
-    if: github.event.pull_request.head.ref == 'feat/vroom-scadoodles-gnome-village'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
