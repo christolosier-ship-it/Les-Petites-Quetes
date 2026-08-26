@@ -2,23 +2,15 @@
 
 Le tableau **La Montagne du Dragon** embarque le mini-jeu Origin 16-bit ARPG comme jeu web autonome.
 
-## Source figée
+## Source locale figée
 
 - Projet amont : `DFarm6/origin-16bit-arpg`
-- Commit : `1e11bd3faee664160faa6b2e6bd440fa7304b603`
-- Blob `index.html` attendu : `3d4fa219a225b048136d47d9a977c96aaf15d4e1`
-- Licence : MIT, copie conservée dans `public/games/origin/LICENSE`
+- Commit importé : `1e11bd3faee664160faa6b2e6bd440fa7304b603`
+- Licence : MIT, conservée dans `vendor/origin/LICENSE` et `public/games/origin/LICENSE`
+- Source : copie locale dans `vendor/origin/index.html`
 
-## Matérialisation
-
-`node scripts/materialize-origin-game.mjs` récupère exactement le commit amont figé, vérifie son Git blob SHA, applique la traduction française de `scripts/origin-fr-translations.mjs`, ajoute la persistance locale puis génère `public/games/origin/index.html`.
-
-La commande est branchée sur `predev` et `prebuild`, afin que le jeu soit disponible en développement comme dans le build Vercel.
+Le build de Les Petites Quêtes ne contacte plus le dépôt amont. `materialize-origin-game.mjs` lit la copie locale, vérifie son Git blob SHA, applique la traduction française et génère `public/games/origin/index.html`.
 
 ## Intégration UI
 
-`DragonMountainGame.tsx` charge le jeu dans une iframe same-origin. Le mini-jeu conserve ses contrôles clavier et tactiles et propose un mode grand écran. Les sauvegardes Origin passent par un adaptateur `window.storage` vers `localStorage`, préfixé `lpq:origin:`.
-
-## Traduction
-
-La traduction couvre les textes visibles du jeu : menus, classes, compétences, objets, zones, boss, PNJ, tutoriels, paramètres, messages de combat et écrans de progression. Le matérialiseur refuse le build lorsqu'une chaîne d'interface chinoise reste détectée, afin d'éviter une régression de localisation lors d'une future mise à jour de la source.
+`DragonMountainGame.tsx` charge le jeu dans une iframe same-origin. Le mini-jeu conserve ses contrôles clavier et tactiles et propose un mode grand écran. Les sauvegardes utilisent `localStorage` avec le préfixe `lpq:origin:`.
