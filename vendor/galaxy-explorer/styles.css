@@ -1,0 +1,2334 @@
+/* Full-bleed canvas + a couple of unobtrusive overlays. */
+
+/* ===== Cartographer redesign — vendored fonts (offline) + design tokens =====
+   Each family/weight is split into a latin face (full range) + a cyrillic face
+   (explicit range, declared last so it wins for Cyrillic codepoints). */
+@font-face { font-family: 'EB Garamond'; font-style: normal; font-weight: 400; font-display: swap;
+  src: url('./vendor/fonts/eb-garamond-latin-400-normal.woff2') format('woff2'); }
+@font-face { font-family: 'EB Garamond'; font-style: normal; font-weight: 400; font-display: swap;
+  src: url('./vendor/fonts/eb-garamond-cyrillic-400-normal.woff2') format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116; }
+@font-face { font-family: 'EB Garamond'; font-style: normal; font-weight: 500; font-display: swap;
+  src: url('./vendor/fonts/eb-garamond-latin-500-normal.woff2') format('woff2'); }
+@font-face { font-family: 'EB Garamond'; font-style: normal; font-weight: 500; font-display: swap;
+  src: url('./vendor/fonts/eb-garamond-cyrillic-500-normal.woff2') format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116; }
+@font-face { font-family: 'EB Garamond'; font-style: italic; font-weight: 400; font-display: swap;
+  src: url('./vendor/fonts/eb-garamond-latin-400-italic.woff2') format('woff2'); }
+@font-face { font-family: 'EB Garamond'; font-style: italic; font-weight: 400; font-display: swap;
+  src: url('./vendor/fonts/eb-garamond-cyrillic-400-italic.woff2') format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116; }
+@font-face { font-family: 'IBM Plex Mono'; font-style: normal; font-weight: 400; font-display: swap;
+  src: url('./vendor/fonts/ibm-plex-mono-latin-400-normal.woff2') format('woff2'); }
+@font-face { font-family: 'IBM Plex Mono'; font-style: normal; font-weight: 400; font-display: swap;
+  src: url('./vendor/fonts/ibm-plex-mono-cyrillic-400-normal.woff2') format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116; }
+@font-face { font-family: 'IBM Plex Mono'; font-style: normal; font-weight: 500; font-display: swap;
+  src: url('./vendor/fonts/ibm-plex-mono-latin-500-normal.woff2') format('woff2'); }
+@font-face { font-family: 'IBM Plex Mono'; font-style: normal; font-weight: 500; font-display: swap;
+  src: url('./vendor/fonts/ibm-plex-mono-cyrillic-500-normal.woff2') format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116; }
+
+:root {
+  /* Cartographer palette — «Тёплый атлас» refinement (#16): richer indigo ground,
+     a brighter text ramp for legibility (#15), and muted-jewel status colours that
+     harmonise with the brass accent instead of reading neon. */
+  --ink-void: #080c1a;
+  --ink-deep: #0d1226;
+  --vellum: rgba(222, 213, 186, 0.5);
+  --vellum-soft: rgba(222, 213, 186, 0.2);
+  --vellum-strong: rgba(228, 219, 192, 0.8);
+  --ivory: #f1ead6;
+  --ivory-dim: #cdbf9d;
+  --parchment: #a89a78;
+  --brass: #cda24e;
+  --brass-bright: #e7c074;
+  --st-inhabited: #5fe0a0;
+  --st-wild: #74c4f2;
+  --st-ruins: #f0a24e;
+  --st-special: #d98ae8;
+  --font-serif: 'EB Garamond', Georgia, 'Times New Roman', serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #03030b;
+  color: #e8e9ff;
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+#scene {
+  display: block;
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  touch-action: none; /* let OrbitControls own touch gestures */
+  cursor: grab;
+}
+
+#scene:active {
+  cursor: grabbing;
+}
+
+/* --- loader (removed by main.js once the scene is built) --- */
+#loader {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  background: #03030b;
+  z-index: 20;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--parchment);
+  transition: opacity 0.6s ease;
+}
+
+#loader.hide {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.loader__core {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #fff6e0 0%, var(--brass) 45%, transparent 70%);
+  animation: pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    transform: scale(0.85);
+    opacity: 0.7;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 1;
+  }
+}
+
+/* --- bottom hint, auto-fades --- */
+#hint {
+  position: fixed;
+  left: 50%;
+  bottom: 26px;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 10px 18px;
+  border-radius: 2px;
+  background: linear-gradient(180deg, rgba(11, 14, 30, 0.5), rgba(8, 10, 22, 0.5));
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--vellum-soft);
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--parchment);
+  white-space: nowrap;
+  z-index: 10;
+  animation: hintFade 1s ease 7s forwards;
+  pointer-events: none;
+  max-width: 92vw;
+  overflow: hidden;
+}
+
+#hint b {
+  color: var(--ivory-dim);
+  font-weight: 500;
+}
+
+.hint__dot {
+  color: var(--vellum-soft);
+  opacity: 1;
+}
+
+@keyframes hintFade {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+@media (max-width: 640px) {
+  #hint {
+    font-size: 11px;
+    gap: 6px;
+    padding: 8px 12px;
+  }
+  .hint__dot {
+    display: none;
+  }
+  #hint span:nth-child(5) {
+    display: none;
+  }
+}
+
+/* lil-gui tuning so it sits nicely on top */
+.lil-gui {
+  --background-color: rgba(9, 12, 24, 0.82);
+  --widget-color: rgba(20, 24, 44, 0.7);
+  --title-background-color: rgba(11, 14, 30, 0.9);
+  --text-color: var(--ivory-dim);
+  --title-text-color: var(--parchment);
+  --number-color: var(--brass-bright);
+  --string-color: var(--st-inhabited);
+  --focus-color: var(--brass);
+  --hover-color: rgba(30, 34, 56, 0.85);
+  --font-family: var(--font-mono);
+  --font-size: 11px;
+  --widget-border-radius: 2px;
+  z-index: 15;
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--vellum-soft);
+}
+/* the settings panel is hidden by default (behind the ⚙ button) and, when
+   opened, sits just below the gear so the gear stays clickable to close it. */
+.lil-gui.root {
+  top: 70px;
+  right: 18px;
+  max-height: calc(100vh - 92px);
+}
+
+/* --- settings (⚙) toggle — top-right, opens/closes the generator panel --- */
+#settings-toggle {
+  position: fixed;
+  top: 18px;
+  right: 18px;
+  z-index: 16;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--vellum);
+  background: linear-gradient(180deg, rgba(11, 14, 30, 0.6), rgba(8, 10, 22, 0.6));
+  backdrop-filter: blur(8px);
+  color: var(--ivory-dim);
+  font-size: 19px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+#settings-toggle:hover {
+  background: linear-gradient(180deg, rgba(20, 24, 44, 0.78), rgba(14, 17, 33, 0.78));
+  border-color: var(--vellum-strong);
+  transform: scale(1.06);
+}
+#settings-toggle.on {
+  border-color: var(--brass);
+  color: var(--ivory);
+  transform: rotate(40deg);
+}
+
+/* --- controls help: «?» button (top-right, by the gear) + popover (#2) --- */
+#help-toggle {
+  position: fixed;
+  top: 18px;
+  right: 68px; /* 18 (gear right) + 42+8 (gear) — codex is now a left rail */
+  z-index: 16;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--vellum);
+  background: linear-gradient(180deg, rgba(11, 14, 30, 0.6), rgba(8, 10, 22, 0.6));
+  backdrop-filter: blur(8px);
+  color: var(--ivory-dim);
+  font-family: var(--font-serif);
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  /* galaxy-only: hidden by default, shown with .visible (mirrors rotate/cine) */
+  opacity: 0;
+  transform: translateY(-6px);
+  pointer-events: none;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease, color 0.2s ease, opacity 0.2s ease;
+}
+#help-toggle.visible {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+#help-toggle:hover {
+  background: linear-gradient(180deg, rgba(20, 24, 44, 0.78), rgba(14, 17, 33, 0.78));
+  border-color: var(--vellum-strong);
+  transform: scale(1.06);
+}
+#help-toggle.on {
+  border-color: var(--brass);
+  color: var(--brass-bright);
+}
+#help-panel {
+  position: fixed;
+  top: 68px;
+  right: 18px;
+  z-index: 17;
+  width: 244px;
+  padding: 14px 16px 15px;
+  border-radius: 12px;
+  border: 1px solid var(--vellum);
+  background: linear-gradient(180deg, rgba(12, 15, 31, 0.95), rgba(8, 10, 22, 0.95));
+  backdrop-filter: blur(10px);
+  box-shadow: 0 12px 34px rgba(0, 0, 0, 0.5);
+  color: var(--ivory-dim);
+  font-family: var(--font-mono);
+  opacity: 0;
+  transform: translateY(-6px);
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+#help-panel.open {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+#help-panel h4 {
+  margin: 0 0 8px;
+  font-family: var(--font-serif);
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--ivory);
+}
+#help-panel .help-group {
+  margin: 11px 0 4px;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--brass);
+}
+#help-panel .help-group:first-of-type {
+  margin-top: 2px;
+}
+#help-panel .help-row {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding: 3px 0;
+}
+#help-panel kbd {
+  flex: 0 0 94px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ivory);
+}
+#help-panel .help-row span {
+  font-size: 12px;
+  color: var(--ivory-dim);
+}
+#help-panel .help-version {
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px solid var(--vellum-soft);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--parchment);
+}
+
+/* --- ambient music toggle --- */
+#music-toggle {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 16;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--vellum);
+  background: linear-gradient(180deg, rgba(11, 14, 30, 0.6), rgba(8, 10, 22, 0.6));
+  backdrop-filter: blur(8px);
+  color: var(--ivory-dim);
+  font-size: 17px;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+#music-toggle:hover {
+  background: linear-gradient(180deg, rgba(20, 24, 44, 0.78), rgba(14, 17, 33, 0.78));
+  border-color: var(--vellum-strong);
+  transform: scale(1.06);
+}
+#music-toggle.on {
+  border-color: var(--brass);
+  color: var(--brass-bright);
+}
+
+/* galaxy-view «stop / rotate the map» toggle — bottom-left, mirrors the music
+   cluster (#4). Hidden (faded) in the system view. */
+#rotate-toggle {
+  position: fixed;
+  left: 20px;
+  bottom: 20px;
+  z-index: 16;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--vellum);
+  background: linear-gradient(180deg, rgba(11, 14, 30, 0.6), rgba(8, 10, 22, 0.6));
+  backdrop-filter: blur(8px);
+  color: var(--ivory-dim);
+  font-size: 16px;
+  cursor: pointer;
+  opacity: 0;
+  transform: translateY(6px);
+  pointer-events: none;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease, opacity 0.3s ease;
+}
+#rotate-toggle.visible {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+#rotate-toggle:hover {
+  background: linear-gradient(180deg, rgba(20, 24, 44, 0.78), rgba(14, 17, 33, 0.78));
+  border-color: var(--vellum-strong);
+}
+#rotate-toggle:active {
+  transform: scale(0.94);
+}
+#rotate-toggle.on {
+  border-color: var(--brass);
+  color: var(--brass-bright);
+}
+
+/* «Кинопоказ» cinematic auto-tour toggle — sits right of the stop button (#5) */
+#cine-toggle {
+  position: fixed;
+  left: 70px;
+  bottom: 20px;
+  z-index: 16;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--vellum);
+  background: linear-gradient(180deg, rgba(11, 14, 30, 0.6), rgba(8, 10, 22, 0.6));
+  backdrop-filter: blur(8px);
+  color: var(--ivory-dim);
+  font-size: 14px;
+  cursor: pointer;
+  opacity: 0;
+  transform: translateY(6px);
+  pointer-events: none;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease, opacity 0.3s ease;
+}
+#cine-toggle.visible {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+#cine-toggle:hover {
+  background: linear-gradient(180deg, rgba(20, 24, 44, 0.78), rgba(14, 17, 33, 0.78));
+  border-color: var(--vellum-strong);
+}
+#cine-toggle:active {
+  transform: scale(0.94);
+}
+#cine-toggle.on {
+  border-color: var(--brass);
+  color: var(--brass-bright);
+}
+
+/* «Кинопоказ» running indicator — a centred top pill with the exit hint (#5) */
+#cine-hint {
+  position: fixed;
+  top: 22px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-8px);
+  z-index: 19;
+  padding: 9px 18px;
+  border-radius: 2px;
+  border: 1px solid var(--vellum);
+  background: linear-gradient(180deg, rgba(11, 14, 30, 0.72), rgba(8, 10, 22, 0.72));
+  backdrop-filter: blur(8px);
+  color: var(--ivory-dim);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+#cine-hint.visible {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* one-time "generation rules updated" notice (see main.js's
+   _maybeShowGenVersionBanner) — a centred top pill, dismissible by click or
+   timeout, same shape as #cine-hint. enterSystem() dismisses it explicitly,
+   and z-index stays below #warp-overlay (30) so even a missed dismiss can't
+   float above the warp fade. Width capped at 72vw so it clears the top-right
+   header buttons on narrow viewports (~420px). */
+#genversion-banner {
+  position: fixed;
+  top: 22px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-8px);
+  z-index: 20;
+  max-width: min(72vw, 520px);
+  padding: 11px 20px;
+  border-radius: 2px;
+  border: 1px solid var(--brass);
+  background: linear-gradient(180deg, rgba(11, 14, 30, 0.86), rgba(8, 10, 22, 0.86));
+  backdrop-filter: blur(8px);
+  color: var(--ivory);
+  font-family: var(--font-serif);
+  font-size: 13px;
+  line-height: 1.4;
+  text-align: center;
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+#genversion-banner.visible {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+  pointer-events: auto;
+}
+
+/* «Кинопоказ» filmic chrome-off: hide ALL the HUD except the left dossier panel,
+   the reticle + its callout and the exit indicator (#4). Each element fades via
+   its own opacity transition. */
+body.cine-show #system-legend,
+body.cine-show #fact-box,
+body.cine-show #hint,
+body.cine-show #nav-back,
+body.cine-show #settings-toggle,
+body.cine-show #codex-toggle,
+body.cine-show #view-mode,
+body.cine-show #rotate-toggle,
+body.cine-show #cine-toggle,
+body.cine-show #music-next,
+body.cine-show #music-track,
+body.cine-show #onboard-card {
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+/* #music-toggle stays live in the show so you can mute it (#cine) */
+
+/* --- first-flight onboarding (stage 3): one coachmark card, bottom-center ---
+   It replaces the static #hint for the tour's duration (body.onboarding) and
+   never covers the canvas — the player keeps full control at every step. */
+body.onboarding #hint {
+  display: none;
+}
+
+#onboard-card {
+  position: fixed;
+  left: 50%;
+  bottom: 26px;
+  transform: translateX(-50%) translateY(12px);
+  z-index: 21; /* above the chrome buttons (16), below the codex panel (24) */
+  width: min(560px, 92vw);
+  padding: 14px 18px 12px;
+  border-radius: 2px;
+  border: 1px solid var(--vellum);
+  background: linear-gradient(180deg, rgba(13, 16, 34, 0.88), rgba(8, 10, 22, 0.88));
+  backdrop-filter: blur(8px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+#onboard-card.visible {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+  pointer-events: auto;
+}
+
+/* inside a system the dossier panel owns bottom-center/left — the card docks
+   bottom-right instead, above the view-mode / music button row (kept AFTER
+   .visible: same specificity, so source order lets it win the transform) */
+#onboard-card.in-system {
+  left: auto;
+  right: 24px;
+  bottom: 76px;
+  transform: none;
+}
+
+/* each step visibly «arrives» — opacity-only, so the flash never fights the
+   two positioning transforms above */
+@keyframes onboardStepIn {
+  from {
+    opacity: 0.35;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+#onboard-card.step-in {
+  animation: onboardStepIn 0.35s ease;
+}
+
+.onboard-kicker {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--brass);
+  margin-bottom: 6px;
+}
+
+.onboard-title {
+  font-family: var(--font-serif);
+  font-size: 19px;
+  color: var(--ivory);
+  margin-bottom: 4px;
+}
+
+.onboard-body {
+  font-family: var(--font-serif);
+  font-size: 15.5px;
+  line-height: 1.45;
+  color: var(--ivory-dim);
+}
+
+.onboard-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.onboard-btn {
+  padding: 7px 16px;
+  border-radius: 2px;
+  border: 1px solid var(--vellum);
+  background: transparent;
+  color: var(--ivory-dim);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
+}
+
+.onboard-btn:hover {
+  border-color: var(--brass);
+  color: var(--brass-bright);
+}
+
+.onboard-btn.primary {
+  border-color: var(--brass);
+  color: var(--brass-bright);
+}
+
+.onboard-btn.primary:hover {
+  background: rgba(205, 162, 78, 0.12);
+}
+
+.onboard-skip {
+  margin-left: auto;
+  padding: 6px 2px;
+  border: none;
+  background: none;
+  color: var(--parchment);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer;
+  opacity: 0.75;
+  transition: opacity 0.2s ease, color 0.2s ease;
+}
+
+.onboard-skip:hover {
+  opacity: 1;
+  color: var(--ivory-dim);
+}
+
+/* brass halo on the DOM element the active step points at (the codex rail);
+   the resting shadow term matches #codex-toggle's own so the loop is seamless */
+@keyframes onboardGlow {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(205, 162, 78, 0), 4px 0 18px rgba(0, 0, 0, 0.35);
+  }
+  50% {
+    box-shadow: 0 0 22px 4px rgba(205, 162, 78, 0.45), 4px 0 18px rgba(0, 0, 0, 0.35);
+  }
+}
+
+.onboard-glow {
+  animation: onboardGlow 1.6s ease-in-out infinite;
+  border-color: var(--brass) !important;
+  color: var(--brass-bright) !important;
+}
+
+/* view-mode cycle button (system view only): full UI → no labels → cinematic */
+#view-mode {
+  position: fixed;
+  right: 120px;
+  bottom: 20px;
+  z-index: 16;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--vellum);
+  background: linear-gradient(180deg, rgba(11, 14, 30, 0.6), rgba(8, 10, 22, 0.6));
+  backdrop-filter: blur(8px);
+  color: var(--ivory-dim);
+  font-size: 17px;
+  cursor: pointer;
+  opacity: 0;
+  transform: translateY(6px);
+  pointer-events: none;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease, opacity 0.3s ease;
+}
+#view-mode.visible {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+#view-mode:hover {
+  background: linear-gradient(180deg, rgba(20, 24, 44, 0.78), rgba(14, 17, 33, 0.78));
+  border-color: var(--vellum-strong);
+}
+#view-mode:active {
+  transform: scale(0.94);
+}
+/* cinematic mode (#mode 2): the chrome slides off to the sides as the camera
+   recentres — left panel exits left, the «note» card exits right (#2). The
+   panels already animate transform+opacity over ~0.45s, so this reads as a
+   smooth glide, not a cut. */
+body.clean-view #system-panel {
+  opacity: 0 !important;
+  transform: translateX(-64px) !important;
+  pointer-events: none !important;
+}
+body.clean-view #fact-box {
+  opacity: 0 !important;
+  transform: translateX(64px) !important;
+  pointer-events: none !important;
+}
+
+/* next-track button — sits just left of the toggle */
+#music-next {
+  position: fixed;
+  right: 70px;
+  bottom: 20px;
+  z-index: 16;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--vellum);
+  background: linear-gradient(180deg, rgba(11, 14, 30, 0.6), rgba(8, 10, 22, 0.6));
+  backdrop-filter: blur(8px);
+  color: var(--ivory-dim);
+  font-size: 15px;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+#music-next:hover {
+  background: linear-gradient(180deg, rgba(20, 24, 44, 0.78), rgba(14, 17, 33, 0.78));
+  border-color: var(--vellum-strong);
+  transform: scale(1.06);
+}
+
+/* current-track name — fades in briefly when the track changes */
+#music-track {
+  position: fixed;
+  right: 20px;
+  bottom: 70px;
+  z-index: 16;
+  padding: 6px 12px;
+  border-radius: 2px;
+  border: 1px solid var(--vellum);
+  background: linear-gradient(180deg, rgba(11, 14, 30, 0.7), rgba(8, 10, 22, 0.7));
+  backdrop-filter: blur(8px);
+  color: var(--parchment);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateY(6px);
+  pointer-events: none;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+#music-track.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* --- codex tab (permanent discovery log) --- a large vertical "pull tab"
+   flush to the LEFT edge, vertically centred: the codex is a headline feature,
+   so it gets its own prominent rail rather than a small corner icon. Galaxy-
+   view only (the system facts box owns the screen inside a dive). The
+   left-middle edge is otherwise empty — the legend sits top-left, the rotate/
+   cinematic controls bottom-left. */
+#codex-toggle {
+  position: fixed;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 16;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  width: 48px;
+  height: 210px;
+  padding: 20px 0;
+  border: 1px solid var(--vellum);
+  border-left: none;
+  border-radius: 0 12px 12px 0;
+  background: linear-gradient(180deg, rgba(13, 16, 34, 0.82), rgba(8, 10, 22, 0.82));
+  backdrop-filter: blur(8px);
+  box-shadow: 4px 0 18px rgba(0, 0, 0, 0.35);
+  color: var(--ivory-dim);
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+#codex-toggle .codex-tab-label {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+}
+#codex-toggle:hover {
+  background: linear-gradient(180deg, rgba(22, 27, 50, 0.9), rgba(14, 17, 33, 0.9));
+  border-color: var(--brass);
+  color: var(--brass-bright);
+  transform: translateY(-50%) translateX(4px);
+  box-shadow: 6px 0 24px rgba(0, 0, 0, 0.45);
+}
+#codex-toggle:active {
+  transform: translateY(-50%) translateX(1px);
+}
+
+/* --- warp transition overlay --- */
+#warp-overlay {
+  position: fixed;
+  inset: 0;
+  background: #000;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 30;
+}
+
+/* --- hover tooltip on explorable systems --- */
+#system-tooltip {
+  position: fixed;
+  z-index: 16;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  /* a narrow card so long status / info lines WRAP downward (vertical) instead
+     of stretching far to the right (design pass: text-wrap + max-width). */
+  width: max-content;
+  max-width: 240px;
+  padding: 14px 16px;
+  border-radius: 2px;
+  background: linear-gradient(180deg, rgba(11, 14, 30, 0.93), rgba(8, 10, 22, 0.93));
+  border: 1px solid var(--vellum);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.6), inset 0 0 0 3px rgba(214, 205, 178, 0.04);
+  backdrop-filter: blur(10px);
+  color: var(--ivory);
+  font-family: var(--font-serif);
+  -webkit-font-smoothing: antialiased;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+#system-tooltip.visible {
+  opacity: 1;
+  transform: none;
+}
+/* name — the clear top line */
+.tt-name {
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 1.05;
+  color: var(--ivory);
+  letter-spacing: 0.01em;
+  text-wrap: balance;
+}
+/* status — a compact coloured chip (colour set inline per status) */
+.tt-status {
+  align-self: flex-start;
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  padding: 3px 9px 2px;
+  border: 1px solid currentColor;
+  border-radius: 2px;
+  white-space: normal;
+}
+
+/* --- system colour legend (galaxy mode) --- */
+#system-legend {
+  position: fixed;
+  left: 22px;
+  top: 22px;
+  z-index: 14;
+  padding: 14px 16px;
+  border-radius: 2px;
+  background: linear-gradient(180deg, rgba(11, 14, 30, 0.5), rgba(8, 10, 22, 0.5));
+  border: 1px solid var(--vellum-soft);
+  backdrop-filter: blur(8px);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--ivory-dim);
+  opacity: 0;
+  transform: translateY(-6px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  pointer-events: none;
+}
+#system-legend.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+#system-legend .lg-title {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.3em;
+  color: var(--parchment);
+  margin-bottom: 10px;
+}
+#system-legend .lg-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  line-height: 2;
+  letter-spacing: 0.04em;
+}
+/* mini of the charted-system marker: a filled status core + a dark rim + a thin
+   status ring (box-shadow), so the legend matches the new map icons (#legend) */
+#system-legend .lg-dot {
+  flex: 0 0 auto;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  border: 1px solid rgba(9, 11, 20, 0.85);
+  background: currentColor;
+  box-shadow: 0 0 0 1.5px currentColor, 0 0 7px color-mix(in srgb, currentColor 70%, transparent);
+}
+
+/* --- system lore panel --- */
+/* Cinematic system / planet info: text over the scene on a soft left-anchored
+   scrim that dissolves to the right — no hard card, full detail shown. The box
+   is wide and minimal; the «Назад» button + the facts card live OUTSIDE it. */
+#system-panel {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: min(680px, 92vw);
+  max-height: calc(100vh - 120px);
+  overflow: hidden;
+  z-index: 16;
+  padding: 30px 90px 30px 44px;
+  color: var(--ivory);
+  font-family: var(--font-serif);
+  /* Fully transparent — the text floats over the scene (no card edge over the
+     bright galaxy); legibility comes from a layered text-shadow. CLICK-THROUGH:
+     drag-to-rotate passes through and the text can't be selected. */
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.95), 0 2px 9px rgba(0, 0, 0, 0.92), 0 0 26px rgba(0, 0, 0, 0.82);
+  opacity: 0;
+  transform: translateY(16px);
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-select: none;
+  transition: opacity 0.45s ease, transform 0.45s ease;
+}
+#system-panel.visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* small-caps eyebrow above the status chip — cartographer "ledger sheet" header */
+.sp-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--parchment);
+  margin-bottom: 14px;
+}
+
+/* #4 — standalone «Назад» control, fixed top-left, always crisp. */
+#nav-back {
+  position: fixed;
+  top: 22px;
+  left: 22px;
+  z-index: 18;
+  appearance: none;
+  background: linear-gradient(180deg, rgba(11, 14, 30, 0.7), rgba(8, 10, 22, 0.7));
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--vellum);
+  color: var(--ivory-dim);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 10px 16px;
+  border-radius: 2px;
+  cursor: pointer;
+  opacity: 0;
+  transform: translateY(-6px);
+  pointer-events: none;
+  transition: opacity 0.3s ease, transform 0.3s ease, background 0.2s ease, border-color 0.2s ease;
+}
+#nav-back.visible {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+#nav-back:hover {
+  background: linear-gradient(180deg, rgba(20, 24, 44, 0.82), rgba(14, 17, 33, 0.82));
+  border-color: var(--vellum-strong);
+}
+#nav-back:active {
+  transform: scale(0.96);
+}
+
+/* #10 — «Заметка на полях» (did-you-know) card, fixed top-right. */
+#fact-box {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 16;
+  width: min(330px, 42vw);
+  padding: 14px 16px;
+  border-radius: 2px;
+  background: linear-gradient(180deg, rgba(11, 14, 30, 0.72), rgba(8, 10, 22, 0.72));
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--vellum);
+  color: var(--ivory-dim);
+  font-family: var(--font-serif);
+  font-size: 15px;
+  line-height: 1.45;
+  text-wrap: pretty;
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.45);
+  opacity: 0;
+  transform: translateY(-6px);
+  pointer-events: none;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+#fact-box.visible {
+  opacity: 1;
+  transform: none;
+}
+.fact-head {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--brass);
+  margin-bottom: 8px;
+}
+#fact-box p {
+  margin: 0;
+}
+/* Selected-object portrait (ship / station): the hand-painted hero card parked
+   to the LEFT of the big title. Hidden for systems / planets, where .sp-head
+   collapses to the single titles column. */
+.sp-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 24px;
+}
+.sp-portrait {
+  display: none; /* JS reveals it for a selected ship / station */
+  flex: none;
+  width: 188px;
+}
+.sp-hero {
+  display: none; /* JS sets display:block once the image decodes */
+  width: 188px;
+  aspect-ratio: 3 / 4;
+  border-radius: 3px;
+  border: 1px solid var(--vellum);
+  background-color: rgba(10, 13, 26, 0.5);
+  background-position: center;
+  background-size: cover;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.55);
+}
+.sp-titles {
+  flex: 1;
+  min-width: 0;
+}
+.sp-status {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  padding: 4px 10px 3px;
+  border: 1px solid currentColor;
+  border-radius: 2px;
+  margin-bottom: 14px;
+}
+.sp-name {
+  font-size: 70px;
+  font-weight: 500;
+  line-height: 0.95;
+  margin-bottom: 8px;
+  letter-spacing: 0.004em;
+  color: var(--ivory);
+  text-wrap: balance;
+  width: fit-content; /* shrink to the text so the ✦ divider can match its width */
+  max-width: 100%;
+}
+.sp-star {
+  font-size: 17px;
+  font-style: italic;
+  color: var(--ivory-dim);
+  margin-bottom: 16px;
+}
+/* brass crest ornament under the subtitle — a symmetric divider with the ✦
+   centred and equal hairlines fading out to both sides (atlas vibe) */
+.sp-flourish {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  width: 250px;
+  color: var(--brass);
+  font-size: 13px;
+  margin: 2px 0 20px;
+}
+.sp-flourish::before,
+.sp-flourish::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+}
+.sp-flourish::before {
+  background: linear-gradient(90deg, transparent, var(--brass));
+}
+.sp-flourish::after {
+  background: linear-gradient(90deg, var(--brass), transparent);
+}
+.sp-desc {
+  font-size: 17.5px;
+  line-height: 1.62;
+  color: var(--ivory-dim);
+  margin-bottom: 14px;
+  max-width: 480px;
+  text-wrap: pretty;
+}
+.sp-planets-title {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.28em;
+  color: var(--parchment);
+  margin-bottom: 8px;
+}
+.sp-planets {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+.sp-planets li {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--ivory-dim);
+}
+.sp-planets .dot {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.25);
+}
+.sp-planets .pt {
+  flex: 1;
+}
+.sp-planets .tags {
+  display: flex;
+  gap: 5px;
+}
+.sp-planets .tag {
+  font-size: 9.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 2px 7px;
+  border-radius: 2px;
+  border: 1px solid var(--vellum-soft);
+  color: var(--parchment);
+  white-space: nowrap;
+}
+.sp-planets .tag-live {
+  border-color: var(--st-inhabited);
+  color: var(--st-inhabited);
+}
+.sp-planets .tag-ruin {
+  border-color: var(--st-ruins);
+  color: var(--st-ruins);
+}
+
+/* --- panel sections (history / resources / civilisation) --- */
+.sp-section {
+  border-top: 1px solid var(--vellum-soft);
+  padding-top: 14px;
+  margin-top: 16px;
+}
+/* the civilisation block sits right under the ✦ flourish on a focused planet,
+   so it must NOT draw its own divider line — the flourish is the separator */
+.sp-civ {
+  border-top: none;
+  padding-top: 0;
+  margin-top: 4px;
+}
+.sp-sec-title {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.28em;
+  color: var(--parchment);
+  margin-bottom: 10px;
+}
+.sp-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--ivory);
+  font-variant-numeric: tabular-nums;
+  margin-bottom: 10px;
+}
+.sp-meta b {
+  color: var(--parchment);
+  font-weight: 400;
+}
+.sp-history {
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--ivory-dim);
+  margin-bottom: 10px;
+  text-wrap: pretty;
+}
+.sp-res-title {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.24em;
+  color: var(--parchment);
+  margin-bottom: 6px;
+}
+.sp-res {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+.chip {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  padding: 3px 9px;
+  border-radius: 2px;
+  background: transparent;
+  border: 1px solid var(--vellum-soft);
+  color: var(--ivory-dim);
+}
+.sp-race-head {
+  display: flex;
+  align-items: baseline;
+  gap: 11px;
+  margin-bottom: 8px;
+}
+.race-name {
+  font-size: 23px;
+  font-weight: 600;
+  color: var(--ivory);
+}
+.sp-race-head .tag {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--parchment);
+}
+.sp-race-head .tag-live {
+  color: var(--st-inhabited);
+}
+.sp-race-head .tag-ruin {
+  color: var(--st-ruins);
+}
+.sp-race-desc {
+  font-size: 16.5px;
+  line-height: 1.66;
+  color: var(--ivory-dim);
+  text-wrap: pretty;
+}
+.sp-race-desc p {
+  margin: 0 0 11px;
+}
+.sp-race-desc p:last-child {
+  margin-bottom: 0;
+}
+
+/* --- mini planet icons --- */
+.pi {
+  position: relative;
+  width: 18px;
+  height: 18px;
+  display: inline-block;
+  flex-shrink: 0;
+}
+.pi-ball {
+  position: absolute;
+  inset: 1px;
+  border-radius: 50%;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
+}
+.pi-ring {
+  position: absolute;
+  left: -3px;
+  right: -3px;
+  top: 50%;
+  height: 7px;
+  transform: translateY(-50%) rotate(-18deg);
+  border-radius: 50%;
+  border: 1.4px solid rgba(222, 210, 178, 0.75);
+}
+
+/* --- tooltip teaser + discovery counter --- */
+.tt-teaser {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 13px;
+  color: var(--brass-bright);
+  letter-spacing: 0.01em;
+  line-height: 1.35;
+  text-wrap: pretty;
+}
+.tt-teaser.tt-seen {
+  color: var(--st-inhabited);
+}
+.tt-info {
+  font-size: 11.5px;
+  color: var(--ivory-dim);
+  line-height: 1.4;
+  text-wrap: pretty;
+}
+/* aligned key→value rows (a small table), so facts read down the column */
+.tt-rows {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 4px 14px;
+  align-items: baseline;
+}
+.tt-k {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--parchment);
+  white-space: nowrap;
+}
+.tt-v {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  color: var(--ivory);
+  text-wrap: pretty;
+}
+
+/* "did you know" fact box */
+.sp-fact {
+  margin-top: 16px;
+  padding: 11px 13px;
+  border-radius: 11px;
+  background: rgba(120, 150, 255, 0.08);
+  border: 1px solid rgba(150, 160, 230, 0.16);
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: #cfd3f2;
+}
+.lg-prog {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid var(--vellum-soft);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: var(--parchment);
+  font-variant-numeric: tabular-nums;
+}
+.lg-prog b {
+  color: var(--ivory);
+}
+
+@media (max-width: 640px) {
+  #system-panel {
+    left: 12px;
+    bottom: 12px;
+    width: calc(100vw - 24px);
+    max-height: 56vh;
+    padding: 16px;
+  }
+  .sp-name {
+    font-size: 23px;
+  }
+}
+
+/* --- Diegetic in-world planet labels (system view) ----------------------- */
+#planet-labels {
+  position: fixed;
+  inset: 0;
+  pointer-events: none; /* gaps pass clicks through; the pills opt back in */
+  z-index: 5;
+  transition: opacity 0.22s ease; /* fade the whole layer on/off (#3) */
+}
+.plabel {
+  position: absolute;
+  top: 0;
+  left: 0;
+  will-change: transform, opacity;
+  pointer-events: auto; /* #5/#6: the label itself is clickable */
+  cursor: pointer;
+  transition: opacity 0.2s ease; /* fade individual labels in/out (#3) */
+}
+.plabel.is-hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+.plabel__pin {
+  /* the dots are gone — only the text labels remain (the planet itself is the
+     marker). Kept in the DOM as the label's positioning anchor. */
+  display: none;
+}
+.plabel__txt {
+  position: absolute;
+  left: 11px;
+  bottom: 5px;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  white-space: nowrap;
+  padding: 4px 10px;
+  border-radius: 2px;
+  background: linear-gradient(180deg, rgba(11, 14, 30, 0.55), rgba(8, 10, 22, 0.55));
+  border: 1px solid var(--vellum-soft);
+  backdrop-filter: blur(4px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+  opacity: 0.92;
+  transition: opacity 0.16s ease, border-color 0.16s ease, transform 0.16s ease;
+}
+.plabel:hover .plabel__txt {
+  opacity: 1;
+  border-color: var(--vellum-strong);
+  transform: translateY(-1px);
+}
+.plabel:active .plabel__txt {
+  transform: scale(0.97);
+}
+.plabel__txt b {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--ivory);
+  letter-spacing: 0.04em;
+}
+.plabel__icon {
+  display: none;
+}
+.plabel__txt i {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  font-style: normal;
+  text-transform: uppercase;
+  color: var(--parchment);
+  letter-spacing: 0.12em;
+}
+.plabel__txt small {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--ivory-dim);
+  letter-spacing: 0.08em;
+}
+/* ships + structures read a touch cooler/dimmer than worlds */
+.plabel--ship .plabel__txt,
+.plabel--structure .plabel__txt {
+  opacity: 0.82;
+}
+
+/* --- ranging reticle: brass corner brackets locked onto the focused object --- */
+/* hover selection — the same brass corner brackets as the focus reticle, only
+   lighter and a touch smaller, so hover reads as «could lock on» vs the locked
+   focus (#1). Open sides keep it clear of the side label (#2). */
+#hover-ring {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 5;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  transition: opacity 0.18s ease;
+}
+#hover-ring.visible {
+  opacity: 0.62;
+}
+
+#reticle {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 6;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+#reticle.visible {
+  opacity: 0.92;
+}
+#reticle .rt,
+#hover-ring .rt {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border: 1px solid var(--brass);
+}
+#hover-ring .rt {
+  width: 12px;
+  height: 12px;
+}
+#reticle .c1,
+#hover-ring .c1 {
+  top: 0;
+  left: 0;
+  border-right: 0;
+  border-bottom: 0;
+}
+#reticle .c2,
+#hover-ring .c2 {
+  top: 0;
+  right: 0;
+  border-left: 0;
+  border-bottom: 0;
+}
+#reticle .c3,
+#hover-ring .c3 {
+  bottom: 0;
+  left: 0;
+  border-right: 0;
+  border-top: 0;
+}
+#reticle .c4,
+#hover-ring .c4 {
+  bottom: 0;
+  right: 0;
+  border-left: 0;
+  border-top: 0;
+}
+
+/* --- focus side callout: the focused object's label + description, parked
+   beside the reticle (moved out of the left dossier panel) --- */
+#focus-callout {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 7;
+  transform: translateY(-50%);
+  width: max-content;
+  max-width: 280px;
+  padding: 13px 15px;
+  border: 1px solid var(--vellum);
+  border-radius: 2px;
+  background: linear-gradient(180deg, rgba(11, 14, 30, 0.86), rgba(8, 10, 22, 0.86));
+  backdrop-filter: blur(8px);
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.5), inset 0 0 0 3px rgba(214, 205, 178, 0.04);
+  pointer-events: none;
+  opacity: 0;
+  max-height: calc(100vh - 120px);
+  overflow: hidden;
+  transition: opacity 0.25s ease;
+}
+#focus-callout.visible {
+  opacity: 1;
+}
+.fc-name {
+  font-family: var(--font-serif);
+  font-size: 22px;
+  font-weight: 500;
+  line-height: 1.04;
+  color: var(--ivory);
+  text-wrap: balance;
+}
+.fc-sub {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--parchment);
+  margin: 6px 0 10px;
+}
+.fc-desc {
+  font-family: var(--font-serif);
+  font-size: 14.5px;
+  line-height: 1.45;
+  color: var(--ivory-dim);
+  text-wrap: pretty;
+}
+.fc-meta-title,
+.fc-res-title {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--parchment);
+  margin: 12px 0 7px;
+  padding-top: 11px;
+  border-top: 1px solid var(--vellum-soft);
+}
+.fc-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--ivory);
+  font-variant-numeric: tabular-nums;
+}
+.fc-meta b {
+  color: var(--parchment);
+  font-weight: 400;
+}
+.fc-res {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+/* --- codex: permanent, cross-party discovery log (#codex) -----------------
+   A full-screen modal — dim backdrop + a centred card — reusing the exact
+   panel chrome every other overlay uses (ink gradient, vellum border, brass
+   accents), toggled the same opacity+transform+pointer-events way as
+   #help-panel (never a display:none swap). z-index stays below #warp-overlay
+   (30) for the same reason #genversion-banner does. The card is a FIXED size
+   (not sized-to-content) so switching tabs never resizes the panel. */
+#codex-panel {
+  position: fixed;
+  inset: 0;
+  z-index: 24;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+#codex-panel.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+.codex-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(8, 10, 22, 0.7);
+  backdrop-filter: blur(8px);
+}
+.codex-card {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  width: min(1060px, 94vw);
+  height: min(760px, 90vh); /* FIXED height — the shelf scrolls inside, panel never jumps */
+  padding: 24px 30px 20px;
+  border-radius: 12px;
+  border: 1px solid var(--vellum);
+  background: linear-gradient(180deg, rgba(12, 15, 31, 0.96), rgba(8, 10, 22, 0.96));
+  backdrop-filter: blur(10px);
+  box-shadow: 0 16px 44px rgba(0, 0, 0, 0.55);
+  color: var(--ivory-dim);
+  font-family: var(--font-mono);
+  opacity: 0;
+  transform: translateY(10px) scale(0.98);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+#codex-panel.open .codex-card {
+  opacity: 1;
+  transform: none;
+}
+.codex-close {
+  position: absolute;
+  top: 16px;
+  right: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid var(--vellum);
+  background: linear-gradient(180deg, rgba(11, 14, 30, 0.6), rgba(8, 10, 22, 0.6));
+  color: var(--ivory-dim);
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  transition: border-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+.codex-close:hover {
+  border-color: var(--vellum-strong);
+  color: var(--ivory);
+  transform: scale(1.06);
+}
+.codex-title {
+  font-family: var(--font-serif);
+  font-size: 26px;
+  font-weight: 500;
+  color: var(--ivory);
+  margin-bottom: 12px;
+  padding-right: 40px; /* clear the ✕ button */
+}
+.codex-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+.codex-tab {
+  appearance: none;
+  padding: 7px 13px;
+  border-radius: 2px;
+  border: 1px solid var(--vellum-soft);
+  background: transparent;
+  color: var(--ivory-dim);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: border-color 0.2s ease, color 0.2s ease;
+}
+.codex-tab:hover {
+  border-color: var(--vellum-strong);
+  color: var(--ivory);
+}
+.codex-tab.on {
+  border-color: var(--brass);
+  color: var(--brass-bright);
+}
+/* progress: a label + a thin brass fill bar, pinned above the scroll area. */
+.codex-prog {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+.codex-prog-label {
+  flex: none;
+  white-space: nowrap;
+}
+.codex-prog-bar {
+  flex: 1;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--vellum-soft);
+  overflow: hidden;
+}
+.codex-prog-bar > i {
+  display: block;
+  height: 100%;
+  width: 0;
+  background: linear-gradient(90deg, var(--brass), var(--brass-bright));
+  transition: width 0.35s ease;
+}
+/* the scrolling body: shelf + curiosities showcase, so the title/tabs/progress
+   above stay pinned while a long shelf (54 ships) scrolls. */
+.codex-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+.codex-empty {
+  grid-column: 1 / -1; /* the empty note lives in the shelf grid — span all tracks */
+  color: var(--parchment);
+  font-size: 12px;
+  line-height: 1.5;
+  padding: 24px 2px;
+}
+.codex-shelf {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(148px, 1fr));
+  gap: 12px;
+}
+/* a section header inside the grid (ships/stations by faction, «Особое» by
+   sub-group) — spans the full width, sits above the row it introduces. */
+.codex-section {
+  grid-column: 1 / -1;
+  margin: 8px 0 0;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--vellum-soft);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--brass);
+}
+.codex-section:first-child {
+  margin-top: 0;
+}
+
+/* «Фракции»: a faction section header — the fleet's signature colour bar +
+   serif name, its one-line character and a mono meta line (capital · race ·
+   flagship). --fac is set inline per faction (see codexUI's FACTION_TINT). */
+.codex-faction-head {
+  grid-column: 1 / -1;
+  margin: 18px 0 0;
+  padding: 10px 12px 9px;
+  border-left: 3px solid var(--fac, var(--brass));
+  border-bottom: 1px solid var(--vellum-soft);
+  background: linear-gradient(90deg, rgba(222, 213, 186, 0.06), transparent 70%);
+}
+.codex-faction-head:first-child {
+  margin-top: 0;
+}
+.codex-faction-name {
+  font-family: var(--font-serif);
+  font-size: 19px;
+  color: var(--ivory);
+}
+.codex-faction-tagline {
+  margin-top: 3px;
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--ivory-dim);
+}
+.codex-faction-meta {
+  margin-top: 6px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  color: var(--fac, var(--brass));
+}
+/* a sub-section rule inside a faction block (Флот / Строения / История) */
+.codex-subsection {
+  grid-column: 1 / -1;
+  margin: 8px 0 -4px;
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--parchment);
+}
+/* the faction switcher inside «Фракции» — one tinted button per fleet */
+.codex-fac-tabs {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.codex-fac-tab {
+  appearance: none;
+  background: none;
+  border: 1px solid var(--vellum-soft);
+  border-radius: 2px;
+  padding: 6px 12px;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
+  color: var(--ivory-dim);
+  cursor: pointer;
+  border-bottom: 2px solid var(--vellum-soft);
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+.codex-fac-tab:hover {
+  color: var(--ivory);
+  border-color: var(--vellum);
+}
+.codex-fac-tab.on {
+  color: var(--ivory);
+  border-bottom-color: var(--fac, var(--brass));
+}
+.codex-fac-tab:focus-visible {
+  outline: 2px solid var(--brass);
+  outline-offset: 2px;
+}
+
+/* the faction chronicle card — unlocks by visiting the capital */
+.codex-lore {
+  grid-column: 1 / -1;
+  padding: 12px 14px;
+  border: 1px solid var(--vellum-soft);
+  border-radius: 2px;
+  background: rgba(10, 12, 24, 0.5);
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--ivory-dim);
+}
+.codex-lore p {
+  margin: 0;
+}
+.codex-lore p + p {
+  margin-top: 8px;
+}
+.codex-lore-essence {
+  font-family: var(--font-serif);
+  font-size: 15px;
+  color: var(--ivory);
+}
+.codex-lore-chapter {
+  margin: 14px 0 6px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--brass);
+}
+
+/* ship characteristics in the detail dialog: label · bar · value rows */
+.codex-detail-stats {
+  display: grid;
+  gap: 5px;
+  margin: 10px 0 2px;
+}
+.codex-detail-stats:empty {
+  display: none;
+}
+.codex-stat-row {
+  display: grid;
+  grid-template-columns: 118px 1fr 20px;
+  align-items: center;
+  gap: 10px;
+}
+.codex-stat-name {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  color: var(--parchment);
+}
+.codex-stat-track {
+  height: 6px;
+  border: 1px solid var(--vellum-soft);
+  border-radius: 1px;
+  background: rgba(10, 12, 24, 0.6);
+}
+.codex-stat-track > i {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, var(--brass), var(--brass-bright));
+}
+.codex-stat-track.unknown {
+  border-style: dashed;
+}
+.codex-stat-val {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  color: var(--ivory-dim);
+}
+.codex-lore.locked {
+  border-style: dashed;
+  font-style: italic;
+  color: var(--parchment);
+}
+
+/* one gallery tile: a square thumbnail over a name strip. Its own class (NOT
+   .codex-card — that's the panel container) so panel chrome never bleeds in.
+   Category accent (--cat) tints the placeholder glyph and hover ring. */
+.codex-tile.cat-system,
+.codex-detail-thumb.cat-system {
+  --cat: var(--st-wild);
+}
+.codex-tile.cat-planet,
+.codex-detail-thumb.cat-planet {
+  --cat: var(--ivory-dim);
+}
+.codex-tile.cat-race,
+.codex-detail-thumb.cat-race {
+  --cat: var(--st-inhabited);
+}
+.codex-tile.cat-ruin,
+.codex-detail-thumb.cat-ruin {
+  --cat: var(--st-ruins);
+}
+.codex-tile.cat-ship,
+.codex-detail-thumb.cat-ship {
+  --cat: var(--brass-bright);
+}
+.codex-tile.cat-station,
+.codex-detail-thumb.cat-station {
+  --cat: var(--brass);
+}
+.codex-tile.cat-special,
+.codex-detail-thumb.cat-special {
+  --cat: var(--st-special);
+}
+.codex-tile {
+  appearance: none;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding: 0;
+  border: 1px solid var(--vellum-soft);
+  border-radius: 4px;
+  background: rgba(8, 11, 24, 0.5);
+  overflow: hidden;
+  cursor: pointer;
+  transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+.codex-tile.found:hover {
+  border-color: var(--cat, var(--vellum));
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+}
+.codex-tile.locked {
+  cursor: default;
+  opacity: 0.5;
+}
+.codex-thumb {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  background: radial-gradient(circle at 50% 42%, rgba(24, 30, 54, 0.9), #05060f 78%);
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.codex-thumb-icon {
+  color: var(--cat, var(--parchment));
+  opacity: 0.7;
+  width: 46%;
+  transition: opacity 0.3s ease;
+}
+.codex-thumb-icon svg {
+  width: 100%;
+  height: 100%;
+}
+.codex-thumb.rendered .codex-thumb-icon {
+  opacity: 0; /* the rendered image took over the background */
+}
+.codex-tile.locked .codex-thumb-icon {
+  opacity: 0.4;
+}
+.codex-tile-name {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  padding: 9px 10px 10px;
+  font-size: 11.5px;
+  line-height: 1.35;
+  color: var(--ivory);
+  border-top: 1px solid var(--vellum-soft);
+  text-wrap: pretty;
+}
+.codex-tile.locked .codex-tile-name {
+  color: var(--parchment);
+  justify-content: center;
+}
+/* an announced-but-future entry (a race not in the game yet): named, a touch
+   brighter than an anonymous "?" slot, with a small «скоро» tag. */
+.codex-tile.locked.future {
+  opacity: 0.72;
+}
+.codex-tile.locked.future .codex-tile-name {
+  color: var(--ivory-dim);
+  justify-content: space-between;
+}
+.codex-soon {
+  flex: none;
+  font-size: 8.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--cat, var(--brass));
+  border: 1px solid var(--vellum-soft);
+  border-radius: 2px;
+  padding: 1px 5px;
+}
+
+/* detail dialog: a second layer over the panel, opened by a card. Its own
+   backdrop dims the shelf behind it. */
+.codex-detail {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+.codex-detail.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+.codex-detail-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(6, 8, 18, 0.72);
+  backdrop-filter: blur(4px);
+}
+.codex-detail-card {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  gap: 22px;
+  width: min(760px, 92%);
+  max-height: 88vh; /* a tall dialog on a short viewport scrolls instead of clipping */
+  overflow-y: auto;
+  padding: 22px;
+  border-radius: 10px;
+  border: 1px solid var(--vellum);
+  background: linear-gradient(180deg, rgba(16, 20, 40, 0.98), rgba(9, 11, 24, 0.98));
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.6);
+  transform: translateY(8px) scale(0.98);
+  transition: transform 0.2s ease;
+}
+.codex-detail.open .codex-detail-card {
+  transform: none;
+}
+.codex-detail-close {
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid var(--vellum-soft);
+  background: transparent;
+  color: var(--ivory-dim);
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+  transition: border-color 0.2s ease, color 0.2s ease;
+}
+.codex-detail-close:hover {
+  border-color: var(--vellum-strong);
+  color: var(--ivory);
+}
+.codex-detail-thumb {
+  flex: none;
+  width: 180px;
+  height: 180px;
+  border-radius: 6px;
+  border: 1px solid var(--vellum-soft);
+  background: radial-gradient(circle at 50% 42%, rgba(24, 30, 54, 0.9), #05060f 78%);
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+/* A find with a hand-painted hero card shows it large and uncropped: the slot
+   takes the card's native 3:4 portrait so `background-size: cover` fills it with
+   no crop. Non-hero finds keep the compact 180² 3D-thumbnail slot above. */
+.codex-detail-thumb.has-hero {
+  width: 288px;
+  height: 384px;
+}
+.codex-detail-thumb .codex-thumb-icon {
+  color: var(--cat, var(--parchment));
+  opacity: 0.7;
+  width: 44%;
+}
+.codex-detail-body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+.codex-detail-sub {
+  font-size: 10px;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--parchment);
+  margin-bottom: 6px;
+}
+.codex-detail-title {
+  font-family: var(--font-serif);
+  font-size: 22px;
+  color: var(--ivory);
+  line-height: 1.2;
+  margin-bottom: 10px;
+  padding-right: 26px; /* clear the ✕ */
+}
+.codex-detail-desc {
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--ivory-dim);
+  margin-bottom: 14px;
+}
+.codex-detail-desc.empty {
+  display: none;
+}
+.codex-detail-facts {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 4px 14px;
+  margin: 0 0 auto;
+  font-size: 11.5px;
+}
+.codex-detail-facts dt {
+  color: var(--parchment);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 10px;
+  align-self: center;
+}
+.codex-detail-facts dd {
+  margin: 0;
+  color: var(--ivory);
+}
+.codex-detail-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 18px;
+}
+.codex-action {
+  appearance: none;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 9px 16px;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease;
+}
+.codex-action.primary {
+  border: 1px solid var(--brass);
+  background: linear-gradient(180deg, rgba(205, 162, 78, 0.24), rgba(205, 162, 78, 0.12));
+  color: var(--brass-bright);
+}
+.codex-action.primary:hover {
+  background: linear-gradient(180deg, rgba(205, 162, 78, 0.36), rgba(205, 162, 78, 0.18));
+  border-color: var(--brass-bright);
+}
+.codex-action.ghost {
+  border: 1px solid var(--vellum);
+  background: transparent;
+  color: var(--ivory-dim);
+}
+.codex-action.ghost:hover {
+  border-color: var(--vellum-strong);
+  color: var(--ivory);
+}
+
+@media (max-width: 640px) {
+  .codex-card {
+    width: calc(100vw - 20px);
+    height: 88vh;
+    padding: 20px 16px 14px;
+  }
+  .codex-title {
+    font-size: 20px;
+  }
+  .codex-shelf {
+    grid-template-columns: repeat(auto-fill, minmax(112px, 1fr));
+    gap: 9px;
+  }
+  .codex-detail-card {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 14px;
+  }
+  .codex-detail-facts {
+    text-align: left;
+  }
+}
+
+/* --- codex object viewer: isolated full-screen canvas (ui/objectViewer.js) -
+   its own renderer, entirely separate from the main scene; only the close
+   button + a bare canvas live here — no other chrome overlaps it. */
+.codex-viewer {
+  position: fixed;
+  inset: 0;
+  z-index: 26;
+  background: #03030b; /* same void as html/body's base background */
+  /* hidden until objectViewer.js adds .open AFTER the find built successfully —
+     a failed build must never leave an opaque, unclickable sheet on screen */
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+.codex-viewer.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+.codex-viewer canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.codex-viewer-close {
+  position: fixed;
+  top: 18px;
+  right: 18px;
+  z-index: 1;
+  appearance: none;
+  padding: 10px 16px;
+  border-radius: 2px;
+  border: 1px solid var(--vellum);
+  background: linear-gradient(180deg, rgba(11, 14, 30, 0.7), rgba(8, 10, 22, 0.7));
+  backdrop-filter: blur(8px);
+  color: var(--ivory-dim);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+.codex-viewer-close:hover {
+  background: linear-gradient(180deg, rgba(20, 24, 44, 0.82), rgba(14, 17, 33, 0.82));
+  border-color: var(--vellum-strong);
+}

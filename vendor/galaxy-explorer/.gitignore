@@ -1,0 +1,22 @@
+.DS_Store
+node_modules/
+*.log
+.playwright-*/
+scratchpad/
+__pycache__/
+.ruff_cache/
+
+# Vercel link (machine-specific project/org ids)
+.vercel
+
+# Scratch roadmap + session checkpoints (not public docs)
+TODO.md
+CHECKPOINT.md
+
+# Dev artifacts — not part of the product (purged from history)
+docs/
+shots/
+
+# Raw AI-generated asset sources (Suno/higgsfield exports etc.) — curated
+# offline, never committed; only the compressed, credited output lands in git.
+assets_src/

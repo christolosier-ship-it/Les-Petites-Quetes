@@ -1,0 +1,19 @@
+# Not part of the deployed site — dev docs, QA screenshots, render scripts,
+# the README demo media, the AI-assistant config, and lint configs (dev-only
+# tooling, not read at runtime).
+docs
+shots
+scripts
+scratchpad
+# media/ is dev-only EXCEPT the hand-painted codex hero cards, which the app
+# fetches at runtime (media/hero/*.webp) and must ship in the deploy bundle.
+media/*
+!media/hero
+!media/hero/**
+.claude
+*.md
+*.py
+pyproject.toml
+.gitignore
+.oxlintrc.json
+biome.jsonc
