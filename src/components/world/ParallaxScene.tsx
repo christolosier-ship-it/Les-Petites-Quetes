@@ -4,7 +4,7 @@ import { GenericParallaxScene } from './GenericParallaxScene';
 import type { WorldSceneRendererProps } from './WorldSceneProps';
 
 const BeyondFableForest = lazy(() => import('./BeyondFableForest').then((module) => ({ default: module.BeyondFableForest })));
-const GnomeVillageCampus = lazy(() => import('./GnomeVillageCampus').then((module) => ({ default: module.GnomeVillageCampus })));
+const VroomScadoodlesGame = lazy(() => import('./VroomScadoodlesGame').then((module) => ({ default: module.VroomScadoodlesGame })));
 const DragonMountainGame = lazy(() => import('./DragonMountainGame').then((module) => ({ default: module.DragonMountainGame })));
 
 function LazyScene({ loader: Renderer, ...props }: WorldSceneRendererProps & { readonly loader: ComponentType<WorldSceneRendererProps> }) {
@@ -19,8 +19,8 @@ function LazyBeyondFableForest(props: WorldSceneRendererProps) {
   return <LazyScene loader={BeyondFableForest} {...props} />;
 }
 
-function LazyGnomeVillageCampus(props: WorldSceneRendererProps) {
-  return <LazyScene loader={GnomeVillageCampus} {...props} />;
+function LazyVroomScadoodlesGame(props: WorldSceneRendererProps) {
+  return <LazyScene loader={VroomScadoodlesGame} {...props} />;
 }
 
 function LazyDragonMountainGame(props: WorldSceneRendererProps) {
@@ -30,7 +30,7 @@ function LazyDragonMountainGame(props: WorldSceneRendererProps) {
 const renderers = {
   'generic-parallax': GenericParallaxScene,
   'firefly-diorama': LazyBeyondFableForest,
-  'gnome-village-diorama': LazyGnomeVillageCampus,
+  'vroom-scadoodles-game': LazyVroomScadoodlesGame,
   'dragon-mountain-game': LazyDragonMountainGame,
 } satisfies Record<SceneRendererId, ComponentType<WorldSceneRendererProps>>;
 

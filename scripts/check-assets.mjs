@@ -2,7 +2,7 @@ import { existsSync, readFileSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 
 const root = process.cwd();
-const registryFiles = ['assets.json', 'firefly-assets.json', 'gnome-assets.json', 'gnome-school-assets.json', 'avatars.json'];
+const registryFiles = ['assets.json', 'firefly-assets.json', 'avatars.json'];
 const registries = registryFiles.map((file) => ({
   file,
   assets: JSON.parse(readFileSync(join(root, 'src/assets/registry', file), 'utf8')),

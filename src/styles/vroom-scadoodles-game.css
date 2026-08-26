@@ -1,0 +1,121 @@
+.vroom-game {
+  position: relative;
+  min-height: 20rem;
+  background: #090909;
+  isolation: isolate;
+}
+
+.vroom-game__viewport {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: #090909;
+}
+
+.vroom-game__frame,
+.vroom-game__preview {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.vroom-game__frame {
+  background: #090909;
+  touch-action: none;
+}
+
+.vroom-game__preview {
+  object-fit: cover;
+  image-rendering: auto;
+}
+
+.vroom-game__expand {
+  position: absolute;
+  z-index: 8;
+  top: 0.75rem;
+  right: 0.75rem;
+  min-height: 2.6rem;
+  padding: 0.55rem 0.9rem;
+  border: 1px solid rgb(255 255 255 / 0.5);
+  border-radius: 999px;
+  background: rgb(10 10 10 / 0.82);
+  color: white;
+  font: inherit;
+  font-weight: 900;
+  box-shadow: 0 0.35rem 1rem rgb(0 0 0 / 0.38);
+  cursor: pointer;
+  backdrop-filter: blur(0.35rem);
+}
+
+.vroom-game__expand:focus-visible {
+  outline: 3px solid white;
+  outline-offset: 3px;
+}
+
+.vroom-game--compact {
+  min-height: 13rem;
+}
+
+.vroom-game__compact-cover {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  align-content: end;
+  gap: 0.25rem;
+  padding: 1rem;
+  background: linear-gradient(transparent 38%, rgb(0 0 0 / 0.82));
+  color: white;
+}
+
+.vroom-game__compact-cover span {
+  font-size: 0.75rem;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.vroom-game__compact-cover strong {
+  font-size: clamp(1rem, 4vw, 1.35rem);
+}
+
+.vroom-game--expanded {
+  position: fixed;
+  z-index: 1000;
+  inset: 0;
+  display: grid;
+  min-height: 100dvh;
+  place-items: center;
+  padding: max(0.5rem, env(safe-area-inset-top)) max(0.5rem, env(safe-area-inset-right)) max(0.5rem, env(safe-area-inset-bottom)) max(0.5rem, env(safe-area-inset-left));
+  background: #050505;
+}
+
+.vroom-game--expanded .vroom-game__viewport {
+  width: min(100%, calc(100dvh * 16 / 9));
+  max-height: 100dvh;
+  box-shadow: 0 1.5rem 5rem rgb(0 0 0 / 0.65);
+}
+
+.vroom-game--expanded .vroom-game__expand {
+  top: max(0.8rem, env(safe-area-inset-top));
+  right: max(0.8rem, env(safe-area-inset-right));
+}
+
+@media (max-width: 45rem) and (orientation: portrait) {
+  .vroom-game:not(.vroom-game--expanded) .vroom-game__viewport {
+    min-height: 18rem;
+  }
+
+  .vroom-game__expand {
+    min-height: 2.4rem;
+    padding-inline: 0.75rem;
+    font-size: 0.82rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vroom-game__expand {
+    transition: none;
+  }
+}

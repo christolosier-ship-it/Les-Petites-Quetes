@@ -37,12 +37,17 @@ const coreJavaScript = new Set(
     .filter((file) => typeof file === 'string' && file.endsWith('.js')),
 );
 
+function isDeferredVroomBinary(relativePath) {
+  return relativePath === 'games/vroom-scadoodles/index.pck' || relativePath === 'games/vroom-scadoodles/index.wasm';
+}
+
 const files = walk(dist)
   .filter((path) => !path.endsWith(`${sep}sw.js`))
   .filter((path) => !path.endsWith('.map'))
   .filter((path) => !path.endsWith(`${sep}.vite${sep}manifest.json`))
   .filter((path) => {
     const relativePath = relative(dist, path).split(sep).join('/');
+    if (isDeferredVroomBinary(relativePath)) return false;
     return !relativePath.endsWith('.js') || coreJavaScript.has(relativePath);
   })
   .map((path) => `./${relative(dist, path).split(sep).join('/')}`)
@@ -83,7 +88,9 @@ self.addEventListener('fetch', (event) => {
       ? './games/beyond-fable/index.html'
       : url.pathname.startsWith('/games/origin/')
         ? './games/origin/index.html'
-        : './index.html';
+        : url.pathname.startsWith('/games/vroom-scadoodles/')
+          ? './games/vroom-scadoodles/index.html'
+          : './index.html';
     event.respondWith(
       fetch(request)
         .then((response) => {
@@ -113,4 +120,4 @@ const html = readFileSync(join(dist, 'index.html'), 'utf8');
 if (!html.includes('.js') || !files.some((file) => file.endsWith('.js'))) {
   throw new Error('Le service worker ne peut pas être généré sans bundle JavaScript initial.');
 }
-console.log(`Service worker ${version} généré avec ${files.length} ressources locales précachées ; les chunks dynamiques sont mis en cache à leur première ouverture.`);
+console.log(`Service worker ${version} généré avec ${files.length} ressources locales précachées ; les chunks dynamiques et binaires lourds de Vroom sont mis en cache à leur première ouverture.`);

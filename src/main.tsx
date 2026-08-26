@@ -13,9 +13,8 @@ import './styles/firefly-life.css';
 import './styles/firefly-wildlife-polish.css';
 import './styles/firefly-life-motion.css';
 import './styles/firefly-panorama.css';
-import './styles/gnome-village.css';
 import './styles/dragon-mountain-game.css';
-import './styles/scene-composer.css';
+import './styles/vroom-scadoodles-game.css';
 import './styles/finalization.css';
 import { registerServiceWorker } from './platform/pwa/registerServiceWorker';
 
@@ -24,11 +23,5 @@ createRoot(document.getElementById('root')!).render(
     <App />
   </StrictMode>,
 );
-
-window.setTimeout(() => {
-  void import('./platform/dev/sceneComposer').then(({ startSceneComposer }) => {
-    startSceneComposer();
-  });
-}, 0);
 
 void registerServiceWorker();

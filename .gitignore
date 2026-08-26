@@ -5,6 +5,7 @@ coverage/
 .generated/
 public/games/beyond-fable/
 public/games/origin/index.html
+public/games/vroom-scadoodles/
 *.tsbuildinfo
 *.log
 .DS_Store
