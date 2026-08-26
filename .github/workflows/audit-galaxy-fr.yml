@@ -1,0 +1,58 @@
+name: Audit Galaxy Explorer FR
+
+on:
+  push:
+    branches: [feat/galaxy-explorer-fr]
+    paths:
+      - .github/workflows/audit-galaxy-fr.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: feat/galaxy-explorer-fr
+      - name: Extraire les chaînes cyrilliques du runtime
+        shell: python
+        run: |
+          from pathlib import Path
+          import re
+
+          root = Path('vendor/galaxy-explorer')
+          targets = [root / 'index.html', root / 'styles.css'] + sorted((root / 'src').rglob('*.js'))
+          cyr = re.compile(r'[\u0400-\u04FF]')
+          quoted = re.compile(r'''(?P<q>['"`])(?P<s>(?:\\.|(?!\1).)*?)(?P=q)''', re.S)
+          records = []
+          for path in targets:
+              text = path.read_text(encoding='utf-8')
+              for m in quoted.finditer(text):
+                  s = m.group('s')
+                  if cyr.search(s):
+                      line = text.count('\n', 0, m.start()) + 1
+                      records.append((str(path), line, s.replace('\n', '\\n')))
+              if path.name == 'index.html':
+                  for n, line_text in enumerate(text.splitlines(), 1):
+                      stripped = re.sub(r'<[^>]+>', ' ', line_text)
+                      stripped = re.sub(r'\s+', ' ', stripped).strip()
+                      if stripped and cyr.search(stripped):
+                          records.append((str(path), n, '[HTML] ' + stripped))
+          # dedupe exact path+string while preserving order
+          seen = set(); out = []
+          for rec in records:
+              key = (rec[0], rec[2])
+              if key in seen: continue
+              seen.add(key); out.append(rec)
+          Path('GALAXY_FR_AUDIT.txt').write_text('\n'.join(f'{p}\t{line}\t{s}' for p,line,s in out) + '\n', encoding='utf-8')
+          print(f'{len(out)} chaînes/segments cyrilliques uniques recensés.')
+      - name: Committer le rapport temporaire
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add GALAXY_FR_AUDIT.txt
+          git commit -m "chore(galaxy-fr): inventorier les chaînes russes" || exit 0
+          git push origin HEAD:feat/galaxy-explorer-fr
