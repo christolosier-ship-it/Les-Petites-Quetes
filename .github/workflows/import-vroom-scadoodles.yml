@@ -1,0 +1,76 @@
+name: Import Vroom Scadoodles
+
+on:
+  push:
+    branches: [feat/vroom-scadoodles-gnome-village]
+    paths:
+      - .github/workflows/import-vroom-scadoodles.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  import-web-build:
+    name: Copier le build Godot figé
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Récupérer Les Petites Quêtes
+        uses: actions/checkout@v5
+        with:
+          ref: feat/vroom-scadoodles-gnome-village
+          fetch-depth: 0
+
+      - name: Récupérer Vroom Scadoodles au commit figé
+        shell: bash
+        run: |
+          set -euo pipefail
+          upstream=/tmp/vroom-scadoodles
+          git init "$upstream"
+          git -C "$upstream" remote add origin https://github.com/pstupka/scribble-cars.git
+          git -C "$upstream" fetch --depth=1 origin 85860cc6286f3c6ab55b7d448fb4e52ee11c4d09
+          git -C "$upstream" checkout --detach FETCH_HEAD
+          test "$(git -C "$upstream" rev-parse HEAD)" = "85860cc6286f3c6ab55b7d448fb4e52ee11c4d09"
+
+      - name: Copier les huit fichiers du runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          upstream=/tmp/vroom-scadoodles
+          target=vendor/vroom-scadoodles/web
+          rm -rf "$target"
+          mkdir -p "$target"
+          for file in \
+            index.apple-touch-icon.png \
+            index.audio.worklet.js \
+            index.html \
+            index.icon.png \
+            index.js \
+            index.pck \
+            index.png \
+            index.wasm
+          do
+            cp "$upstream/$file" "$target/$file"
+          done
+          test "$(find "$target" -maxdepth 1 -type f | wc -l)" -eq 8
+          test "$(stat -c %s "$target/index.pck")" -eq 29111472
+          test "$(stat -c %s "$target/index.wasm")" -eq 13793958
+
+      - name: Valider les empreintes et matérialiser le jeu
+        run: node scripts/materialize-vroom-scadoodles.mjs
+
+      - name: Enregistrer les binaires dans la branche
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add vendor/vroom-scadoodles/web
+          if git diff --cached --quiet; then
+            echo "Le runtime Vroom exact est déjà présent."
+            exit 0
+          fi
+          git commit -m "vendor(vroom): embarquer le build Godot complet"
+          git push origin HEAD:feat/vroom-scadoodles-gnome-village
