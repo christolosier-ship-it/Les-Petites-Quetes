@@ -7,9 +7,9 @@
     "node": ">=24 <25"
   },
   "scripts": {
-    "predev": "node scripts/materialize-origin-game.mjs",
+    "predev": "node scripts/materialize-origin-game.mjs && node scripts/materialize-beyond-fable.mjs",
     "dev": "vite --host 0.0.0.0",
-    "prebuild": "node scripts/materialize-origin-game.mjs",
+    "prebuild": "node scripts/materialize-origin-game.mjs && node scripts/materialize-beyond-fable.mjs",
     "build": "tsc -b && vite build && node scripts/generate-service-worker.mjs && npm run check:bundle",
     "preview": "vite preview --host 0.0.0.0",
     "lint": "eslint . --max-warnings=0",
