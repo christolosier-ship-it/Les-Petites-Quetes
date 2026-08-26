@@ -6,6 +6,8 @@ on:
     branches: [feat/vroom-scadoodles-gnome-village]
     paths:
       - .github/workflows/import-vroom-scadoodles.yml
+  pull_request:
+    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -14,6 +16,7 @@ permissions:
 jobs:
   import-web-build:
     name: Copier le build Godot figé
+    if: github.head_ref == 'feat/vroom-scadoodles-gnome-village' || github.ref_name == 'feat/vroom-scadoodles-gnome-village'
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
