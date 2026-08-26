@@ -9,7 +9,6 @@ permissions:
 
 jobs:
   vendor:
-    if: startsWith(github.event.head_commit.message, 'chore: bootstrap vendor migration')
     runs-on: ubuntu-latest
     timeout-minutes: 12
 
