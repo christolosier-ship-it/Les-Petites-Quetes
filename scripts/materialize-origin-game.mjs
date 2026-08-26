@@ -48,9 +48,34 @@ const EXTRA_REPLACEMENTS = [
   ['法力不足', 'Mana insuffisant'], ['获得装备', 'Équipement obtenu'], ['总Victoires', 'Victoires'], ['难度提升', 'Difficulté augmentée'],
 ];
 
+const FRENCH_APOSTROPHE_PREFIXES = ['l', 'L', 'd', 'D', 'n', 'N', 's', 'S', 'c', 'C', 'j', 'J', 't', 'T', 'm', 'M'];
+
 function gitBlobSha(content) {
   const bytes = Buffer.from(content, 'utf8');
   return createHash('sha1').update(`blob ${bytes.length}\0`).update(bytes).digest('hex');
+}
+
+function normalizeFrenchApostrophes(source) {
+  let output = source.replaceAll("qu'", 'qu’').replaceAll("Qu'", 'Qu’');
+  for (const prefix of FRENCH_APOSTROPHE_PREFIXES) output = output.replaceAll(`${prefix}'`, `${prefix}’`);
+  return output;
+}
+
+function extractExecutableScript(source) {
+  const match = source.match(/<script>([\s\S]*?)<\/script>/);
+  if (!match) throw new Error('Origin : script principal introuvable dans le HTML généré');
+  return match[1];
+}
+
+function assertValidJavaScript(source) {
+  const script = extractExecutableScript(source);
+  try {
+    // Parse uniquement. Le corps n’est jamais exécuté par le matérialiseur.
+    new Function(script);
+  } catch (error) {
+    const detail = error instanceof Error ? `${error.name}: ${error.message}` : String(error);
+    throw new Error(`Origin : JavaScript généré invalide après traduction (${detail})`);
+  }
 }
 
 function remainingFrenchGaps(source) {
@@ -72,6 +97,7 @@ if (actualSha !== ORIGIN_BLOB_SHA) throw new Error(`Origin: empreinte source ina
 let localized = translateOriginToFrench(upstream);
 for (const [from, to] of [...EXTRA_REPLACEMENTS].sort((a, b) => b[0].length - a[0].length)) localized = localized.replaceAll(from, to);
 localized = finalizeOriginFrench(localized);
+localized = normalizeFrenchApostrophes(localized);
 
 const bridge = `
 /* Les Petites Quêtes : persistance locale pour le mini-jeu embarqué. */
@@ -85,7 +111,8 @@ localized = localized.replace('<title>Origin · La Montagne du Dragon — RPG 16
 
 const remaining = remainingFrenchGaps(localized);
 if (remaining.length > 0) throw new Error(`Origin FR : ${remaining.length} ligne(s) contiennent encore du chinois :\n` + remaining.slice(0, 120).map((value) => `  - ${value}`).join('\n'));
+assertValidJavaScript(localized);
 
 await mkdir(dirname(OUTPUT), { recursive: true });
 await writeFile(OUTPUT, localized, 'utf8');
-console.log(`Origin FR matérialisé : ${OUTPUT} (${Buffer.byteLength(localized)} octets)`);
+console.log(`Origin FR matérialisé et JavaScript validé : ${OUTPUT} (${Buffer.byteLength(localized)} octets)`);
