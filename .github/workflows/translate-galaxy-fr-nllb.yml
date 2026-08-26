@@ -1,0 +1,298 @@
+name: Traduire Galaxy Explorer avec NLLB
+
+on:
+  push:
+    branches: [feat/galaxy-explorer-fr]
+    paths:
+      - .github/workflows/translate-galaxy-fr-nllb.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  translate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: feat/galaxy-explorer-fr
+          fetch-depth: 0
+
+      - name: Repartir du snapshot russe original
+        run: |
+          git fetch origin main
+          git restore --source=origin/main -- vendor/galaxy-explorer scripts/materialize-galaxy-explorer.mjs
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+
+      - name: Installer NLLB localement
+        run: |
+          python -m pip install --quiet torch --index-url https://download.pytorch.org/whl/cpu
+          python -m pip install --quiet 'transformers<5' sentencepiece
+
+      - name: Traduire le runtime russe vers le français
+        shell: python
+        run: |
+          from pathlib import Path
+          import re
+          import torch
+          from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
+
+          ROOT = Path('vendor/galaxy-explorer')
+          CYR = re.compile(r'[\u0400-\u04FF]')
+          PATS = [
+              re.compile(r"'(?:\\.|[^'\\])*'"),
+              re.compile(r'"(?:\\.|[^"\\])*"'),
+              re.compile(r'`(?:\\.|[^`\\])*`'),
+          ]
+          PROTECTED = re.compile(r'(\$\{[^}]+\}|\{[^{}]+\}|<[^>]+>|\\n|\\t)')
+
+          OVERRIDES = {
+              # Tutoriel, réécrit manuellement pour un français naturel.
+              'Добро пожаловать, картограф': 'Bienvenue, cartographe',
+              'Перед тобой — целая галактика, выращенная из одного зерна. Короткий первый полёт — и она твоя.': 'Devant toi s’étend une galaxie entière, née d’une seule graine. Un court premier vol, et elle sera à toi.',
+              'Начать': 'Commencer',
+              'Зажми левую кнопку мыши и поверни галактику.': 'Maintiens le bouton gauche de la souris et fais pivoter la galaxie.',
+              'Колесо мыши приближает к месту под курсором. Клавиши Q и E — тоже зум.': 'La molette zoome vers l’endroit pointé par le curseur. Les touches Q et E permettent aussi de zoomer.',
+              'Среди тысяч звёзд есть наш дом. Нажми «Показать дом», затем кликни по пульсирующему маркеру, чтобы войти.': 'Notre foyer se cache parmi des milliers d’étoiles. Appuie sur « Montrer notre foyer », puis touche le marqueur lumineux pour entrer dans le système.',
+              'Это Солнечная система. Слева — досье: звезда, возраст, история. Планеты подписаны прямо на орбитах.': 'Voici le Système solaire. À gauche, le dossier présente son étoile, son âge et son histoire. Les planètes sont nommées directement sur leurs orbites.',
+              'Дальше': 'Continuer',
+              'Кликни по Земле — рассмотрим её поближе.': 'Clique sur la Terre pour l’observer de plus près.',
+              'Земля записана в твой Кодекс. Теперь вернись к галактике: Esc делает шаг назад — нажми его дважды.': 'La Terre est maintenant inscrite dans ton Codex. Reviens à la galaxie : la touche Échap remonte d’un niveau, appuie deux fois.',
+              'Кодекс — вкладка у левого края: всё, что ты находишь, остаётся в нём навсегда. Загляни — Земля уже там.': 'Le Codex se trouve sur le bord gauche. Toutes tes découvertes y restent pour toujours. Ouvre-le : la Terre y figure déjà.',
+              'Первый полёт завершён': 'Premier vol terminé',
+              'Дальше — свободный полёт: наводись на маркеры, ныряй в системы, собирай кодекс. Настройки — сверху справа.': 'À toi maintenant d’explorer librement : vise les marqueurs, plonge dans les systèmes et complète ton Codex. Les réglages se trouvent en haut à droite.',
+              'В путь': 'En route',
+              # Interface / accessibilité.
+              'Следующий трек': 'Piste suivante', 'Космическая музыка': 'Musique spatiale', 'Музыка': 'Musique',
+              'Настройки': 'Réglages', 'Настройки галактики': 'Réglages de la galaxie',
+              'Кодекс': 'Codex', 'Кодекс — коллекция находок': 'Codex — collection de découvertes',
+              'Режим отображения': 'Mode d’affichage', 'Режим отображения: подписи / сцена / кино': 'Mode d’affichage : légendes / scène / cinéma',
+              'Назад': 'Retour', 'Ресурсы': 'Ressources', 'Цивилизация': 'Civilisation', 'Об этой системе': 'À propos de ce système',
+              'Звёздная опись': 'Atlas stellaire', 'Обитаемые': 'Habités', 'Дикие': 'Sauvages', 'Руины': 'Ruines', 'Особые': 'Spéciaux',
+              'Вписано в карту': 'Cartographiés', 'Перейти к объекту': 'Aller à l’objet', 'Рассмотреть': 'Observer', 'Закрыть': 'Fermer',
+              'Показать дом': 'Montrer notre foyer',
+              # Catégories.
+              'Системы': 'Systèmes', 'Объекты': 'Objets', 'Планеты': 'Planètes', 'Виды': 'Espèces', 'Скоро': 'Bientôt',
+              'Корабли': 'Vaisseaux', 'Станции': 'Stations', 'Фракции': 'Factions', 'Неизвестный вид': 'Espèce inconnue',
+              # Mondes et états.
+              'Лавовая планета': 'Planète de lave', 'Каменистая планета': 'Planète rocheuse', 'Пустынная планета': 'Planète désertique',
+              'Планета земного типа': 'Planète tellurique', 'Океаническая планета': 'Planète océanique', 'Ледяная планета': 'Planète glacée',
+              'Газовый гигант': 'Géante gazeuse', 'Безжизненные руины': 'Ruines sans vie', 'Мир машин': 'Monde des machines',
+              'Разрушенный мир': 'Monde dévasté', 'Уничтоженный мир': 'Monde anéanti', 'Обитаема': 'Habitée', 'Дикая': 'Sauvage',
+              # Noms propres et références.
+              'Человечество': 'Humanité', 'Фримены': 'Fremen', 'На’ви': 'Na’vi', 'Строители Знаков': 'Bâtisseurs de Signes',
+              'Аэлары': 'Aelari', 'Хешты': 'Hesht', 'Приплод': 'Progéniture', 'Предтечи': 'Précurseurs', 'Некроморфы': 'Nécromorphes',
+              'Стрелец A*': 'Sagittarius A*', 'Гаргантюа': 'Gargantua', 'Солнечная система': 'Système solaire',
+              'Чёрный Карантин': 'Quarantaine Noire', 'Сектор Альдераан': 'Secteur Alderaan', 'Двусолнечье': 'Deux-Soleils',
+              'Пряный Предел': 'Frontière des Épices', 'Спутник Бурь': 'Lune des Tempêtes', 'Хот': 'Hoth',
+              'Первая Верфь': 'Premier Chantier', 'Зольный Престол': 'Trône de Cendres', 'Первый Сад': 'Premier Jardin',
+              'Меридиан-Ноль': 'Méridien Zéro', 'Вольная Гавань': 'Port-Libre', 'Чертог Молчания': 'Hall du Silence',
+              'Станция «Эндюранс»': 'Station « Endurance »', 'Звезда Смерти «Длань»': 'Étoile de la Mort « La Main »',
+              'Земля': 'Terre', 'Марс': 'Mars', 'Альдераан': 'Alderaan', 'Эгида VII': 'Égide VII', 'Тау-Волантис': 'Tau Volantis',
+              'Татуин': 'Tatooine', 'Арракис': 'Arrakis', 'Пандора': 'Pandora', 'Аэла': 'Aela', 'Хешт': 'Hesht',
+              'Наковальня': 'L’Enclume', 'Прародина': 'Berceau', 'Прайм': 'Prime', 'Толстяк': 'Le Gros', 'Скрижаль': 'La Tablette',
+              # Factions.
+              'Альянс Свободных Верфей': 'Alliance des Chantiers Libres', 'Империя Пепла': 'Empire des Cendres',
+              'Рой': 'Essaim', 'Синдикат': 'Syndicat', 'Вольный Картель': 'Cartel Libre',
+              'Тихая Гавань': 'Havre Silencieux', 'Тризна': 'Veillée', 'Исполин': 'Colosse',
+              'Контрольный пакет': 'Bloc de Contrôle', 'Мамаша': 'La Matrone', 'Тот, Кто Остался': 'Celui qui est resté',
+              # Génération de noms : translittération déterministe.
+              'Вэй':'Vey','Кор':'Kor','Аэт':'Aet','Зар':'Zar','Тал':'Tal','Мор':'Mor','Аль':'Al','Ор':'Or','Вен':'Ven','Сель':'Sel',
+              'Дра':'Dra','Эль':'El','Кас':'Kas','Тир':'Tir','Ун':'Un','Фе':'Fe','Лю':'Lu','Сан':'San','Хет':'Khet','Нью':'Nyu',
+              'Кир':'Kir','Овен':'Oven','Тея':'Thea','Изра':'Izra','Кель':'Kel',
+              'ла':'la','рон':'ron','вест':'vest','мир':'mir','тея':'thea','дор':'dor','нис':'nis','рах':'rakh','лон':'lon','тар':'tar',
+              'сид':'sid','лей':'ley','наш':'nash','рим':'rim','сол':'sol','дан':'dan','тис':'tis','вал':'val','тор':'tor','мис':'mis',
+              'Прайм':'Prime','Майнор':'Minor','Секунда':'Secunda','Нова':'Nova','Веста':'Vesta','Ультима':'Ultima','Терра':'Terra','Бис':'Bis',
+              'Кеплер':'Kepler','Глизе':'Gliese','Тейя':'Theia','Вега':'Vega','Орн':'Orn','Лиэн':'Lien','Каэр':'Kaer','Тихо':'Tycho',
+              'аэ':'ae','со':'so','кри':'kri','ве':'ve','се':'se','ли':'li','тха':'tha','му':'mu','не':'ne','зи':'zi','фа':'fa','вэ':'vae','то':'to','ри':'ri','ша':'sha',
+              'лли':'lli','вани':'vani','ши':'shi','лани':'lani','теш':'tesh','нави':'navi','сти':'sti','элы':'ely','нтар':'ntar','оши':'oshi','эни':'eni','исса':'issa','ора':'ora','эми':'emi','аны':'ani',
+          }
+
+          tokenizer = AutoTokenizer.from_pretrained('facebook/nllb-200-distilled-600M', src_lang='rus_Cyrl')
+          model = AutoModelForSeq2SeqLM.from_pretrained('facebook/nllb-200-distilled-600M')
+          model.eval()
+          torch.set_num_threads(2)
+          forced_bos = tokenizer.convert_tokens_to_ids('fra_Latn')
+
+          files = [ROOT / 'index.html'] + sorted((ROOT / 'src').rglob('*.js'))
+          originals = {}
+          for path in files:
+              for raw in path.read_text(encoding='utf-8').splitlines():
+                  stripped = raw.strip()
+                  if stripped.startswith('//') or stripped.startswith('*') or stripped.startswith('/*'):
+                      continue
+                  for pat in PATS:
+                      for m in pat.finditer(raw):
+                          value = m.group(0)[1:-1]
+                          if CYR.search(value):
+                              originals.setdefault(value, None)
+
+          segments, split_cache = set(), {}
+          for value in originals:
+              if value in OVERRIDES:
+                  continue
+              parts = PROTECTED.split(value)
+              split_cache[value] = parts
+              for part in parts:
+                  if part and CYR.search(part) and not PROTECTED.fullmatch(part):
+                      segments.add(part)
+
+          def split_long(text):
+              if len(tokenizer(text, return_tensors='pt', truncation=False).input_ids[0]) <= 420:
+                  return [text]
+              sentences = re.split(r'(?<=[.!?…])\s+', text)
+              chunks, current = [], ''
+              for sentence in sentences:
+                  candidate = (current + ' ' + sentence).strip()
+                  if current and len(tokenizer(candidate, return_tensors='pt', truncation=False).input_ids[0]) > 420:
+                      chunks.append(current)
+                      current = sentence
+                  else:
+                      current = candidate
+              if current:
+                  chunks.append(current)
+              return chunks
+
+          owners, units = {}, []
+          for segment in sorted(segments):
+              chunks = split_long(segment)
+              owners[segment] = chunks
+              units.extend(chunks)
+          units = list(dict.fromkeys(units))
+
+          translated_units = {}
+          batch_size = 6
+          for i in range(0, len(units), batch_size):
+              batch = units[i:i+batch_size]
+              encoded = tokenizer(batch, return_tensors='pt', padding=True, truncation=True, max_length=512)
+              with torch.no_grad():
+                  generated = model.generate(
+                      **encoded,
+                      forced_bos_token_id=forced_bos,
+                      max_new_tokens=512,
+                      num_beams=1,
+                      renormalize_logits=True,
+                  )
+              outputs = tokenizer.batch_decode(generated, skip_special_tokens=True)
+              translated_units.update(zip(batch, outputs))
+              print(f'NLLB : {min(i+batch_size, len(units))}/{len(units)} fragments')
+
+          segment_translation = {seg: ' '.join(translated_units[ch] for ch in chunks) for seg, chunks in owners.items()}
+          translations = {}
+          for value in originals:
+              if value in OVERRIDES:
+                  translations[value] = OVERRIDES[value]
+                  continue
+              parts = split_cache[value]
+              translations[value] = ''.join(
+                  segment_translation.get(part, part) if not PROTECTED.fullmatch(part or '') else part
+                  for part in parts
+              )
+
+          def escape_for_quote(value, quote):
+              value = value.replace('\\', '\\\\').replace('\\\\n', '\\n').replace('\\\\t', '\\t')
+              if quote == "'": value = value.replace("'", "\\'")
+              elif quote == '"': value = value.replace('"', '\\"')
+              else: value = value.replace('`', '\\`')
+              return value
+
+          for path in files:
+              out = []
+              for raw in path.read_text(encoding='utf-8').splitlines(keepends=True):
+                  stripped = raw.strip()
+                  if stripped.startswith('//') or stripped.startswith('*') or stripped.startswith('/*'):
+                      out.append(raw); continue
+                  line = raw
+                  for pat in PATS:
+                      def repl(m):
+                          token, q = m.group(0), m.group(0)[0]
+                          value = token[1:-1]
+                          return token if value not in translations else q + escape_for_quote(translations[value], q) + q
+                      line = pat.sub(repl, line)
+                  out.append(line)
+              path.write_text(''.join(out), encoding='utf-8')
+
+          # HTML visible hors littéraux JS.
+          html = (ROOT / 'index.html').read_text(encoding='utf-8')
+          html = html.replace('<html lang="ru">', '<html lang="fr">')
+          html = html.replace('<title>Galaxy Explorer</title>', '<title>Explorateur Galactique</title>')
+          html = html.replace('Составление звёздной описи…', 'Cartographie des étoiles…')
+          html = html.replace('<b>Колесо мыши</b> — приблизиться к курсору', '<b>Molette</b> — zoomer vers le curseur')
+          html = html.replace('<b>Зажать ЛКМ</b> — повернуть галактику', '<b>Maintenir le clic gauche</b> — faire pivoter la galaxie')
+          html = html.replace('<b>Стрелки / WASD</b> — обзор, <b>Q/E</b> — зум', '<b>Flèches / WASD</b> — déplacer la vue, <b>Q/E</b> — zoomer')
+          html = html.replace('<b>Сверху справа</b> — настройки', '<b>En haut à droite</b> — réglages')
+          html = html.replace('<span class="codex-tab-label">Кодекс</span>', '<span class="codex-tab-label">Codex</span>')
+          (ROOT / 'index.html').write_text(html, encoding='utf-8')
+
+          # Fragments HTML / clés non quotés.
+          patches = {
+              ROOT / 'src/codex/codexUI.js': [
+                  ("const SPECIAL_GROUP_ICON = { Системы: 'system', Объекты: 'phenomenon', Планеты: 'planet' };",
+                   "const SPECIAL_GROUP_ICON = { 'Systèmes': 'system', 'Objets': 'phenomenon', 'Planètes': 'planet' };")
+              ],
+              ROOT / 'src/ui/hud.js': [
+                  ('<div class="sp-about-title sp-sec-title">Об этой системе</div>', '<div class="sp-about-title sp-sec-title">À propos de ce système</div>'),
+                  ('<div class="sp-res-title sp-sec-title">Ресурсы</div>', '<div class="sp-res-title sp-sec-title">Ressources</div>'),
+                  ('<div class="sp-sec-title">Цивилизация</div>', '<div class="sp-sec-title">Civilisation</div>'),
+                  ('<div class="lg-title">Звёздная опись</div>', '<div class="lg-title">Atlas stellaire</div>'),
+                  ('>Обитаемые</div>', '>Habités</div>'), ('>Дикие</div>', '>Sauvages</div>'),
+                  ('>Руины</div>', '>Ruines</div>'), ('>Особые</div>', '>Spéciaux</div>'),
+                  ('<div class="lg-prog">Вписано в карту <b>0</b> / 0</div>', '<div class="lg-prog">Cartographiés <b>0</b> / 0</div>'),
+              ],
+          }
+          for path, replacements in patches.items():
+              text = path.read_text(encoding='utf-8')
+              for before, after in replacements: text = text.replace(before, after)
+              path.write_text(text, encoding='utf-8')
+
+          print(f'{len(translations)} chaînes traduites, dont {len(OVERRIDES)} contrôlées manuellement.')
+
+      - name: Valider le runtime français
+        shell: bash
+        run: |
+          set -euo pipefail
+          find vendor/galaxy-explorer/src -name '*.js' -print0 | xargs -0 -n1 node --check
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          root = Path('vendor/galaxy-explorer')
+          cyr = re.compile(r'[\u0400-\u04FF]')
+          offenders = []
+          for path in [root/'index.html'] + sorted((root/'src').rglob('*.js')):
+              for n, raw in enumerate(path.read_text(encoding='utf-8').splitlines(), 1):
+                  if not cyr.search(raw): continue
+                  s = raw.strip()
+                  if s.startswith('//') or s.startswith('*') or s.startswith('/*') or '// ' in raw: continue
+                  offenders.append(f'{path}:{n}: {s}')
+          if offenders:
+              print('\n'.join(offenders[:100]))
+              raise SystemExit(f'{len(offenders)} lignes cyrilliques non commentées subsistent')
+          print('Runtime utilisateur : 0 ligne cyrillique résiduelle.')
+          PY
+
+      - name: Aligner les empreintes du snapshot français
+        shell: python
+        run: |
+          from pathlib import Path
+          import subprocess, re
+          p = Path('scripts/materialize-galaxy-explorer.mjs')
+          text = p.read_text(encoding='utf-8')
+          for rel in ['index.html', 'src/main.js']:
+              sha = subprocess.check_output(['git', 'hash-object', f'vendor/galaxy-explorer/{rel}'], text=True).strip()
+              text, n = re.subn(rf"\['{re.escape(rel)}', '[0-9a-f]{{40}}'\]", f"['{rel}', '{sha}']", text, count=1)
+              if n != 1: raise SystemExit(f'Empreinte introuvable pour {rel}')
+          text = text.replace('empreintes amont validées', 'empreintes du snapshot français validées')
+          p.write_text(text, encoding='utf-8')
+
+      - name: Enregistrer la traduction NLLB
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add vendor/galaxy-explorer scripts/materialize-galaxy-explorer.mjs
+          git commit -m "feat(galaxy): finaliser la traduction française du runtime"
+          git push origin HEAD:feat/galaxy-explorer-fr
