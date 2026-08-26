@@ -2,6 +2,8 @@ node_modules/
 dist/
 coverage/
 .vite/
+.generated/
+public/games/beyond-fable/
 *.tsbuildinfo
 *.log
 .DS_Store

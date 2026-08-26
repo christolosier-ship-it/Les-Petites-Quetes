@@ -1,0 +1,3 @@
+[submodule "vendor/beyond-fable"]
+	path = vendor/beyond-fable
+	url = https://github.com/xikhar/beyond-fable.git

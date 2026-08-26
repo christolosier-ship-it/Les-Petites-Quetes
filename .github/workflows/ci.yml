@@ -22,6 +22,8 @@ jobs:
     steps:
       - name: Récupérer le dépôt
         uses: actions/checkout@v5
+        with:
+          submodules: recursive
 
       - name: Installer Node.js
         uses: actions/setup-node@v5
