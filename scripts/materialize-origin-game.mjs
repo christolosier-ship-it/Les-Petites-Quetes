@@ -54,9 +54,7 @@ function gitBlobSha(content) {
 }
 
 function normalizeFrenchApostrophes(source) {
-  return source
-    .replace(/\b([lLdDnNsScCjJtTmM])'(?=[A-Za-zÀ-ÖØ-öø-ÿ])/g, '$1’')
-    .replace(/\b([qQ]u)'(?=[A-Za-zÀ-ÖØ-öø-ÿ])/g, '$1’');
+  return source.replace(/(?<=[A-Za-zÀ-ÖØ-öø-ÿ])'(?=[A-Za-zÀ-ÖØ-öø-ÿ])/g, '’');
 }
 
 function extractExecutableScript(source) {
