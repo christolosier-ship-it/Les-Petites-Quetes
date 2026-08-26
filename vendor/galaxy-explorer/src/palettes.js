@@ -22,7 +22,7 @@ export const PALETTES = {
     nebula: { core: '#ffcf8a', mid: '#9a52ff', edge: '#3a1a7a' }, // gold → purple → violet
   },
   ember: {
-    label: 'Ember (тёплая)',
+    label: 'Ember (grogne)',
     background: '#0b0503',
     core: '#fff1cf',
     inner: '#ffd089',
@@ -31,7 +31,7 @@ export const PALETTES = {
     nebula: { core: '#ffe7b0', mid: '#e0632a', edge: '#5a1c0e' },
   },
   emerald: {
-    label: 'Emerald (изумруд)',
+    label: 'Emerald (émeraude)',
     background: '#02080a',
     core: '#eafff4',
     inner: '#9af7d0',
@@ -40,7 +40,7 @@ export const PALETTES = {
     nebula: { core: '#d6fff0', mid: '#1f9e86', edge: '#0a3b32' },
   },
   ice: {
-    label: 'Ice (ледяная)',
+    label: 'Ice (glaciaire)',
     background: '#030810',
     core: '#ffffff',
     inner: '#bfe6ff',
@@ -49,7 +49,7 @@ export const PALETTES = {
     nebula: { core: '#e6f4ff', mid: '#3f7bd6', edge: '#13284f' },
   },
   rose: {
-    label: 'Rose (розово-пурпурная)',
+    label: 'Rose (pourpre-rose)',
     background: '#0a030a',
     core: '#fff0fb',
     inner: '#ffb3e6',

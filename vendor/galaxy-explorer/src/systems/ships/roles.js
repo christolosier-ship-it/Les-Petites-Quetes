@@ -206,15 +206,15 @@ function makeFlagship(s) {
 // `scale` makes the role's display/world size match its purpose (scout tiny,
 // flagship huge). `cat` drives in-system traffic mix; `speed` the flight speed.
 export const ROLES = [
-  { id: 'scout', name: 'Скаут', cat: 'scout', size: 'XS', lengthM: 16, speed: 14, crew: 1, scale: 0.7, arm: 'без вооружения', purpose: 'разведка и связь', desc: 'Лёгкий быстрый разведчик — глаза и уши флота.', make: makeScout },
-  { id: 'fighter', name: 'Истребитель', cat: 'fighter', size: 'S', lengthM: 12, speed: 12, crew: 1, scale: 0.95, arm: 'спаренные пушки', purpose: 'лёгкий бой', desc: 'Основной боевой корабль: маневренный, с пушками.', make: makeFighter },
-  { id: 'interceptor', name: 'Перехватчик', cat: 'fighter', size: 'S', lengthM: 14, speed: 14, crew: 1, scale: 0.95, arm: 'скоростные орудия', purpose: 'против истребителей', desc: 'Самый быстрый — догоняет и сбивает чужаков.', make: makeInterceptor },
-  { id: 'gunship', name: 'Канонерка', cat: 'fighter', size: 'M', lengthM: 28, speed: 8, crew: 4, scale: 1.3, arm: 'тяжёлые орудия + турель', purpose: 'штурм', desc: 'Летающая батарея: медленнее, но бьёт больно.', make: makeGunship },
-  { id: 'corvette', name: 'Корвет', cat: 'fighter', size: 'M', lengthM: 60, speed: 9, crew: 20, scale: 1.5, arm: 'турели', purpose: 'эскорт и патруль', desc: 'Малый военный корабль: мостик, турели, эскорт.', make: makeCorvette },
-  { id: 'freighter', name: 'Грузовик', cat: 'transport', size: 'L', lengthM: 90, speed: 5, crew: 8, scale: 1.25, arm: 'карго 8 000 т', purpose: 'перевозка грузов', desc: 'Рабочая лошадка: контейнеры, медленно, надёжно.', make: makeFreighter },
-  { id: 'tanker', name: 'Танкер', cat: 'transport', size: 'L', lengthM: 85, speed: 4.5, crew: 6, scale: 1.2, arm: 'танки топлива/газа', purpose: 'топливо и газ', desc: 'Возит топливо и сжатый газ в больших баках.', make: makeTanker },
-  { id: 'liner', name: 'Лайнер', cat: 'transport', size: 'L', lengthM: 120, speed: 5.5, crew: 40, scale: 1.35, arm: 'до 4 000 колонистов', purpose: 'пассажиры и колонисты', desc: 'Перевозит людей: ряды окон, обзорные купола.', make: makeLiner },
-  { id: 'flagship', name: 'Флагман', cat: 'flagship', size: 'XL', lengthM: 400, speed: 2.6, crew: 2000, scale: 1.9, arm: 'батареи + ангар', purpose: 'командный дредноут', desc: 'Сердце флота: огромный, медленный, ощетинился орудиями.', make: makeFlagship },
+  { id: 'scout', name: 'Scout', cat: 'scout', size: 'XS', lengthM: 16, speed: 14, crew: 1, scale: 0.7, arm: 'sans armes', purpose: 'Exploration et communications', desc: 'Un petit éclaireur rapide, les yeux et les oreilles de la flotte.', make: makeScout },
+  { id: 'fighter', name: 'Un chasseur', cat: 'fighter', size: 'S', lengthM: 12, speed: 12, crew: 1, scale: 0.95, arm: 'Canons équipant', purpose: 'Un combat léger', desc: 'Le vaisseau de combat principal est manœuvré, avec des armes.', make: makeFighter },
+  { id: 'interceptor', name: 'Intercepteur', cat: 'fighter', size: 'S', lengthM: 14, speed: 14, crew: 1, scale: 0.95, arm: 'Canons rapides', purpose: 'contre des chasseurs', desc: 'Le plus rapide des cris rattrape et tue les étrangers.', make: makeInterceptor },
+  { id: 'gunship', name: 'Canoner', cat: 'fighter', size: 'M', lengthM: 28, speed: 8, crew: 4, scale: 1.3, arm: 'Canon lourd + touriste', purpose: 'assaut', desc: 'Batterie volante: doucement, mais mal.', make: makeGunship },
+  { id: 'corvette', name: 'Corvette', cat: 'fighter', size: 'M', lengthM: 60, speed: 9, crew: 20, scale: 1.5, arm: 'Touristes', purpose: 'Escorte et patrouille', desc: 'Petite embarcation militaire: pont, tourelles, escorte.', make: makeCorvette },
+  { id: 'freighter', name: 'Camion', cat: 'transport', size: 'L', lengthM: 90, speed: 5, crew: 8, scale: 1.25, arm: 'Cargo 8 000 tonnes', purpose: 'Transport de marchandises', desc: 'C\'est un cheval de travail, des conteneurs, lentement, fiable.', make: makeFreighter },
+  { id: 'tanker', name: 'Bateau-citerne', cat: 'transport', size: 'L', lengthM: 85, speed: 4.5, crew: 6, scale: 1.2, arm: 'Chars à carburant/gaz', purpose: 'Combustibles et gaz', desc: 'Il prend du carburant et du gaz comprimé dans les grands réservoirs.', make: makeTanker },
+  { id: 'liner', name: 'Liner', cat: 'transport', size: 'L', lengthM: 120, speed: 5.5, crew: 40, scale: 1.35, arm: 'Jusqu &apos; à 4 000 colons', purpose: 'Passagers et colons', desc: 'Il transporte des gens: fenêtres, dômes de vision.', make: makeLiner },
+  { id: 'flagship', name: 'Drapeau', cat: 'flagship', size: 'XL', lengthM: 400, speed: 2.6, crew: 2000, scale: 1.9, arm: 'batteries + hangar', purpose: 'Dressage de commande', desc: 'Le cœur de la flotte: grand, lent, a craqué avec des armes.', make: makeFlagship },
 ];
 
 export const ROLE_BY_ID = Object.fromEntries(ROLES.map((r) => [r.id, r]));

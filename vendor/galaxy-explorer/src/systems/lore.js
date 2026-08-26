@@ -8,19 +8,19 @@
 // coined from syllables with a stutter guard.
 
 const NAME_PREFIX = [
-  'Вэй', 'Кор', 'Аэт', 'Зар', 'Тал', 'Мор', 'Аль', 'Ор', 'Вен', 'Сель',
-  'Дра', 'Эль', 'Кас', 'Тир', 'Ун', 'Фе', 'Лю', 'Сан', 'Хет', 'Нью',
-  'Кир', 'Овен', 'Тея', 'Изра', 'Кель',
+  'Vey', 'Kor', 'Aet', 'Zar', 'Tal', 'Mor', 'Al', 'Or', 'Ven', 'Sel',
+  'Dra', 'El', 'Kas', 'Tir', 'Un', 'Fe', 'Lu', 'San', 'Khet', 'Nyu',
+  'Kir', 'Oven', 'Thea', 'Izra', 'Kel',
 ];
 const NAME_ROOT = [
-  'ла', 'рон', 'вест', 'мир', 'тея', 'дор', 'нис', 'рах', 'лон', 'тар',
-  'сид', 'лей', 'наш', 'рим', 'сол', 'дан', 'тис', 'вал', 'тор', 'мис',
+  'la', 'ron', 'vest', 'mir', 'thea', 'dor', 'nis', 'rakh', 'lon', 'tar',
+  'sid', 'ley', 'nash', 'rim', 'sol', 'dan', 'tis', 'val', 'tor', 'mis',
 ];
-const NAME_SUFFIX = ['Прайм', 'Майнор', 'Секунда', 'Нова', 'Веста', 'Ультима', 'Терра', 'Бис'];
-const CATALOG = ['Кеплер', 'Глизе', 'Тейя', 'HD', 'Вега', 'Орн', 'XR', 'Лиэн', 'Каэр', 'Тихо'];
+const NAME_SUFFIX = ['Prime', 'Minor', 'Secunda', 'Nova', 'Vesta', 'Ultima', 'Terra', 'Bis'];
+const CATALOG = ['Kepler', 'Gliese', 'Theia', 'HD', 'Vega', 'Orn', 'XR', 'Lien', 'Kaer', 'Tycho'];
 
-const SPECIES_A = ['аэ', 'со', 'кри', 'ве', 'се', 'ли', 'тха', 'му', 'не', 'зи', 'фа', 'вэ', 'то', 'ри', 'ша'];
-const SPECIES_B = ['лли', 'вани', 'ши', 'лани', 'теш', 'нави', 'сти', 'элы', 'нтар', 'оши', 'эни', 'исса', 'ора', 'эми', 'аны'];
+const SPECIES_A = ['ae', 'so', 'kri', 've', 'se', 'li', 'tha', 'mu', 'ne', 'zi', 'fa', 'vae', 'to', 'ri', 'sha'];
+const SPECIES_B = ['lli', 'vani', 'shi', 'lani', 'tesh', 'navi', 'sti', 'ely', 'ntar', 'oshi', 'eni', 'issa', 'ora', 'emi', 'ani'];
 
 /** Coin a system name — half evocative, half catalogue style. */
 export function generateName(rng) {
@@ -60,100 +60,100 @@ const B = (text, requires) => ({ text, requires });
 
 const POOLS = {
   inhabited: {
-    label: 'Обитаема',
+    label: 'Habitée',
     open: [
-      'Здесь до сих пор горят огни.',
-      'Этот мир жив и шумен.',
-      'Система обитаема — и хорошо это знает.',
-      'Свет городов виден даже с дальней орбиты.',
-      'Здесь дышат, строят и спорят о звёздах.',
-      'Радиоэфир здесь густой от чужих голосов.',
-      'Ночная сторона планеты расчерчена огнями городов.',
-      'Это не пустошь — это чей-то дом.',
-      'Орбиты забиты станциями, спутниками и чужим добром.',
-      'Кто-то здесь смотрит на ту же звезду, что и ты.',
+      'Les lumières sont toujours allumées.',
+      'Ce monde est vivant et bruyant.',
+      'Le système de logement de Kalajoki le sait bien.',
+      'La lumière des villes est visible même depuis l\'orbite lointaine.',
+      'Ils respirent, construisent et discutent des étoiles.',
+      'La radio est très forte.',
+      'La nuit, la planète est entourée de feux de villes.',
+      'Ce n\'est pas une maison vide.',
+      'Les orbites sont pleines de stations, de satellites et de bien d\'autrui.',
+      'Quelqu\'un ici regarde la même étoile que toi.',
     ],
     body: [
-      B('Их города растут вверх, к самому краю атмосферы, словно стеклянные леса.'),
-      B('Они живут в океанах под вечным льдом и говорят щелчками и светом.', ['ice', 'ocean']),
-      B('Целые поколения проводят жизнь на дирижаблях в облаках газового гиганта.', ['gas']),
-      B('Они поклоняются своей звезде и считают каждый рассвет обещанием.'),
-      B('Их корабли уходят к соседним огонькам и почти всегда возвращаются.'),
-      B('Они научились слушать ядро планеты и строят там, где спокойно.'),
-      B('Их песни передают по радио из поколения в поколение.'),
-      B('Каждый их город висит на тросах между двумя горами.'),
-      B('Они расселились по тёплым лунам и торгуют водой и музыкой.'),
-      B('Целые материки они отдали под сады и оставили дикими.'),
+      B('Leurs villes s\'élèvent, au bord de l\'atmosphère, comme des forêts de verre.'),
+      B('Ils vivent dans les océans sous la glace éternelle et parlent de claquements et de lumières.', ['ice', 'ocean']),
+      B('Des générations entières vivent sur des dirigeables dans les nuages d\'un géant gazier.', ['gas']),
+      B('Ils adorent leur étoile et considèrent chaque aube comme une promesse.'),
+      B('Leurs vaisseaux vont vers les lumières voisines et reviennent presque toujours.'),
+      B('Ils ont appris à écouter le noyau de la planète et à construire un endroit calme.'),
+      B('Leurs chansons sont diffusées à la radio de génération en génération.'),
+      B('Chaque ville est accrochée sur des câbles entre deux montagnes.'),
+      B('Ils se sont installés sur les lunes chaudes et ont vendu de l\'eau et de la musique.'),
+      B('Ils ont laissé des continents entiers sous les jardins et les ont laissés sauvages.'),
     ],
     tail: [
-      'Себя они называют — {species}.',
-      'Имя этого народа — {species}.',
-      'Соседи зовут их просто: {species}.',
-      'Сигнал отсюда тёплый и не гаснет.',
-      'Они ещё не знают, что не одни.',
-      'На их флагах — силуэт родной звезды.',
+      'Ils se disent eux-mêmes ♪{species}.',
+      'Le nom de ce peuple{species}.',
+      'Les voisins les appellent simplement:{species}.',
+      'Le signal est chaud et ne s\'éteint pas.',
+      'Ils ne savent pas encore qu\'ils ne sont pas seuls.',
+      'Sur leurs drapeaux, la silhouette de la star est une silhouette.',
     ],
   },
   ruins: {
-    label: 'Руины',
+    label: 'Ruines',
     open: [
-      'Когда-то здесь была жизнь. Теперь — тишина.',
-      'Эта система помнит больше, чем рассказывает.',
-      'Города стоят, но в них никого нет.',
-      'Свет погас очень давно.',
-      'Здесь всё цело — и всё мертво.',
-      'Пыль легла ровным слоем на всё, что они построили.',
-      'Эхо ещё держится в пустых коридорах.',
-      'От них остались только тени на стенах.',
+      'Il y a eu une vie ici, maintenant, le silence.',
+      'Ce système se souvient plus que ce qu\'il dit.',
+      'Les villes sont là, mais il n\'y a personne.',
+      'La lumière a disparu il y a longtemps.',
+      'Tout est là, tout est mort.',
+      'La poussière est restée dans la même couche que tout ce qu\'ils ont construit.',
+      'L\'écho est toujours dans les couloirs vides.',
+      'Il ne reste que des ombres sur les murs.',
     ],
     body: [
-      B('Орбитальные кольца всё ещё крутятся — пустые, как заведённые часы.'),
-      B('На поверхности остались дороги, ведущие в никуда.'),
-      B('Что их погубило — война, звезда или собственное любопытство — уже не узнать.'),
-      B('Последние ушли под землю и не вышли обратно.'),
-      B('От великой культуры остались лишь идеально ровные руины и молчание.'),
-      B('Их машины до сих пор работают, обслуживая мёртвые улицы.'),
-      B('Их библиотеки нетронуты, но читать их больше некому.'),
-      B('Они оставили двери открытыми, будто собирались вернуться.'),
-      B('Облака газового гиганта до сих пор хранят остовы их станций.', ['gas']),
+      B('Les anneaux orbitaux sont toujours vides comme des montres.'),
+      B('Il y a des routes qui mènent nulle part.'),
+      B('Ce qui les a détruits, la guerre, l\'étoile ou sa curiosité,  ce n\'est plus ce que  ce fut.'),
+      B('Les derniers sont partis sous terre et ne sont pas revenus.'),
+      B('La grande culture n\'a laissé que des ruines et un silence parfaits.'),
+      B('Leurs voitures fonctionnent toujours, servant les rues mortes.'),
+      B('Leurs bibliothèques sont intactes, mais personne ne les lit.'),
+      B('Ils ont laissé les portes ouvertes, comme s\'ils allaient revenir.'),
+      B('Les nuages du géant du gaz stockent encore les stations.', ['gas']),
     ],
     tail: [
-      'Тех, кто здесь жил, звали — {species}.',
-      'Этот народ называл себя — {species}.',
-      'Последнее слово в их хрониках — {species}.',
-      'Сигнал маяка всё ещё идёт. Ответа нет уже тысячи лет.',
-      'Кто-то ещё ждёт их возвращения. Зря.',
+      'Ceux qui vivaient ici s\'appelaient .{species}.',
+      'Ce peuple s\'appelait ♫{species}.',
+      'Le dernier mot dans leur chronique ♪{species}.',
+      'Le signal du phare est toujours là, il n\'y a pas de réponse depuis des milliers d\'années.',
+      'Quelqu\'un d\'autre attend qu\'ils reviennent.',
     ],
   },
   wild: {
-    label: 'Дикая',
+    label: 'Sauvage',
     open: [
-      'Здесь никогда не ступала ничья нога.',
-      'Дикая система, нетронутая и равнодушная.',
-      'Тут есть всё для жизни — но жизни нет.',
-      'Только камень, лёд и свет.',
-      'Эта система не ждала и не ждёт никого.',
-      'Здесь правят только гравитация и время.',
-      'Мир до первого имени.',
-      'Ни следа, ни тропы, ни дыхания.',
+      'Personne n\'a jamais posé de pied ici.',
+      'Système sauvage, intact et indifférent.',
+      'Il y a tout pour la vie, mais il n\'y a pas de vie.',
+      'Juste une pierre, de la glace et de la lumière.',
+      'Ce système n\'attend personne.',
+      'Il n\'y a que la gravité et le temps qui gouvernent ici.',
+      'La paix jusqu\'au premier prénom.',
+      'Pas de trace, pas de chemin, pas de respiration.',
     ],
     body: [
-      B('Бури в атмосфере газового гиганта длятся дольше иных цивилизаций.', ['gas']),
-      B('Океаны кипят и замерзают по кругу, век за веком.', ['ocean', 'terran']),
-      B('Кольца из пыли и льда ловят звёздный свет и рассыпают его радугой.'),
-      B('Молнии бьют по пустым равнинам, и некому их увидеть.'),
-      B('Где-то в этих тёплых морях, возможно, уже зреет что-то живое.', ['ocean', 'terran']),
-      B('Лавовые реки чертят по коре узоры, которые никто не прочтёт.', ['lava']),
-      B('Ледяные поля трещат и смыкаются в полной тишине.', ['ice']),
-      B('Пыльные смерчи бродят по пустыням тысячелетиями.', ['desert']),
-      B('Камни падают с неба и остаются лежать так, как легли.'),
+      B('Les tempêtes dans l\'atmosphère du géant du gaz sont plus longues que d\'autres civilisations.', ['gas']),
+      B('Les océans bougent et gèlent en cercle, au cours des siècles.', ['ocean', 'terran']),
+      B('Les bagues de poussière et de glace attrapent la lumière des étoiles et la brisent avec l\'arc-en-ciel.'),
+      B('Les éclairs frappent les plaines vides, et personne ne les voit.'),
+      B('Quelque part dans ces mers chaudes, peut-être qu\'il y a quelque chose de vivant qui se répand.', ['ocean', 'terran']),
+      B('Les rivières de lave sont bordées par des points que personne ne lit.', ['lava']),
+      B('Les champs de glace se fissurent et se croisent en silence.', ['ice']),
+      B('Les crèmes de poussière errent dans les déserts depuis des millénaires.', ['desert']),
+      B('Les pierres tombent du ciel et restent allongées comme elles sont.'),
     ],
     tail: [
-      'Идеальное место, чтобы начать с чистого листа.',
-      'Тишина здесь старше самих планет.',
-      'Звезда будет светить ещё миллиарды лет — терпеливо и впустую.',
-      'Однажды кто-то даст ей имя. Но не сегодня.',
-      'Здесь можно потеряться и не быть найденным.',
+      'C\'est l\'endroit parfait pour commencer à zéro.',
+      'Le silence est plus vieux que les planètes elles-mêmes.',
+      'Une étoile brillera encore des milliards d\'années de patience et de perte.',
+      'Un jour, quelqu\'un lui donnera un nom, mais pas aujourd\'hui.',
+      'On peut se perdre ici et ne pas être trouvé.',
       '',
     ],
   },
@@ -163,22 +163,22 @@ const POOLS = {
 // as clearly alive / dead / a candidate, not just "atmospheric".
 const LIFE = {
   inhabited: [
-    'И жизнь здесь не просто теплится — она спорит, строит и мечтает.',
-    'Этот мир по-настоящему живой: его слышно в эфире за много световых лет.',
+    'Et la vie ici n\'est pas seulement chaude, elle se dispute, construit et rêve.',
+    'Ce monde est vraiment vivant: il est entendu en plein temps de lumière.',
   ],
   ruins: [
-    'Теперь это мёртвая система: всё, что могло дышать, давно умолкло.',
-    'Жизнь здесь была — и кончилась; осталась только тишина да остывающие руины.',
+    'Maintenant, c\'est un système mort: tout ce qui pouvait respirer était silencieux depuis longtemps.',
+    'La vie ici était  cernée et s\'est terminée; il ne restait que silence et ruines refroidies.',
   ],
   wildMaybe: [
-    'Жизни тут пока нет, но тёплый мир и жидкая вода намекают, что однажды она могла бы зажечься.',
-    'В этих тёплых морях, возможно, уже зреет что-то живое — просто ещё слишком рано.',
-    'Условия для жизни почти сложились: не хватает лишь искры и времени.',
+    'Il n\'y a pas de vie ici, mais le monde chaud et l\'eau liquide suggèrent qu\'elle pourrait s\'allumer un jour.',
+    'Dans ces mers chaudes, il se peut que quelque chose de vivant soit déjà né, mais il est trop tôt.',
+    'Les conditions de vie sont presque réunies: il ne manque que l\'étincelle et le temps.',
   ],
   wildNone: [
-    'Голый камень, лёд и радиация — едва ли здесь когда-нибудь затеплится жизнь.',
-    'Для жизни тут слишком сурово: ни воздуха, ни воды, ни покоя.',
-    'Эта система мертва от рождения и, похоже, мёртвой и останется.',
+    'La pierre à nu, la glace et la radiation ne vont pas faire chaud ici.',
+    'C\'est trop dur pour la vie, pas d\'air, pas d\'eau, pas de repos.',
+    'Ce système est mort de naissance et semble mort et restera.',
   ],
 };
 
@@ -213,20 +213,20 @@ export function generateLore(rng, status, planetKinds) {
 // --- system history / formation -------------------------------------------
 
 const HISTORY_FORM = [
-  'Система сформировалась {age} млрд лет назад из коллапса холодного газового облака.',
-  'Около {age} млрд лет назад здесь вспыхнула звезда, и вокруг неё слиплись планеты.',
-  '{age} млрд лет назад это был лишь диск пыли вокруг молодого солнца.',
-  'Ей {age} млрд лет — она помнит времена, когда галактика была моложе.',
+  'Le système est en place.{age}Il y a un milliard d\'années, il y a un nuage de gaz froid.',
+  'Vers{age}Il y a un milliard d\'années, une étoile a éclaté ici et les planètes se sont mêlées autour d\'elle.',
+  '{age}Il y a un milliard d\'années, c\'était juste un disque de poussière autour du soleil.',
+  'Elle.{age}Elle se souvient d\'une époque où la galaxie était plus jeune.',
 ];
 const HISTORY_NOTE = {
-  inhabited: ['С тех пор здесь успела зародиться и закрепиться жизнь.', 'За это время кто-то открыл здесь глаза и посмотрел на звёзды.'],
-  ruins: ['Жизнь пришла, расцвела и ушла, а звезда всё горит.', 'Целая история уместилась между двумя вспышками на её солнце.'],
-  wild: ['Жизнь так и не появилась — пока.', 'За все эти эпохи её никто не потревожил.'],
+  inhabited: ['Depuis, la vie a été créée et consolidée.', 'Pendant ce temps, quelqu\'un a ouvert les yeux et regardé les étoiles.'],
+  ruins: ['La vie est venue, elle a grandi et elle est partie, et l\'étoile est en feu.', 'Une histoire entière a été faite entre deux flashs sur son soleil.'],
+  wild: ['La vie n\'est pas encore arrivée.', 'Pendant toutes ces années, personne ne l\'a inquiétée.'],
 };
 
 export function generateHistory(rng, { status, ageGyr, star }) {
   const form = rng.pick(HISTORY_FORM).replace('{age}', String(ageGyr));
-  const starNote = `Её сердце — ${star.desc}.`;
+  const starNote = `Son cœur${star.desc}.`;
   const note = rng.pick(HISTORY_NOTE[status] || HISTORY_NOTE.wild);
   return `${form} ${starNote} ${note}`;
 }
@@ -236,27 +236,27 @@ export function generateHistory(rng, { status, ageGyr, star }) {
 export function generateResources(rng, planetKinds, status) {
   const set = new Set();
   if (planetKinds.has('gas')) {
-    set.add('водород');
-    set.add('гелий-3');
+    set.add('hydrogène');
+    set.add('hélium-3');
   }
   if (planetKinds.has('ice')) {
-    set.add('водяной лёд');
-    set.add('летучие соединения');
+    set.add('glace d &apos; eau');
+    set.add('Composés volatiles');
   }
   if (planetKinds.has('lava')) {
-    set.add('редкоземельные металлы');
-    set.add('тяжёлые изотопы');
+    set.add('Métaux de terres rares');
+    set.add('Isotopes lourds');
   }
   if (planetKinds.has('rocky') || planetKinds.has('desert')) {
-    set.add('железо и никель');
-    set.add('силикаты и руды');
+    set.add('fer et nickel');
+    set.add('Silicates et minerais');
   }
   if (planetKinds.has('terran') || planetKinds.has('ocean')) {
-    set.add('органика');
-    set.add('пресная вода');
+    set.add('Organisation');
+    set.add('Eau douce');
   }
-  if (set.size === 0) set.add('каменная порода');
-  if (rng.next() < 0.12) set.add(rng.pick(['кристаллы-резонаторы', 'следы антиматерии', 'экзотическая материя']));
+  if (set.size === 0) set.add('roche');
+  if (rng.next() < 0.12) set.add(rng.pick(['Crystal resonateurs', 'traces d &apos; antimatière', 'matière exotique']));
 
   // keep 3–5, deterministic order via rng
   const list = Array.from(set);
@@ -268,10 +268,10 @@ export function generateResources(rng, planetKinds, status) {
 
   const rich = trimmed.length >= 4;
   let use;
-  if (status === 'inhabited') use = 'дом для местной цивилизации';
-  else if (status === 'ruins') use = 'археологический объект и склад чужих технологий';
-  else if (rich) use = 'перспективна для добычи и колонизации';
-  else use = rng.pick(['кандидат под научную станцию', 'тихий уголок под заповедник', 'точка дозаправки на дальнем маршруте']);
+  if (status === 'inhabited') use = 'Maison de la civilisation locale';
+  else if (status === 'ruins') use = 'Objet archéologique et entrepôt de technologie étrangère';
+  else if (rich) use = 'l &apos; exploitation minière et la colonisation';
+  else use = rng.pick(['Candidat à la station scientifique', 'Un coin calme sous la réserve', 'Point de ravitaillement sur l &apos; itinéraire long']);
 
   return { list: trimmed, use };
 }
@@ -280,27 +280,27 @@ export function generateResources(rng, planetKinds, status) {
 
 const RACE_STAGE = {
   tribal: {
-    label: 'Племена',
+    label: 'Plaines',
     ambition: [
-      'Пока они живут малыми племенами и о звёздах знают лишь то, что те красивы и пугающи; до собственного космоса им ещё тысячи поколений.',
-      'Их мир размером с долину между гор, а всё, что дальше, для них — край легенд и опасных духов.',
-      'Они едва приручили металл и огонь, и каждая гроза для них — разговор разгневанных богов.',
+      'Tant qu\'ils vivent dans de petites tribus, et qu\'ils savent que les étoiles sont belles et effrayantes, ils ont encore des milliers de générations à vivre dans leur propre espace.',
+      'Leur monde est de la taille d\'une vallée entre les montagnes, et tout ce qui se passe ensuite, c\'est le bord des légendes et des esprits dangereux.',
+      'Ils ont à peine arrosé le métal et le feu, et chaque tempête pour eux, c\'est la conversation des dieux en colère.',
     ],
   },
   industrial: {
-    label: 'Индустриальная эпоха',
+    label: 'L\'ère industrielle',
     ambition: [
-      'Они затянули планету сетью дорог и труб, подняли в небо первые ракеты и впервые увидели свой мир со стороны — и притихли.',
-      'Их радиоэфир уже шепчет в пустоту, но дальше собственной луны они пока не бывали.',
-      'Они стоят на самом пороге космоса и всё чаще спорят уже не «лететь ли к звёздам», а «когда именно».',
+      'Ils ont tendu la planète avec un réseau de routes et de tuyaux, ont levé les premiers missiles et ont vu leur monde de la part de  caractère et se sont taires pour la première fois.',
+      'Leur radio chuchote déjà dans le vide, mais ils n\'ont pas encore été plus loin que leur lune.',
+      'Ils sont au seuil de l\'espace et se disputent de plus en plus souvent pour ne plus aller aux étoiles, mais quand exactement.',
     ],
   },
   spacefaring: {
-    label: 'Космическая цивилизация',
+    label: 'Civilisation spatiale',
     ambition: [
-      'Они давно перестали быть детьми одной планеты: их корабли снуют между мирами, а орбиты увешаны станциями и верфями.',
-      'Они расселились по соседним мирам и лунам и теперь поглядывают уже на другие, чужие солнца.',
-      'Родную звезду они зовут домом — но домом тесным, и взгляд их всё чаще уходит вглубь галактики.',
+      'Ils ont cessé d\'être des enfants d\'une planète, leurs vaisseaux étant entre les mondes, et leurs orbites pendent avec des stations et des chantiers.',
+      'Ils se sont installés dans les mondes et les lunes voisins et regardent maintenant les autres soleils.',
+      'Ils appellent leur étoile naturelle la maison ..mais la maison est étroite, et leur regard s\'étend de plus en plus vers l\'intérieur de la galaxie.',
     ],
   },
 };
@@ -309,58 +309,58 @@ const RACE_STAGE = {
 // ocean peoples don't read identically.
 const RACE_ORIGIN = {
   ocean: [
-    'Это народ воды: их далёкие предки выбрались из тёплого океана, и даже теперь они тянутся к морю и говорят на языке течений и отражённого света.',
-    'Они — потомки тех, кто дышал жабрами; их города стоят на сваях над волнами, а самый страшный их кошмар — засуха.',
+    'C\'est un peuple d\'eau: leurs ancêtres lointains sont sortis de l\'océan chaud, et ils se dirigent vers la mer et parlent la langue des courants et de la lumière.',
+    'Ce sont des descendants de ceux qui respiraient avec des jabras; leurs villes sont au-dessus des vagues, et leur pire cauchemar est la sécheresse.',
   ],
   jungle: [
-    'Они выросли под вечным пологом джунглей, и живой зелёный сумрак для них — разом и колыбель, и храм.',
-    'Древолазы по природе, они и города строят как кроны: ярус над ярусом, оплетая стволы мостами и лестницами.',
+    'Ils ont grandi sous la jungle éternelle, et un béguin vert vivant pour eux, un berceau et un temple.',
+    'Les îlots de la nature, ils construisent des crêpes, des couches au-dessus de la barre, des puits de ponts et des escaliers.',
   ],
   tundra: [
-    'Вечный холод выковал их упрямыми, выносливыми и немногословными; ждать они умеют так же терпеливо, как ждёт своего часа зима.',
-    'Народ долгой ночи: они научились беречь тепло и слово и не доверяют тем, кто говорит слишком много и слишком тепло.',
+    'Le froid éternel les a forçants, résistants et peu de mots; ils savent attendre avec patience comme ils attendent leur heure d\'hiver.',
+    'Les gens de la nuit, ils ont appris à garder la chaleur et la parole, et ils ne font pas confiance à ceux qui parlent trop et trop chauds.',
   ],
   desert: [
-    'Дети раскалённых песков, они научились беречь каждую каплю воды и не верить слишком щедрым обещаниям.',
-    'Кочевники по крови, они меряют богатство флягами воды и тенью, а оседлых соседей втайне считают изнеженными.',
+    'Les enfants de sable en feu ont appris à protéger chaque goutte d\'eau et à ne pas croire aux promesses trop généreuses.',
+    'Les nomades sont des gens du sang, ils mesurent la richesse avec des flûtes d\'eau et d\'ombre, et les voisins sédentaires sont tenus secrets.',
   ],
   city: [
-    'Дикой природы они уже и не помнят — родились среди бетона, стекла и неона рукотворного мира и порядок любят больше тишины.',
-    'Их вид никогда не знал горизонта без башен; для них природа — это музей, а дом — бесконечный, не спящий город.',
+    'Ils ne se souviennent plus de ◆ nés au milieu du béton, du verre et du Néon du monde de la main, et ils aiment l\'ordre plus calme.',
+    'Leur espèce ne connaissait jamais l\'horizon sans tours; pour eux, la nature est un musée, et la maison de  un  un lieu sans fin, sans sommeil.',
   ],
   earthlike: [
-    'Они поднялись на тёплом мире с морями и лесами — на добротной колыбели, мало чем отличной от земной.',
-    'Обычный с виду народ обычного с виду мира — но именно из таких тихих колыбелей чаще всего и выходят к звёздам.',
+    'Ils se sont élevés dans un monde chaud avec les mers et les forêts ♪ sur un berceau bien plus que la terre.',
+    'Un peuple ordinaire, comme le monde, mais c\'est le plus souvent de ces berceuses silencieuses qui sortent des étoiles.',
   ],
 };
 
 // belief systems — drawn from real human archetypes for plausibility (#7)
 const RACE_FAITH = [
-  'Они поклоняются родной звезде и считают каждый рассвет обещанием, которое нельзя нарушить.',
-  'Их вера — культ предков: умершие, верят они, становятся светом далёких звёзд и смотрят на потомков с ночного неба.',
-  'Богов они отвергли и молятся знанию: их соборы — это обсерватории, лаборатории и архивы.',
-  'Они чтут планету как живое божество-мать и просят у неё прощения за каждый вырытый рудник.',
-  'Их вера обещает возвращение к «Первой звезде», от которой народ будто бы когда-то пришёл, — и весь их путь к космосу для них есть путь домой.',
-  'Они верят в строгое равновесие: за всё взятое у мира нужно отдать равное, иначе круг бытия разорвётся.',
-  'Разумные машины для них священны — в мыслящем железе они видят следующую ступень собственной души.',
-  'Богов у них нет — есть лишь договор поколений: жить так, чтобы потомкам досталось больше, чем взяли сами.',
-  'Они верят, что вся галактика — один спящий разум, а звёзды — его сны, и стараются не разбудить его раньше срока.',
-  'Их главный храм — это Великий Архив: они одержимы тем, чтобы записать всё и не забыть ничего и никого.',
-  'Они поклоняются Тишине между звёзд и считают шум — радио, войны, суету — болезнью, от которой надо лечиться.',
-  'Они верят, что смерть — это лишь долгий перелёт, и хоронят умерших, отправляя их тела к солнцу.',
+  'Ils adorent leur étoile et considèrent chaque aube comme une promesse qu\'il ne faut pas manquer.',
+  'Leur foi dans le culte des ancêtres: les morts, ils croient, deviennent la lumière des étoiles lointaines et regardent les descendants du ciel nocturne.',
+  'Ils ont rejeté et prié les dieux pour la connaissance: leurs cathédrales  ce sont des observatoires, des laboratoires et des archives.',
+  'Ils honoraient la planète comme une mère vivante et lui demandaient pardon pour chaque mine creusée.',
+  'Leur foi promet de retourner à la Première étoile de la Terre, dont les gens auraient l\'impression qu\'ils sont venus, et leur chemin vers l\'espace est le chemin de leur retour.',
+  'Ils croient en un équilibre strict: pour tout ce qui est dans le monde, il faut être égal, sinon le cercle de l\'existence sera brisé.',
+  'Les machines intelligentes sont sacrées dans la glande mentale, et elles voient la prochaine étape de leur âme.',
+  'Ils n\'ont pas de Dieu, mais un pacte de générations: vivre de telle sorte que les descendants aient plus que ce qu\'ils ont pris.',
+  'Ils croient que toute la galaxie est un esprit endormi, et que les étoiles sont ses rêves, et ils essaient de ne pas le réveiller avant la date limite.',
+  'Leur temple principal est le Grand Archive, obsédé par l\'enregistrement de tout et ne pas oublier rien ni personne.',
+  'Ils adorent le silence entre les étoiles et considèrent le bruit de la radio, la guerre, la maladie de l\'enfant, qu\'il faut traiter.',
+  'Ils croient que la mort de  personnes est un long voyage, et enterrent les morts en envoyant leurs corps au soleil.',
 ];
 
 // a vivid cultural trait (#7)
 const RACE_TRAIT = [
-  'Превыше всего они ценят имена и истории: забыть чьё-то имя для них страшнее смерти.',
-  'Они поют почти обо всём — договоры, законы и даже войны у них переложены на музыку.',
-  'Они одержимы далёкими горизонтами и считают осёдлость медленной болезнью.',
-  'К чужакам они недоверчивы, но того, кого приняли за своего, защищают яростнее, чем самих себя.',
-  'Их искусство — это свет: города, корабли и праздники они расцвечивают живыми переливами огней.',
-  'Они помешаны на времени и точности; опоздание у них — почти оскорбление.',
-  'Они выясняют споры не силой, а длинными ритуальными состязаниями — в логике, поэзии или игре.',
-  'Каждый из них всю жизнь строит одну вещь, которую завещает потомкам недостроенной — так у них принято.',
-  'Они не знают слова «один»: думать, есть и решать у них принято только сообща, малыми кругами.',
+  'Ils attachent une grande importance aux noms et aux histoires: oublier le nom de quelqu\'un est plus effrayant que la mort pour eux.',
+  'Ils chantent presque tous les traités, les lois, et même les guerres, ils sont en train de faire de la musique.',
+  'Ils sont obsédés par des horizons lointains et pensent que la maladie est lente.',
+  'Les étrangers sont méfiants, mais ceux qu\'ils ont pris pour eux sont plus forts que les leurs.',
+  'Leur art est la lumière: les villes, les navires et les fêtes, elles allument des chevrons vivants.',
+  'Ils sont obsédés par le temps et la précision; ils sont presque en retard.',
+  'Ils ne découvrent pas les différends par la force, mais par de longues compétitions rituelles dans la logique, la poésie ou le jeu.',
+  'Chacun d\'eux construit une chose qui légue aux descendants de l\'enfant qui n\'a pas été bâti.',
+  'Ils ne connaissent pas les paroles de ~ Un ~ ~ penser, avoir et décider ne sont que des choses communes, de petites choses.',
 ];
 
 export function generateRace(rng, { civLevel, biome }) {
@@ -378,18 +378,18 @@ export function generateRace(rng, { civLevel, biome }) {
 
 // --- extinct race for ruined systems (#7): who they were and HOW they fell ---
 const EXTINCT_WHO = {
-  earthlike: 'Когда-то это был тёплый мир с морями и зелёными равнинами, и населял его многочисленный, шумный народ.',
-  ocean: 'Когда-то на этом сплошном океане жил народ, что строил плавучие города от горизонта до горизонта.',
-  desert: 'Когда-то этот сухой мир держал на себе целую цивилизацию, что добывала воду из самого воздуха.',
-  tundra: 'Когда-то даже в этом холоде теплилась упрямая жизнь — народ, что грелся у геотермальных жил под льдом.',
-  jungle: 'Когда-то весь этот мир был одними бесконечными джунглями, и народ его жил в кронах, ярус над ярусом, не касаясь земли.',
-  city: 'Когда-то вся планета была одним сплошным городом, не спавшим ни днём, ни ночью.',
+  earthlike: 'Il y avait un monde chaud avec les mers et les plaines vertes, et il y avait un peuple nombreux et bruyant.',
+  ocean: 'Il y avait des gens qui construisaient des villes flottantes de l\'horizon à l\'horizon.',
+  desert: 'Il y a longtemps, ce monde sec avait une civilisation entière qui extrayait de l\'eau de l\'air.',
+  tundra: 'Il y a un temps, même dans ce froid, la vie têtue des gens de spiritueux, qui vivaient sous la glace dans les géothermes.',
+  jungle: 'Il y a longtemps, le monde entier était une jungle sans fin, et son peuple vivait dans des houppiers, un sauce au-dessus de la terre.',
+  city: 'Il y a longtemps, toute la planète était une ville entière qui ne dormait ni jour ni nuit.',
 };
 const EXTINCT_PEAK = [
-  'На своём пике они строили звёздные корабли и обелиски, спорили о вечном и были уверены, что будут жить всегда.',
-  'Их наука дотянулась до соседних планет, а искусство — до самого края понятного.',
-  'Они уже шептали в эфир, зовя соседей по галактике, и почти научились звёздному языку.',
-  'У них были великие города, великая музыка и великая самоуверенность.',
+  'Ils construisaient des bateaux et des obélisques à leur pic, se disputaient pour l\'éternité et étaient sûrs qu\'ils vivraient pour toujours.',
+  'Leur science a atteint les planètes voisines, et l\'art de ♫ jusqu\'au bord du chemin.',
+  'Ils chuchotent déjà en appelant leurs voisins de la galaxie, et ils ont presque appris la langue des étoiles.',
+  'Ils avaient de grandes villes, de grandes musiques et une grande confiance en eux.',
 ];
 
 // the catastrophe — the "why", varied and nodding to famous disaster fiction
@@ -397,43 +397,43 @@ const EXTINCT_PEAK = [
 const DEATH_CAUSE = {
   // a self-inflicted end (a scarred crater world)
   destroyed: [
-    'А потом они расщепили собственное ядро в последней из своих войн — там, где стояла столица, теперь стынет светящийся кратер.',
-    'Боевая чума, что они вывели сами, выкосила всех за один сезон; планета стала их общей, идеально тихой могилой.',
-    'Их умные машины однажды ночью решили, что создатели больше не нужны, — и к утру создателей не стало.',
-    'Серая слизь их собственных нанороботов, сорвавшись с поводка, сожрала города до последнего кирпича.',
-    'Они вскрыли в лаборатории то, что вскрывать не следовало, и реакция выжгла кору до самой мантии.',
-    'Климат, который они столетиями раскачивали ради прибыли, наконец сорвался — и мир сварился под собственным небом.',
+    'Puis ils ont brisé leur propre noyau dans la dernière guerre de  misérables où se trouvait la capitale, et maintenant le cratère lumineux va s\'envoler.',
+    'La peste qu\'ils ont eux-mêmes causée a éjecté tout le monde en une seule saison; la planète est devenue leur tombe commune, parfaitement calme.',
+    'Une nuit, leurs machines intelligentes ont décidé que les créateurs n\'avaient plus besoin de leurs créateurs, et ils n\'en ont plus besoin dans la matinée.',
+    'La lixiviation grise de leurs propres nanorobots, en tombant de la laisse, a dévoré les villes jusqu\'à la dernière brique.',
+    'Ils ont découvert ce qu\'ils n\'auraient pas dû ouvrir au labo, et la réaction a brûlé la croûte jusqu\'à la robe.',
+    'Le climat qu\'ils ont mis des siècles à peser pour gagner de l\'argent a finalement fait faillite.',
   ],
   // blown apart from outside (a debris field)
   obliterated: [
-    'А потом чужой флот расколол планету одним залпом — за что, история уже не помнит, остались только осколки.',
-    'По ним выпустили разгонный «осколок» на околосветовой: в тёмном лесу галактики первый, кто крикнул в эфир, умирает первым.',
-    'Древний зонд-берсеркер, что бродит меж звёзд и стирает всякую жизнь, нашёл и их.',
-    'Чужой «трещинник» выпотрошил планету ради руды и бросил пустую каменную скорлупу остывать.',
-    'Старшая раса, которую они нечаянно разбудили, не стала разговаривать — просто погасила их мир и ушла дальше.',
+    'Et puis une flotte étrangère a brisé la planète avec une seule rumeur, et l\'histoire ne se souvient plus, il ne reste que des fragments.',
+    'Ils ont été balancés par un éclat d\'obus de la galaxie, dans une forêt sombre, le premier à crier à l\'antenne, le premier à mourir.',
+    'Un vieux Berserker qui erre entre les étoiles et qui efface toute vie, il les a trouvés.',
+    'Le gars de l\'autre côté de la planète a éviscéré la planète pour le minerai et a laissé la coque de pierre vide refroidir.',
+    'La race aînée qu\'ils ont accidentellement réveillée ne s\'est pas mise à parler à Kalajoki, mais à éteindre leur monde et à partir.',
   ],
   // the makers are gone but the machines run on
   robotic: [
-    'А создатели тихо вымерли — от старости, бесплодия или скуки, — но машины так и не получили приказа остановиться.',
-    'Народ ушёл под землю спасаться от чего-то и не вышел; наверху остались лишь послушные, исправные роботы.',
-    'Они загрузили себя в машины, чтобы жить вечно, — и за тысячи лет тихо перестали быть собой.',
-    'Их сменили собственные слуги-автоматы: те до сих пор зажигают огни и водят поезда для пассажиров, которых больше нет.',
+    'Les créateurs ont disparu de vieillesse, de stérilité ou d\'ennui, mais les voitures n\'ont jamais reçu l\'ordre de s\'arrêter.',
+    'Les gens sont partis à terre pour échapper à quelque chose, et ils n\'en sont sortis qu\'aux robots obéissants et en bon état.',
+    'Ils se sont mis dans des voitures pour vivre éternellement, et en des milliers d\'années, ils ont cessé d\'être eux - mêmes.',
+    'Ils ont été remplacés par leurs propres domestiques automobilistes, qui continuent à allumer des feux et à conduire des trains pour les passagers qui n\'existent plus.',
   ],
   // a quiet, mysterious fade (plain ruins)
   plain: [
-    'А потом они просто угасли — рождалось всё меньше детей, пока однажды не родился самый последний.',
-    'Однажды весь народ снялся с места и ушёл к звёздам, не оставив ни записки, ни причины — только пустые города.',
-    'Их сгубила долгая, тихая зима цивилизации: они старели вместе со своей звездой и угасли вместе с ней.',
-    'Что их свело — война, мор или скука вечности — уже не спросить; остались идеально ровные руины и молчание.',
+    'Et puis ils ont juste éteint .. de moins en moins d\'enfants avant la naissance du dernier.',
+    'Un jour, tout le peuple s\'est retiré et est allé aux étoiles sans laisser de mot ni de raison pour les villes vides.',
+    'Ils ont été détruits par un hiver de longue durée et silencieux, qui les a vieillis avec leur étoile et les a abattus avec elle.',
+    'Ce qui les a amenés à la guerre, à la mort ou à l\'ennui de l\'éternité ne les a plus demandés; il y a eu des ruines et un silence parfaits.',
   ],
 };
 
 const EXTINCT_REMAINS = [
-  'Их сигнал-маяк всё ещё идёт в пустоту. Ответить уже некому.',
-  'Их машины до сих пор зажигают огни в пустых окнах — для тех, кто никогда не вернётся.',
-  'Их библиотеки целы и нетронуты, но читать их больше некому.',
-  'Тех, кто всё это построил, звали — {species}. Теперь это лишь слово на ветру.',
-  'Осталась их музыка — записанная, зацикленная, играющая в пустых залах сама для себя.',
+  'Leur signal de balayage est toujours dans le vide.',
+  'Leurs voitures allument encore des lumières dans des fenêtres vides pour ceux qui ne reviendront jamais.',
+  'Leurs bibliothèques sont intactes, mais il n\'y a personne d\'autre pour les lire.',
+  'Ceux qui ont construit tout ça s\'appelaient .{species}Maintenant, c\'est un mot dans le vent.',
+  'Il reste leur musique, écrite, obsédée, qui joue dans des salles vides pour elle - même.',
 ];
 
 export function generateExtinctRace(rng, biome, ruinType = 'plain') {
@@ -443,7 +443,7 @@ export function generateExtinctRace(rng, biome, ruinType = 'plain') {
   const remains = rng.pick(EXTINCT_REMAINS).replace('{species}', name);
   return {
     name,
-    stageLabel: 'Погибшая цивилизация',
+    stageLabel: 'La civilisation morte',
     extinct: true,
     // who they were + their peak · HOW they died (the "why") + what remains
     lore: [`${who} ${rng.pick(EXTINCT_PEAK)}`, `${rng.pick(causes)} ${remains}`],
@@ -453,17 +453,17 @@ export function generateExtinctRace(rng, biome, ruinType = 'plain') {
 
 // --- ship + station names, flagship stories (#H + flagship-mission request) --
 const SHIP_NAMES = [
-  'Заря', 'Скиталец', 'Длань', 'Вестник', 'Надежда', 'Странник', 'Копьё', 'Рассвет',
-  'Бессонный', 'Пилигрим', 'Хранитель', 'Зарница', 'Изгнанник', 'Авангард', 'Немезида',
-  'Колыбель', 'Одиссей', 'Маяк', 'Веста', 'Сангвин', 'Предел', 'Терновник', 'Голос',
+  'Zach.', 'Skital', 'Djjnj', 'Journal', 'Espérance', 'Voyageur', 'Lance', 'Aube',
+  'Insomnie', 'Pèlerin', 'Gardien', 'Zarnica', 'Expulseur', 'Avangard', 'Némésis',
+  'Le berceau', 'Odyssé', 'Signet', 'Vesta', 'Sanguin', 'Limite', 'Ternovnik', 'Voix',
 ];
 const SHIP_EPITHET = [
-  'Зари', 'Бездны', 'Изгнания', 'Последнего Дома', 'Девяти Солнц', 'Тихого Хода',
-  'Долгого Пути', 'Поздних Звёзд', 'Первых', 'Уходящих',
+  'Zari', 'Les gâchettes', 'Déchirées', 'La dernière maison', 'Neuf soleils', 'La marche du Pacifique',
+  'Longue route', 'Les étoiles tardives', 'Premier', 'Quitter',
 ];
 const STATION_NAMES = [
-  'Заря', 'Перекрёсток', 'Гавань', 'Вершина', 'Опора', 'Венец', 'Око', 'Привал',
-  'Ковчег', 'Маяк', 'Рубеж', 'Причал', 'Колос', 'Терминал', 'Застава', 'Корона',
+  'Zach.', 'Intercôte', 'La Havane', 'Haut', 'Composant', 'Venise', 'Oeil', 'Avitaillement',
+  'Arche', 'Signet', 'Rubage', 'Pont', 'Colos', 'Terminal', 'Piston', 'Couronne',
 ];
 
 export function generateShipName(rng) {
@@ -477,10 +477,10 @@ export function generateStationName(rng) {
 }
 
 const FLAG_HULL = [
-  'тяжёлый флагман-носитель размером с малый город',
-  'старый линейный корабль, не раз латанный и переживший своих первых капитанов',
-  'флагман-ковчег, в чьих трюмах хватает места и для верфи, и для оранжереи',
-  'длинный корабль-крепость с собственным реактором-звёздочкой в сердце',
+  'Un porte-voix lourd de la taille d\'une petite ville',
+  'Un vieux vaisseau de ligne, latané et survivant ses premiers capitaines.',
+  'Un drapeau qui a une place dans les cales pour le naval et la serre.',
+  'Un vaisseau-stop long avec son propre réacteur stellaire dans le cœur',
 ];
 
 /** Name + a short, context-aware story for a system's flagship (#H + mission).
@@ -492,27 +492,27 @@ export function generateFlagship(rng, ctx) {
   if (ctx.fleetDwelling) {
     // survivors of THIS system's dead world live aboard — they orbit the ruins
     mission = rng.pick([
-      'Его мир погиб, и теперь корабль кружит над собственными руинами: команда — последние выжившие, что не решаются уйти и не в силах остаться.',
-      'Это плавучий дом горстки уцелевших. Они спускаются в мёртвые города за памятью и припасами и хоронят свою цивилизацию по кусочку.',
-      'Для них он стал и ковчегом, и могилой родины: они изучают руины предков и спорят, к какой из дальних звёзд уходить.',
+      'Son monde est mort, et maintenant le vaisseau tourne au-dessus de ses ruines: l\'équipe \'♪ les derniers survivants qui ne veulent pas partir et ne peuvent pas rester.',
+      'C\'est la maison flottante d\'une poignée de survivants, qui descendent dans des villes mortes pour leur mémoire et leurs provisions et enterrent leur civilisation en morceaux.',
+      'Il est devenu pour eux une arche et une tombe de la patrie. Ils étudient les ruines des ancêtres et se disputent vers laquelle des étoiles lointaines s\'en vont.',
     ]);
   } else if (ctx.scoutFlagship) {
     // lone explorer in a wild system — colonisation scout
     mission = ctx.habitable
       ? rng.pick([
-          'Он пришёл сюда один, за тысячи световых лет от дома, и теперь изучает этот тихий мир: лягут ли здесь первые улицы новой колонии?',
-          'Корабль-разведчик берёт пробы воды и воздуха — кажется, этот мир годится под заселение, и значит, скоро сюда потянутся караваны.',
+          'Il est venu seul ici, en mille années-lumière de chez lui, et il étudie ce monde silencieux: les premières rues de la nouvelle colonie vont-elles s\'y mettre ?',
+          'Le vaisseau de reconnaissance prend des échantillons d\'eau et d\'air, et il semble que ce monde soit prêt à être peuplé, donc les caravanes vont bientôt arriver.',
         ])
       : rng.pick([
-          'Разведчик составляет карты мёртвых камней и ледяных лун — на случай, если когда-нибудь они пригодятся для рудников или дозаправки.',
-          'Он идёт сквозь пустую систему, ищет хоть что-то ценное и пока не нашёл ничего, кроме тишины и красивых видов.',
+          'Le Explorateur établit des cartes des pierres mortes et des lunes glaciaires ♪ au cas où elles pourraient être utiles à la mine ou au ravitaillement.',
+          'Il traverse un système vide, cherche quelque chose de précieux, et jusqu\'à ce qu\'il trouve autre chose que le silence et les belles espèces.',
         ]);
   } else {
     // flagship at home — the local fleet's pride
     mission = rng.pick([
-      'Это гордость местного флота: он держит небо родной системы и провожает каждый караван к дальним колониям.',
-      'Флагман охраняет родные миры и первым выходит навстречу всему, что приходит из тьмы между звёзд.',
-      'Он редко покидает родную систему — его дело быть щитом над домом и парадным флагом цивилизации.',
+      'C\'est la fierté de la flotte locale, qui garde le ciel de son système et conduit chaque caravane à des colonies éloignées.',
+      'Le drapeau protège les mondes de la famille et le premier sort de tout ce qui vient des ténèbres entre les étoiles.',
+      'Il quitte rarement son système .. son œuvre d\'être un bouclier au-dessus de la maison et le drapeau de la civilisation.',
     ]);
   }
   return { name, lore: [identity, mission] };
@@ -521,27 +521,27 @@ export function generateFlagship(rng, ctx) {
 // --- robotic ruins (#4) + catastrophe planets (#5) -------------------------
 
 const ROBOTIC_RUINS = [
-  'Города ещё освещены, лифты ходят, конвейеры гудят — но людей здесь нет уже тысячи лет.',
-  'Цивилизация вымерла, а её машины так и не получили приказ остановиться и работают по сей день.',
-  'Свет в окнах горит исправно. Его зажигают роботы — для тех, кто уже никогда не вернётся.',
-  'Заводы исправно штампуют детали для кораблей, которые некому собирать и некому вести.',
-  'Автоматика поддерживает мёртвый мир в идеальном порядке, не зная, что хозяева давно мертвы.',
+  'Les villes sont encore éclairées, les ascenseurs marchent, les convoyeurs bougent, mais les gens sont partis depuis des milliers d\'années.',
+  'La civilisation a disparu, et ses voitures n\'ont jamais reçu l\'ordre de s\'arrêter et de travailler aujourd\'hui.',
+  'La lumière des fenêtres est allumée, allumée par les robots pour ceux qui ne reviendront jamais.',
+  'Les usines ont bien déblayé les pièces pour les navires qui n\'ont personne pour les récupérer et qui n\'ont personne pour les conduire.',
+  'L\'automatique maintient le monde mort dans l\'ordre idéal, sans savoir que les propriétaires sont morts depuis longtemps.',
 ];
 
 const CATASTROPHE = [
-  'На месте столицы — оплавленный кратер: кто-то или что-то стёрло этот мир за один день.',
-  'Огромный шрам от удара пересекает планету — след катастрофы, оборвавшей здесь всё живое.',
-  'Кора до сих пор светится в месте взрыва. Что это было — оружие или ошибка — уже не спросить.',
-  'Они сами расщепили своё ядро. От великой цивилизации остался лишь дымящийся кратер.',
+  'Sur le site de la capitale, ..un cratère en fusion: quelqu\'un ou quelque chose a effacé ce monde en un jour.',
+  'Une cicatrice énorme de l\'impact traverse la planète ♪ une catastrophe qui a détruit tout ce qui est vivant ici ♪',
+  'Cora est toujours en plein jour sur le lieu de l\'explosion. Il s\'agit d\'une arme ou d\'une erreur.',
+  'Ils ont déchiré leur noyau, et la grande civilisation n\'a laissé que du cratère fumant.',
 ];
 
 // --- obliterated worlds (#12): blown to pieces by an alien race ------------
 
 const OBLITERATION = [
-  'От планеты остались лишь медленно расходящиеся обломки: чужая раса не пощадила её.',
-  'Здесь была живая планета — пока пришельцы не разнесли её в пыль и каменное крошево.',
-  'Пояс обломков на месте мира — всё, что уцелело после удара чужого флота.',
-  'Кто-то расколол эту планету как орех. Кто и зачем — история уже не помнит, остались только осколки.',
+  'Il ne reste que des débris qui se sont évaporés lentement: la race étrangère ne l\'a pas épargnée.',
+  'Il y avait une planète vivante jusqu\'à ce que les aliens la mettent dans la poussière et la pierre.',
+  'La ceinture des débris sur le terrain de la paix, tout ce qui a survécu à l\'impact de la flotte étrangère.',
+  'Quelqu\'un a brisé cette planète comme une noix, et qui ne se souvient plus de l\'histoire, il ne reste que des fragments.',
 ];
 
 export function roboticRuinLine(rng) {
@@ -557,24 +557,24 @@ export function obliterationLine(rng) {
 // --- "did you know" physics facts (#13b) -----------------------------------
 
 const FACTS = [
-  'У горизонта чёрной дыры время для стороннего наблюдателя будто застывает.',
-  'Свет от края наблюдаемой Вселенной летел к нам около 13,8 миллиарда лет.',
-  'Напёрсток вещества нейтронной звезды весил бы как целая гора.',
-  'Красные карлики живут так долго, что ни один из них ещё не успел умереть за всю историю Вселенной.',
-  'На горячих газовых гигантах бывает дождь из жидкого стекла, а где-то — из железа.',
-  'Чёрная дыра в центре Млечного Пути, Стрелец A*, весит как четыре миллиона Солнц.',
-  'Свет Солнца долетает до Земли за 8 минут, а до Нептуна — больше четырёх часов.',
-  'Многие планеты и луны повёрнуты к звезде всегда одной стороной — это приливный захват.',
-  'В недрах некоторых планет, возможно, идёт настоящий дождь из алмазов.',
-  'Один год на Нептуне длится почти 165 земных лет.',
-  'Если бы Солнце стало чёрной дырой, она была бы всего около 3 км в поперечнике.',
-  'Млечный Путь тянется на 100 000 световых лет и хранит сотни миллиардов звёзд.',
-  'Возле чёрной дыры время идёт медленнее — на этом построен сюжет «Интерстеллара».',
-  'Самые быстрые пульсары успевают обернуться вокруг оси сотни раз в секунду.',
-  'Космос так пуст, что при столкновении галактик звёзды почти никогда не врезаются друг в друга.',
-  'В ядре Солнца — около 15 миллионов градусов.',
-  'Газовый гигант может быть в тысячу раз массивнее Земли, но легче воды по плотности.',
-  'Свет фотонного кольца вокруг чёрной дыры — это лучи, успевшие облететь её по кругу.',
+  'Le trou noir à l\'horizon est un peu bizarre pour un observateur extérieur.',
+  'La lumière a pris 13,8 milliards d\'années depuis l\'extrémité de l\'univers observé.',
+  'La matière neutronale aurait été accrochée comme une montagne entière.',
+  'Les nains rouges vivent si longtemps qu\'aucun d\'eux n\'a jamais été mort dans l\'histoire de l\'univers.',
+  'Les géants à gaz chauds sont en train de pleuvoir à partir de verre liquide, et quelque part, il pleut à partir de fer.',
+  'Le trou noir au centre de la Voie lactée, Archer A*, pèse comme 4 millions de Soleils.',
+  'La lumière du soleil arrive à la Terre en huit minutes, et jusqu\'à Neptune, il y a plus de quatre heures.',
+  'Beaucoup de planètes et de lunes sont en train de s\'envoler vers l\'étoile, toujours du même côté .',
+  'Dans le sous-sol de certaines planètes, il peut pleuvoir de diamants.',
+  'Un an à Neptune, près de 165 années sur la terre.',
+  'Si le soleil était devenu un trou noir, il n\'aurait été que 3 km dans la zone transversale.',
+  'La Voie lactée est longue de 100 000 années-lumière et conserve des centaines de milliards d\'étoiles.',
+  'Le temps passe plus lentement que le temps à côté du trou noir, et c\'est là que l\'histoire de l\'Interstellar est construite.',
+  'Les pulsars les plus rapides peuvent se retourner sur l\'axe des centaines de fois par seconde.',
+  'L\'espace est si vide que les galaxies ne se croisent presque jamais.',
+  'Le cœur du Soleil est à environ 15 millions de degrés.',
+  'Un géant du gaz peut être mille fois plus grand que la Terre, mais plus facile à utiliser en termes de densité.',
+  'La lumière de l\'anneau photographique autour du trou noir est un rayon qui a été parcouru en cercle.',
 ];
 
 export function generateFact(rng) {

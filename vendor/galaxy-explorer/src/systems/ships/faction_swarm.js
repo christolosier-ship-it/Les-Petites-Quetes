@@ -50,26 +50,26 @@ function swarmTint(base, key) {
 
 export const FACTION = {
   id: 'swarm',
-  name: 'Рой',
+  name: 'Essaim',
   colors: { hull: 0x2e2440, hull2: 0x413458, accent: 0x5a3f7a, dark: 0x14101f, glass: 0xc77bff, gold: 0x9a7fb0 },
   accent: 0xb14cff,
   glow: 0xc060ff,
   nav: { port: 0xff5aa0, star: 0x9a6bff, top: 0xe6c8ff },
-  lore: 'Живой рой выращенных левиафанов: тёмная фиолетовая плоть и фиолетово-магентовое био-люминесцентное свечение из глубин пустоты вместо заводской стали.',
+  lore: 'La corne vivante des léviathans cultivés: chair violette noire et luminance bio-luminescente violet-agent de la profondeur du vide au lieu de l\'acier de l\'usine.',
 
   // Per-faction ship names (#hero): the Swarm's beasts aren't «Грузовик»/«Танкер»
   // — each role is a grown creature with its own name. Consumed by the codex
   // catalog + the in-world info panel; other factions fall back to ROLES names.
   names: {
-    scout: 'Малёк',
-    fighter: 'Жало',
-    interceptor: 'Стрекало',
-    gunship: 'Таран',
-    corvette: 'Панцирник',
-    freighter: 'Носитель',
-    tanker: 'Нектарник',
-    liner: 'Ковчег',
-    flagship: 'Исполин',
+    scout: 'Petit',
+    fighter: 'Plainte',
+    interceptor: 'Ligne',
+    gunship: 'Taran',
+    corvette: 'Pancirnique',
+    freighter: 'Porteur',
+    tanker: 'Nectarnik',
+    liner: 'Arche',
+    flagship: 'Colosse',
   },
 
   // Full bespoke line — every role is its own grown leviathan-beast (no shared

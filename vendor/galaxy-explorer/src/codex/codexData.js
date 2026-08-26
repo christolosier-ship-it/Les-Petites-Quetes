@@ -51,13 +51,13 @@ for (const faction of FACTIONS) {
 
 // --- planets: the 7 kinds, as an encyclopedia of TYPES (not instances) ------
 const PLANET_KIND_LABELS = {
-  lava: 'Лавовая планета',
-  rocky: 'Каменистая планета',
-  desert: 'Пустынная планета',
-  terran: 'Планета земного типа',
-  ocean: 'Океаническая планета',
-  ice: 'Ледяная планета',
-  gas: 'Газовый гигант',
+  lava: 'Planète de lave',
+  rocky: 'Planète rocheuse',
+  desert: 'Planète désertique',
+  terran: 'Planète tellurique',
+  ocean: 'Planète océanique',
+  ice: 'Planète glacée',
+  gas: 'Géante gazeuse',
 };
 const PLANET_CATALOG = Object.keys(PLANET_KINDS).map((kind) => ({
   archetypeKey: kind,
@@ -69,10 +69,10 @@ const PLANET_CATALOG = Object.keys(PLANET_KINDS).map((kind) => ({
 // Was a biome×type grid (24), but a single galaxy only holds ~15 ruined worlds,
 // so it could never complete; the honest, stable unit is the flavour itself.
 const RUIN_TYPE_LABELS = {
-  plain: 'Безжизненные руины',
-  robotic: 'Мир машин',
-  destroyed: 'Разрушенный мир',
-  obliterated: 'Уничтоженный мир',
+  plain: 'Ruines sans vie',
+  robotic: 'Monde des machines',
+  destroyed: 'Monde dévasté',
+  obliterated: 'Monde anéanti',
 };
 const RUIN_CATALOG = RUIN_TYPES.map((t) => ({
   archetypeKey: t,
@@ -86,23 +86,23 @@ const RUIN_CATALOG = RUIN_TYPES.map((t) => ({
 // `future: true` races are announced but not yet in the game: they show as
 // named-but-locked "coming" cards (grouped under Скоро), never discoverable.
 const RACE_CATALOG = [
-  { archetypeKey: 'humanity', label: 'Человечество', group: 'Виды', planetRef: { seed: 'sol-system', label: 'Земля' } },
-  { archetypeKey: 'fremen', label: 'Фримены', group: 'Виды', planetRef: { seed: 'film-spice', label: 'Арракис' } },
-  { archetypeKey: 'navi', label: 'На’ви', group: 'Виды', planetRef: { seed: 'film-jungle', label: 'Пандора' } },
+  { archetypeKey: 'humanity', label: 'Humanité', group: 'Espèces', planetRef: { seed: 'sol-system', label: 'Terre' } },
+  { archetypeKey: 'fremen', label: 'Fremen', group: 'Espèces', planetRef: { seed: 'film-spice', label: 'Arrakis' } },
+  { archetypeKey: 'navi', label: 'Na’vi', group: 'Espèces', planetRef: { seed: 'film-jungle', label: 'Pandora' } },
   {
     archetypeKey: 'signbuilders',
-    label: 'Строители Знаков',
-    group: 'Виды',
-    planetRef: { seed: 'deadspace', label: 'Тау-Волантис' },
+    label: 'Bâtisseurs de Signes',
+    group: 'Espèces',
+    planetRef: { seed: 'deadspace', label: 'Tau Volantis' },
   },
   // the faction homeworld races (#stage6) — unlocked by visiting their capital
-  { archetypeKey: 'aelari', label: 'Аэлары', group: 'Виды', planetRef: { seed: 'capital-alliance', label: 'Аэла' } },
-  { archetypeKey: 'hesht', label: 'Хешты', group: 'Виды', planetRef: { seed: 'capital-imperial', label: 'Наковальня' } },
-  { archetypeKey: 'porosl', label: 'Приплод', group: 'Виды', planetRef: { seed: 'capital-swarm', label: 'Прародина' } },
-  { archetypeKey: 'precursors', label: 'Предтечи', group: 'Виды', planetRef: { seed: 'capital-precursor', label: 'Скрижаль' } },
-  { archetypeKey: 'necromorphs', label: 'Некроморфы', group: 'Скоро', future: true },
-  { archetypeKey: 'generative-1', label: 'Неизвестный вид', group: 'Скоро', future: true },
-  { archetypeKey: 'generative-2', label: 'Неизвестный вид', group: 'Скоро', future: true },
+  { archetypeKey: 'aelari', label: 'Aelari', group: 'Espèces', planetRef: { seed: 'capital-alliance', label: 'Aela' } },
+  { archetypeKey: 'hesht', label: 'Hesht', group: 'Espèces', planetRef: { seed: 'capital-imperial', label: 'L’Enclume' } },
+  { archetypeKey: 'porosl', label: 'Progéniture', group: 'Espèces', planetRef: { seed: 'capital-swarm', label: 'Berceau' } },
+  { archetypeKey: 'precursors', label: 'Précurseurs', group: 'Espèces', planetRef: { seed: 'capital-precursor', label: 'La Tablette' } },
+  { archetypeKey: 'necromorphs', label: 'Nécromorphes', group: 'Bientôt', future: true },
+  { archetypeKey: 'generative-1', label: 'Espèce inconnue', group: 'Bientôt', future: true },
+  { archetypeKey: 'generative-2', label: 'Espèce inconnue', group: 'Bientôt', future: true },
 ];
 const RACE_BY_KEY = Object.fromEntries(RACE_CATALOG.map((r) => [r.archetypeKey, r]));
 
@@ -112,53 +112,53 @@ const RACE_BY_KEY = Object.fromEntries(RACE_CATALOG.map((r) => [r.archetypeKey, 
 // planet inside `seed`. `race` — the named race that lives on this planet.
 const SPECIAL_CATALOG = [
   // --- системы ---
-  { archetypeKey: 'sys-sagittarius', label: 'Стрелец A*', group: 'Системы', seed: 'galactic-core', view: 'blackhole-galactic' },
-  { archetypeKey: 'sys-gargantua', label: 'Гаргантюа', group: 'Системы', seed: 'interstellar', view: 'blackhole-gargantua' },
-  { archetypeKey: 'sys-sol', label: 'Солнечная система', group: 'Системы', seed: 'sol-system' },
-  { archetypeKey: 'sys-quarantine', label: 'Чёрный Карантин', group: 'Системы', seed: 'deadspace' },
-  { archetypeKey: 'sys-alderaan', label: 'Сектор Альдераан', group: 'Системы', seed: 'death-star' },
-  { archetypeKey: 'sys-twinsun', label: 'Двусолнечье', group: 'Системы', seed: 'film-twinsun' },
-  { archetypeKey: 'sys-spice', label: 'Пряный Предел', group: 'Системы', seed: 'film-spice' },
-  { archetypeKey: 'sys-jungle', label: 'Спутник Бурь', group: 'Системы', seed: 'film-jungle' },
-  { archetypeKey: 'sys-hoth', label: 'Хот', group: 'Системы', seed: 'film-ice' },
+  { archetypeKey: 'sys-sagittarius', label: 'Sagittarius A*', group: 'Systèmes', seed: 'galactic-core', view: 'blackhole-galactic' },
+  { archetypeKey: 'sys-gargantua', label: 'Gargantua', group: 'Systèmes', seed: 'interstellar', view: 'blackhole-gargantua' },
+  { archetypeKey: 'sys-sol', label: 'Système solaire', group: 'Systèmes', seed: 'sol-system' },
+  { archetypeKey: 'sys-quarantine', label: 'Quarantaine Noire', group: 'Systèmes', seed: 'deadspace' },
+  { archetypeKey: 'sys-alderaan', label: 'Secteur Alderaan', group: 'Systèmes', seed: 'death-star' },
+  { archetypeKey: 'sys-twinsun', label: 'Deux-Soleils', group: 'Systèmes', seed: 'film-twinsun' },
+  { archetypeKey: 'sys-spice', label: 'Frontière des Épices', group: 'Systèmes', seed: 'film-spice' },
+  { archetypeKey: 'sys-jungle', label: 'Lune des Tempêtes', group: 'Systèmes', seed: 'film-jungle' },
+  { archetypeKey: 'sys-hoth', label: 'Hoth', group: 'Systèmes', seed: 'film-ice' },
   // --- столицы фракций (#stage6) ---
-  { archetypeKey: 'sys-cap-alliance', label: 'Первая Верфь', group: 'Системы', seed: 'capital-alliance' },
-  { archetypeKey: 'sys-cap-imperial', label: 'Зольный Престол', group: 'Системы', seed: 'capital-imperial' },
-  { archetypeKey: 'sys-cap-swarm', label: 'Первый Сад', group: 'Системы', seed: 'capital-swarm' },
-  { archetypeKey: 'sys-cap-syndicate', label: 'Меридиан-Ноль', group: 'Системы', seed: 'capital-syndicate' },
-  { archetypeKey: 'sys-cap-cartel', label: 'Вольная Гавань', group: 'Системы', seed: 'capital-cartel' },
-  { archetypeKey: 'sys-cap-precursor', label: 'Чертог Молчания', group: 'Системы', seed: 'capital-precursor' },
+  { archetypeKey: 'sys-cap-alliance', label: 'Premier Chantier', group: 'Systèmes', seed: 'capital-alliance' },
+  { archetypeKey: 'sys-cap-imperial', label: 'Trône de Cendres', group: 'Systèmes', seed: 'capital-imperial' },
+  { archetypeKey: 'sys-cap-swarm', label: 'Premier Jardin', group: 'Systèmes', seed: 'capital-swarm' },
+  { archetypeKey: 'sys-cap-syndicate', label: 'Méridien Zéro', group: 'Systèmes', seed: 'capital-syndicate' },
+  { archetypeKey: 'sys-cap-cartel', label: 'Port-Libre', group: 'Systèmes', seed: 'capital-cartel' },
+  { archetypeKey: 'sys-cap-precursor', label: 'Hall du Silence', group: 'Systèmes', seed: 'capital-precursor' },
   // --- объекты ---
-  { archetypeKey: 'endurance', label: 'Станция «Эндюранс»', group: 'Объекты', view: 'endurance', seed: 'interstellar' },
-  { archetypeKey: 'ishimura', label: 'USG Ishimura', group: 'Объекты', view: 'ishimura', seed: 'deadspace' },
-  { archetypeKey: 'deathstar', label: 'Звезда Смерти «Длань»', group: 'Объекты', view: 'deathstar', seed: 'death-star' },
-  { archetypeKey: 'dragon', label: 'Crew Dragon', group: 'Объекты', view: 'dragon', seed: 'sol-system' },
+  { archetypeKey: 'endurance', label: 'Station « Endurance »', group: 'Objets', view: 'endurance', seed: 'interstellar' },
+  { archetypeKey: 'ishimura', label: 'USG Ishimura', group: 'Objets', view: 'ishimura', seed: 'deadspace' },
+  { archetypeKey: 'deathstar', label: 'Étoile de la Mort « La Main »', group: 'Objets', view: 'deathstar', seed: 'death-star' },
+  { archetypeKey: 'dragon', label: 'Crew Dragon', group: 'Objets', view: 'dragon', seed: 'sol-system' },
   // --- планеты ---
-  { archetypeKey: 'pl-earth', label: 'Земля', group: 'Планеты', seed: 'sol-system', planetLabel: 'Земля', race: 'humanity' },
-  { archetypeKey: 'pl-mars', label: 'Марс', group: 'Планеты', seed: 'sol-system', planetLabel: 'Марс' },
-  { archetypeKey: 'pl-alderaan', label: 'Альдераан', group: 'Планеты', seed: 'death-star', planetLabel: 'Альдераан' },
-  { archetypeKey: 'pl-aegis7', label: 'Эгида VII', group: 'Планеты', seed: 'deadspace', planetLabel: 'Эгида VII' },
-  { archetypeKey: 'pl-tau', label: 'Тау-Волантис', group: 'Планеты', seed: 'deadspace', planetLabel: 'Тау-Волантис', race: 'signbuilders' },
-  { archetypeKey: 'pl-tatooine', label: 'Татуин', group: 'Планеты', seed: 'film-twinsun', planetLabel: 'Татуин' },
-  { archetypeKey: 'pl-arrakis', label: 'Арракис', group: 'Планеты', seed: 'film-spice', planetLabel: 'Арракис', race: 'fremen' },
-  { archetypeKey: 'pl-pandora', label: 'Пандора', group: 'Планеты', seed: 'film-jungle', planetLabel: 'Пандора', race: 'navi' },
-  { archetypeKey: 'pl-hoth', label: 'Хот', group: 'Планеты', seed: 'film-ice', planetLabel: 'Хот' },
+  { archetypeKey: 'pl-earth', label: 'Terre', group: 'Planètes', seed: 'sol-system', planetLabel: 'Terre', race: 'humanity' },
+  { archetypeKey: 'pl-mars', label: 'Mars', group: 'Planètes', seed: 'sol-system', planetLabel: 'Mars' },
+  { archetypeKey: 'pl-alderaan', label: 'Alderaan', group: 'Planètes', seed: 'death-star', planetLabel: 'Alderaan' },
+  { archetypeKey: 'pl-aegis7', label: 'Égide VII', group: 'Planètes', seed: 'deadspace', planetLabel: 'Égide VII' },
+  { archetypeKey: 'pl-tau', label: 'Tau Volantis', group: 'Planètes', seed: 'deadspace', planetLabel: 'Tau Volantis', race: 'signbuilders' },
+  { archetypeKey: 'pl-tatooine', label: 'Tatooine', group: 'Planètes', seed: 'film-twinsun', planetLabel: 'Tatooine' },
+  { archetypeKey: 'pl-arrakis', label: 'Arrakis', group: 'Planètes', seed: 'film-spice', planetLabel: 'Arrakis', race: 'fremen' },
+  { archetypeKey: 'pl-pandora', label: 'Pandora', group: 'Planètes', seed: 'film-jungle', planetLabel: 'Pandora', race: 'navi' },
+  { archetypeKey: 'pl-hoth', label: 'Hoth', group: 'Planètes', seed: 'film-ice', planetLabel: 'Hoth' },
   // --- миры столиц фракций (#stage6) ---
-  { archetypeKey: 'pl-aela', label: 'Аэла', group: 'Планеты', seed: 'capital-alliance', planetLabel: 'Аэла', race: 'aelari' },
-  { archetypeKey: 'pl-hesht', label: 'Хешт', group: 'Планеты', seed: 'capital-imperial', planetLabel: 'Хешт' },
-  { archetypeKey: 'pl-anvil', label: 'Наковальня', group: 'Планеты', seed: 'capital-imperial', planetLabel: 'Наковальня', race: 'hesht' },
-  { archetypeKey: 'pl-firstgarden', label: 'Прародина', group: 'Планеты', seed: 'capital-swarm', planetLabel: 'Прародина', race: 'porosl' },
-  { archetypeKey: 'pl-prime', label: 'Прайм', group: 'Планеты', seed: 'capital-syndicate', planetLabel: 'Прайм' },
-  { archetypeKey: 'pl-fatman', label: 'Толстяк', group: 'Планеты', seed: 'capital-cartel', planetLabel: 'Толстяк' },
-  { archetypeKey: 'pl-tablet', label: 'Скрижаль', group: 'Планеты', seed: 'capital-precursor', planetLabel: 'Скрижаль', race: 'precursors' },
+  { archetypeKey: 'pl-aela', label: 'Aela', group: 'Planètes', seed: 'capital-alliance', planetLabel: 'Aela', race: 'aelari' },
+  { archetypeKey: 'pl-hesht', label: 'Hesht', group: 'Planètes', seed: 'capital-imperial', planetLabel: 'Hesht' },
+  { archetypeKey: 'pl-anvil', label: 'L’Enclume', group: 'Planètes', seed: 'capital-imperial', planetLabel: 'L’Enclume', race: 'hesht' },
+  { archetypeKey: 'pl-firstgarden', label: 'Berceau', group: 'Planètes', seed: 'capital-swarm', planetLabel: 'Berceau', race: 'porosl' },
+  { archetypeKey: 'pl-prime', label: 'Prime', group: 'Planètes', seed: 'capital-syndicate', planetLabel: 'Prime' },
+  { archetypeKey: 'pl-fatman', label: 'Le Gros', group: 'Planètes', seed: 'capital-cartel', planetLabel: 'Le Gros' },
+  { archetypeKey: 'pl-tablet', label: 'La Tablette', group: 'Planètes', seed: 'capital-precursor', planetLabel: 'La Tablette', race: 'precursors' },
 ];
 const SPECIAL_BY_KEY = Object.fromEntries(SPECIAL_CATALOG.map((s) => [s.archetypeKey, s]));
 const SPECIAL_SYSTEM_BY_SEED = Object.fromEntries(
-  SPECIAL_CATALOG.filter((s) => s.group === 'Системы').map((s) => [s.seed, s.archetypeKey]),
+  SPECIAL_CATALOG.filter((s) => s.group === 'Systèmes').map((s) => [s.seed, s.archetypeKey]),
 );
 const SPECIAL_PLANET_BY_SEED_LABEL = {};
 for (const s of SPECIAL_CATALOG) {
-  if (s.group === 'Планеты') SPECIAL_PLANET_BY_SEED_LABEL[`${s.seed}::${s.planetLabel}`] = s;
+  if (s.group === 'Planètes') SPECIAL_PLANET_BY_SEED_LABEL[`${s.seed}::${s.planetLabel}`] = s;
 }
 
 const CATALOGS = {
@@ -214,7 +214,7 @@ export function factionShelf() {
       tagline: f.lore || '',
       capitalKey: refs.capitalKey || null,
       capitalName: cap ? cap.label : '',
-      raceName: race ? race.label : 'смешанный состав',
+      raceName: race ? race.label : 'Mixte',
       flagshipName: (FLAGSHIP_LORE[f.id] || {}).name || '',
       lore: FACTION_LORE[f.id] || null,
       ships: SHIP_CATALOG.filter((c) => c.factionId === f.id),
@@ -246,7 +246,7 @@ export function specialViewKey(archetypeKey) {
 /** The (seed, planetLabel) a special-planet entry rebuilds from, or null. */
 export function specialPlanetRef(archetypeKey) {
   const s = SPECIAL_BY_KEY[archetypeKey];
-  return s && s.group === 'Планеты' ? { seed: s.seed, label: s.planetLabel } : null;
+  return s && s.group === 'Planètes' ? { seed: s.seed, label: s.planetLabel } : null;
 }
 
 /** The system seed a special entry lives in (for «Перейти к объекту»). */
@@ -305,52 +305,52 @@ export function specialGroup(archetypeKey) {
 
 /** RU category headings — the tab strip and the detail dialog's subtitle. */
 export const CATEGORY_LABELS = {
-  system: 'Система',
-  planet: 'Планета',
-  race: 'Раса',
-  ruin: 'Руины',
-  ship: 'Корабль',
-  station: 'Станция',
-  special: 'Особое',
+  system: 'Système',
+  planet: 'Planète',
+  race: 'Race',
+  ruin: 'Ruines',
+  ship: 'Navire',
+  station: 'Station',
+  special: 'Spécial',
 };
 
 // Planet-type encyclopedia: what it is, typical climate, resources, and how a
 // world of this type comes to be.
 const PLANET_INFO = {
   lava: {
-    desc: 'Раскалённый мир вулканов и лавовых морей — слишком близко к звезде для жизни. Образуется у самой звезды или разогревается приливами соседних гигантов.',
-    climate: 'Расплавленная кора, сотни градусов',
-    resources: 'Тяжёлые металлы, сера, редкие изотопы',
+    desc: 'Un monde de volcans et de lave-glaces s\'épuise trop près de l\'étoile pour vivre. Il se formera à l\'étoile elle-même ou se réchauffera avec les marées des géants voisins.',
+    climate: 'Corbe fondue, centaines de degrés',
+    resources: 'Métaux lourds, soufre, isotopes rares',
   },
   rocky: {
-    desc: 'Каменистый безводный мир с изрытой кратерами корой. Малое тело, не удержавшее атмосферу и воду — выжженное близостью звезды или промороженное далью.',
-    climate: 'Безводно, резкие перепады день/ночь',
-    resources: 'Руды, силикаты, строительный камень',
+    desc: 'Un monde sans eau de pierre avec une croûte de cratères creusée, un petit corps qui n\'a pas retenu l\'atmosphère et l\'eau de l\'étoile brûlée par la proximité ou gelée par le Dalek.',
+    climate: 'Des vagues de nuit et de jour',
+    resources: 'Minerais, silicates, pierre de construction',
   },
   desert: {
-    desc: 'Сухая планета песков и растрескавшихся равнин под жёстким солнцем. Обычно это мир умеренного пояса, потерявший почти всю воду.',
-    climate: 'Жарко и сухо, пыльные бури',
-    resources: 'Кремний, соли, лёд у полюсов',
+    desc: 'La planète sèche des sables et des plaines fissurées sous le soleil dur, c\'est généralement un monde de ceinture modérée qui a perdu presque toute l\'eau.',
+    climate: 'Froide et neigeuse, tempêtes de poussière',
+    resources: 'Crème, sel, glace près des pôles',
   },
   terran: {
-    desc: 'Мир земного типа: вода, атмосфера, умеренный пояс — колыбель жизни. Возникает в обитаемом поясе звезды, где вода держится жидкой, а атмосфера — стабильной.',
-    climate: 'Умеренный, жидкая вода и воздух',
-    resources: 'Вода, органика, плодородные почвы',
+    desc: 'Le monde de la terre: l\'eau, l\'atmosphère, la ceinture modérée, le berceau de la vie, se développe dans une ceinture habitée, où l\'eau est maintenue liquide et l\'atmosphère stable.',
+    climate: 'Eau et air modérés, liquides',
+    resources: 'Eau, organismes, sols fertiles',
   },
   ocean: {
-    desc: 'Планета сплошного океана с редкими архипелагами. Тёплый мир обитаемого пояса, где воды набралось больше, чем суши.',
-    climate: 'Влажный, глобальный океан',
-    resources: 'Вода, биомасса, растворённые соли',
+    desc: 'Une planète d\'océans avec des archipels rares, un monde chaud de ceinture habitée où l\'eau est plus abondante que les terres.',
+    climate: 'Océan humide, mondial',
+    resources: 'Eau, biomasse, sel dissous',
   },
   ice: {
-    desc: 'Промёрзший мир на дальней орбите — ледяные щиты и азотный иней. Формируется за снеговой линией, где до звезды слишком далеко для тепла.',
-    climate: 'Мороз, азотный и водяной лёд',
-    resources: 'Лёд, летучие соединения, чистая вода',
+    desc: 'Le monde glacial en orbite longue ♪ les panneaux glacés et les dysoles d\'azote sont formés derrière la ligne de neige, où l\'étoile est trop loin pour la chaleur.',
+    climate: 'Froid, neige azotée et glace d &apos; eau',
+    resources: 'glace, composés volatiles, eau propre',
   },
   gas: {
-    desc: 'Огромный газовый гигант с полосами облаков и системой колец. Массивное ядро набрало толстую водородно-гелиевую оболочку в холодной внешней части системы.',
-    climate: 'Нет твёрдой поверхности, вечные штормы',
-    resources: 'Водород, гелий — топливо для скиммеров',
+    desc: 'Un géant gazier géant avec des bandes de nuages et un système de bagues, le noyau de masse a pris une enveloppe d\'hydrogène et d\'hélium dans la partie extérieure froide du système.',
+    climate: 'Pas de surface dure, des tempêtes éternelles.',
+    resources: 'Hydrogène, hélium, combustible pour les scimers',
   },
 };
 
@@ -358,73 +358,73 @@ const PLANET_INFO = {
 // how it got that way.
 const RUIN_INFO = {
   plain: {
-    desc: 'Молчаливые руины давно вымершей цивилизации — ни тел, ни ответа почему. Жизнь угасла тихо: болезнь, климат или медленный упадок.',
-    fate: 'Вымерли без катастрофы',
+    desc: 'Les ruines silencieuses d\'une civilisation ancienne et éteinte, ni corps ni raison, se sont éteintes calmement: maladie, climat, déclin.',
+    fate: 'Décédés sans catastrophe',
   },
   robotic: {
-    desc: 'Мир, где остались одни машины: заводы и депо всё ещё работают на давно мёртвых хозяев, гоняя грузы по пустым орбитам.',
-    fate: 'Люди исчезли, автоматика жива',
+    desc: 'Un monde où il n\'y a plus que des voitures: les usines et les dépôts fonctionnent toujours avec des propriétaires morts de longue date, pourchassant des cargaisons sur des orbites vides.',
+    fate: 'Les gens ont disparu, l\'auto-détective est en vie.',
   },
   destroyed: {
-    desc: 'Разрушенный войной или катастрофой мир — расплавленные города, шрам на коре, орбита в обломках. Кто-то уцелел и бежал на соседний мир.',
-    fate: 'Катастрофа, часть спаслась',
+    desc: 'Le monde détruit par la guerre ou la catastrophe, les villes fondues, la cicatrice sur la croûte, l\'orbite dans les débris, et quelqu\'un a survécu et a fui vers le monde voisin.',
+    fate: 'Une partie de la catastrophe a été sauvée.',
   },
   obliterated: {
-    desc: 'Уничтоженный мир: от целой цивилизации не осталось почти ничего, планета расколота на облако щебня чужим оружием.',
-    fate: 'Планету раскололи извне',
+    desc: 'Un monde détruit: une civilisation entière est à peine intacte, une planète divisée en un nuage de griffes par des armes étrangères.',
+    fate: 'La planète a été déchirée de l\'extérieur.',
   },
 };
 
 // Named-race flavour (real ones; future ones show a "coming" note instead).
 const RACE_INFO = {
-  humanity: 'Любопытный вид, едва вышедший за пределы родной планеты, но уже мечтающий о звёздах.',
-  fremen: 'Суровый народ пустынь, живущий по воде и оседлавший песчаных исполинов родного мира.',
-  navi: 'Рослый народ, вросший в живую сеть своей луны-джунглей и защищающий её всем племенем.',
-  signbuilders: 'Давно исчезнувшая раса зодчих, оставившая на промёрзшем мире загадочные Знаки.',
-  aelari: 'Негромкий народ верфей — лучшие сварщики и навигаторы Альянса, одна из рас-основательниц Договора.',
-  hesht: 'Народ расколотого мира, превративший траур в дисциплину, а клятву — в государство.',
-  porosl: 'Монораса-коллектив Роя; выводок исполинских выращенных тварей, кочующих между звёзд. Имя дали чужие картографы.',
-  precursors: 'Высокие тихие силуэты старшей расы; их видят редко, издалека и всегда за работой.',
+  humanity: 'Une vue curieux qui a à peine dépassé la planète, mais qui rêve déjà des étoiles.',
+  fremen: 'Une nation du désert qui vit sur l\'eau et qui s\'étend sur les grès de la terre.',
+  navi: 'Un peuple éphémère qui s\'est transformé en réseau vivant de sa lune jungle et qui la protège par toute la tribu.',
+  signbuilders: 'Une race de zods qui a disparu depuis longtemps, laissant des signes mystérieux sur un monde gelé.',
+  aelari: 'Le peuple des chantiers de l\'Alliance, l\'une des principales fondatrices du Traité, est un peuple de chantier.',
+  hesht: 'Un peuple divisé qui a transformé le deuil en discipline et le serment de ◆ en État.',
+  porosl: 'Monorace le collectif de Roy, une sorte de créature de la culture de la terre qui se baladent entre les étoiles, et les cartographes de l\'étranger.',
+  precursors: 'Les silhouettes de la race aînée sont très calmes; elles sont rarement vues, de loin et toujours après le travail.',
 };
 
 // Special-content flavour + facts, by archetypeKey.
 const SPECIAL_INFO = {
-  'sys-sagittarius': { desc: 'Сверхмассивная чёрная дыра в самом сердце галактики; вокруг искривлён сам свет.', facts: [['Тип', 'сверхмассивная ЧД'], ['Масса', '≈ 4 млн солнц']] },
-  'sys-gargantua': { desc: 'Гигантская вращающаяся чёрная дыра с ярким тонким диском — та самая Гаргантюа из «Интерстеллара».', facts: [['Тип', 'вращающаяся ЧД'], ['Рядом', '«Эндюранс»']] },
-  'sys-sol': { desc: 'Наша родная система: восемь планет вокруг жёлтого карлика, колыбель Человечества.', facts: [['Звезда', 'жёлтый карлик'], ['Планет', '8']] },
-  'sys-quarantine': { desc: 'Мёртвая система под карантином: над Эгидой VII завис корабль-трещинник, команда мертва.', facts: [['Статус', 'карантин'], ['Угроза', 'некроморфы']] },
-  'sys-alderaan': { desc: 'Сектор, где боевая станция расколола целый мир одним залпом — на память осталось облако щебня.', facts: [['Событие', 'уничтожение Альдераана']] },
-  'sys-twinsun': { desc: 'Мир двух солнц: под сдвоенным светом лежит пустынный Татуин.', facts: [['Звёзд', '2']] },
-  'sys-spice': { desc: 'Пустынный предел, где добывают драгоценную пряность, а под песком ходят исполины.', facts: [['Ресурс', 'пряность']] },
-  'sys-jungle': { desc: 'Спутник газового гиганта, заросший живыми джунглями, — дом народа На’ви.', facts: [['Тип', 'луна-джунгли']] },
-  'sys-hoth': { desc: 'Промёрзшая планета вечных снегов и ледяных бурь.', facts: [['Климат', 'вечная мерзлота']] },
-  endurance: { desc: 'Кольцевая исследовательская станция, вращающаяся ради искусственной гравитации, — «Эндюранс» у Гаргантюа.', facts: [['Тип', 'кольцевая станция']] },
-  ishimura: { desc: 'Корабль-трещинник, разламывающий планеты ради руды. Команда погибла — на борту некроморфы. (Dead Space)', facts: [['Класс', 'planetcracker'], ['Длина', '~1,6 км']] },
-  deathstar: { desc: 'Бронированная боевая станция размером с малую луну; суперлазер раскалывает планету одним залпом.', facts: [['Тип', 'боевая станция'], ['Размер', '~160 км']] },
-  dragon: { desc: 'Частный многоразовый корабль с экипажем на пути к Марсу — капсула-«капля» на разгонном модуле.', facts: [['Экипаж', 'до 4'], ['Курс', 'Земля → Марс']] },
-  'pl-earth': { desc: 'Голубой мир воды и воздуха — единственный известный дом жизни и разума.', facts: [['Биом', 'земной'], ['Раса', 'Человечество']] },
-  'pl-mars': { desc: 'Ржавая пустынная планета, ближайшая цель первой межпланетной экспедиции Человечества.', facts: [['Биом', 'пустыня'], ['Спутников', '2']] },
-  'pl-alderaan': { desc: 'Мирная планета, уничтоженная боевой станцией одним залпом, — теперь поле обломков.', facts: [['Статус', 'уничтожена']] },
-  'pl-aegis7': { desc: 'Мёртвый шахтёрский мир: из его недр подняли Красный Обелиск, после чего колония сошла с ума.', facts: [['Статус', 'мёртв'], ['Над ним', 'Ishimura']] },
-  'pl-tau': { desc: 'Промёрзший мир, хранящий Знаки исчезнувшей расы зодчих.', facts: [['Биом', 'лёд'], ['Раса', 'Строители Знаков']] },
-  'pl-tatooine': { desc: 'Пустынная планета под двумя солнцами — родина не одного героя.', facts: [['Биом', 'пустыня'], ['Звёзд', '2']] },
-  'pl-arrakis': { desc: 'Пустынный мир пряности и песчаных исполинов, дом Фрименов.', facts: [['Биом', 'пустыня'], ['Раса', 'Фримены']] },
-  'pl-pandora': { desc: 'Живая луна-джунгли газового гиганта, дом народа На’ви.', facts: [['Биом', 'джунгли'], ['Раса', 'На’ви']] },
-  'pl-hoth': { desc: 'Планета вечных снегов и ледяных бурь.', facts: [['Биом', 'лёд']] },
+  'sys-sagittarius': { desc: 'Un trou noir supermassif au cœur de la galaxie, la lumière elle-même est ouverte.', facts: [['Type', 'CA supermassive'], ['Masse', '~ 4 millions de soleils']] },
+  'sys-gargantua': { desc: 'Un trou noir rotatif géant avec un disque brillant et fin, la même Gargantua de l\'Interstellar.', facts: [['Type', 'PD tournant'], ['À côté', '○ Endurance ○']] },
+  'sys-sol': { desc: 'Notre système est composé de huit planètes autour du nain jaune, berceau de l\'humanité.', facts: [['Étoile', 'Nain jaune'], ['Planet', '8']] },
+  'sys-quarantine': { desc: 'Système mort en quarantaine: Egida VII est en train de faire une épave, l\'équipe est morte.', facts: [['Statut', 'quarantaine'], ['Menace', 'nécromorphes']] },
+  'sys-alderaan': { desc: 'Un secteur où la station de combat a brisé le monde entier avec une seule bagarre de spiritueux, il reste un nuage de gravier.', facts: [['Événement', 'Destruction d &apos; Alderaan']] },
+  'sys-twinsun': { desc: 'Le monde des deux soleils: sous la lumière double se trouve le Tatwin désertique.', facts: [['Étoiles', '2']] },
+  'sys-spice': { desc: 'Une limite désertique où l\'on trouve une épice précieuse et où les cavités se déplacent sous le sable.', facts: [['Ressources', 'Épreuve']] },
+  'sys-jungle': { desc: 'Un satellite de géant gazier, qui a été peuplé de jungles vivantes, la maison du peuple Na\'vi.', facts: [['Type', 'Luna-Jungli']] },
+  'sys-hoth': { desc: 'Une planète gelée de neiges et de tempêtes de glace.', facts: [['Climat', 'pergélisol éternel']] },
+  endurance: { desc: 'Une station de recherche annulaire qui tourne pour la gravité artificielle,  faire de l\'Endurance chez Gargantua.', facts: [['Type', 'Station annulaire']] },
+  ishimura: { desc: 'Un vaisseau fêlé qui brise les planètes pour le minerai. L\'équipe est morte à bord d\'un neuromorphe.', facts: [['Classe', 'planetcracker'], ['Longueur', '~1,6 km']] },
+  deathstar: { desc: 'Une station blindée de combat de la taille d\'une petite lune; un super laser explose la planète en une seule bagarre.', facts: [['Type', 'Station de combat'], ['Taille', '~160 km']] },
+  dragon: { desc: 'Un vaisseau privé à équipage multiples en route pour Mars .. capsule-capsule sur le module de propulsion.', facts: [['Équipage', 'Jusqu &apos; à 4'], ['Cours', 'Terre Mars']] },
+  'pl-earth': { desc: 'Le monde bleu de l\'eau et de l\'air est la seule maison connue pour la vie et l\'esprit.', facts: [['Biome', 'Terre'], ['Race', 'Humanité']] },
+  'pl-mars': { desc: 'Une planète désertique rouillée, la cible la plus proche de la première expédition interplanétaire de l\'humanité.', facts: [['Biome', 'désert'], ['Satellites', '2']] },
+  'pl-alderaan': { desc: 'Une planète pacifique détruite par une station de combat par une seule bagarre,  faire maintenant un champ de décombres.', facts: [['Statut', 'détruit']] },
+  'pl-aegis7': { desc: 'Le monde minier mort: le sous-sol a été relevé par l\'Obélisque Rouge, et la colonie est devenue folle.', facts: [['Statut', 'Mort'], ['Au-dessus de lui.', 'Ishimura']] },
+  'pl-tau': { desc: 'Un monde froid qui garde les Signaux des Zods disparus.', facts: [['Biome', 'glace'], ['Race', 'Bâtisseurs de Signes']] },
+  'pl-tatooine': { desc: 'Une planète déserte sous deux soleils . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .', facts: [['Biome', 'désert'], ['Étoiles', '2']] },
+  'pl-arrakis': { desc: 'Le monde désert d\'épices et de sable, la maison des Freeman.', facts: [['Biome', 'désert'], ['Race', 'Fremen']] },
+  'pl-pandora': { desc: 'La lune-jungli du géant gazier, maison du peuple Na\'vi.', facts: [['Biome', 'jungle'], ['Race', 'Na’vi']] },
+  'pl-hoth': { desc: 'La planète des neiges et des tempêtes de glace.', facts: [['Biome', 'glace']] },
   // --- столицы фракций (#stage6) ---
-  'sys-cap-alliance': { desc: 'Первая общая верфь галактики над родным миром аэларов: здесь сваркой подписали Договор.', facts: [['Фракция', 'Альянс'], ['Флагман', '«Тихая Гавань»']] },
-  'sys-cap-imperial': { desc: 'Поле обломков расколотого Хешта и тронная Наковальня — рана, вокруг которой построена Империя.', facts: [['Фракция', 'Империя Пепла'], ['Флагман', '«Тризна»']] },
-  'sys-cap-swarm': { desc: 'Прародина-сад, океан-питомник и пастбища полипов; все имена здесь дали чужие картографы.', facts: [['Фракция', 'Рой'], ['Флагман', '«Исполин»']] },
-  'sys-cap-syndicate': { desc: 'Нулевой меридиан всех маршрутов галактики: эталонные часы Прайма заверяют сделки половины флотов.', facts: [['Фракция', 'Синдикат'], ['Флагман', '«Контрольный пакет»']] },
-  'sys-cap-cartel': { desc: 'Старейший вольный порт галактики: толчея бортов у Толстяка и доки, где плиты не гаснут.', facts: [['Фракция', 'Картель'], ['Флагман', '«Мамаша»']] },
-  'sys-cap-precursor': { desc: 'Система, которую все карты помечают одинаково: не мешать. Города выметены, сад поливают — хозяев не видно.', facts: [['Фракция', 'Предтечи'], ['Флагман', '«Тот, Кто Остался»']] },
-  'pl-aela': { desc: 'Родной мир аэларов: города вдоль побережий, кольцевой хаб-верфь над экватором и старые песни в ритме работы.', facts: [['Биом', 'земной'], ['Раса', 'Аэлары']] },
-  'pl-hesht': { desc: 'Расколотый родной мир хештов — святыня и рана; сюда приходят молчать, заглушив двигатель.', facts: [['Статус', 'уничтожен'], ['Память', 'осколки в килях кораблей']] },
-  'pl-anvil': { desc: 'Тронный мир Империи: чёрные города-арсеналы и небо, в котором всегда виден расколотый Хешт.', facts: [['Биом', 'скальный'], ['Раса', 'Хешты']] },
-  'pl-firstgarden': { desc: 'Мир-сад без единого огня городов: города здесь не строят, здесь растут.', facts: [['Биом', 'джунгли'], ['Раса', 'Приплод']] },
-  'pl-prime': { desc: 'Мир-штаб под стеклом: от его нулевого меридиана отсчитываются маршруты и время половины галактики.', facts: [['Биом', 'город'], ['Владелец', 'Синдикат «Меридиан»']] },
-  'pl-fatman': { desc: 'Полосатый гигант, кормящий половину Картеля: газосборщики, доки и очередь, которую уважают больше законов.', facts: [['Тип', 'газовый гигант'], ['Роль', 'главный порт']] },
-  'pl-tablet': { desc: 'Древний мир, чьи города с орбиты читаются как строки текста; единственный сад поливают до сих пор.', facts: [['Биом', 'пустыня'], ['Раса', 'Предтечи']] },
+  'sys-cap-alliance': { desc: 'Le premier chantier de la galaxie sur le monde des Aélars, où le Traité a été signé.', facts: [['Faction', 'Alliance'], ['Drapeau', '♪ La Havane tranquille ♪']] },
+  'sys-cap-imperial': { desc: 'Le champ des débris de Hesht et la colonne de la blessure autour de laquelle l\'Empire a été construit.', facts: [['Faction', 'Empire des Cendres'], ['Drapeau', '♪ Trisme ♪']] },
+  'sys-cap-swarm': { desc: 'La vermine, la boulangerie et les pâturages polypéens, tous les noms sont donnés par des cartographes étrangers.', facts: [['Faction', 'Essaim'], ['Drapeau', '♪ Ispolin ♪']] },
+  'sys-cap-syndicate': { desc: 'Meridian zéro sur tous les itinéraires de la galaxie: l\'horloge de référence de Prime assure la moitié des opérations de la flotte.', facts: [['Faction', 'Syndicat'], ['Drapeau', '♪ Un sac de contrôle ♪']] },
+  'sys-cap-cartel': { desc: 'Le plus vieux port libre de la galaxie: le plus grand rameau de la côte de la Grande et des docks, où les plaques ne s\'éteignent pas.', facts: [['Faction', 'Carte'], ['Drapeau', '♪ Maman ♪']] },
+  'sys-cap-precursor': { desc: 'Un système que toutes les cartes indiquent de la même façon: ne pas déranger. Les villes sont balayées, le jardin est arrosé par les propriétaires.', facts: [['Faction', 'Précurseurs'], ['Drapeau', '♪ Celui qui est resté ♪']] },
+  'pl-aela': { desc: 'Le monde des Aelars, les villes le long des côtes, le rocade de l\'Hub, au-dessus de l\'équateur et les vieilles chansons dans le rythme du travail.', facts: [['Biome', 'Terre'], ['Race', 'Aelari']] },
+  'pl-hesht': { desc: 'Le monde des hachts, le sanctuaire et la blessure, s\'est brisé; ils viennent ici pour se taire en bloquant le moteur.', facts: [['Statut', 'détruit'], ['Mémoire', 'Des fragments dans les quilles des navires']] },
+  'pl-anvil': { desc: 'Le monde du trône de l\'Empire: les villes noires harsenales et le ciel, où est toujours vu le Hasht brisé.', facts: [['Biome', 'roche'], ['Race', 'Hesht']] },
+  'pl-firstgarden': { desc: 'Un monde-shad sans feu unique des villes: les villes ne sont pas construites ici, elles grandissent ici.', facts: [['Biome', 'jungle'], ['Race', 'Progéniture']] },
+  'pl-prime': { desc: 'Le monde sous la vitre: le méridien zéro mesure les itinéraires et le temps de la moitié de la galaxie.', facts: [['Biome', 'Ville'], ['Propriétaire', 'Syndicat  la Meridian']] },
+  'pl-fatman': { desc: 'Un géant chevelu qui allaite la moitié du cartel: les collecteurs de gaz, les docks et la file d\'attente, qui sont plus respectueux des lois.', facts: [['Type', 'Gigant gazier'], ['Rôle', 'Port principal']] },
+  'pl-tablet': { desc: 'Un monde ancien dont les villes sont lues comme des lignes de texte; le seul jardin est encore en train d\'être arrosé.', facts: [['Biome', 'désert'], ['Race', 'Précurseurs']] },
 };
 
 /**
@@ -454,11 +454,11 @@ export function describeEntry(entry) {
         desc = role.desc;
         // transports keep their payload in `arm` (cargo, fuel, colonists) — an
         // honest «Нагрузка» beats calling 4 000 colonists an armament.
-        const armLabel = role.cat === 'transport' ? 'Нагрузка' : 'Вооружение';
-        facts.push(['Назначение', role.purpose], ['Длина', `${role.lengthM} м`], ['Экипаж', String(role.crew)], [armLabel, role.arm]);
+        const armLabel = role.cat === 'transport' ? 'Charge' : 'Armement';
+        facts.push(['Nomination', role.purpose], ['Longueur', `${role.lengthM}m`], ['Équipage', String(role.crew)], [armLabel, role.arm]);
       }
       if (faction) {
-        facts.push(['Флот', faction.name]);
+        facts.push(['Navire', faction.name]);
         if (faction.lore) desc += (desc ? ' ' : '') + faction.lore;
       }
       // the flagship of each fleet is a NAMED legend (#stage6) — its story
@@ -466,11 +466,11 @@ export function describeEntry(entry) {
       const fl = roleId === 'flagship' && FLAGSHIP_LORE[factionId];
       if (fl) {
         desc = `${fl.desc} ${fl.history}`;
-        facts.unshift(['Имя', fl.name]);
+        facts.unshift(['Nom', fl.name]);
       }
       // the 1–10 characteristics block + the fleet-wide quirk (#stage6)
       stats = getShipStats(roleId, factionId);
-      if (stats && stats.quirk) facts.push(['Особенность', stats.quirk]);
+      if (stats && stats.quirk) facts.push(['Caractéristiques', stats.quirk]);
       break;
     }
     case 'station': {
@@ -479,19 +479,19 @@ export function describeEntry(entry) {
       // per-faction station lore (#stage6) — what a hub/outpost/collector IS
       // to that culture; falls back to the neutral type blurb.
       const STATION_DESC = {
-        ring: 'Кольцевой хаб над родным миром цивилизации — её орбитальная столица.',
-        outpost: 'Колониальный аванпост: скромная орбитальная станция над колонией.',
-        collector: 'Газосборщик — скиммер, черпающий топливо из атмосферы газового гиганта.',
+        ring: 'Le hub au-dessus du monde de la civilisation, sa capitale orbitale.',
+        outpost: 'Avant-poste colonial: une petite station orbitale au-dessus de la colonie.',
+        collector: 'Un gars qui collecte du gaz, un smmer qui récupère du carburant dans l\'atmosphère d\'un géant gazeux.',
       };
       desc = (STATION_LORE[factionId] && STATION_LORE[factionId][type]) || STATION_DESC[type] || '';
-      if (faction) facts.push(['Фракция', faction.name]);
+      if (faction) facts.push(['Faction', faction.name]);
       break;
     }
     case 'planet': {
       const info = PLANET_INFO[key];
       if (info) {
         desc = info.desc;
-        facts.push(['Климат', info.climate], ['Ресурсы', info.resources]);
+        facts.push(['Climat', info.climate], ['Ressources', info.resources]);
       }
       break;
     }
@@ -499,18 +499,18 @@ export function describeEntry(entry) {
       const info = RUIN_INFO[key];
       if (info) {
         desc = info.desc;
-        facts.push(['Судьба', info.fate]);
+        facts.push(['Le destin', info.fate]);
       }
       break;
     }
     case 'race': {
       const r = RACE_BY_KEY[key];
       if (r && r.future) {
-        desc = 'Этот вид ещё не появился в игре — карточка-заглушка. Позже он получит свою историю и родную планету.';
-        facts.push(['Статус', 'в разработке']);
+        desc = 'Cette espèce n\'est pas encore apparue dans le jeu \'carte-bouchon\', et il aura son histoire et sa planète.';
+        facts.push(['Statut', 'dans la mise au point']);
       } else {
         desc = RACE_INFO[key] || '';
-        if (r && r.planetRef) facts.push(['Родной мир', r.planetRef.label]);
+        if (r && r.planetRef) facts.push(['Monde', r.planetRef.label]);
       }
       break;
     }
@@ -523,7 +523,7 @@ export function describeEntry(entry) {
       break;
     }
     case 'system':
-      desc = 'Звёздная система, нанесённая на карту в этой галактике.';
+      desc = 'Le système stellaire qui est en jeu dans cette galaxie.';
       break;
     default:
       break;

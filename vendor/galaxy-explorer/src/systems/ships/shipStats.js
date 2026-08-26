@@ -24,37 +24,37 @@ const ROLE_BASE = {
 const FACTION_PROFILE = {
   alliance: {
     mods: { armor: 1, autonomy: 1, agility: -1 },
-    quirk: 'Каждый борт несёт лишнюю койку и запас кислорода на чужую расу — эвакуация считается боевой задачей.',
+    quirk: 'Chaque bord porte un lit en trop et une réserve d\'oxygène par race est considérée comme une tâche de combat.',
   },
   imperial: {
     mods: { armor: 2, firepower: 1, speed: -1, agility: -1 },
-    quirk: 'В киле вварен осколок Хешта; переборки двойные — корабль дерётся, пока держит хоть одна.',
+    quirk: 'Le kilo est un fragment de Heshta; les cloisons de double bateau se battent jusqu\'à ce qu\'une seule porte.',
   },
   swarm: {
     mods: { agility: 2, autonomy: 1, firepower: -1 },
-    quirk: 'Живой корпус заращивает пробоины; двух одинаковых кораблей у Роя не бывает.',
+    quirk: 'La coque vivante infeste les trous; il n\'y a pas deux vaisseaux identiques chez Roy.',
   },
   syndicate: {
     mods: { speed: 2, range: 1, armor: -2 },
-    quirk: 'Гарантийное обслуживание в любом порту сети; маршрутные лицензии дают приоритетные коридоры.',
+    quirk: 'Des services de garantie sont assurés dans tout port du réseau; les permis de transport sont accordés dans les couloirs prioritaires.',
   },
   cartel: {
     mods: { autonomy: 2, agility: 1, speed: -1, armor: -1 },
-    quirk: 'Сшит из чужих плит и чинится чем попало где попало — и всё-таки долетает.',
+    quirk: 'Il est fait de plaques d\'autres personnes et se répare comme il est là où il est et il arrive.',
   },
   precursor: {
     unknown: true,
-    quirk: 'Приборы не находят ни двигателя, ни орудий — только результат их работы.',
+    quirk: 'Les instruments ne trouvent ni moteur ni arme, mais seulement le résultat de leur fonctionnement.',
   },
 };
 
 export const STAT_LABELS = [
-  ['speed', 'Скорость'],
-  ['agility', 'Манёвренность'],
-  ['armor', 'Броня'],
-  ['firepower', 'Огневая мощь'],
-  ['range', 'Дальность'],
-  ['autonomy', 'Автономность'],
+  ['speed', 'Vitesse'],
+  ['agility', 'Manœuvrabilité'],
+  ['armor', 'Véhicule blindé'],
+  ['firepower', 'Puissance de feu'],
+  ['range', 'Portée'],
+  ['autonomy', 'Autonomie'],
 ];
 
 const clamp = (v) => Math.max(1, Math.min(10, v));

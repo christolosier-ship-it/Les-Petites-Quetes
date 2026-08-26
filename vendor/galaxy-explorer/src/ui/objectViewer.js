@@ -110,7 +110,7 @@ export class ObjectViewer {
     const closeBtn = document.createElement('button');
     closeBtn.type = 'button';
     closeBtn.className = 'codex-viewer-close';
-    closeBtn.textContent = 'Закрыть';
+    closeBtn.textContent = 'Fermer';
     closeBtn.addEventListener('click', () => this.close());
     overlay.appendChild(closeBtn);
 

@@ -27,12 +27,12 @@ import { thumbnailFor, releaseThumbnailRenderer } from './thumbnails.js';
 // as one section per fleet faction (chronicle, fleet, structures) — the old
 // «Корабли»/«Станции» tabs live inside it now.
 const TABS = [
-  { id: 'system', label: 'Системы' },
-  { id: 'planet', label: 'Планеты' },
-  { id: 'race', label: 'Расы' },
-  { id: 'ruin', label: 'Руины' },
-  { id: 'faction', label: 'Фракции' },
-  { id: 'special', label: 'Особое' },
+  { id: 'system', label: 'Systèmes' },
+  { id: 'planet', label: 'Planètes' },
+  { id: 'race', label: 'Race' },
+  { id: 'ruin', label: 'Ruines' },
+  { id: 'faction', label: 'Factions' },
+  { id: 'special', label: 'Spécial' },
 ];
 
 // Faction signature tints for the «Фракции» section headers — keep in sync
@@ -47,7 +47,7 @@ const FACTION_TINT = {
 };
 
 // Which placeholder glyph a special find uses, by its Особое sub-group.
-const SPECIAL_GROUP_ICON = { Системы: 'system', Объекты: 'phenomenon', Планеты: 'planet' };
+const SPECIAL_GROUP_ICON = { 'Systèmes': 'system', 'Objets': 'phenomenon', 'Planètes': 'planet' };
 
 /** The codexIcons glyph key for an entry — a special find picks its glyph by
  *  sub-group, everything else by its category. */
@@ -150,9 +150,9 @@ export class CodexUI {
     el.setAttribute('aria-hidden', 'true');
     el.innerHTML =
       '<div class="codex-backdrop"></div>' +
-      '<div class="codex-card" role="dialog" aria-label="Кодекс">' +
-      '<button type="button" class="codex-close" aria-label="Закрыть">×</button>' +
-      '<div class="codex-title">Кодекс</div>' +
+      '<div class="codex-card" role="dialog" aria-label="Codex">' +
+      '<button type="button" class="codex-close" aria-label="Fermer">×</button>' +
+      '<div class="codex-title">Code</div>' +
       '<div class="codex-tabs"></div>' +
       '<div class="codex-prog"><div class="codex-prog-label lg-prog"></div><div class="codex-prog-bar"><i></i></div></div>' +
       '<div class="codex-scroll">' +
@@ -201,8 +201,8 @@ export class CodexUI {
     return (
       '<div class="codex-detail" aria-hidden="true">' +
       '<div class="codex-detail-backdrop"></div>' +
-      '<div class="codex-detail-card" role="dialog" aria-label="Находка">' +
-      '<button type="button" class="codex-detail-close" aria-label="Закрыть">×</button>' +
+      '<div class="codex-detail-card" role="dialog" aria-label="Recherche">' +
+      '<button type="button" class="codex-detail-close" aria-label="Fermer">×</button>' +
       '<div class="codex-detail-thumb"></div>' +
       '<div class="codex-detail-body">' +
       '<div class="codex-detail-sub"></div>' +
@@ -233,18 +233,18 @@ export class CodexUI {
       const partyId = this._getPartyId();
       found = list(cat).filter((e) => e.batchId === partyId).length;
       total = this._getSystemTotal();
-      this._r.progLabel.innerHTML = `В этой галактике: <b>${found}</b> / ${total}`;
+      this._r.progLabel.innerHTML = `Dans cette galaxie:<b>${found}</b> / ${total}`;
     } else if (cat === 'faction') {
       // the faction shelf spans TWO catalogs — its progress is their union
       total = catalogFor('ship').length + catalogFor('station').length;
       found = progress('ship').found + progress('station').found;
-      this._r.progLabel.innerHTML = `Найдено <b>${found}</b> / ${total}`;
+      this._r.progLabel.innerHTML = `Trouvé<b>${found}</b> / ${total}`;
     } else {
       // count against DISCOVERABLE archetypes only — future placeholder races
       // (never obtainable yet) don't drag the denominator below 100%.
       total = catalog.filter((c) => !c.future).length;
       found = progress(cat).found;
-      this._r.progLabel.innerHTML = `Найдено <b>${found}</b> / ${total}`;
+      this._r.progLabel.innerHTML = `Trouvé<b>${found}</b> / ${total}`;
     }
     const pct = total > 0 ? Math.min(100, Math.round((found / total) * 100)) : 0;
     this._r.progBar.style.width = `${pct}%`;
@@ -275,7 +275,7 @@ export class CodexUI {
       if (!entries.length) {
         const empty = document.createElement('div');
         empty.className = 'codex-empty';
-        empty.textContent = 'Пока ничего не найдено. Заходите в системы, чтобы наносить их на карту.';
+        empty.textContent = 'Vous pouvez entrer dans les systèmes pour les cartographier.';
         this._r.shelf.appendChild(empty);
       } else {
         for (const entry of entries) this._r.shelf.appendChild(this._card(entry));
@@ -327,23 +327,23 @@ export class CodexUI {
     tagline.textContent = f.tagline;
     const meta = document.createElement('div');
     meta.className = 'codex-faction-meta';
-    meta.textContent = `★ ${f.capitalName} · раса: ${f.raceName} · флагман: «${f.flagshipName}»`;
+    meta.textContent = `★ ${f.capitalName}· race:${f.raceName}∙ drapeau: ∙${f.flagshipName}»`;
     head.append(title, tagline, meta);
     this._r.shelf.appendChild(head);
 
-    this._subsection('Флот');
+    this._subsection('Navire');
     for (const c of f.ships) {
       const entry = shipByKey.get(c.archetypeKey);
       this._r.shelf.appendChild(entry ? this._card(entry) : this._lockedCard(c, 'ship'));
     }
 
-    this._subsection('Строения');
+    this._subsection('Constructions');
     for (const c of f.stations) {
       const entry = stationByKey.get(c.archetypeKey);
       this._r.shelf.appendChild(entry ? this._card(entry) : this._lockedCard(c, 'station'));
     }
 
-    this._subsection('Хроника');
+    this._subsection('Chronicle');
     const lore = document.createElement('div');
     const unlocked = f.capitalKey && has('special', f.capitalKey) && f.lore;
     if (unlocked) {
@@ -369,7 +369,7 @@ export class CodexUI {
       }
     } else {
       lore.className = 'codex-lore locked';
-      lore.textContent = `Посетите столицу — ★ ${f.capitalName} — чтобы открыть хронику фракции.`;
+      lore.textContent = `Visitez la capitale  ce soir.${f.capitalName}○ ouvrir la chronologie de la fraction.`;
     }
     this._r.shelf.appendChild(lore);
   }
@@ -421,7 +421,7 @@ export class CodexUI {
       label.textContent = c.label;
       const soon = document.createElement('span');
       soon.className = 'codex-soon';
-      soon.textContent = 'скоро';
+      soon.textContent = 'Bientôt.';
       name.append(label, soon);
     } else {
       name.innerHTML = '<span>?</span>';
@@ -549,10 +549,10 @@ export class CodexUI {
 
     this._r.detailActions.innerHTML = '';
     if (isRebuildable(entry)) {
-      this._r.detailActions.appendChild(this._actionBtn('Рассмотреть', 'primary', () => this._view(entry)));
+      this._r.detailActions.appendChild(this._actionBtn('Observer', 'primary', () => this._view(entry)));
     }
     if (this._canNavigate(entry)) {
-      this._r.detailActions.appendChild(this._actionBtn('Перейти к объекту', 'ghost', () => this._navigate(entry)));
+      this._r.detailActions.appendChild(this._actionBtn('Aller à l’objet', 'ghost', () => this._navigate(entry)));
     }
 
     this._r.detail.classList.add('open');

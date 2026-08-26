@@ -39,13 +39,13 @@ import {
 
 // Russian planet-type labels for the in-system hover card (#6).
 const SYS_TYPE_RU = {
-  lava: 'Лавовая',
-  rocky: 'Каменистая',
-  desert: 'Пустынная',
-  terran: 'Земного типа',
-  ocean: 'Океаническая',
-  ice: 'Ледяная',
-  gas: 'Газовый гигант',
+  lava: 'Lave',
+  rocky: 'Cuministe',
+  desert: 'Désert',
+  terran: 'Type terrestre',
+  ocean: 'Océanique',
+  ice: 'Glacé',
+  gas: 'Géante gazeuse',
 };
 
 // Held keys that drive the camera each frame (orbit + zoom). Discrete one-shot
@@ -150,7 +150,7 @@ class GalaxyApp {
     const el = document.createElement('div');
     el.id = 'genversion-banner';
     el.textContent =
-      'Правила генерации миров обновились — вселенная пересобрана заново, карта исследований начата с чистого листа.';
+      'Les règles de génération des mondes ont été actualisées  ce qui a permis de remodeler l\'univers et de refaire la carte des recherches.';
     document.body.appendChild(el);
 
     const dismiss = () => {
@@ -219,7 +219,7 @@ class GalaxyApp {
     const btn = document.createElement('button');
     btn.id = 'rotate-toggle';
     btn.type = 'button';
-    btn.setAttribute('aria-label', 'Вращение карты'); // title is synced dynamically
+    btn.setAttribute('aria-label', 'Rotation de la carte'); // title is synced dynamically
     btn.classList.add('visible'); // galaxy mode is shown from the start
     btn.innerHTML = this._rotIcon(true);
     btn.addEventListener('click', () => {
@@ -256,7 +256,7 @@ class GalaxyApp {
     if (!force && this._rotBtnRotating === rotating) return;
     this._rotBtnRotating = rotating;
     this._rotateBtn.innerHTML = this._rotIcon(rotating);
-    this._rotateBtn.title = rotating ? 'Остановить вращение карты' : 'Вращать карту';
+    this._rotateBtn.title = rotating ? 'Arrêter la rotation de la carte' : 'Rotation de la carte';
     this._rotateBtn.classList.toggle('on', !rotating);
   }
 
@@ -266,8 +266,8 @@ class GalaxyApp {
     const btn = document.createElement('button');
     btn.id = 'help-toggle';
     btn.type = 'button';
-    btn.title = 'Управление';
-    btn.setAttribute('aria-label', 'Управление');
+    btn.title = 'Gouvernance';
+    btn.setAttribute('aria-label', 'Gouvernance');
     btn.textContent = '?';
     btn.classList.add('visible'); // galaxy mode from the start
     document.body.appendChild(btn);
@@ -276,23 +276,23 @@ class GalaxyApp {
     panel.id = 'help-panel';
     panel.setAttribute('aria-hidden', 'true');
     const rows = [
-      ['Мышь', ''],
-      ['Колесо', 'приблизиться к курсору'],
-      ['Зажать ЛКМ', 'повернуть / облёт'],
-      ['Клик', 'войти в систему · выбрать объект (метки тоже кликаются)'],
-      ['Клавиатура', ''],
-      ['Стрелки / WASD', 'обзор'],
-      ['Q / E · + / −', 'зум'],
-      ['R', 'вращение карты'],
-      ['C', 'кинопоказ'],
-      ['M', 'музыка'],
-      ['Пробел', 'из планеты — к системе'],
-      ['Esc', 'шаг назад'],
-      ['Ещё', ''],
-      ['Кодекс', 'коллекция находок — вкладка у левого края'],
+      ['Souris', ''],
+      ['Roue', 'Approchez-vous du curseur.'],
+      ['Attacher la LKM', 'Tourner / & #160; brouillon'],
+      ['Clique', 'Utilisez le système . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .'],
+      ['Clavier', ''],
+      ['Flèches / WASD', 'Examen'],
+      ['Q / E · + / −', 'Zoom'],
+      ['R', 'rotation de la carte'],
+      ['C', 'Projection cinématographique'],
+      ['M', 'musique'],
+      ['Lacune', '○ vers le système'],
+      ['Esc', 'Reculez'],
+      ['Encore.', ''],
+      ['Codex', 'Collection de découvertes ○ onglets à l\'extrémité gauche'],
     ];
     panel.innerHTML =
-      '<h4>Управление</h4>' +
+      '<h4>Gouvernance</h4>' +
       rows
         .map(([k, v]) =>
           v === ''
@@ -332,8 +332,8 @@ class GalaxyApp {
     const btn = document.createElement('button');
     btn.id = 'cine-toggle';
     btn.type = 'button';
-    btn.title = 'Кинопоказ — авто-облёт миров';
-    btn.setAttribute('aria-label', 'Кинопоказ');
+    btn.title = 'Un film de l\'auto-boîte des mondes';
+    btn.setAttribute('aria-label', 'Projection cinématographique');
     btn.innerHTML =
       '<svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><rect x="3" y="7" width="12.5" height="10" rx="1.6"/><path d="M15.5 10.4 21 7.6v8.8l-5.5-2.8z"/></svg>';
     btn.classList.add('visible');
@@ -346,7 +346,7 @@ class GalaxyApp {
 
     const hint = document.createElement('div');
     hint.id = 'cine-hint';
-    hint.textContent = 'Кинопоказ · любое действие — выход';
+    hint.textContent = 'Cinéma · toute action ∙ sortie';
     document.body.appendChild(hint);
     this._cineHintEl = hint;
 
@@ -440,9 +440,9 @@ class GalaxyApp {
     const byName = (n) => list.find((s) => s.data && s.data.name === n);
     const stops = [];
     const push = (s) => s && !stops.includes(s) && stops.push(s);
-    push(byName('Солнечная система')); // Earth + Crew Dragon
-    push(byName('Чёрный Карантин')); // the Ishimura cracks a planet
-    push(byName('Гаргантюа')); // black hole + the Endurance station
+    push(byName('Système solaire')); // Earth + Crew Dragon
+    push(byName('Quarantaine Noire')); // the Ishimura cracks a planet
+    push(byName('Gargantua')); // black hole + the Endurance station
     // the rest of the hand-built specials (events/phenomena/transport), skipping
     // only the galactic-core void
     for (const s of list) if (s.special && !s.noFade) push(s);
@@ -482,14 +482,14 @@ class GalaxyApp {
     this._frameObject(sv.endurance.group, 'endurance');
     this.infoPanel.showStructure(
       {
-        kindLabel: 'Станция · экспедиция',
-        name: '«Эндюранс»',
-        desc: 'Вращающаяся станция-кольцо: искусственную тяжесть ей даёт само вращение обода. Горстка людей на ней ищет человечеству новый дом — у самого края чёрной дыры, где время течёт иначе.',
+        kindLabel: 'Station: expédition',
+        name: '○ Endurance ○',
+        desc: 'Une station-anneau tournante: le poids artificiel lui donne la rotation de la jante, une poignée de gens sur elle cherche une nouvelle maison ♪ au bord du trou noir où le temps passe différemment.',
         meta: [
-          ['Тип', 'кольцевая станция'],
-          ['Экипаж', 'экспедиция'],
-          ['Тяжесть', 'от вращения обода'],
-          ['Курс', 'к мирам за горизонтом событий'],
+          ['Type', 'Station annulaire'],
+          ['Équipage', 'Expédition'],
+          ['C\'est lourd.', 'de la rotation de la jante'],
+          ['Cours', 'vers les mondes à l &apos; horizon'],
         ],
       },
       null, // not a faction build — keep the "Orbital structure" subtitle
@@ -1104,12 +1104,12 @@ class GalaxyApp {
         return;
       }
       const d = hit.ref.data;
-      const title = d.label || d.biomeLabel || SYS_TYPE_RU[d.type] || 'Планета';
-      this.tooltip.showSimple(title, 'нажмите, чтобы приблизиться →', e.x, e.y);
+      const title = d.label || d.biomeLabel || SYS_TYPE_RU[d.type] || 'Planète';
+      this.tooltip.showSimple(title, 'Cliquez pour vous approcher de', e.x, e.y);
       this.canvas.style.cursor = 'pointer';
     } else if (hit && (hit.kind === 'ship' || hit.kind === 'structure' || hit.kind === 'ishimura' || hit.kind === 'deathstar')) {
-      const name = hit.kind === 'ship' && hit.ref.type ? hit.ref.type.name : 'Объект';
-      this.tooltip.showSimple(name, 'нажмите для информации →', e.x, e.y);
+      const name = hit.kind === 'ship' && hit.ref.type ? hit.ref.type.name : 'Objet';
+      this.tooltip.showSimple(name, 'Cliquez pour l\'information', e.x, e.y);
       this.canvas.style.cursor = 'pointer';
     } else {
       this.tooltip.hide();
@@ -1408,14 +1408,14 @@ class GalaxyApp {
       this._frameObject(ish.group, 'ishimura');
       this.infoPanel.showStructure(
         {
-          kindLabel: 'Корабль · добыча',
+          kindLabel: 'Navire d &apos; extraction',
           name: 'USG Ishimura',
-          desc: 'Корабль-трещинник, разламывающий планеты ради руды. Сейчас он завис над Эгидой VII — именно из недр этой планеты подняли Красный Обелиск, после чего колония и сошла с ума. (Dead Space)',
+          desc: 'Un vaisseau fêlé qui brise les planètes pour le minerai, qui se trouve maintenant au-dessus de l\'Egide VII ♪ est celui qui a fait monter l\'Obélisque Rouge, puis la colonie est devenue folle.',
           meta: [
-            ['Класс', 'planetcracker'],
-            ['Длина', '~1,6 км'],
-            ['Захваты', '52 гравитационных троса'],
-            ['Команда', 'погибла — некроморфы'],
+            ['Classe', 'planetcracker'],
+            ['Longueur', '~1,6 km'],
+            ['Prises', '52 câbles gravitationnels'],
+            ['Commande', '♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪'],
           ],
         },
         this.systemView._factionStyle,
@@ -1429,14 +1429,14 @@ class GalaxyApp {
       this._frameObject(ds.group, 'deathstar');
       this.infoPanel.showStructure(
         {
-          kindLabel: 'Боевая станция · Империя',
-          name: 'Звезда Смерти «Длань»',
-          desc: 'Бронированная боевая станция размером с малую луну. По её броне тянется глубокий экваториальный ров, а на верхней полусфере зияет вогнутая чаша главного орудия: его зелёный суперлазер способен расколоть планету одним залпом — что и случилось с Альдерааном.',
+          kindLabel: 'Station de combat Empire',
+          name: 'Étoile de la Mort « La Main »',
+          desc: 'Une station de combat blindée de la taille d\'une petite lune. Son armure est recouverte de profondeur équatoriale, et une baguette d\'arme principale vogue dans la haute atmosphère. Son super laser vert peut diviser la planète avec une seule bagarre.',
           meta: [
-            ['Тип', 'боевая станция'],
-            ['Размер', 'с малую луну (~160 км)'],
-            ['Орудие', 'суперлазер — раскалывает планеты'],
-            ['Флот', 'клиновидные разрушители'],
+            ['Type', 'Station de combat'],
+            ['Taille', 'Lune (~160 km)'],
+            ['Armes', 'Un super laser ♪ ♪ Frappe des planètes ♪'],
+            ['Navire', 'Détracteurs clinoïdes'],
           ],
         },
         this.systemView._factionStyle,
@@ -1450,14 +1450,14 @@ class GalaxyApp {
       this._frameObject(dr.group, 'dragon');
       this.infoPanel.showStructure(
         {
-          kindLabel: 'Корабль · экспедиция',
+          kindLabel: 'Navire: expédition',
           name: 'Crew Dragon',
-          desc: 'Частный многоразовый корабль с экипажем на пути к Марсу. Капсула-«капля» с тепловым щитом сидит на разгонном модуле с солнечными крыльями; внутри — несколько человек и припасы на долгий перелёт.',
+          desc: 'Un vaisseau privé à équipage en route pour Mars, capsule-cachet, avec bouclier thermique, assis sur un module de propulsion avec ailes solaires, à l\'intérieur duquel plusieurs personnes et des provisions pour un long vol.',
           meta: [
-            ['Тип', 'пилотируемая капсула'],
-            ['Экипаж', 'до 4 человек'],
-            ['Курс', 'Земля → Марс'],
-            ['Двигатели', 'SuperDraco + разгонный модуль'],
+            ['Type', 'Capsule habitée'],
+            ['Équipage', 'Jusqu &apos; à 4 personnes'],
+            ['Cours', 'Terre Mars'],
+            ['Moteurs', 'SuperDraco + module de lancement'],
           ],
         },
         this.systemView._factionStyle,

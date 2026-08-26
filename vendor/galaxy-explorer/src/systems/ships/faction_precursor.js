@@ -896,12 +896,12 @@ function makePrecursorCollector(s) {
 
 export const FACTION = {
   id: 'precursor',
-  name: 'Предтечи',
+  name: 'Précurseurs',
   colors: { hull: 0x5a4a26, hull2: 0x7a6230, accent: 0xc9a24b, dark: 0x241d10, glass: 0xffe6a0, gold: 0xffd27a },
   accent: 0xffcf6a,
   glow: 0xffd27a,
   nav: { port: 0xffd27a, star: 0xffe6a0, top: 0xffffff },
-  lore: 'Древний флот Предтеч: золото-бронзовые корпуса, испещрённые светящимися рунами, вокруг которых парят геометрические осколки, удерживаемые светом.',
+  lore: 'La flotte de Pretech: des blindages d\'or, des runes lumineuses, autour desquels des fragments géométriques sont maintenus par la lumière.',
 
   // Full bespoke line — every role has its own sacred gold-geometry hull (no
   // shared flourish; each ship carries its own rune-bands + floating shards).

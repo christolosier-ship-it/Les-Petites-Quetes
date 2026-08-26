@@ -1125,12 +1125,12 @@ function makeSyndicateCollector(s) {
 
 export const FACTION = {
   id: 'syndicate',
-  name: 'Синдикат',
+  name: 'Syndicat',
   colors: { hull: 0x2b3039, hull2: 0x3c4453, accent: 0x525d70, dark: 0x121620, glass: 0x44e4ff, gold: 0xbfe8f0 },
   accent: 0x00d4ff,
   glow: 0x46ecff,
   nav: { port: 0xff4060, star: 0x49ffd0, top: 0xffffff },
-  lore: 'Гладкий преступный синдикат: тёмные графитовые корпуса, хищные силуэты и холодное циановое свечение контрабандного хайтека.',
+  lore: 'Un petit syndicat criminel: des cavités de graphite, des silhouettes prédatrices et une lumière froide de cyanure d\'un hytech de contrebande.',
   roles: {
     scout: makeSyndicateScout,
     fighter: makeSyndicateFighter,

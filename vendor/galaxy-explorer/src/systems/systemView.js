@@ -224,8 +224,8 @@ export class SystemView {
 
   /** Build the Crew Dragon and set up its Earth → Mars transit (#8). */
   _buildDragon() {
-    const earthIdx = this.data.planets.findIndex((p) => p.label === 'Земля');
-    const marsIdx = this.data.planets.findIndex((p) => p.label === 'Марс');
+    const earthIdx = this.data.planets.findIndex((p) => p.label === 'Terre');
+    const marsIdx = this.data.planets.findIndex((p) => p.label === 'Mars');
     if (earthIdx < 0 || marsIdx < 0) return;
     const d = new Dragon(0.5);
     d.addTo(this.scene);

@@ -629,12 +629,12 @@ function makeAllianceCollector(s) {
 
 export const FACTION = {
   id: 'alliance',
-  name: 'Альянс',
+  name: 'Alliance',
   colors: { hull: 0x7e8a9e, hull2: 0x5e6878, accent: 0x49546a, dark: 0x262c36, glass: 0x8fc4ff, gold: 0xbfae7a },
   accent: 0x2f6bff,
   glow: 0x8fc4ff,
   nav: { port: 0xff4036, star: 0x49ff84, top: 0xffffff },
-  lore: 'Флот оружейной стали: утилитарный, надёжный, авианосцы вместо линкоров.',
+  lore: 'La flotte d\'acier de guerre: port d\'artillerie, porte-avions fiable, au lieu de linco.',
   roles: {
     scout: makeAllianceScout,
     fighter: makeAllianceFighter,

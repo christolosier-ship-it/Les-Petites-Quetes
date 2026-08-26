@@ -36,13 +36,13 @@ function stripUniverseTag(text) {
 }
 
 const TYPE_LABEL = {
-  lava: 'Лавовая',
-  rocky: 'Каменистая',
-  desert: 'Пустынная',
-  terran: 'Земного типа',
-  ocean: 'Океаническая',
-  ice: 'Ледяная',
-  gas: 'Газовый гигант',
+  lava: 'Lave',
+  rocky: 'Cuministe',
+  desert: 'Désert',
+  terran: 'Type terrestre',
+  ocean: 'Océanique',
+  ice: 'Glacé',
+  gas: 'Géante gazeuse',
 };
 
 export function planetLabel(p) {
@@ -69,18 +69,18 @@ function planetSubtitle(p) {
 // --- a very short status hook for the in-scene diegetic labels (#5). Plain
 // wild worlds return null (the biome line already says enough). ---------------
 export function planetMiniDesc(p) {
-  if (p.inhabited) return 'дом цивилизации';
+  if (p.inhabited) return 'La maison de la civilisation';
   if (p.colony) {
     // colonyKind (systemData.js): settlements on liveable bands, pressurised
     // domes on hostile ones, the odd terraformed temperate rock.
-    if (p.colonyKind === 'dome') return 'купольная база';
-    if (p.colonyKind === 'terraformed') return 'терраформированная колония';
-    return 'колония-поселение';
+    if (p.colonyKind === 'dome') return 'dôme';
+    if (p.colonyKind === 'terraformed') return 'Colonie terraforme';
+    return 'Colonie de peuplement';
   }
-  if (p.obliterated) return 'обломки мира';
-  if (p.destroyed) return 'мёртвый мир, кратер';
-  if (p.robotic) return 'мёртвый мир машин';
-  if (p.ruined) return 'безжизненные руины';
+  if (p.obliterated) return 'Les débris du monde';
+  if (p.destroyed) return 'Un monde mort, un cratère';
+  if (p.robotic) return 'Le monde des machines est mort';
+  if (p.ruined) return 'Débris sans vie';
   return null;
 }
 /** Accent colour for a planet's diegetic pin (matches the status palette). */
@@ -101,33 +101,33 @@ export function planetStatusIcon(p) {
 // --- orbital-structure info cards (#6): ring habitats, gas collectors, hubs --
 const STRUCTURE_INFO = {
   ring: {
-    kindLabel: 'Станция · город-кольцо',
-    name: 'Орбитальный город-кольцо',
-    desc: 'Огромная вращающаяся станция-кольцо: искусственную тяжесть здесь создаёт само вращение обода. Внутри — целый город: жилые ярусы, верфи и причалы для кораблей со всей системы.',
+    kindLabel: 'Station ville-anneau',
+    name: 'Ville orbitale',
+    desc: 'Une énorme station tournante: la charge artificielle crée la rotation de la jante. À l\'intérieur de  personnes, une ville entière: des couches résidentielles, des chantiers et des quais pour les navires.',
     meta: [
-      ['Тип', 'кольцевой хабитат'],
-      ['Население', 'десятки тысяч'],
-      ['Назначение', 'столица орбиты, верфь и порт'],
+      ['Type', 'Habitat annulaire'],
+      ['Population', 'Des dizaines de milliers'],
+      ['Nomination', 'La capitale de l &apos; orbite, le chantier et le port'],
     ],
   },
   collector: {
-    kindLabel: 'Станция · сбор газа',
-    name: 'Газовый коллектор',
-    desc: 'Платформа висит в верхних облаках газового гиганта и черпает из них водород и гелий-3 — топливо для дальних перелётов. Снизу тянутся километровые заборники, сверху швартуются танкеры.',
+    kindLabel: 'Station de collecte du gaz',
+    name: 'Récepteur de gaz',
+    desc: 'La plate-forme est accrochée dans les nuages supérieurs d\'un géant gazier et contient de l\'hydrogène et de l\'hélium 3 pour des vols lointains. Des rainures de kilomètres se sont accrochées, des bateaux-citernes ont été amarrés.',
     meta: [
-      ['Тип', 'добывающая платформа'],
-      ['Добыча', 'водород · гелий-3'],
-      ['Назначение', 'топливо для флота'],
+      ['Type', 'Plate-forme minière'],
+      ['Extraction', 'hydrogène hélium-3'],
+      ['Nomination', 'Carburant pour la flotte'],
     ],
   },
   outpost: {
-    kindLabel: 'Станция · форпост',
-    name: 'Орбитальный хаб',
-    desc: 'Скромный модульный форпост на орбите: причал, склады и узел связи с метрополией. Отсюда следят за погодой, кораблями и горизонтом.',
+    kindLabel: 'Station d &apos; avant-poste',
+    name: 'Hubbe Orbital',
+    desc: 'Un petit avant-poste modulaire en orbite: quai, entrepôts et noeud de liaison avec la métropole, qui surveille le temps, les navires et l\'horizon.',
     meta: [
-      ['Тип', 'модульный форпост'],
-      ['Экипаж', 'небольшой гарнизон'],
-      ['Назначение', 'причал и связь колонии'],
+      ['Type', 'avant-poste modulaire'],
+      ['Équipage', 'petite garnison'],
+      ['Nomination', 'd &apos; abord, et lien entre la colonie'],
     ],
   },
 };
@@ -140,22 +140,22 @@ export function structureCard(planet) {
 
 // --- planet detail copy (#6) -----------------------------------------------
 const TYPE_DESC = {
-  lava: 'Раскалённый вулканический мир',
-  rocky: 'Каменистый безатмосферный мир',
-  desert: 'Сухой пустынный мир',
-  terran: 'Землеподобный мир',
-  ocean: 'Океанический мир',
-  ice: 'Ледяной, промёрзший мир',
-  gas: 'Газовый гигант',
+  lava: 'Un monde volcanique en feu',
+  rocky: 'Un monde sans atmosphère',
+  desert: 'Le désert sec',
+  terran: 'Un monde semblable à la Terre',
+  ocean: 'Le monde océanique',
+  ice: 'Un monde glacé, froid',
+  gas: 'Géante gazeuse',
 };
 const WILD_DESC = {
-  lava: 'Кипящие лавовые реки и чёрные базальтовые поля — ни воздуха, ни воды.',
-  rocky: 'Голый камень в кратерах, без атмосферы и следов жизни.',
-  desert: 'Бескрайние дюны и сухие ветра под жарким солнцем.',
-  terran: 'Тёплый мир с водой и воздухом — здесь могла бы быть жизнь.',
-  ocean: 'Сплошной океан от полюса до полюса под облачным небом.',
-  ice: 'Замёрзший мир: ледяные равнины трещат в полной тишине.',
-  gas: 'Исполин из водорода и гелия с вечными штормами в облаках.',
+  lava: 'Les rivières de lave et les champs de basalte noirs ne sont ni de l\'air ni de l\'eau.',
+  rocky: 'Une pierre à poil dans les cratères, sans atmosphère ni traces de vie.',
+  desert: 'Des dunes sans fin et des vents secs sous le soleil chaud.',
+  terran: 'Un monde chaud avec de l\'eau et de l\'air pourrait être la vie ici.',
+  ocean: 'Un océan entier, du pôle au pôle sous le ciel nuageux.',
+  ice: 'Un monde gelé: les plaines glaciaires se glissant en silence.',
+  gas: 'L\'hylène et l\'hydrogène, avec des tempêtes éternelles dans les nuages.',
 };
 
 function planetDesc(p) {
@@ -164,17 +164,17 @@ function planetDesc(p) {
     // satellites at all, an industrial one has its first probes but no stations,
     // and only a spacefaring civ rings its world with stations and ships.
     if (p.civLevel === 'tribal')
-      return 'Живой обитаемый мир: его народ ещё живёт малыми племенами и не вышел в космос — небо над ним пусто, ни спутников, ни станций.';
+      return 'Un monde vivant: son peuple vit encore dans de petites tribus et n\'a pas vu le ciel au-dessus de lui vide, ni satellites, ni stations.';
     if (p.civLevel === 'industrial')
-      return 'Живой обитаемый мир: цивилизация только осваивает орбиту — в небе уже кружат первые спутники, но станций и кораблей пока нет.';
-    return 'Живой обитаемый мир — сердце космической цивилизации. Вокруг него вращаются станции, спутники и корабли.';
+      return 'Un monde vivant: la civilisation ne fait que s\'exploiter l\'orbite  cernée dans le ciel, mais les premiers satellites sont déjà en orbite, mais il n\'y a pas encore de stations et de navires.';
+    return 'Le monde vivant est le cœur de la civilisation spatiale, entouré de stations, de satellites et de navires.';
   }
-  if (p.colony) return 'Колония переселенцев: на ночной стороне горят огни поселений, рядом висит орбитальный хаб.';
-  if (p.obliterated) return 'От планеты остались лишь медленно расходящиеся обломки — её разнесли в пыль.';
-  if (p.destroyed) return 'Мёртвый мир со шрамом катастрофы: гигантский кратер пересекает кору.';
-  if (p.robotic) return 'Мёртвый мир, где машины до сих пор обслуживают опустевшие города.';
-  if (p.ruined) return 'Безжизненные руины давно исчезнувшей цивилизации.';
-  return WILD_DESC[p.type] || 'Дикий, нетронутый мир.';
+  if (p.colony) return 'Colonie de colons: des feux de campement sont allumés du côté nocturne, et un hab orbital est en place.';
+  if (p.obliterated) return 'Il ne reste que des débris qui se sont épaissés lentement.';
+  if (p.destroyed) return 'Le monde mort avec la cicatrice de la catastrophe: un cratère géant traverse la croûte.';
+  if (p.robotic) return 'Un monde mort où les voitures servent toujours les villes désertes.';
+  if (p.ruined) return 'Des ruines sans vie d\'une civilisation qui a disparu depuis longtemps.';
+  return WILD_DESC[p.type] || 'Un monde sauvage et intact.';
 }
 
 // --- planet physical data (#2): the visual radius is unitless; map it to a
@@ -182,13 +182,13 @@ function planetDesc(p) {
 const KM_PER_UNIT = 19500; // a terran world (r≈0.65) ≈ 12,700 km, like Earth
 const TYPE_DENSITY = { lava: 1.0, rocky: 0.95, desert: 0.9, terran: 1.0, ocean: 0.95, ice: 0.5, gas: 0.22 };
 const PLANET_RES = {
-  lava: ['редкоземельные металлы', 'тяжёлые изотопы', 'сера'],
-  rocky: ['железо и никель', 'силикаты', 'редкие металлы'],
-  desert: ['кремний', 'соли и руды', 'следы воды'],
-  terran: ['вода', 'органика', 'плодородная почва'],
-  ocean: ['вода', 'биомасса', 'растворённые соли'],
-  ice: ['водяной лёд', 'аммиак', 'летучие соединения'],
-  gas: ['водород', 'гелий-3', 'аммиак'],
+  lava: ['Métaux de terres rares', 'Isotopes lourds', 'soufre'],
+  rocky: ['fer et nickel', 'Silicates', 'Métaux rares'],
+  desert: ['silicium', 'sels et minerais', 'traces d &apos; eau'],
+  terran: ['Eau', 'Organisation', 'Sol fertile'],
+  ocean: ['Eau', 'biomasse', 'sels dissous'],
+  ice: ['glace d &apos; eau', 'Ammoniac', 'Composés volatiles'],
+  gas: ['hydrogène', 'hélium-3', 'Ammoniac'],
 };
 
 function groupThousands(n) {
@@ -217,9 +217,9 @@ function starMassLine(data) {
   const m = data.star.solarMass;
   if (m == null) return '';
   if (data.binary && data.binary.star2.solarMass != null) {
-    return `<span><b>Массы звёзд:</b> ≈ ${fmtSolar(m)} + ${fmtSolar(data.binary.star2.solarMass)} ☉</span>`;
+    return `<span><b>Masses d'étoiles & #160;:</b> ≈ ${fmtSolar(m)} + ${fmtSolar(data.binary.star2.solarMass)} ☉</span>`;
   }
-  return `<span><b>Масса звезды:</b> ≈ ${fmtSolar(m)} ☉ (Солнц)</span>`;
+  return `<span><b>Masse d'étoiles & #160;:</b> ≈ ${fmtSolar(m)}♪ (Soln)</span>`;
 }
 
 export class InfoPanel {
@@ -244,17 +244,17 @@ export class InfoPanel {
       </div>
 
       <div class="sp-section sp-about">
-        <div class="sp-about-title sp-sec-title">Об этой системе</div>
+        <div class="sp-about-title sp-sec-title">À propos de ce système</div>
         <div class="sp-meta"></div>
         <p class="sp-history"></p>
         <div class="sp-res-block">
-          <div class="sp-res-title sp-sec-title">Ресурсы</div>
+          <div class="sp-res-title sp-sec-title">Ressources</div>
           <div class="sp-res"></div>
         </div>
       </div>
 
       <div class="sp-section sp-civ">
-        <div class="sp-sec-title">Цивилизация</div>
+        <div class="sp-sec-title">Civilisation</div>
         <div class="sp-race-head"></div>
         <p class="sp-race-desc"></p>
       </div>
@@ -267,7 +267,7 @@ export class InfoPanel {
     const back = document.createElement('button');
     back.id = 'nav-back';
     back.type = 'button';
-    back.textContent = '← Назад';
+    back.textContent = '∙ Reculez';
     back.addEventListener('click', () => this._back());
     document.body.appendChild(back);
     this.backEl = back;
@@ -286,9 +286,9 @@ export class InfoPanel {
       '<div class="fc-name"></div>' +
       '<div class="fc-sub"></div>' +
       '<div class="fc-desc"></div>' +
-      '<div class="fc-meta-title">Характеристики</div>' +
+      '<div class="fc-meta-title">Caractéristiques</div>' +
       '<div class="fc-meta"></div>' +
-      '<div class="fc-res-title">Ресурсы</div>' +
+      '<div class="fc-res-title">Ressources</div>' +
       '<div class="fc-res"></div>';
     document.body.appendChild(fc);
     this.focusEl = fc;
@@ -387,7 +387,7 @@ export class InfoPanel {
   /** Show/hide the top-right fact card (#10) — only the system view has one. */
   _setFact(fact) {
     if (fact) {
-      this.factEl.innerHTML = `<div class="fact-head">✦ Заметка на полях</div><p></p>`;
+      this.factEl.innerHTML = `<div class="fact-head">○ Note sur les champs</div><p></p>`;
       this.factEl.querySelector('p').textContent = fact;
       this.factEl.classList.add('visible');
     } else {
@@ -422,18 +422,18 @@ export class InfoPanel {
     const r = this._r;
     this._mode = 'system';
     this._setDossier(null); // systems carry no hero portrait
-    this.backEl.textContent = '← Назад к галактике';
+    this.backEl.textContent = '∙ Retour à la galaxie';
     this.backEl.classList.add('visible');
-    r.aboutTitle.textContent = 'Об этой системе';
+    r.aboutTitle.textContent = 'À propos de ce système';
     const color = data.event ? '#ffcf6e' : (data.capital && CAPITAL_COLOR[data.capital]) || (data.special ? SPECIAL_COLOR : STATUS_COLOR[data.status]);
-    r.status.textContent = (data.event ? '✦ СОБЫТИЕ · ' : data.capital ? '★ ' : '') + data.statusLabel;
+    r.status.textContent = (data.event ? '∙ ÉVOLUTION . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .' : data.capital ? '★ ' : '') + data.statusLabel;
     r.status.style.color = color;
     r.status.style.borderColor = color;
     r.name.textContent = data.name;
     this._fitName();
     // #18: a binary system must read as two suns, not one.
     r.star.textContent = data.binary
-      ? `Двойная звезда · ${data.star.label} + ${data.binary.star2.label}`
+      ? `Étoile double ·${data.star.label} + ${data.binary.star2.label}`
       : `${data.star.label} — ${data.star.desc}`;
     r.about.style.display = '';
     r.desc.style.display = '';
@@ -442,9 +442,9 @@ export class InfoPanel {
 
     // about: age + star mass (#8) + use + history; NO resources here (#3)
     r.meta.innerHTML =
-      `<span><b>Возраст:</b> ${data.ageGyr} млрд лет</span>` +
+      `<span><b>Âge:</b> ${data.ageGyr}Millions d &apos; années</span>` +
       starMassLine(data) +
-      `<span><b>Назначение:</b> ${data.useFor}</span>`;
+      `<span><b>Nomination:</b> ${data.useFor}</span>`;
     r.history.textContent = stripUniverseTag(data.history);
     r.resBlock.style.display = 'none';
 
@@ -462,11 +462,11 @@ export class InfoPanel {
     const r = this._r;
     this._mode = 'planet';
     this._setDossier(null); // planets keep their photo-less callout
-    this.backEl.textContent = '← Назад к системе';
+    this.backEl.textContent = '∙ Retour au système';
     this.backEl.classList.add('visible');
-    r.aboutTitle.textContent = 'О планете';
+    r.aboutTitle.textContent = 'La planète';
     const color = p.inhabited || p.colony ? STATUS_COLOR.inhabited : p.ruined ? STATUS_COLOR.ruins : STATUS_COLOR.wild;
-    r.status.textContent = p.inhabited ? 'Обитаемая планета' : p.colony ? 'Колония' : p.ruined ? 'Мёртвый мир' : 'Планета';
+    r.status.textContent = p.inhabited ? 'Planète habitée' : p.colony ? 'Colonie' : p.ruined ? 'Un monde mort' : 'Planète';
     r.status.style.color = color;
     r.status.style.borderColor = color;
     r.name.textContent = name || planetLabel(p);
@@ -478,9 +478,9 @@ export class InfoPanel {
     r.desc.style.display = 'none';
     const moonN = p.moons ? p.moons.length : 0;
     const metaHtml =
-      `<span><b>Диаметр:</b> ≈ ${groupThousands(planetDiameterKm(p))} км</span>` +
-      `<span><b>Масса:</b> ≈ ${fmtEarths(planetMassEarth(p))} ⊕ (Земли)</span>` +
-      (moonN ? `<span><b>Луны:</b> ${moonN}</span>` : '');
+      `<span><b>Diamètre:</b> ≈ ${groupThousands(planetDiameterKm(p))}km</span>` +
+      `<span><b>Masse:</b> ≈ ${fmtEarths(planetMassEarth(p))}la terre</span>` +
+      (moonN ? `<span><b>Lunes:</b> ${moonN}</span>` : '');
     const res = p.obliterated ? [] : PLANET_RES[p.type] || [];
     const resHtml = res.map((x) => `<span class="chip">${x}</span>`).join('');
     this._setFocusCallout(name || planetLabel(p), planetSubtitle(p), stripUniverseTag(p.ref || planetDesc(p)), metaHtml, resHtml);
@@ -500,41 +500,41 @@ export class InfoPanel {
   showShip(role, faction, ship, heroPath) {
     const r = this._r;
     this._mode = 'ship';
-    this.backEl.textContent = '← Назад к системе';
+    this.backEl.textContent = '∙ Retour au système';
     this.backEl.classList.add('visible');
-    r.aboutTitle.textContent = 'Характеристики';
+    r.aboutTitle.textContent = 'Caractéristiques';
     const color = '#bcd0ff';
     const named = ship && ship.name;
-    r.status.textContent = named ? 'Флагман флота' : `Корабль · ${role.size}`;
+    r.status.textContent = named ? 'Le drapeau de la flotte' : `Navire ·${role.size}`;
     r.status.style.color = color;
     r.status.style.borderColor = color;
     // a faction may name its ships itself (Swarm's grown beasts); flagship keeps its own legend name
     const roleName = (faction && faction.names && faction.names[role.id]) || role.name;
     r.name.textContent = named || roleName;
     this._fitName();
-    r.star.textContent = faction && faction.name ? `Флот: ${faction.name}` : 'Корабль';
+    r.star.textContent = faction && faction.name ? `Flotte:${faction.name}` : 'Navire';
     // story + label + specs stay in the side callout by the reticle (#15); the
     // hero portrait is the only thing added to the left panel, beside the title.
     r.desc.textContent = '';
     r.desc.style.display = 'none';
     // transports keep their payload in `arm` (cargo, fuel, colonists) — label
     // the row honestly instead of calling 4 000 colonists an armament.
-    const armLabel = role.cat === 'transport' ? 'Нагрузка' : 'Вооружение';
+    const armLabel = role.cat === 'transport' ? 'Charge' : 'Armement';
     // speed on the shared 1–10 codex scale (shipStats.js — the single source);
     // raw role.speed is an internal sim unit (2.6–14) that reads as nonsense
     // next to «Длина: 120 м». Precursor instruments give no readings — no row.
     const stats = getShipStats(role.id, faction && faction.id);
-    const speedVal = stats && !stats.unknown ? (stats.rows.find((row) => row[0] === 'Скорость') || [])[1] : null;
+    const speedVal = stats && !stats.unknown ? (stats.rows.find((row) => row[0] === 'Vitesse') || [])[1] : null;
     const metaHtml =
-      `<span><b>Класс:</b> ${roleName}</span>` +
-      `<span><b>Длина:</b> ${role.lengthM} м</span>` +
-      (speedVal ? `<span><b>Скорость:</b> ${speedVal} / 10</span>` : '') +
-      `<span><b>Экипаж:</b> ${role.crew}</span>` +
+      `<span><b>Classe:</b> ${roleName}</span>` +
+      `<span><b>Longueur & #160;:</b> ${role.lengthM}m</span>` +
+      (speedVal ? `<span><b>Vitesse & #160;:</b> ${speedVal} / 10</span>` : '') +
+      `<span><b>Équipage:</b> ${role.crew}</span>` +
       `<span><b>${armLabel}:</b> ${role.arm}</span>`;
     this._setDossier(heroPath); // hero portrait → left panel, beside the title
     this._setFocusCallout(
       named || role.name,
-      faction && faction.name ? `Флот: ${faction.name}` : 'Корабль',
+      faction && faction.name ? `Flotte:${faction.name}` : 'Navire',
       stripUniverseTag(ship && ship.lore ? ship.lore.join(' ') : role.desc),
       metaHtml,
       '',
@@ -551,16 +551,16 @@ export class InfoPanel {
   showStructure(info, faction, heroPath) {
     const r = this._r;
     this._mode = 'structure';
-    this.backEl.textContent = '← Назад к системе';
+    this.backEl.textContent = '∙ Retour au système';
     this.backEl.classList.add('visible');
-    r.aboutTitle.textContent = 'Характеристики';
+    r.aboutTitle.textContent = 'Caractéristiques';
     const color = '#bcd0ff';
     r.status.textContent = info.kindLabel;
     r.status.style.color = color;
     r.status.style.borderColor = color;
     r.name.textContent = info.name;
     this._fitName();
-    r.star.textContent = faction && faction.name ? `Постройка флота: ${faction.name}` : 'Орбитальная постройка';
+    r.star.textContent = faction && faction.name ? `Construction de la flotte:${faction.name}` : 'Construction orbitale';
     r.desc.textContent = '';
     r.desc.style.display = 'none';
     const metaHtml = (info.meta || []).map(([k, v]) => `<span><b>${k}:</b> ${v}</span>`).join('');
@@ -605,11 +605,11 @@ export class Tooltip {
     if (!visited && !data.noFade) {
       // a capital's star marker already announces WHAT it is — the tooltip may
       // say so too; WHOSE it is stays hidden until the actual visit (#stage6)
-      const label = data.capital ? '★ Столица фракции' : data.special ? 'Неопознанный объект' : 'Неопознанная система';
+      const label = data.capital ? '○ Capitale de la faction' : data.special ? 'Objet non identifié' : 'Système non identifié';
       this.el.innerHTML =
         `<div class="tt-name">${label}</div>` +
-        `<div class="tt-status" style="color:var(--parchment)">не исследована</div>` +
-        `<div class="tt-teaser">Нажмите, чтобы исследовать →</div>`;
+        `<div class="tt-status" style="color:var(--parchment)">Non étudiée</div>` +
+        `<div class="tt-teaser">Cliquez pour étudier  ce que vous voulez dire</div>`;
       this.el.style.left = `${x + 16}px`;
       this.el.style.top = `${y + 14}px`;
       this.el.classList.add('visible');
@@ -619,29 +619,29 @@ export class Tooltip {
     // (a small table) rather than one long «·»-separated enumeration.
     const rows = [];
     if (data.kind === 'blackhole') {
-      rows.push(['Объект', data.star.label]);
-      if (data.star.desc) rows.push(['Масштаб', data.star.desc]);
+      rows.push(['Objet', data.star.label]);
+      if (data.star.desc) rows.push(['Zoom', data.star.desc]);
     } else {
       const n = data.planets ? data.planets.length : 0;
       const home = data.planets && data.planets.find((p) => p.inhabited);
       if (data.binary) {
         rows.push([
-          'Звёзды',
+          'Étoiles',
           `${data.star.label.replace(/\s*\(.\)/, '')} + ${data.binary.star2.label.replace(/\s*\(.\)/, '')}`,
         ]);
       } else {
-        rows.push(['Звезда', data.star.label.replace(/\s*\(.\)/, '')]);
+        rows.push(['Étoile', data.star.label.replace(/\s*\(.\)/, '')]);
       }
-      rows.push(['Планет', String(n)]);
+      rows.push(['Planet', String(n)]);
       if (home) {
-        rows.push(['Эпоха', home.civLabel]);
-        if (home.race) rows.push(['Народ', home.race.name]);
+        rows.push(['Époque', home.civLabel]);
+        if (home.race) rows.push(['Population', home.race.name]);
       }
     }
     const rowsHtml = rows.map(([k, v]) => `<span class="tt-k">${k}</span><span class="tt-v">${v}</span>`).join('');
     const teaser = visited
-      ? '<div class="tt-teaser tt-seen">✓ Исследована · открыть снова</div>'
-      : '<div class="tt-teaser">Нажмите, чтобы исследовать →</div>';
+      ? '<div class="tt-teaser tt-seen">∙ ∙ ∙ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪ ♪</div>'
+      : '<div class="tt-teaser">Cliquez pour étudier  ce que vous voulez dire</div>';
     // faction capitals read in their fleet's colour; other special encounters
     // read magenta with a ✦; otherwise the status palette
     const color = (data.capital && CAPITAL_COLOR[data.capital]) || (data.special ? SPECIAL_COLOR : STATUS_COLOR[data.status] || '#aab0e0');
@@ -674,12 +674,12 @@ export class Legend {
     const el = document.createElement('div');
     el.id = 'system-legend';
     el.innerHTML = `
-      <div class="lg-title">Звёздная опись</div>
-      <div class="lg-row"><span class="lg-dot" style="color:${STATUS_COLOR.inhabited}"></span>Обитаемые</div>
-      <div class="lg-row"><span class="lg-dot" style="color:${STATUS_COLOR.wild}"></span>Дикие</div>
-      <div class="lg-row"><span class="lg-dot" style="color:${STATUS_COLOR.ruins}"></span>Руины</div>
-      <div class="lg-row"><span class="lg-dot" style="color:${SPECIAL_COLOR}"></span>Особые</div>
-      <div class="lg-prog">Вписано в карту <b>0</b> / 0</div>
+      <div class="lg-title">Atlas stellaire</div>
+      <div class="lg-row"><span class="lg-dot" style="color:${STATUS_COLOR.inhabited}"></span>Habités</div>
+      <div class="lg-row"><span class="lg-dot" style="color:${STATUS_COLOR.wild}"></span>Sauvages</div>
+      <div class="lg-row"><span class="lg-dot" style="color:${STATUS_COLOR.ruins}"></span>Ruines</div>
+      <div class="lg-row"><span class="lg-dot" style="color:${SPECIAL_COLOR}"></span>Spéciaux</div>
+      <div class="lg-prog">Cartographiés <b>0</b> / 0</div>
     `;
     document.body.appendChild(el);
     this.el = el;
@@ -687,7 +687,7 @@ export class Legend {
   }
 
   setProgress(n, total) {
-    this._prog.innerHTML = `Вписано в карту <b>${n}</b> / ${total}`;
+    this._prog.innerHTML = `C'est dans la carte<b>${n}</b> / ${total}`;
   }
 
   setVisible(v) {

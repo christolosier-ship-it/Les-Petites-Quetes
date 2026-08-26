@@ -6,7 +6,7 @@
 
 export const QUALITY_PRESETS = {
   low: {
-    label: 'Низкое (слабый ПК)',
+    label: 'Faible (faible PC)',
     starCount: 16000,
     sunCount: 95,
     backgroundStars: 1500,
@@ -15,7 +15,7 @@ export const QUALITY_PRESETS = {
     maxPixelRatio: 1.0,
   },
   medium: {
-    label: 'Среднее',
+    label: 'Secondaire',
     starCount: 38000,
     sunCount: 175,
     backgroundStars: 2600,
@@ -24,7 +24,7 @@ export const QUALITY_PRESETS = {
     maxPixelRatio: 1.5,
   },
   high: {
-    label: 'Высокое',
+    label: 'Haut',
     starCount: 78000,
     sunCount: 280,
     backgroundStars: 4000,

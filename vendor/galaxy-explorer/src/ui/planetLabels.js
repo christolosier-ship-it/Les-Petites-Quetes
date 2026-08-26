@@ -48,27 +48,27 @@ export class PlanetLabels {
     // flagships only (not every fighter/transport — that would be noise)
     for (const s of view.ships || []) {
       if (s.type && s.type.cat === 'flagship') {
-        this._add(s.mesh, s.name || s.type.name, 'флагман', null, '#bcd0ff', 'ship', s, '🛰');
+        this._add(s.mesh, s.name || s.type.name, 'Périphérique', null, '#bcd0ff', 'ship', s, '🛰');
       }
     }
     // orbital structures (stations, gas collectors, hubs)
     for (const pl of planets) {
       if (pl.station) {
         const card = structureCard(pl);
-        this._add(pl.station, card.name, card.kindLabel.replace('Станция · ', ''), null, '#bcd0ff', 'structure', pl, '⬡');
+        this._add(pl.station, card.name, card.kindLabel.replace('Station ·', ''), null, '#bcd0ff', 'structure', pl, '⬡');
       }
     }
     // the battle station (#10)
     if (view.deathStar) {
-      this._add(view.deathStar.group, 'Звезда Смерти «Длань»', 'боевая станция', null, '#ffcf6e', 'deathstar', view.deathStar, '✦');
+      this._add(view.deathStar.group, 'Étoile de la Mort « La Main »', 'Station de combat', null, '#ffcf6e', 'deathstar', view.deathStar, '✦');
     }
     // the Ishimura planet-cracker (#5)
     if (view.ishimura) {
-      this._add(view.ishimura.group, 'USG Ishimura', 'корабль-трещинник', null, '#ffcf6e', 'ishimura', view.ishimura, '✦');
+      this._add(view.ishimura.group, 'USG Ishimura', 'Navire fêlé', null, '#ffcf6e', 'ishimura', view.ishimura, '✦');
     }
     // the Crew Dragon en route to Mars (#8)
     if (view.dragon) {
-      this._add(view.dragon.group, 'Crew Dragon', 'к Марсу', null, '#bcd0ff', 'dragon', view.dragon, '✦');
+      this._add(view.dragon.group, 'Crew Dragon', 'Mars', null, '#bcd0ff', 'dragon', view.dragon, '✦');
     }
     this.setVisible(this.items.length > 0);
   }

@@ -195,7 +195,7 @@ export class Onboarding {
       '<div class="onboard-actions">' +
       '<button type="button" class="onboard-btn onboard-action"></button>' +
       '<button type="button" class="onboard-btn primary onboard-next"></button>' +
-      '<button type="button" class="onboard-skip">Пропустить обучение</button>' +
+      '<button type="button" class="onboard-skip">manquer l\'enseignement</button>' +
       '</div>';
     document.body.appendChild(el);
     this._el = el;
@@ -216,7 +216,7 @@ export class Onboarding {
   _render(step) {
     const el = this._el;
     if (!el) return;
-    el.querySelector('.onboard-kicker').textContent = `Первый полёт · шаг ${this.index + 1} из ${this.steps.length}`;
+    el.querySelector('.onboard-kicker').textContent = `Premier vol: pas${this.index + 1}de${this.steps.length}`;
     const title = el.querySelector('.onboard-title');
     title.textContent = step.title || '';
     title.style.display = step.title ? '' : 'none';
@@ -224,11 +224,11 @@ export class Onboarding {
 
     const actionBtn = el.querySelector('.onboard-action');
     actionBtn.style.display = step.action ? '' : 'none';
-    if (step.action === 'showHome') actionBtn.textContent = 'Показать дом';
+    if (step.action === 'showHome') actionBtn.textContent = 'Afficher la maison';
 
     const nextBtn = el.querySelector('.onboard-next');
     nextBtn.style.display = step.advanceOn === 'manual' ? '' : 'none';
-    nextBtn.textContent = step.next || 'Дальше';
+    nextBtn.textContent = step.next || 'Suivant';
 
     // «Пропустить» next to the final «В путь» would be a second button doing
     // the same thing — the last step offers only the real exit.

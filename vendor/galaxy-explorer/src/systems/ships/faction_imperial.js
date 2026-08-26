@@ -12,12 +12,12 @@ import {
 
 export const FACTION = {
   id: 'imperial',
-  name: 'Империя',
+  name: 'L\'Empire',
   colors: { hull: 0x2b2e34, hull2: 0x3b3f47, accent: 0x50555f, dark: 0x141619, glass: 0xff5247, gold: 0x7d828c },
   accent: 0xe01e10,
   glow: 0xff5a2a,
   nav: { port: 0xff3024, star: 0xff3024, top: 0xd0d6e0 },
-  lore: 'Угрожающий имперский флот: чёрная угловатая броня, красные клинки маркировки и раскалённые до оранжа дюзы.',
+  lore: 'Une flotte impériale menaçante: une armure noire, des lames rouges et des duses fendues jusqu\'à l\'orange.',
 
   // Full bespoke line — every role has its own Imperial-language hull (no shared
   // silhouette, so no `flourish`; each ship carries its own trench-lines/plating).

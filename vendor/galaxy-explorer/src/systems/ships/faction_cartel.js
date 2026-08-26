@@ -18,12 +18,12 @@ import {
 
 export const FACTION = {
   id: 'cartel',
-  name: 'Картель',
+  name: 'Carte',
   colors: { hull: 0x6b5240, hull2: 0x4d3e2f, accent: 0x8a4a28, dark: 0x231a12, glass: 0xff9440, gold: 0x9c7c3c },
   accent: 0xff6a1e,
   glow: 0xff7a2a,
   nav: { port: 0xff3a2a, star: 0xffae3a, top: 0xffae3a },
-  lore: 'Сборный флот картеля из чужого хлама: разномастные корпуса, приваренные баки и ржавые заплаты держатся на честном слове и оранжевом пламени.',
+  lore: 'La flotte de cartel d\'un autre pays: bâtiments divers, réservoirs soudés et paiements rouillés, reste en bonne position et en feu orange.',
 
   // Full bespoke line — every role has its own cobbled, ASYMMETRIC salvage hull
   // (no shared flourish; each ship welds its own lopsided junk).

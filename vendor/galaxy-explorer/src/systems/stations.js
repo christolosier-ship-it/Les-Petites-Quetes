@@ -110,9 +110,9 @@ function makeCollector(style) {
 }
 
 export const STATION_TYPES = [
-  { id: 'ring', name: 'Хаб (родной мир)' },
-  { id: 'outpost', name: 'Колониальный аванпост' },
-  { id: 'collector', name: 'Газосборщик' },
+  { id: 'ring', name: 'Hab (monde d\'origine)' },
+  { id: 'outpost', name: 'Avant-poste colonial' },
+  { id: 'collector', name: 'Récupérateur de gaz' },
 ];
 
 // shared fallback builders (used when a faction provides no bespoke station)
