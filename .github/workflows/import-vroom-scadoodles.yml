@@ -1,5 +1,6 @@
 name: Import Vroom Scadoodles
 
+# Workflow ponctuel : retiré de la PR une fois le runtime vendored.
 on:
   push:
     branches: [feat/vroom-scadoodles-gnome-village]
