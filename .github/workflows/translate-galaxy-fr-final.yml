@@ -1,0 +1,110 @@
+name: Finaliser Galaxy Explorer FR
+
+on:
+  push:
+    branches: [feat/galaxy-explorer-fr]
+    paths:
+      - .github/workflows/translate-galaxy-fr-final.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  translate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: feat/galaxy-explorer-fr
+          fetch-depth: 0
+
+      - name: Repartir du snapshot russe original
+        run: |
+          git fetch origin main
+          git restore --source=origin/main -- vendor/galaxy-explorer scripts/materialize-galaxy-explorer.mjs
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+
+      - name: Installer NLLB localement
+        run: |
+          python -m pip install --quiet torch --index-url https://download.pytorch.org/whl/cpu
+          python -m pip install --quiet 'transformers<5' sentencepiece
+
+      - name: Réutiliser le traducteur NLLB avec correctifs
+        shell: python
+        run: |
+          from pathlib import Path
+          import textwrap
+
+          workflow = Path('.github/workflows/translate-galaxy-fr-nllb.yml').read_text(encoding='utf-8')
+          marker = '      - name: Traduire le runtime russe vers le français\n        shell: python\n        run: |\n'
+          if marker not in workflow:
+              raise SystemExit('Bloc traducteur NLLB introuvable')
+          block = workflow.split(marker, 1)[1].split('\n      - name: Valider le runtime français', 1)[0]
+          script = textwrap.dedent(block)
+          script = script.replace('torch.set_num_threads(2)', 'torch.set_num_threads(4)')
+          script = script.replace('batch_size = 6', 'batch_size = 24')
+
+          anchor = "    'лли':'lli','вани':'vani','ши':'shi','лани':'lani','теш':'tesh','нави':'navi','сти':'sti','элы':'ely','нтар':'ntar','оши':'oshi','эни':'eni','исса':'issa','ора':'ora','эми':'emi','аны':'ani',\n"
+          additions = anchor + (
+              "    'Двухкорпусный авианосец, головной корабль класса «Гавань»: два корпуса, соединённые доковым пролётом, куда помещается и звено истребителей, и повреждённый корвет целиком.': "
+              "'Porte-avions à double coque, navire de tête de la classe « Havre » : deux coques reliées par une travée de dock pouvant accueillir à la fois une escadrille de chasseurs et une corvette endommagée entière.',\n"
+              "    'В реестре контрагентов значатся все пять. Альянс Свободных Верфей — «партнёр/конкурент»: крупнейший клиент с привычкой раздавать бесплатно то, что можно продавать; договор о ненападении не подписан — не потребовался, Альянс платит вовремя. Империя Пепла — заёмщик первой категории: кредит на восстановление обслуживается безукоризненно, пункт о пересмотре ставок при расширении вписан в самом конце. Рой не подписывает и проходит по страховому разделу, между вспышками звёзд и гравитационными штормами; взносы в секторах его роста пересчитываются ежеквартально и всегда вверх.\\n\\nС Вольным Картелем официально ведутся иски, неофициально — подряды: куда нельзя послать чистый борт, летит ржавый, и обе строки в отчётность не попадают. Предтечам Синдикат ни разу не выставил счёт: их маршруты старше монополии, и в графе «владелец» стоит «не наше» — слово, которого нет больше нигде в его документах. Чужака встречают одинаково: белый стол, запатентованный запах озона и белого чая, договор на столе.': "
+              "'Dans le registre des contreparties figurent les cinq autres. L’Alliance des Chantiers Libres est « partenaire/concurrent » : son plus gros client, avec la manie de distribuer gratuitement ce qui pourrait être vendu ; aucun pacte de non-agression n’a été signé, il n’en a jamais été besoin, l’Alliance paie à l’heure. L’Empire des Cendres est emprunteur de première catégorie : le prêt de reconstruction est remboursé sans faute, la clause de révision des taux en cas d’expansion est glissée tout à la fin. L’Essaim ne signe rien et relève du chapitre assurance, entre éruptions stellaires et tempêtes gravitationnelles ; les primes des secteurs où il progresse sont recalculées chaque trimestre, toujours à la hausse.\\n\\nAvec le Cartel Libre, on échange officiellement des procès et officieusement des contrats : là où un pont propre ne peut pas être envoyé, un rouillé y va, et aucune des deux lignes n’apparaît dans les comptes. Le Syndicat n’a jamais facturé les Précurseurs : leurs routes sont plus anciennes que le monopole et, dans la case « propriétaire », il est écrit « pas à nous », formule qui n’apparaît nulle part ailleurs dans ses documents. Les étrangers sont tous reçus de la même façon : table blanche, parfum breveté d’ozone et de thé blanc, contrat posé devant eux.',\n"
+          )
+          if anchor not in script:
+              raise SystemExit('Ancre du glossaire NLLB introuvable')
+          script = script.replace(anchor, additions, 1)
+          exec(compile(script, '<galaxy-nllb-final>', 'exec'), {})
+
+      - name: Valider le runtime français
+        shell: bash
+        run: |
+          set -euo pipefail
+          find vendor/galaxy-explorer/src -name '*.js' -print0 | xargs -0 -n1 node --check
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          root = Path('vendor/galaxy-explorer')
+          cyr = re.compile(r'[\u0400-\u04FF]')
+          offenders = []
+          for path in [root/'index.html'] + sorted((root/'src').rglob('*.js')):
+              for n, raw in enumerate(path.read_text(encoding='utf-8').splitlines(), 1):
+                  if not cyr.search(raw):
+                      continue
+                  s = raw.strip()
+                  if s.startswith('//') or s.startswith('*') or s.startswith('/*') or '// ' in raw:
+                      continue
+                  offenders.append(f'{path}:{n}: {s}')
+          if offenders:
+              print('\n'.join(offenders[:100]))
+              raise SystemExit(f'{len(offenders)} lignes cyrilliques non commentées subsistent')
+          print('Runtime utilisateur : 0 ligne cyrillique résiduelle.')
+          PY
+
+      - name: Aligner les empreintes du snapshot français
+        shell: python
+        run: |
+          from pathlib import Path
+          import subprocess, re
+          p = Path('scripts/materialize-galaxy-explorer.mjs')
+          text = p.read_text(encoding='utf-8')
+          for rel in ['index.html', 'src/main.js']:
+              sha = subprocess.check_output(['git', 'hash-object', f'vendor/galaxy-explorer/{rel}'], text=True).strip()
+              text, n = re.subn(rf"\['{re.escape(rel)}', '[0-9a-f]{{40}}'\]", f"['{rel}', '{sha}']", text, count=1)
+              if n != 1:
+                  raise SystemExit(f'Empreinte introuvable pour {rel}')
+          text = text.replace('empreintes amont validées', 'empreintes du snapshot français validées')
+          p.write_text(text, encoding='utf-8')
+
+      - name: Enregistrer la traduction finale
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add vendor/galaxy-explorer scripts/materialize-galaxy-explorer.mjs
+          git commit -m "feat(galaxy): finaliser la traduction française du runtime"
+          git push origin HEAD:feat/galaxy-explorer-fr
